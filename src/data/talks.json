@@ -1,0 +1,75 @@
+{
+  "talks": [
+    {
+      "id": "agentverse-rag-2026",
+      "title": "Agentverse: The Scholar's Grimoire — Building Knowledge Engines with RAG",
+      "description": "A hands-on session exploring how to build deterministic retrieval systems using GraphRAG, ADK, and Neo4j. Part of the Build with AI initiative by ML Indore & GDG Indore.",
+      "date": "2026-02-21",
+      "year": "2026",
+      "event": "Build with AI",
+      "org": "ML Indore & GDG Indore",
+      "venue": "SiyaTech Ventures, Indore",
+      "role": "Speaker",
+      "tags": ["Build with AI", "ML Indore & GDG Indore", "SiyaTech Ventures"],
+      "links": [
+        { "label": "Event Details", "url": "https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/" }
+      ]
+    },
+    {
+      "id": "build-with-ai-session-01-2026",
+      "title": "Build with AI Indore — Session 01",
+      "description": "Opening session of the 2026 Build with AI series by ML Indore. Covered fundamentals of agentic AI and multi-agent orchestration patterns.",
+      "date": "2026-01-15",
+      "year": "2026",
+      "event": "Build with AI",
+      "org": "ML Indore",
+      "venue": "Indore",
+      "role": "Speaker & Organiser",
+      "tags": ["ML Indore", "Speaker & Organiser"],
+      "links": [
+        { "label": "Event Details", "url": "https://www.commudle.com/communities/machine-learning-indore/events/build-with-ai-indore-session-01-ml-indore" }
+      ]
+    },
+    {
+      "id": "devfest-india-2025",
+      "title": "DevFest India — GDG Cloud Indore",
+      "description": "Spoke at DevFest India, Google's annual developer festival, on AI systems architecture and production MLOps patterns.",
+      "date": "2025-11-20",
+      "year": "2025",
+      "event": "DevFest India",
+      "org": "GDG Cloud Indore",
+      "venue": "Indore",
+      "role": "Speaker",
+      "tags": ["GDG Cloud Indore", "Speaker"],
+      "links": []
+    },
+    {
+      "id": "cloud-community-days-2025",
+      "title": "Cloud Community Days 2025",
+      "description": "Spoke on cloud-native AI architecture and MLOps infrastructure at the largest cloud community conference in Central India.",
+      "date": "2025-09-15",
+      "year": "2025",
+      "event": "Cloud Community Days",
+      "org": "GDG Cloud Indore",
+      "venue": "Indore",
+      "role": "Speaker",
+      "tags": ["GDG Cloud Indore", "Speaker"],
+      "links": [
+        { "label": "Event Details", "url": "https://konfhub.com/ccd-2025-indore" }
+      ]
+    },
+    {
+      "id": "build-with-ai-workshop-aitr-2025",
+      "title": "Build with AI: Hands-on Workshop",
+      "description": "Led a practical workshop on building AI agents and deploying LLM systems at scale, hosted by GDG Indore in collaboration with AITR.",
+      "date": "2025-06-10",
+      "year": "2025",
+      "event": "Build with AI",
+      "org": "GDG Indore x AITR",
+      "venue": "Indore",
+      "role": "Workshop Lead",
+      "tags": ["GDG Indore x AITR", "Workshop Lead"],
+      "links": []
+    }
+  ]
+}

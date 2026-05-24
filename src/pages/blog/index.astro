@@ -7,29 +7,29 @@ const posts = (await getCollection('blog')).sort(
 );
 ---
 <Layout title="Writing | Karan Mittal">
-  <main style="max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem;">
-    <nav style="margin-bottom: 2rem; font-size: 0.9rem; color: var(--muted);">
-      <a href="/">Karan Mittal</a>
-      <span style="margin: 0 0.5rem;">/</span>
-      <span style="font-weight: 600; color: var(--accent);">Writing</span>
-    </nav>
+  <main class="container">
 
-    <h1 style="margin-bottom: 2rem;">Technical Writing</h1>
+    <p class="label">Writing</p>
+    <h1 style="margin-bottom: 1rem;">Technical Essays</h1>
+    <p style="color: var(--muted); margin-bottom: 3rem; max-width: 560px;">
+      Long-form writing on deterministic AI, GraphRAG architecture, high-performance systems, and lessons from production MLOps.
+    </p>
 
     <ul style="list-style: none; padding: 0;">
       {posts.map(post => (
-        <li style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem;">
-          <a href={`/blog/${post.slug}/`} style="font-size: 1.15rem; font-weight: 600;">
+        <li style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
+          <a href={`/blog/${post.slug}/`} style="font-size: 1.25rem; font-weight: 700; color: var(--accent); text-decoration: none; line-height: 1.3;">
             {post.data.title}
           </a>
-          <p style="margin: 0.35rem 0 0; color: var(--muted); font-size: 0.95rem;">
+          <p style="margin: 0.5rem 0 0; color: var(--muted); font-size: 1rem; line-height: 1.5;">
             {post.data.description}
           </p>
-          <p style="margin: 0.5rem 0 0; font-size: 0.8rem; color: var(--muted);">
+          <p style="margin: 0.75rem 0 0; font-size: 0.8rem; color: var(--muted); font-weight: 500;">
             {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         </li>
       ))}
     </ul>
+
   </main>
 </Layout>

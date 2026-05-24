@@ -13,23 +13,56 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<'blog'>;
 const post = Astro.props;
 const { Content } = await post.render();
+
+const wordCount = post.body.split(/\s+/).filter(Boolean).length;
+const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 ---
-<Layout title={`${post.data.title} | Karan Mittal`} description={post.data.description}>
-  <main style="max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem;">
-    <nav style="margin-bottom: 2rem; font-size: 0.9rem; color: var(--muted);">
-      <a href="/">Karan Mittal</a>
-      <span style="margin: 0 0.5rem;">/</span>
-      <a href="/blog">Writing</a>
-      <span style="margin: 0 0.5rem;">/</span>
-      <span style="font-weight: 600; color: var(--accent);">{post.data.title}</span>
-    </nav>
+<Layout 
+  title={`${post.data.title} | Karan Mittal`} 
+  description={post.data.description}
+  type="article"
+  pubDate={post.data.pubDate}
+>
+  <main class="container">
 
     <article>
-      <h1 style="margin-bottom: 0.5rem;">{post.data.title}</h1>
-      <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem;">
-        Published {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+      <p class="label" style="margin-bottom: 0.75rem;">
+        {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        <span style="margin: 0 0.6rem; color: var(--border);">·</span>
+        {readingTime} min read
       </p>
+      <h1 style="margin-bottom: 2.5rem;">{post.data.title}</h1>
       <Content />
     </article>
+
+    <footer style="margin-top: 5rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+      <p style="color: var(--muted); font-size: 0.95rem; margin-bottom: 1.25rem;">
+        Thanks for reading. If you found this useful, consider sharing it:
+      </p>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2rem;">
+        <a 
+          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.data.title)}&url=${encodeURIComponent(Astro.url.toString())}`} 
+          target="_blank" 
+          rel="noopener"
+          class="btn btn-secondary"
+          style="font-size: 0.85rem; padding: 0.5rem 1rem;"
+        >
+          Share on X
+        </a>
+        <a 
+          href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.toString())}`} 
+          target="_blank" 
+          rel="noopener"
+          class="btn btn-secondary"
+          style="font-size: 0.85rem; padding: 0.5rem 1rem;"
+        >
+          Share on LinkedIn
+        </a>
+      </div>
+      <p style="margin: 0;">
+        <a href="/blog" style="font-size: 0.95rem; font-weight: 600;">← All posts</a>
+      </p>
+    </footer>
+
   </main>
 </Layout>

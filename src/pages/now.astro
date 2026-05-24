@@ -1,0 +1,82 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+---
+<Layout title="Now | Karan Mittal">
+  <main class="container">
+
+    <p class="label">Now</p>
+    <h1 style="margin-bottom: 1.5rem;">What I'm Doing Now</h1>
+    <p style="color: var(--muted); margin-bottom: 3rem; max-width: 560px;">
+      A living snapshot of my current focus. This page is updated periodically and serves as a north star for my priorities.
+    </p>
+
+    <div class="grid-2">
+
+      <section class="card">
+        <h2 style="margin-top: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+          <Icon name="briefcase" size={16} />
+          Work
+        </h2>
+        <ul style="color: var(--muted); margin: 0; padding-left: 1.25rem;">
+          <li>Co-founding and leading engineering at <a href="https://dextar.co">Dextar.co</a></li>
+          <li>Architecting production GraphRAG systems for enterprise clients</li>
+          <li>Consulting on MLOps infrastructure and GPU cluster optimization</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2 style="margin-top: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+          <Icon name="wrench" size={16} />
+          Building
+        </h2>
+        <ul style="color: var(--muted); margin: 0; padding-left: 1.25rem;">
+          <li>An open-source deterministic RAG evaluation harness</li>
+          <li>A CUDA optimization pattern cookbook for ML inference</li>
+          <li>This blog and my GitHub presence</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2 style="margin-top: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+          <Icon name="book-open" size={16} />
+          Learning
+        </h2>
+        <ul style="color: var(--muted); margin: 0; padding-left: 1.25rem;">
+          <li>Advanced Rust for systems programming</li>
+          <li>CPU/GPU co-design patterns for edge LLM inference</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2 style="margin-top: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+          <Icon name="users" size={16} />
+          Community
+        </h2>
+        <ul style="color: var(--muted); margin: 0; padding-left: 1.25rem;">
+          <li>Organising <a href="https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/">MLIndore</a> hands-on AI workshops</li>
+          <li>Mentoring at <a href="https://gdg.community.dev/events/details/google-gdg-cloud-mumbai-presents-code-vipassana-season-2-finale/">CodeVipassana</a></li>
+          <li>Hosting cloud-native sessions at <a href="https://gdg.community.dev/gdg-cloud-indore/">GDG Cloud Indore</a></li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2 style="margin-top: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+          <Icon name="mic" size={16} />
+          Speaking
+        </h2>
+        <ul style="color: var(--muted); margin: 0; padding-left: 1.25rem;">
+          <li>Preparing talks on GraphRAG and deterministic retrieval for 2026</li>
+          <li>Workshop on Building Knowledge Engines with RAG</li>
+          <li><a href="/talks">View all talks and events →</a></li>
+        </ul>
+      </section>
+
+    </div>
+
+    <p style="color: var(--muted); font-size: 0.85rem; margin-top: 3rem; text-align: center;">
+      Last updated: May 2026 · <a href="https://nownownow.com/about">What is a /now page?</a>
+    </p>
+
+  </main>
+</Layout>

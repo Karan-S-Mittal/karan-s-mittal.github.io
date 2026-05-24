@@ -1,9 +1,24 @@
 ---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
 interface Props {
   title: string;
   description?: string;
+  image?: string;
+  type?: string;
+  pubDate?: Date;
 }
-const { title, description = "Karan Mittal — Solutions Architect & AI Systems Leader" } = Astro.props;
+const { 
+  title, 
+  description = "Karan Mittal — Solutions Architect & AI Systems Leader",
+  image = "https://karan-s-mittal.github.io/og-default.png",
+  type = "website",
+  pubDate,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const rssUrl = new URL('/rss.xml', Astro.site).toString();
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -12,51 +27,64 @@ const { title, description = "Karan Mittal — Solutions Architect & AI Systems 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title}</title>
   <meta name="description" content={description} />
-  <style is:global>
-    :root {
-      --bg: #ffffff;
-      --text: #24292e;
-      --muted: #586069;
-      --accent: #2F3349;
-      --accent-light: #546E7A;
-      --border: #e1e4e8;
-      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0d1117;
-        --text: #c9d1d9;
-        --muted: #8b949e;
-        --accent: #c9d1d9;
-        --accent-light: #58a6ff;
-        --border: #30363d;
-      }
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: var(--font-sans);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
-    a { color: var(--accent-light); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    code, pre {
-      font-family: var(--font-mono);
-      font-size: 0.9em;
-      background: var(--border);
-      padding: 0.15em 0.4em;
-      border-radius: 4px;
-    }
-    pre { padding: 1em; overflow-x: auto; }
-    pre code { background: transparent; padding: 0; }
-    h1, h2, h3 { color: var(--accent); line-height: 1.25; }
-    article img { max-width: 100%; height: auto; }
-  </style>
+  <link rel="canonical" href={canonicalURL} />
+  <link rel="alternate" type="application/rss+xml" title="RSS Feed" href={rssUrl} />
+  <link rel="stylesheet" href="/styles/global.css" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content={type} />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={image} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={image} />
+  {pubDate && <meta property="article:published_time" content={pubDate.toISOString()} />}
 </head>
 <body>
+  <Header />
   <slot />
+  <Footer />
+
+  <script>
+    // Copy code buttons
+    document.querySelectorAll('pre').forEach((pre) => {
+      const button = document.createElement('button');
+      button.className = 'copy-code';
+      button.textContent = 'Copy';
+      pre.appendChild(button);
+
+      button.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        const text = code ? code.textContent : pre.textContent;
+        try {
+          await navigator.clipboard.writeText(text);
+          button.textContent = 'Copied';
+          button.classList.add('copied');
+          setTimeout(() => {
+            button.textContent = 'Copy';
+            button.classList.remove('copied');
+          }, 2000);
+        } catch (err) {
+          button.textContent = 'Failed';
+          setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+        }
+      });
+    });
+
+    // Header scroll shadow
+    const header = document.querySelector('header');
+    if (header) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
+    }
+  </script>
 </body>
 </html>

@@ -1,0 +1,33 @@
+{
+  "communities": [
+    {
+      "id": "mlindore",
+      "name": "MLIndore",
+      "description": "Community Leader. Co-hosts hands-on workshops on AI Agents, LLMOps, and RAG systems with GDG Indore.",
+      "logo": "/logos/mlindore.svg",
+      "links": [
+        { "label": "Commudle", "url": "https://www.commudle.com/communities/machine-learning-indore" },
+        { "label": "Events", "url": "https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/" }
+      ]
+    },
+    {
+      "id": "codevipassana",
+      "name": "CodeVipassana",
+      "description": "A community blending mindful practice with deep technical work. Seasonal coding sprints and focused peer-learning sessions.",
+      "logo": "/logos/codevipassana.svg",
+      "links": [
+        { "label": "Website", "url": "https://www.codevipassana.dev/" }
+      ]
+    },
+    {
+      "id": "gdg-cloud-indore",
+      "name": "GDG Cloud Indore",
+      "description": "Google Developer Group Cloud chapter organiser. Hosting Firebase, Google Cloud, and DevFest events.",
+      "logo": "/logos/gdg-cloud-indore.svg",
+      "links": [
+        { "label": "Homepage", "url": "https://gdg.community.dev/gdg-cloud-indore/" },
+        { "label": "DevFest", "url": "https://gdg.community.dev/events/details/google-gdg-cloud-indore-presents-devfest-india/" }
+      ]
+    }
+  ]
+}

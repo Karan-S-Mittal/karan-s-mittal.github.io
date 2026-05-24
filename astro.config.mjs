@@ -6,4 +6,10 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://karan-s-mittal.github.io',
   base: '/',
+  markdown: {
+    shikiConfig: {
+      theme: 'github-dark',
+      wrap: true,
+    },
+  },
 });
