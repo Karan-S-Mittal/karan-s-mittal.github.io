@@ -1,0 +1,218 @@
+---
+import type { Talk } from '../types/talks';
+import { formatTalkDate } from '../utils/date';
+
+interface Props {
+  talk: Talk;
+}
+
+const { talk } = Astro.props;
+const formattedDate = formatTalkDate(talk.date);
+
+const typeLabel: Record<Talk['type'], string> = {
+  talk: 'Session',
+  workshop: 'Workshop',
+  panel: 'Panel',
+  keynote: 'Keynote',
+};
+---
+
+<article class="talk-card">
+  <div class="talk-meta">
+    <span class="talk-type" data-type={talk.type}>{typeLabel[talk.type]}</span>
+    <time datetime={talk.date}>{formattedDate}</time>
+  </div>
+
+  <h3 class="talk-title">{talk.title}</h3>
+  <p class="talk-description">{talk.description}</p>
+
+  <dl class="talk-details">
+    <div class="detail-row">
+      <dt>Event</dt>
+      <dd>{talk.event}</dd>
+    </div>
+    <div class="detail-row">
+      <dt>Organiser</dt>
+      <dd>{talk.org}</dd>
+    </div>
+    {talk.venue && (
+      <div class="detail-row">
+        <dt>Venue</dt>
+        <dd>{talk.venue}</dd>
+      </div>
+    )}
+    <div class="detail-row">
+      <dt>Role</dt>
+      <dd>{talk.role}</dd>
+    </div>
+  </dl>
+
+  {talk.tags.length > 0 && (
+    <div class="talk-tags">
+      {talk.tags.map((tag) => (
+        <span class="tag">{tag}</span>
+      ))}
+    </div>
+  )}
+
+  {talk.links.length > 0 && (
+    <div class="talk-links">
+      {talk.links.map((link) => (
+        <a
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="talk-link"
+        >
+          {link.label}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 17L17 7"></path>
+            <path d="M7 7h10v10"></path>
+          </svg>
+        </a>
+      ))}
+    </div>
+  )}
+</article>
+
+<style>
+  .talk-card {
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .talk-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-color: var(--accent-light);
+  }
+
+  .talk-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .talk-type {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-radius: 999px;
+    background: var(--accent-light);
+    color: #fff;
+  }
+  .talk-type[data-type="workshop"] {
+    background: #059669;
+  }
+  .talk-type[data-type="panel"] {
+    background: #7c3aed;
+  }
+  .talk-type[data-type="keynote"] {
+    background: #dc2626;
+  }
+
+  time {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .talk-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--accent);
+  }
+
+  .talk-description {
+    margin: 0 0 1rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .talk-details {
+    margin: 0 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.5rem 1rem;
+  }
+  .detail-row {
+    display: flex;
+    gap: 0.35rem;
+    align-items: baseline;
+  }
+  .detail-row dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+  .detail-row dd {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text);
+  }
+
+  .talk-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  .tag {
+    padding: 0.3rem 0.65rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--border);
+  }
+
+  .talk-links {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .talk-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--link);
+    text-decoration: none;
+    padding: 0.35rem 0;
+    transition: color 0.2s;
+  }
+  .talk-link:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+  }
+  .talk-link svg {
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 640px) {
+    .talk-card {
+      padding: 1.25rem;
+    }
+    .talk-details {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+  }
+</style>

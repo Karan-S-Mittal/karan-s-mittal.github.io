@@ -16,53 +16,142 @@ const { Content } = await post.render();
 
 const wordCount = post.body.split(/\s+/).filter(Boolean).length;
 const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
+const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
 ---
-<Layout 
-  title={`${post.data.title} | Karan Mittal`} 
+
+<Layout
+  title={`${post.data.title} | Karan Mittal`}
   description={post.data.description}
   type="article"
   pubDate={post.data.pubDate}
 >
   <main class="container">
-
     <article>
-      <p class="label" style="margin-bottom: 0.75rem;">
-        {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-        <span style="margin: 0 0.6rem; color: var(--border);">·</span>
-        {readingTime} min read
-      </p>
-      <h1 style="margin-bottom: 2.5rem;">{post.data.title}</h1>
+      <header class="post-header">
+        <div class="post-meta">
+          <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
+          <span aria-hidden="true" class="meta-sep">·</span>
+          <span>{readingTime} min read</span>
+          {post.data.updatedDate && (
+            <>
+              <span aria-hidden="true" class="meta-sep">·</span>
+              <span class="updated">
+                Updated {post.data.updatedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+              </span>
+            </>
+          )}
+        </div>
+
+        <h1>{post.data.title}</h1>
+
+        {post.data.tags.length > 0 && (
+          <div class="post-tags">
+            {post.data.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        )}
+      </header>
+
       <Content />
     </article>
 
-    <footer style="margin-top: 5rem; padding-top: 2rem; border-top: 1px solid var(--border);">
-      <p style="color: var(--muted); font-size: 0.95rem; margin-bottom: 1.25rem;">
-        Thanks for reading. If you found this useful, consider sharing it:
-      </p>
-      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2rem;">
-        <a 
-          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.data.title)}&url=${encodeURIComponent(Astro.url.toString())}`} 
-          target="_blank" 
+    <footer class="post-footer">
+      <p class="share-label">Thanks for reading. If you found this useful, consider sharing it:</p>
+      <div class="share-actions">
+        <a
+          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.data.title)}&url=${encodeURIComponent(Astro.url.toString())}`}
+          target="_blank"
           rel="noopener"
           class="btn btn-secondary"
-          style="font-size: 0.85rem; padding: 0.5rem 1rem;"
         >
           Share on X
         </a>
-        <a 
-          href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.toString())}`} 
-          target="_blank" 
+        <a
+          href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.toString())}`}
+          target="_blank"
           rel="noopener"
           class="btn btn-secondary"
-          style="font-size: 0.85rem; padding: 0.5rem 1rem;"
         >
           Share on LinkedIn
         </a>
       </div>
-      <p style="margin: 0;">
-        <a href="/blog" style="font-size: 0.95rem; font-weight: 600;">← All posts</a>
+      <p class="back-link">
+        <a href="/blog">← All posts</a>
       </p>
     </footer>
-
   </main>
 </Layout>
+
+<style>
+  .post-header {
+    margin-bottom: 2.5rem;
+  }
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .meta-sep {
+    color: var(--border);
+  }
+  .updated {
+    color: var(--accent-light);
+  }
+
+  .post-header h1 {
+    margin-bottom: 1rem;
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .tag {
+    padding: 0.3rem 0.65rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--border);
+  }
+
+  .post-footer {
+    margin-top: 5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .share-label {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.25rem;
+  }
+  .share-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .share-actions .btn {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+  }
+  .back-link {
+    margin: 0;
+  }
+  .back-link a {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+</style>

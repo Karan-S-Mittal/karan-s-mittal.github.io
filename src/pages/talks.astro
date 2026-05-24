@@ -1,77 +1,172 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import TalkCard from '../components/TalkCard.astro';
 import talksData from '../data/talks.json';
+import type { Talk } from '../types/talks';
 
-const { talks } = talksData;
+const talks: Talk[] = talksData.talks;
 
 // Sort chronologically: newest first
 const sortedTalks = [...talks].sort(
   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
 );
 
-const hasAnyLinks = sortedTalks.some(t => t.links && t.links.length > 0);
+// Group by year
+const talksByYear = sortedTalks.reduce<Record<string, Talk[]>>((acc, talk) => {
+  const year = talk.year;
+  if (!acc[year]) acc[year] = [];
+  acc[year].push(talk);
+  return acc;
+}, {});
 
-const formatDate = (iso: string) => {
-  const d = new Date(iso + 'T00:00:00');
-  return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-};
+const years = Object.keys(talksByYear).sort((a, b) => Number(b) - Number(a));
+const talkCount = sortedTalks.length;
 ---
 
 <Layout title="Talks | Karan Mittal">
   <main class="container">
-    <p class="label">Talks &amp; Workshops</p>
-    <h1 style="margin-bottom: 1rem;">Speaking</h1>
-    <p style="color: var(--muted); margin-bottom: 3rem; max-width: 600px;">
-      I speak at conferences, meetups, and workshops on AI architecture, GraphRAG, deterministic systems, and MLOps.
-      If you would like me to speak at your event,
-      <a href="mailto:karanshyammittal@gmail.com">get in touch</a>.
-    </p>
+    <header class="page-header">
+      <p class="label">Talks &amp; Workshops</p>
+      <h1>Speaking</h1>
+      <p class="lead">
+        I speak at conferences, meetups, and workshops on AI architecture, GraphRAG, deterministic systems, and MLOps.
+        <span class="talk-count">{talkCount} events on record.</span>
+      </p>
+    </header>
 
     <div class="timeline">
-      {sortedTalks.map((talk) => (
-        <div class="timeline-item">
-          <p style="font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">
-            {formatDate(talk.date)}
-          </p>
-          <h3 style="margin: 0 0 0.5rem; font-size: 1.15rem;">
-            {talk.title}
-          </h3>
-          <p style="color: var(--muted); margin-bottom: 0.75rem;">
-            {talk.description}
-          </p>
-          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            {talk.tags.map((tag: string) => (
-              <span class="tag">{tag}</span>
+      {years.map((year) => (
+        <section class="year-group" aria-labelledby={`year-${year}`}>
+          <div class="year-marker">
+            <h2 id={`year-${year}`} class="year-label">{year}</h2>
+            <span class="year-count" aria-hidden="true">{talksByYear[year].length}</span>
+          </div>
+          <div class="year-talks">
+            {talksByYear[year].map((talk) => (
+              <TalkCard talk={talk} />
             ))}
           </div>
-          {talk.links && talk.links.length > 0 && (
-            <p style="margin-top: 0.75rem; margin-bottom: 0;">
-              {talk.links.map((link: { label: string; url: string }) => (
-                <a href={link.url} target="_blank" rel="noopener">{link.label} &rarr;</a>
-              ))}
-            </p>
-          )}
-        </div>
+        </section>
       ))}
     </div>
 
-    <section style="margin-top: 4rem; padding: 2rem; border: 1px solid var(--border); border-radius: var(--radius); text-align: center;">
-      <h2 style="margin-top: 0; font-size: 1.2rem;">Invite Me to Speak</h2>
-      <p style="color: var(--muted); margin-bottom: 1.5rem;">
-        I am open to speaking at conferences, meetups, and workshops on AI architecture, GraphRAG, MLOps, and building production-scale systems.
-      </p>
+    <section class="cta-section">
+      <h2>Invite Me to Speak</h2>
+      <p>Open to speaking at conferences, meetups, and workshops on AI architecture, GraphRAG, MLOps, and building production-scale systems.</p>
       <a href="mailto:karanshyammittal@gmail.com" class="btn btn-primary">Request a Talk</a>
     </section>
   </main>
 </Layout>
 
 <style>
-  .tag {
-    padding: 0.35rem 0.75rem;
-    font-size: 0.8rem;
+  .page-header {
+    margin-bottom: 3rem;
+  }
+  .page-header h1 {
+    margin-bottom: 0.75rem;
+  }
+  .lead {
     color: var(--muted);
+    max-width: 600px;
+    margin: 0;
+    line-height: 1.6;
+  }
+  .talk-count {
+    display: inline-block;
+    margin-left: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-light);
+    background: var(--border);
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius);
+    white-space: nowrap;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    margin-bottom: 5rem;
+  }
+
+  .year-group {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .year-marker {
+    position: sticky;
+    top: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .year-label {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-light);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .year-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-top: 0.35rem;
+    background: var(--border);
+    padding: 0.15rem 0.4rem;
+    border-radius: var(--radius);
+  }
+
+  .year-talks {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .cta-section {
+    padding: 2.5rem;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    background: var(--bg);
+    text-align: center;
+  }
+  .cta-section h2 {
+    margin-top: 0;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  .cta-section p {
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (max-width: 640px) {
+    .year-group {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    .year-marker {
+      position: static;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+      text-align: left;
+    }
+    .year-label {
+      font-size: 1.25rem;
+    }
+    .cta-section {
+      padding: 1.5rem;
+    }
   }
 </style>

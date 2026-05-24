@@ -2,6 +2,7 @@
 title: "Deterministic RAG: Beyond Probabilistic Retrieval"
 description: "Why enterprise knowledge systems need guarantees, not just probabilities."
 pubDate: 2026-05-25
+tags: ["RAG", "GraphRAG", "AI Architecture", "MLOps"]
 ---
 
 Most RAG systems today are probabilistic black boxes. You chunk documents, embed them, retrieve the top-k, and hope the LLM cites the right source. In production, hope is not a strategy.
