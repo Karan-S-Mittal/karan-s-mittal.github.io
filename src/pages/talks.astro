@@ -1,52 +1,43 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import YearGroup from '../components/YearGroup.astro';
 import TalkCard from '../components/TalkCard.astro';
 import talksData from '../data/talks.json';
 import type { Talk } from '../types/talks';
 
 const talks: Talk[] = talksData.talks;
 
-// Sort chronologically: newest first
 const sortedTalks = [...talks].sort(
   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
 );
 
-// Group by year
 const talksByYear = sortedTalks.reduce<Record<string, Talk[]>>((acc, talk) => {
-  const year = talk.year;
-  if (!acc[year]) acc[year] = [];
-  acc[year].push(talk);
+  if (!acc[talk.year]) acc[talk.year] = [];
+  acc[talk.year].push(talk);
   return acc;
 }, {});
 
 const years = Object.keys(talksByYear).sort((a, b) => Number(b) - Number(a));
-const talkCount = sortedTalks.length;
 ---
 
 <Layout title="Talks | Karan Mittal">
   <main class="container">
-    <header class="page-header">
-      <p class="label">Talks &amp; Workshops</p>
-      <h1>Speaking</h1>
-      <p class="lead">
-        I speak at conferences, meetups, and workshops on AI architecture, GraphRAG, deterministic systems, and MLOps.
-        <span class="talk-count">{talkCount} events on record.</span>
-      </p>
-    </header>
+    <PageHeader
+      label="Talks & Workshops"
+      title="Speaking"
+      description="I speak at conferences, meetups, and workshops on AI architecture, GraphRAG, deterministic systems, and MLOps."
+      count={sortedTalks.length}
+      countLabel="events"
+    />
 
     <div class="timeline">
       {years.map((year) => (
-        <section class="year-group" aria-labelledby={`year-${year}`}>
-          <div class="year-marker">
-            <h2 id={`year-${year}`} class="year-label">{year}</h2>
-            <span class="year-count" aria-hidden="true">{talksByYear[year].length}</span>
-          </div>
-          <div class="year-talks">
-            {talksByYear[year].map((talk) => (
-              <TalkCard talk={talk} />
-            ))}
-          </div>
-        </section>
+        <YearGroup year={year} count={talksByYear[year].length}>
+          {talksByYear[year].map((talk) => (
+            <TalkCard talk={talk} />
+          ))}
+        </YearGroup>
       ))}
     </div>
 
@@ -59,112 +50,34 @@ const talkCount = sortedTalks.length;
 </Layout>
 
 <style>
-  .page-header {
-    margin-bottom: 3rem;
-  }
-  .page-header h1 {
-    margin-bottom: 0.75rem;
-  }
-  .lead {
-    color: var(--muted);
-    max-width: 600px;
-    margin: 0;
-    line-height: 1.6;
-  }
-  .talk-count {
-    display: inline-block;
-    margin-left: 0.5rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--accent-light);
-    background: var(--border);
-    padding: 0.15rem 0.5rem;
-    border-radius: var(--radius);
-    white-space: nowrap;
-  }
-
   .timeline {
     display: flex;
     flex-direction: column;
-    gap: 3rem;
-    margin-bottom: 5rem;
-  }
-
-  .year-group {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    gap: 1.5rem;
-    align-items: start;
-  }
-
-  .year-marker {
-    position: sticky;
-    top: 5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    text-align: right;
-  }
-
-  .year-label {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--accent-light);
-    line-height: 1;
-    letter-spacing: -0.02em;
-  }
-
-  .year-count {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--muted);
-    margin-top: 0.35rem;
-    background: var(--border);
-    padding: 0.15rem 0.4rem;
-    border-radius: var(--radius);
-  }
-
-  .year-talks {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
+    gap: 2.5rem;
+    margin-bottom: 4rem;
   }
 
   .cta-section {
     padding: 2.5rem;
-    border: 1px solid var(--border);
     border-radius: var(--radius);
+    background: var(--bg-elevated);
     text-align: center;
   }
   .cta-section h2 {
     margin-top: 0;
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
   }
   .cta-section p {
     color: var(--muted);
-    margin-bottom: 1.5rem;
-    max-width: 520px;
+    margin-bottom: 1.25rem;
+    max-width: 480px;
     margin-left: auto;
     margin-right: auto;
+    font-size: 0.95rem;
   }
 
   @media (max-width: 640px) {
-    .year-group {
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
-    }
-    .year-marker {
-      position: static;
-      flex-direction: row;
-      align-items: center;
-      gap: 0.5rem;
-      text-align: left;
-    }
-    .year-label {
-      font-size: 1.25rem;
-    }
     .cta-section {
       padding: 1.5rem;
     }

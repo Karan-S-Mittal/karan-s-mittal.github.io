@@ -1,82 +1,132 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
 import Icon from '../components/Icon.astro';
 ---
+
 <Layout title="Now | Karan Mittal">
   <main class="container">
+    <PageHeader
+      label="Now"
+      title="What I'm Doing Now"
+      description="A living snapshot of my current focus. This page is updated periodically and serves as a north star for my priorities."
+    />
 
-    <p class="label">Now</p>
-    <h1 style="margin-bottom: 1.5rem;">What I'm Doing Now</h1>
-    <p style="color: var(--muted); margin-bottom: 3rem; max-width: 560px;">
-      A living snapshot of my current focus. This page is updated periodically and serves as a north star for my priorities.
-    </p>
-
-    <div class="grid-2">
-
-      <section class="card">
-        <h2 style="margin-top: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+    <div class="now-grid">
+      <div class="now-item">
+        <div class="now-header">
           <Icon name="briefcase" size={16} />
-          Work
-        </h2>
-        <ul style="color: var(--muted); margin: 0; padding-left: 1.25rem;">
+          <h3>Work</h3>
+        </div>
+        <ul>
           <li>Co-founding and leading engineering at <a href="https://dextar.co">Dextar.co</a></li>
           <li>Architecting production GraphRAG systems for enterprise clients</li>
           <li>Consulting on MLOps infrastructure and GPU cluster optimization</li>
         </ul>
-      </section>
+      </div>
 
-      <section class="card">
-        <h2 style="margin-top: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+      <div class="now-item">
+        <div class="now-header">
           <Icon name="wrench" size={16} />
-          Building
-        </h2>
-        <ul style="color: var(--muted); margin: 0; padding-left: 1.25rem;">
+          <h3>Building</h3>
+        </div>
+        <ul>
           <li>An open-source deterministic RAG evaluation harness</li>
           <li>A CUDA optimization pattern cookbook for ML inference</li>
           <li>This blog and my GitHub presence</li>
         </ul>
-      </section>
+      </div>
 
-      <section class="card">
-        <h2 style="margin-top: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+      <div class="now-item">
+        <div class="now-header">
           <Icon name="book-open" size={16} />
-          Learning
-        </h2>
-        <ul style="color: var(--muted); margin: 0; padding-left: 1.25rem;">
+          <h3>Learning</h3>
+        </div>
+        <ul>
           <li>Advanced Rust for systems programming</li>
           <li>CPU/GPU co-design patterns for edge LLM inference</li>
         </ul>
-      </section>
+      </div>
 
-      <section class="card">
-        <h2 style="margin-top: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+      <div class="now-item">
+        <div class="now-header">
           <Icon name="users" size={16} />
-          Community
-        </h2>
-        <ul style="color: var(--muted); margin: 0; padding-left: 1.25rem;">
+          <h3>Community</h3>
+        </div>
+        <ul>
           <li>Organising <a href="https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/">MLIndore</a> hands-on AI workshops</li>
-          <li>Mentoring at <a href="https://gdg.community.dev/events/details/google-gdg-cloud-mumbai-presents-code-vipassana-season-2-finale/">CodeVipassana</a></li>
+          <li>Mentoring at <a href="https://www.codevipassana.dev/">CodeVipassana</a></li>
           <li>Hosting cloud-native sessions at <a href="https://gdg.community.dev/gdg-cloud-indore/">GDG Cloud Indore</a></li>
         </ul>
-      </section>
+      </div>
 
-      <section class="card">
-        <h2 style="margin-top: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+      <div class="now-item">
+        <div class="now-header">
           <Icon name="mic" size={16} />
-          Speaking
-        </h2>
-        <ul style="color: var(--muted); margin: 0; padding-left: 1.25rem;">
+          <h3>Speaking</h3>
+        </div>
+        <ul>
           <li>Preparing talks on GraphRAG and deterministic retrieval for 2026</li>
           <li>Workshop on Building Knowledge Engines with RAG</li>
           <li><a href="/talks">View all talks and events →</a></li>
         </ul>
-      </section>
-
+      </div>
     </div>
 
-    <p style="color: var(--muted); font-size: 0.85rem; margin-top: 3rem; text-align: center;">
+    <p class="now-footer">
       Last updated: May 2026 · <a href="https://nownownow.com/about">What is a /now page?</a>
     </p>
-
   </main>
 </Layout>
+
+<style>
+  .now-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .now-item {
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    background: var(--bg-elevated);
+    transition: var(--transition);
+  }
+  .now-item:hover {
+    background: var(--bg-inset);
+  }
+  .now-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .now-header h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .now-item ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+  .now-item li {
+    margin-bottom: 0.4rem;
+  }
+
+  .now-footer {
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-top: 3rem;
+    text-align: center;
+  }
+
+  @media (max-width: 640px) {
+    .now-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

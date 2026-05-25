@@ -1,17 +1,16 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import YearGroup from '../../components/YearGroup.astro';
 import BlogPostCard from '../../components/BlogPostCard.astro';
 
 const allPosts = await getCollection('blog');
-
-// Filter out drafts in production
 const isDev = import.meta.env.DEV;
 const posts = allPosts
   .filter((post) => isDev || !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-// Group by year
 const postsByYear = posts.reduce<Record<string, typeof posts>>((acc, post) => {
   const year = post.data.pubDate.getFullYear().toString();
   if (!acc[year]) acc[year] = [];
@@ -20,124 +19,34 @@ const postsByYear = posts.reduce<Record<string, typeof posts>>((acc, post) => {
 }, {});
 
 const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
-const postCount = posts.length;
 ---
 
 <Layout title="Writing | Karan Mittal">
   <main class="container">
-    <header class="page-header">
-      <p class="label">Writing</p>
-      <h1>Technical Essays</h1>
-      <p class="lead">
-        Long-form writing on deterministic AI, GraphRAG architecture, high-performance systems, and lessons from production MLOps.
-        <span class="post-count">{postCount} essay{postCount !== 1 ? 's' : ''} on record.</span>
-      </p>
-    </header>
+    <PageHeader
+      label="Writing"
+      title="Technical Essays"
+      description="Long-form writing on deterministic AI, GraphRAG architecture, high-performance systems, and lessons from production MLOps."
+      count={posts.length}
+      countLabel="essays"
+    />
 
     <div class="timeline">
       {years.map((year) => (
-        <section class="year-group" aria-labelledby={`year-${year}`}>
-          <div class="year-marker">
-            <h2 id={`year-${year}`} class="year-label">{year}</h2>
-            <span class="year-count" aria-hidden="true">{postsByYear[year].length}</span>
-          </div>
-          <div class="year-posts">
-            {postsByYear[year].map((post) => (
-              <BlogPostCard post={post} />
-            ))}
-          </div>
-        </section>
+        <YearGroup year={year} count={postsByYear[year].length}>
+          {postsByYear[year].map((post) => (
+            <BlogPostCard post={post} />
+          ))}
+        </YearGroup>
       ))}
     </div>
   </main>
 </Layout>
 
 <style>
-  .page-header {
-    margin-bottom: 3rem;
-  }
-  .page-header h1 {
-    margin-bottom: 0.75rem;
-  }
-  .lead {
-    color: var(--muted);
-    max-width: 600px;
-    margin: 0;
-    line-height: 1.6;
-  }
-  .post-count {
-    display: inline-block;
-    margin-left: 0.5rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--accent-light);
-    background: var(--border);
-    padding: 0.15rem 0.5rem;
-    border-radius: var(--radius);
-    white-space: nowrap;
-  }
-
   .timeline {
     display: flex;
     flex-direction: column;
-    gap: 3rem;
-  }
-
-  .year-group {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    gap: 1.5rem;
-    align-items: start;
-  }
-
-  .year-marker {
-    position: sticky;
-    top: 5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    text-align: right;
-  }
-
-  .year-label {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--accent-light);
-    line-height: 1;
-    letter-spacing: -0.02em;
-  }
-
-  .year-count {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--muted);
-    margin-top: 0.35rem;
-    background: var(--border);
-    padding: 0.15rem 0.4rem;
-    border-radius: var(--radius);
-  }
-
-  .year-posts {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  @media (max-width: 640px) {
-    .year-group {
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
-    }
-    .year-marker {
-      position: static;
-      flex-direction: row;
-      align-items: center;
-      gap: 0.5rem;
-      text-align: left;
-    }
-    .year-label {
-      font-size: 1.25rem;
-    }
+    gap: 2.5rem;
   }
 </style>

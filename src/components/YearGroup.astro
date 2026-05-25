@@ -1,0 +1,73 @@
+---
+interface Props {
+  year: string;
+  count: number;
+}
+
+const { year, count } = Astro.props;
+---
+
+<section class="year-group" aria-labelledby={`year-${year}`}>
+  <div class="year-marker">
+    <h2 id={`year-${year}`} class="year-label">{year}</h2>
+    <span class="year-count" aria-hidden="true">{count}</span>
+  </div>
+  <div class="year-content">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .year-group {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .year-marker {
+    position: sticky;
+    top: 4.5rem;
+    text-align: right;
+  }
+
+  .year-label {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
+    line-height: 1;
+  }
+
+  .year-count {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-top: 0.35rem;
+    opacity: 0.6;
+  }
+
+  .year-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  @media (max-width: 640px) {
+    .year-group {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    .year-marker {
+      position: static;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      text-align: left;
+    }
+    .year-count {
+      margin-top: 0;
+    }
+  }
+</style>

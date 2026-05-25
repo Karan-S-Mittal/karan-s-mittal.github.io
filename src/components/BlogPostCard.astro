@@ -47,15 +47,14 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
 <style>
   .post-card {
     padding: 1.5rem;
-    border: 1px solid var(--border);
     border-radius: var(--radius);
-    background: var(--bg);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    background: var(--bg-elevated);
+    transition: var(--transition);
+    border-left: 3px solid transparent;
   }
   .post-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    border-color: var(--accent-light);
+    background: var(--bg-inset);
+    border-left-color: var(--accent);
   }
 
   .post-link {
@@ -64,32 +63,32 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     color: inherit;
   }
   .post-link:hover .post-title {
-    color: var(--link);
+    color: var(--muted);
   }
 
   .post-title {
-    margin: 0 0 0.5rem;
-    font-size: 1.15rem;
+    margin: 0 0 0.35rem;
+    font-size: 1.05rem;
     font-weight: 600;
     line-height: 1.3;
-    color: var(--accent);
+    color: var(--text);
     transition: color 0.2s;
   }
 
   .post-description {
-    margin: 0 0 0.75rem;
+    margin: 0 0 0.625rem;
     color: var(--muted);
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     line-height: 1.6;
   }
 
   .post-meta {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
     flex-wrap: wrap;
-    margin-bottom: 0.75rem;
-    font-size: 0.8rem;
+    margin-bottom: 0.625rem;
+    font-size: 0.78rem;
     font-weight: 500;
     color: var(--muted);
   }
@@ -97,21 +96,13 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     color: var(--border);
   }
   .updated {
-    color: var(--accent-light);
+    color: var(--accent);
   }
 
   .post-tags {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.4rem;
     flex-wrap: wrap;
-  }
-  .tag {
-    padding: 0.3rem 0.65rem;
-    font-size: 0.78rem;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--border);
   }
 
   @media (max-width: 640px) {

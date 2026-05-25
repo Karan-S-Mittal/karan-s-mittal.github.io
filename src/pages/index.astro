@@ -1,84 +1,121 @@
 ---
 import Layout from '../layouts/Layout.astro';
 ---
+
 <Layout title="Karan Mittal | Solutions Architect">
   <main class="container">
-    
+
     <section class="hero">
-      <div>
-        <p class="label">Co-Founder & CTO @ Dextar &middot; Community Organiser</p>
-        <h1 style="margin-bottom: 1.25rem;">
-          Building deterministic, high-performance AI systems.
-        </h1>
-        <p style="font-size: 1.125rem; color: var(--muted); max-width: 540px; line-height: 1.65; margin: 0;">
-          I architect enterprise-scale systems where reliability is the foundation. 
-          Co-founder of <a href="https://dextar.co">Dextar</a>, organiser of <a href="/about#community">MLIndore</a> and <a href="/about#community">GDG Cloud Indore</a>, 
-          and a technical leader who has shipped across life sciences, semiconductor supply chains, and finance.
-        </p>
-      </div>
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <img 
-          src="/profile.jpg" 
-          srcset="/profile-400.jpg 400w, /profile.jpg 800w"
-          sizes="(max-width: 720px) 200px, 280px"
-          alt="Karan Mittal" 
-          width="280" 
-          height="280" 
-          style="border-radius: 50%; box-shadow: var(--shadow); object-fit: cover; filter: grayscale(20%); transition: filter 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;" 
-          onmouseover="this.style.filter='grayscale(0%)';this.style.transform='scale(1.02)';this.style.boxShadow='var(--shadow-hover)';"
-          onmouseout="this.style.filter='grayscale(20%)';this.style.transform='scale(1)';this.style.boxShadow='var(--shadow)';"
-        />
+      <h1 class="hero-title">
+        Building deterministic,<br />high-performance AI systems.
+      </h1>
+      <p class="hero-lead">
+        I architect enterprise-scale systems where reliability is the foundation.
+        Co-founder of <a href="https://dextar.co">Dextar</a>, organiser of
+        <a href="/about#community">MLIndore</a> and <a href="/about#community">GDG Cloud Indore</a>,
+        and a technical leader who has shipped across life sciences, semiconductor supply chains, and finance.
+      </p>
+      <div class="hero-links">
+        <a href="https://www.linkedin.com/in/karansmittal/" class="btn btn-primary">LinkedIn</a>
+        <a href="https://twitter.com/KaranSMittal" class="btn btn-secondary">X / Twitter</a>
+        <a href="mailto:karanshyammittal@gmail.com" class="btn btn-ghost">Email</a>
       </div>
     </section>
 
     <hr />
 
-    <div class="grid-2" style="margin-bottom: 3.5rem;">
-      
-      <section>
-        <h2 style="margin-top: 0;">Current Focus</h2>
-        <ul style="color: var(--muted);">
-          <li>Production-grade GraphRAG with deterministic retrieval</li>
-          <li>CPU/GPU co-design for edge LLM inference</li>
-          <li>Open-source tooling for reproducible RAG evaluation</li>
-          <li>Growing technical communities in Central India</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2 style="margin-top: 0;">Connect</h2>
-        <p style="color: var(--muted); margin-bottom: 1rem;">
-          Available for enterprise consulting, architecture reviews, and contract CTO engagements.
-        </p>
-        <div style="display: flex; gap: 1.25rem; flex-wrap: wrap;">
-          <a href="https://www.linkedin.com/in/karansmittal/" style="font-weight: 500;">LinkedIn</a>
-          <a href="https://twitter.com/KaranSMittal" style="font-weight: 500;">X / Twitter</a>
-          <a href="mailto:karanshyammittal@gmail.com" style="font-weight: 500;">Email</a>
-        </div>
-      </section>
-
-    </div>
-
-    <section>
-      <h2 style="margin-top: 0;">Selected Work</h2>
-      <p style="color: var(--muted); margin-bottom: 1.5rem;">
-        Explore my architectural work on <a href="https://github.com/Karan-S-Mittal">GitHub</a>, read my <a href="/blog">technical writing</a>, or see my <a href="/talks">talks and workshops</a>.
-      </p>
-      <div class="grid-3">
-        <a href="https://github.com/Karan-S-Mittal" class="card" style="text-decoration: none; color: inherit;">
-          <p style="font-weight: 600; color: var(--accent); margin: 0 0 0.35rem; font-size: 0.95rem;">GitHub Repositories</p>
-          <p style="font-size: 0.85rem; color: var(--muted); margin: 0;">Pinned architectural projects and open-source work.</p>
+    <section class="selected-work">
+      <p class="label">Selected Work</p>
+      <div class="work-grid">
+        <a href="https://github.com/Karan-S-Mittal" class="work-card">
+          <h3>GitHub</h3>
+          <p>Architectural projects and open-source work on deterministic RAG, CUDA patterns, and MLOps tooling.</p>
         </a>
-        <a href="/blog" class="card" style="text-decoration: none; color: inherit;">
-          <p style="font-weight: 600; color: var(--accent); margin: 0 0 0.35rem; font-size: 0.95rem;">Technical Writing</p>
-          <p style="font-size: 0.85rem; color: var(--muted); margin: 0;">Essays on GraphRAG, CUDA, and MLOps at scale.</p>
+        <a href="/blog" class="work-card">
+          <h3>Writing</h3>
+          <p>Essays on GraphRAG, deterministic retrieval, and lessons from production AI systems.</p>
         </a>
-        <a href="/talks" class="card" style="text-decoration: none; color: inherit;">
-          <p style="font-weight: 600; color: var(--accent); margin: 0 0 0.35rem; font-size: 0.95rem;">Talks & Workshops</p>
-          <p style="font-size: 0.85rem; color: var(--muted); margin: 0;">Agentverse, Cloud Community Days, Build with AI.</p>
+        <a href="/talks" class="work-card">
+          <h3>Talks</h3>
+          <p>Workshops and sessions on AI architecture, MLOps, and building production-scale systems.</p>
         </a>
       </div>
     </section>
 
   </main>
 </Layout>
+
+<style>
+  .hero {
+    padding: 3rem 0 2rem;
+    text-align: center;
+  }
+  .hero-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+    color: var(--text);
+  }
+  .hero-lead {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 540px;
+    margin: 0 auto 1.75rem;
+    line-height: 1.7;
+  }
+  .hero-links {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .selected-work {
+    padding: 1rem 0 2rem;
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .work-card {
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    background: var(--bg-elevated);
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition);
+  }
+  .work-card:hover {
+    background: var(--bg-inset);
+    text-decoration: none;
+  }
+  .work-card h3 {
+    margin: 0 0 0.35rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .work-card p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  @media (max-width: 720px) {
+    .work-grid {
+      grid-template-columns: 1fr;
+    }
+    .hero {
+      padding: 1.5rem 0 1rem;
+      text-align: left;
+    }
+    .hero-links {
+      justify-content: flex-start;
+    }
+  }
+</style>

@@ -63,6 +63,22 @@
       "links": [
         { "label": "Event Details", "url": "https://www.commudle.com/communities/machine-learning-indore/events/build-with-ai-indore-workshop-2" }
       ]
+    },
+    {
+      "id": "build-with-ai-ips-2025",
+      "title": "Build with AI — GDG on Campus IPS Academy",
+      "description": "Speaker at the Build with AI campus event at IPS Academy Indore, introducing students to Google AI tools including AI Studio, Gemini, and Gemma.",
+      "date": "2025-03-31",
+      "year": "2025",
+      "event": "Build with AI",
+      "org": "GDG on Campus IPS Academy",
+      "venue": "IPS Academy, Indore",
+      "role": "Speaker",
+      "type": "workshop",
+      "tags": ["GDG on Campus", "IPS Academy"],
+      "links": [
+        { "label": "Event Details", "url": "https://gdg.community.dev/events/details/google-gdg-on-campus-ips-academy-indore-india-presents-build-with-ai-1/" }
+      ]
     }
   ]
 }

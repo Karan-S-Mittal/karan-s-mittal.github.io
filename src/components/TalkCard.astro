@@ -26,26 +26,17 @@ const typeLabel: Record<Talk['type'], string> = {
   <h3 class="talk-title">{talk.title}</h3>
   <p class="talk-description">{talk.description}</p>
 
-  <dl class="talk-details">
-    <div class="detail-row">
-      <dt>Event</dt>
-      <dd>{talk.event}</dd>
-    </div>
-    <div class="detail-row">
-      <dt>Organiser</dt>
-      <dd>{talk.org}</dd>
-    </div>
+  <div class="talk-footnote">
+    <span>{talk.event}</span>
+    <span class="sep">·</span>
+    <span>{talk.org}</span>
     {talk.venue && (
-      <div class="detail-row">
-        <dt>Venue</dt>
-        <dd>{talk.venue}</dd>
-      </div>
+      <>
+        <span class="sep">·</span>
+        <span>{talk.venue}</span>
+      </>
     )}
-    <div class="detail-row">
-      <dt>Role</dt>
-      <dd>{talk.role}</dd>
-    </div>
-  </dl>
+  </div>
 
   {talk.tags.length > 0 && (
     <div class="talk-tags">
@@ -58,16 +49,11 @@ const typeLabel: Record<Talk['type'], string> = {
   {talk.links.length > 0 && (
     <div class="talk-links">
       {talk.links.map((link) => (
-        <a
-          href={link.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="talk-link"
-        >
+        <a href={link.url} target="_blank" rel="noopener noreferrer" class="talk-link">
           {link.label}
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M7 17L17 7"></path>
-            <path d="M7 7h10v10"></path>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 17L17 7"/>
+            <path d="M7 7h10v10"/>
           </svg>
         </a>
       ))}
@@ -77,142 +63,117 @@ const typeLabel: Record<Talk['type'], string> = {
 
 <style>
   .talk-card {
-    padding: 1.5rem;
-    border: 1px solid var(--border);
+    padding: 1.25rem;
     border-radius: var(--radius);
-    background: var(--bg);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    background: var(--bg-elevated);
+    transition: var(--transition);
+    border-left: 3px solid transparent;
   }
   .talk-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    border-color: var(--accent-light);
+    background: var(--bg-inset);
+    border-left-color: var(--accent);
   }
 
   .talk-meta {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
     flex-wrap: wrap;
   }
 
   .talk-type {
     display: inline-block;
-    padding: 0.2rem 0.6rem;
-    font-size: 0.7rem;
-    font-weight: 700;
+    padding: 0.12rem 0.45rem;
+    font-size: 0.6rem;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    border-radius: 999px;
-    background: var(--accent-light);
-    color: #fff;
+    border-radius: var(--radius-pill);
+    background: var(--text);
+    color: var(--bg);
   }
   .talk-type[data-type="workshop"] {
-    background: #059669;
+    background: var(--accent);
+    color: #fff;
   }
   .talk-type[data-type="panel"] {
-    background: #7c3aed;
+    background: #8b5cf6;
+    color: #fff;
   }
   .talk-type[data-type="keynote"] {
-    background: #dc2626;
+    background: #ef4444;
+    color: #fff;
   }
 
   time {
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 500;
     color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
   }
 
   .talk-title {
-    margin: 0 0 0.5rem;
-    font-size: 1.15rem;
+    margin: 0 0 0.3rem;
+    font-size: 1rem;
     font-weight: 600;
     line-height: 1.3;
-    color: var(--accent);
+    color: var(--text);
   }
 
   .talk-description {
-    margin: 0 0 1rem;
+    margin: 0 0 0.6rem;
     color: var(--muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 0.88rem;
+    line-height: 1.55;
   }
 
-  .talk-details {
-    margin: 0 0 1rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 0.5rem 1rem;
-  }
-  .detail-row {
+  .talk-footnote {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
     display: flex;
     gap: 0.35rem;
-    align-items: baseline;
+    flex-wrap: wrap;
+    align-items: center;
   }
-  .detail-row dt {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    flex-shrink: 0;
-  }
-  .detail-row dd {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--text);
+  .talk-footnote .sep {
+    color: var(--border);
   }
 
   .talk-tags {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.35rem;
     flex-wrap: wrap;
-    margin-bottom: 1rem;
-  }
-  .tag {
-    padding: 0.3rem 0.65rem;
-    font-size: 0.78rem;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--border);
+    margin-bottom: 0.6rem;
   }
 
   .talk-links {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.6rem;
     flex-wrap: wrap;
   }
   .talk-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    font-size: 0.85rem;
+    gap: 0.2rem;
+    font-size: 0.78rem;
     font-weight: 500;
-    color: var(--link);
+    color: var(--muted);
     text-decoration: none;
-    padding: 0.35rem 0;
-    transition: color 0.2s;
+    transition: var(--transition);
   }
   .talk-link:hover {
-    color: var(--link-hover);
-    text-decoration: underline;
+    color: var(--text);
+    text-decoration: none;
   }
   .talk-link svg {
     flex-shrink: 0;
-    opacity: 0.7;
+    opacity: 0.5;
   }
 
   @media (max-width: 640px) {
     .talk-card {
-      padding: 1.25rem;
-    }
-    .talk-details {
-      grid-template-columns: 1fr;
-      gap: 0.35rem;
+      padding: 1rem;
     }
   }
 </style>
