@@ -47,61 +47,60 @@ import Layout from '../layouts/Layout.astro';
 
 <style>
   .hero {
-    padding: 3rem 0 2rem;
+    padding: var(--space-7) 0 var(--space-5);
     text-align: center;
   }
   .hero-title {
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 1.1;
-    margin-bottom: 1.25rem;
-    color: var(--text);
+    margin-bottom: var(--space-4);
+    color: var(--accent);
   }
   .hero-lead {
-    font-size: 1.1rem;
+    font-size: var(--text-lg);
     color: var(--muted);
     max-width: 540px;
-    margin: 0 auto 1.75rem;
+    margin: 0 auto var(--space-5);
     line-height: 1.7;
   }
   .hero-links {
     display: flex;
-    gap: 0.75rem;
+    gap: var(--space-2);
     justify-content: center;
     flex-wrap: wrap;
   }
 
   .selected-work {
-    padding: 1rem 0 2rem;
+    padding: var(--space-2) 0 var(--space-5);
   }
 
   .work-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    gap: var(--space-4);
   }
   .work-card {
-    padding: 1.5rem;
-    border-radius: var(--radius);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
     background: var(--bg-elevated);
+    border: 1px solid var(--border);
     text-decoration: none;
     color: inherit;
-    transition: var(--transition);
   }
   .work-card:hover {
-    background: var(--bg-inset);
     text-decoration: none;
   }
   .work-card h3 {
-    margin: 0 0 0.35rem;
-    font-size: 0.95rem;
+    margin: 0 0 var(--space-1);
+    font-size: var(--text-sm);
     font-weight: 600;
     color: var(--text);
   }
   .work-card p {
     margin: 0;
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     color: var(--muted);
     line-height: 1.55;
   }
@@ -111,7 +110,7 @@ import Layout from '../layouts/Layout.astro';
       grid-template-columns: 1fr;
     }
     .hero {
-      padding: 1.5rem 0 1rem;
+      padding: var(--space-5) 0 var(--space-4);
       text-align: left;
     }
     .hero-links {

@@ -83,44 +83,41 @@ import Icon from '../components/Icon.astro';
   .now-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: var(--space-4);
   }
   .now-item {
-    padding: 1.5rem;
-    border-radius: var(--radius);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
     background: var(--bg-elevated);
-    transition: var(--transition);
-  }
-  .now-item:hover {
-    background: var(--bg-inset);
+    border: 1px solid var(--border);
   }
   .now-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
   }
   .now-header h3 {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: var(--text-sm);
     font-weight: 600;
     color: var(--text);
   }
   .now-item ul {
     margin: 0;
-    padding-left: 1.1rem;
+    padding-left: var(--space-4);
     color: var(--muted);
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     line-height: 1.65;
   }
   .now-item li {
-    margin-bottom: 0.4rem;
+    margin-bottom: var(--space-1);
   }
 
   .now-footer {
     color: var(--muted);
-    font-size: 0.8rem;
-    margin-top: 3rem;
+    font-size: var(--text-xs);
+    margin-top: var(--space-7);
     text-align: center;
   }
 

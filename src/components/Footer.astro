@@ -14,6 +14,7 @@ const socials = [
       <nav class="footer-nav">
         <a href="/about">About</a>
         <a href="/talks">Talks</a>
+        <a href="/tags">Tags</a>
         <a href="/rss.xml">RSS</a>
       </nav>
     </div>
@@ -61,39 +62,42 @@ const socials = [
   .footer-inner {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 2rem 1.5rem;
+    padding: var(--space-6) var(--space-5);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: var(--space-4);
   }
   .footer-left {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: var(--space-4);
     flex-wrap: wrap;
   }
   .copyright {
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     color: var(--muted);
     margin: 0;
   }
   .footer-nav {
     display: flex;
-    gap: 1rem;
+    gap: var(--space-4);
   }
   .footer-nav a {
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     color: var(--muted);
     text-decoration: none;
+    transition: color var(--transition-fast);
   }
   .footer-nav a:hover {
     color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
   .footer-right {
     display: flex;
-    gap: 0.35rem;
+    gap: var(--space-1);
     align-items: center;
   }
 
@@ -101,8 +105,8 @@ const socials = [
     .footer-inner {
       flex-direction: column;
       align-items: flex-start;
-      gap: 0.75rem;
-      padding: 1.5rem 1.25rem;
+      gap: var(--space-3);
+      padding: var(--space-5) var(--space-4);
     }
   }
 </style>

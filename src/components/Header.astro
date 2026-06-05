@@ -37,7 +37,7 @@ function isActive(href: string) {
     background: rgba(250, 250, 249, 0.8);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    transition: box-shadow 0.3s ease;
+    transition: border-color 0.3s ease;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -49,11 +49,11 @@ function isActive(href: string) {
   .header-inner {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 0.875rem 1.5rem;
+    padding: var(--space-3) var(--space-5);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
+    gap: var(--space-4);
   }
 
   .brand {
@@ -70,33 +70,35 @@ function isActive(href: string) {
 
   .main-nav {
     display: flex;
-    gap: 1.75rem;
+    gap: var(--space-5);
     align-items: center;
   }
   .main-nav a {
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     font-weight: 500;
     color: var(--muted);
     text-decoration: none;
-    padding: 0.25rem 0;
-    transition: var(--transition);
+    padding: var(--space-1) 0;
+    transition: color var(--transition-fast);
   }
   .main-nav a:hover {
     color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
   .main-nav a.active {
     color: var(--text);
   }
 
   .contact-link {
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     font-weight: 500;
     color: var(--muted);
     text-decoration: none;
-    padding: 0.4rem 0.9rem;
+    padding: var(--space-1) var(--space-3);
     border: 1px solid var(--border);
     border-radius: var(--radius-pill);
-    transition: var(--transition);
+    transition: color var(--transition-fast), border-color var(--transition-fast);
   }
   .contact-link:hover {
     color: var(--text);
@@ -106,10 +108,10 @@ function isActive(href: string) {
 
   @media (max-width: 640px) {
     .header-inner {
-      padding: 0.75rem 1.25rem;
+      padding: var(--space-3) var(--space-4);
     }
     .main-nav {
-      gap: 1.25rem;
+      gap: var(--space-4);
     }
     .contact-link {
       display: none;
@@ -117,12 +119,4 @@ function isActive(href: string) {
   }
 </style>
 
-<script is:inline>
-  const header = document.querySelector('header');
-  if (header) {
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 10) header.classList.add('scrolled');
-      else header.classList.remove('scrolled');
-    });
-  }
-</script>
+

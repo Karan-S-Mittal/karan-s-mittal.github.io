@@ -53,33 +53,34 @@ const years = Object.keys(talksByYear).sort((a, b) => Number(b) - Number(a));
   .timeline {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
-    margin-bottom: 4rem;
+    gap: var(--space-6);
+    margin-bottom: var(--space-8);
   }
 
   .cta-section {
-    padding: 2.5rem;
-    border-radius: var(--radius);
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
     background: var(--bg-elevated);
+    border: 1px solid var(--border);
     text-align: center;
   }
   .cta-section h2 {
     margin-top: 0;
-    font-size: 1.15rem;
-    margin-bottom: 0.5rem;
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-2);
   }
   .cta-section p {
     color: var(--muted);
-    margin-bottom: 1.25rem;
+    margin-bottom: var(--space-4);
     max-width: 480px;
     margin-left: auto;
     margin-right: auto;
-    font-size: 0.95rem;
+    font-size: var(--text-sm);
   }
 
   @media (max-width: 640px) {
     .cta-section {
-      padding: 1.5rem;
+      padding: var(--space-5);
     }
   }
 </style>

@@ -1,6 +1,8 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+import { getReadingTime } from '../../utils/readingTime';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -12,10 +14,12 @@ export async function getStaticPaths() {
 
 type Props = CollectionEntry<'blog'>;
 const post = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
 
-const wordCount = post.body.split(/\s+/).filter(Boolean).length;
-const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+const showToc = tocHeadings.length > 2;
+
+const readingTime = getReadingTime(post.body);
 
 const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -30,8 +34,8 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   type="article"
   pubDate={post.data.pubDate}
 >
-  <main class="container">
-    <article>
+  <main class="container post-layout">
+    <article class="post-content">
       <header class="post-header">
         <div class="post-meta">
           <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
@@ -52,53 +56,54 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
         {post.data.tags.length > 0 && (
           <div class="post-tags">
             {post.data.tags.map((tag) => (
-              <span class="tag">{tag}</span>
+              <a href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}/`} class="tag">{tag}</a>
             ))}
           </div>
         )}
       </header>
 
       <Content />
+
+      <footer class="post-footer">
+        <p class="back-link">
+          <a href="/blog">← All posts</a>
+        </p>
+      </footer>
     </article>
 
-    <footer class="post-footer">
-      <p class="share-label">Thanks for reading. If you found this useful, consider sharing it:</p>
-      <div class="share-actions">
-        <a
-          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.data.title)}&url=${encodeURIComponent(Astro.url.toString())}`}
-          target="_blank"
-          rel="noopener"
-          class="btn btn-secondary"
-        >
-          Share on X
-        </a>
-        <a
-          href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.toString())}`}
-          target="_blank"
-          rel="noopener"
-          class="btn btn-secondary"
-        >
-          Share on LinkedIn
-        </a>
-      </div>
-      <p class="back-link">
-        <a href="/blog">← All posts</a>
-      </p>
-    </footer>
+    {showToc && (
+      <aside class="post-sidebar">
+        <TableOfContents headings={tocHeadings} />
+      </aside>
+    )}
   </main>
 </Layout>
 
 <style>
+  .post-layout {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: var(--space-8);
+    max-width: 1080px;
+    align-items: start;
+  }
+  .post-content {
+    min-width: 0;
+  }
+  .post-sidebar {
+    position: relative;
+  }
+
   .post-header {
-    margin-bottom: 2.5rem;
+    margin-bottom: var(--space-6);
   }
   .post-meta {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: var(--space-1);
     flex-wrap: wrap;
-    margin-bottom: 0.75rem;
-    font-size: 0.82rem;
+    margin-bottom: var(--space-3);
+    font-size: var(--text-sm);
     font-weight: 500;
     color: var(--muted);
   }
@@ -110,40 +115,35 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   }
 
   .post-header h1 {
-    margin-bottom: 0.875rem;
+    margin-bottom: var(--space-3);
+    color: var(--accent);
   }
 
   .post-tags {
     display: flex;
-    gap: 0.4rem;
+    gap: var(--space-1);
     flex-wrap: wrap;
   }
 
   .post-footer {
-    margin-top: 4rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border);
-  }
-  .share-label {
-    color: var(--muted);
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-  }
-  .share-actions {
-    display: flex;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.5rem;
-  }
-  .share-actions .btn {
-    font-size: 0.8rem;
-    padding: 0.45rem 0.9rem;
+    margin-top: var(--space-8);
+    padding-top: var(--space-5);
   }
   .back-link {
     margin: 0;
   }
   .back-link a {
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     font-weight: 600;
+  }
+
+  @media (max-width: 960px) {
+    .post-layout {
+      grid-template-columns: 1fr;
+      max-width: var(--max-width);
+    }
+    .post-sidebar {
+      display: none;
+    }
   }
 </style>
