@@ -91,7 +91,9 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     min-width: 0;
   }
   .post-sidebar {
-    position: relative;
+    position: sticky;
+    top: 5rem;
+    align-self: start;
   }
 
   .post-header {
