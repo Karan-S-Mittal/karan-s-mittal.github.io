@@ -1,0 +1,11 @@
+In 1962, a bank manager in Cleveland sat at a mahogany desk with a single-page loan application and a red pen. Three numbers circled on the page told him everything he needed: income, years at current job, balance at his own branch. He weighed them in his mind — not with math, but with memory. The Jones family always paid. The Millers never did. The applicant's handshake last Tuesday was firm. He was the model. His judgment was the algorithm, and it worked because the world was small enough to fit inside one person's head.
+
+Fifty applications per week. That was the number he could carry — the boundary of what one trained mind could pattern-match over coffee and a cigarette. The red pen moved, approving some, declining others, and the system held because the data stayed below the threshold where human intuition starts to fray.
+
+Then the threshold moved.
+
+First it was five hundred, then five thousand, then fifty thousand applications flooding in from a new network of branches. The mahogany desk became a row of Formica tables in a processing center. The red pen became a rubber stamp, then a checkbox on a punch card. The bank manager's gift — the quiet synthesis of income and handshake and rumor into a yes or a no — could not scale. No amount of training could make a human mind consistent across ten thousand decisions a day. The patterns were still there, buried in the numbers, but they had slipped below the surface, too subtle and too numerous for any single person to trace. Something had to take his place.
+
+This is the pattern that will run through everything that follows. Every tool in this story was born from a specific kind of data overwhelming the tool before it — not because the earlier tool was bad, but because the data grew in a direction the tool was never built to reach. The red pen collapsed under volume. The rules that replaced it would collapse under dimensionality. The statistical models that followed would collapse under the raw complexity of images and sound. Each solution planted the seed of its own obsolescence by proving that a problem could be automated, then watching the automated version drown in the data it attracted.
+
+The bank manager did not know he was the first layer. He only knew the applications kept coming.

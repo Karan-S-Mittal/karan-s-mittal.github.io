@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import PageHeader from '../components/PageHeader.astro';
 import YearGroup from '../components/YearGroup.astro';
 import TalkCard from '../components/TalkCard.astro';
 import talksData from '../data/talks.json';
@@ -19,23 +18,54 @@ const talksByYear = sortedTalks.reduce<Record<string, Talk[]>>((acc, talk) => {
 }, {});
 
 const years = Object.keys(talksByYear).sort((a, b) => Number(b) - Number(a));
+const allYears = [...new Set(talks.map((t) => t.year))].sort((a, b) => Number(b) - Number(a));
 ---
 
 <Layout title="Talks | Karan Mittal">
   <main class="container">
-    <PageHeader
-      label="Talks & Workshops"
-      title="Speaking"
-      description="I speak at conferences, meetups, and workshops on AI architecture, GraphRAG, deterministic systems, and MLOps."
-      count={sortedTalks.length}
-      countLabel="events"
-    />
+    <div class="filters">
+      <div class="search-wrap">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="search"
+          id="talk-search"
+          placeholder="Search talks..."
+          aria-label="Search talks"
+          autocomplete="off"
+        />
+      </div>
 
-    <div class="timeline">
+      <div class="year-filter">
+        <select id="year-filter" aria-label="Filter by year">
+          <option value="">All years</option>
+          {allYears.map((year) => (
+            <option value={year}>{year}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+
+    <p id="no-results" class="no-results" style="display: none;">No talks found.</p>
+
+    <div class="timeline" id="talks-timeline">
       {years.map((year) => (
         <YearGroup year={year} count={talksByYear[year].length}>
           {talksByYear[year].map((talk) => (
-            <TalkCard talk={talk} />
+            <TalkCard
+              talk={talk}
+              searchText={[
+                talk.title,
+                talk.description,
+                talk.event,
+                talk.org,
+                talk.venue,
+                talk.type,
+                ...talk.tags,
+              ].join(' ').toLowerCase()}
+            />
           ))}
         </YearGroup>
       ))}
@@ -49,11 +79,115 @@ const years = Object.keys(talksByYear).sort((a, b) => Number(b) - Number(a));
   </main>
 </Layout>
 
+<script>
+  const searchInput = document.getElementById('talk-search');
+  const yearSelect = document.getElementById('year-filter');
+  const talks = document.querySelectorAll('.talk-card');
+  const yearGroups = document.querySelectorAll('.year-group');
+  const noResults = document.getElementById('no-results');
+
+  function filterTalks() {
+    const query = (searchInput as HTMLInputElement)?.value.toLowerCase().trim() || '';
+    const selectedYear = (yearSelect as HTMLSelectElement)?.value || '';
+    let visibleCount = 0;
+
+    talks.forEach((talk) => {
+      const text = (talk as HTMLElement).dataset.search || '';
+      const year = (talk as HTMLElement).dataset.year || '';
+      const matchesQuery = !query || text.includes(query);
+      const matchesYear = !selectedYear || year === selectedYear;
+      const match = matchesQuery && matchesYear;
+      (talk as HTMLElement).style.display = match ? '' : 'none';
+      if (match) visibleCount++;
+    });
+
+    yearGroups.forEach((group) => {
+      const visibleTalks = group.querySelectorAll('.talk-card');
+      let hasVisible = false;
+      visibleTalks.forEach((t) => {
+        if ((t as HTMLElement).style.display !== 'none') hasVisible = true;
+      });
+      (group as HTMLElement).style.display = hasVisible ? '' : 'none';
+    });
+
+    if (noResults) {
+      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+  }
+
+  searchInput?.addEventListener('input', filterTalks);
+  yearSelect?.addEventListener('change', filterTalks);
+</script>
+
 <style>
+  .filters {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 400px;
+  }
+  .search-wrap .search-icon {
+    position: absolute;
+    left: var(--space-3);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .search-wrap input {
+    width: 100%;
+    padding: var(--space-2) var(--space-3) var(--space-2) var(--space-8);
+    font-size: var(--text-sm);
+    font-family: var(--font-sans);
+    color: var(--text);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .search-wrap input::placeholder {
+    color: var(--muted);
+  }
+  .search-wrap input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-subtle);
+  }
+
+  .year-filter select {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+    font-family: var(--font-sans);
+    color: var(--text);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    outline: none;
+    cursor: pointer;
+    transition: border-color var(--transition-fast);
+  }
+  .year-filter select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-subtle);
+  }
+
+  .no-results {
+    color: var(--muted);
+    font-size: var(--text-base);
+    margin: var(--space-4) 0;
+  }
+
   .timeline {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
     margin-bottom: var(--space-8);
   }
 
@@ -79,6 +213,13 @@ const years = Object.keys(talksByYear).sort((a, b) => Number(b) - Number(a));
   }
 
   @media (max-width: 640px) {
+    .filters {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .search-wrap {
+      max-width: none;
+    }
     .cta-section {
       padding: var(--space-5);
     }

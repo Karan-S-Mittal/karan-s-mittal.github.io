@@ -1,0 +1,22 @@
+[
+  {
+    "name": "AI Architecture",
+    "slug": "ai-architecture",
+    "aliases": []
+  },
+  {
+    "name": "GraphRAG",
+    "slug": "graphrag",
+    "aliases": []
+  },
+  {
+    "name": "MLOps",
+    "slug": "mlops",
+    "aliases": []
+  },
+  {
+    "name": "RAG",
+    "slug": "rag",
+    "aliases": []
+  }
+]

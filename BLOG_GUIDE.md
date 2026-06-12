@@ -4,7 +4,17 @@ A quick reference for writing posts on this Astro blog.
 
 ---
 
-## Creating a New Post
+## Creating a New Post (Quick)
+
+Run the scaffold command and follow the prompts:
+
+```bash
+npm run new
+```
+
+This creates a new post file with correct frontmatter and opens it in VS Code.
+
+## Creating a New Post (Manual)
 
 1. Create a file in `src/content/blog/`
 2. Use `.md` for plain Markdown or `.mdx` if you need components/images
@@ -147,6 +157,35 @@ Regular markdown still works below.
 
 ---
 
+## Auto-Tagging
+
+Any word in your post body that matches an existing tag is automatically linked to that tag's archive page. For example, typing `GraphRAG` in a paragraph becomes a link to `/tags/graphrag/`.
+
+**What gets linked:**
+- Tag names in paragraph text (case-insensitive)
+- Aliases you define in `src/data/autoTags.json`
+
+**What does NOT get linked:**
+- Text inside code blocks or inline code
+- Text inside existing links
+- Text inside headings
+
+### Adding Tag Aliases
+
+Edit `src/data/autoTags.json` to add aliases:
+
+```json
+{
+  "name": "GraphRAG",
+  "slug": "graphrag",
+  "aliases": ["Graph RAG", "graph rag"]
+}
+```
+
+Then run `npm run sync-tags` to ensure the dictionary is up to date.
+
+---
+
 ## Tips
 
 - **Tags**: Use consistent casing. `"GraphRAG"` not `"graphrag"`.
@@ -174,6 +213,12 @@ src/content/blog/
 ```bash
 # Preview locally
 npm run dev
+
+# Regenerate tag dictionary from frontmatter
+npm run sync-tags
+
+# Scaffold a new post (opens in VS Code)
+npm run new
 
 # Build static site
 npm run build

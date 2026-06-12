@@ -4,14 +4,14 @@ import { getCollection } from 'astro:content';
 export async function GET(context) {
   const posts = await getCollection('blog');
   return rss({
-    title: 'Karan Mittal | Technical Writing',
+    title: 'Karan Mittal | Blog',
     description: 'Deterministic AI, GraphRAG, and High-Performance Systems.',
     site: context.site,
     items: posts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.pubDate,
       description: post.data.description,
-      link: `/blog/${post.slug}/`,
+      link: `/blog/${post.id}/`,
     })),
   });
 }

@@ -419,3 +419,18 @@ hr {
 header.scrolled {
   border-bottom-color: var(--border);
 }
+
+/* ================================================================
+   Auto-tag links (inline keyword linking)
+   ================================================================ */
+
+a.auto-tag {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--accent);
+  transition: border-bottom-style var(--transition-fast);
+}
+a.auto-tag:hover {
+  border-bottom-style: solid;
+  text-decoration: none;
+}
