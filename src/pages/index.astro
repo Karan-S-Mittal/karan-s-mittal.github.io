@@ -1,8 +1,57 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import fallbackProjects from '../data/projects.json';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+interface Project {
+  name: string;
+  description: string;
+  meta: string;
+  url: string;
+}
+
+interface GitHubRepo {
+  name: string;
+  description: string | null;
+  language: string | null;
+  stargazers_count: number;
+  html_url: string;
+  fork: boolean;
+}
+
+let projects: Project[] = fallbackProjects;
+try {
+  const res = await fetch(
+    'https://api.github.com/users/Karan-S-Mittal/repos?per_page=100&sort=updated'
+  );
+  if (res.ok) {
+    const repos = (await res.json()) as GitHubRepo[];
+    const top = repos
+      .filter(r => !r.fork)
+      .sort((a, b) => b.stargazers_count - a.stargazers_count)
+      .slice(0, 2)
+      .map(r => ({
+        name: r.name,
+        description: r.description ?? 'No description yet.',
+        meta: [r.language, `★ ${r.stargazers_count}`].filter(Boolean).join(' · '),
+        url: r.html_url,
+      }));
+    if (top.length > 0) projects = top;
+  }
+} catch {
+  // Offline or rate-limited build — keep JSON fallback.
+}
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
 ---
 
-<Layout title="Karan Mittal | Solutions Architect">
+<Layout title="Karan Mittal | AI Systems Architect">
   <main class="container">
 
     <section class="hero">
@@ -10,11 +59,20 @@ import Layout from '../layouts/Layout.astro';
         Building deterministic,<br />high-performance AI systems.
       </h1>
       <p class="hero-lead">
-        I architect enterprise-scale systems where reliability is the foundation.
-        Co-founder of <a href="https://dextar.co">Dextar</a>, organiser of
-        <a href="/about#community">MLIndore</a> and <a href="/about#community">GDG Cloud Indore</a>,
-        and a technical leader who has shipped across life sciences, semiconductor supply chains, and finance.
+        I'm an AI Systems Architect and co-founder of <a href="https://dextar.co">Dextar</a>,
+        where we build production-ready AI systems that actually ship — knowledge engines,
+        deterministic retrieval, and the infrastructure behind them. I also organise
+        <a href="/about#community">MLIndore</a> and <a href="/about#community">GDG Cloud Indore</a>.
       </p>
+      <div class="callout status-line">
+        <span>AI Systems Architect</span>
+        <span class="status-sep" aria-hidden="true">·</span>
+        <span>Co-founder, Dextar</span>
+        <span class="status-sep" aria-hidden="true">·</span>
+        <span>Indore, IN</span>
+        <span class="status-sep" aria-hidden="true">·</span>
+        <span>Open to talks &amp; collabs</span>
+      </div>
       <div class="hero-links">
         <a href="https://www.linkedin.com/in/karansmittal/" class="btn btn-primary">LinkedIn</a>
         <a href="https://twitter.com/KaranSMittal" class="btn btn-secondary">X / Twitter</a>
@@ -24,21 +82,36 @@ import Layout from '../layouts/Layout.astro';
 
     <hr />
 
-    <section class="selected-work">
-      <p class="label">Selected Work</p>
-      <div class="work-grid">
-        <a href="https://github.com/Karan-S-Mittal" class="work-card">
-          <h3>GitHub</h3>
-          <p>Architectural projects and open-source work on deterministic RAG, CUDA patterns, and MLOps tooling.</p>
-        </a>
-        <a href="/blog" class="work-card">
-          <h3>Blog</h3>
-          <p>Essays on GraphRAG, deterministic retrieval, and lessons from production AI systems.</p>
-        </a>
-        <a href="/talks" class="work-card">
-          <h3>Talks</h3>
-          <p>Workshops and sessions on AI architecture, MLOps, and building production-scale systems.</p>
-        </a>
+    <section class="home-section">
+      <p class="label"><span class="label-num">01</span>Writing</p>
+      <div class="writing-list">
+        {posts.map(post => (
+          <a href={`/blog/${post.id}/`} class="writing-row">
+            <time class="writing-date" datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate)}
+            </time>
+            <span class="writing-body">
+              <span class="writing-title">{post.data.title}</span>
+              <span class="writing-desc">{post.data.description}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+      <a href="/blog" class="section-more">All posts →</a>
+    </section>
+
+    <hr />
+
+    <section class="home-section">
+      <p class="label"><span class="label-num">02</span>Projects</p>
+      <div class="project-grid">
+        {projects.map(project => (
+          <a href={project.url} target="_blank" rel="noopener" class="project-card">
+            <h3 class="project-name">{project.name}</h3>
+            <p class="project-desc">{project.description}</p>
+            <p class="project-meta">{project.meta}</p>
+          </a>
+        ))}
       </div>
     </section>
 
@@ -51,19 +124,37 @@ import Layout from '../layouts/Layout.astro';
     text-align: center;
   }
   .hero-title {
+    font-family: var(--font-serif);
     font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
-    font-weight: 700;
-    letter-spacing: -0.03em;
+    font-weight: 600;
+    letter-spacing: -0.02em;
     line-height: 1.1;
     margin-bottom: var(--space-4);
-    color: var(--accent);
+    color: var(--text);
   }
   .hero-lead {
     font-size: var(--text-lg);
     color: var(--muted);
     max-width: 540px;
-    margin: 0 auto var(--space-5);
+    margin: 0 auto var(--space-4);
     line-height: 1.7;
+  }
+  .status-line {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto var(--space-5);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    text-align: left;
+  }
+  .status-sep {
+    color: var(--accent);
   }
   .hero-links {
     display: flex;
@@ -72,49 +163,144 @@ import Layout from '../layouts/Layout.astro';
     flex-wrap: wrap;
   }
 
-  .selected-work {
+  .home-section {
     padding: var(--space-2) 0 var(--space-5);
   }
 
-  .work-grid {
+  .section-more {
+    display: inline-block;
+    margin-top: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .section-more:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Writing — editorial index rows */
+  .writing-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .writing-row {
+    display: flex;
+    gap: var(--space-4);
+    align-items: baseline;
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--border-subtle);
+    text-decoration: none;
+    color: inherit;
+  }
+  .writing-row:last-child {
+    border-bottom: none;
+  }
+  .writing-row:hover {
+    text-decoration: none;
+  }
+  .writing-row:hover .writing-title {
+    color: var(--accent);
+  }
+  .writing-date {
+    flex-shrink: 0;
+    width: 6.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--muted);
+  }
+  .writing-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+  .writing-title {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text);
+    transition: color var(--transition-fast);
+  }
+  .writing-desc {
+    font-size: var(--text-sm);
+    color: var(--muted);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Projects */
+  .project-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-4);
   }
-  .work-card {
+  .project-card {
     padding: var(--space-5);
     border-radius: var(--radius-lg);
     background: var(--bg-elevated);
     border: 1px solid var(--border);
     text-decoration: none;
     color: inherit;
+    transition: border-color var(--transition-fast);
   }
-  .work-card:hover {
+  .project-card:hover {
     text-decoration: none;
+    border-color: var(--muted);
   }
-  .work-card h3 {
+  .project-name {
     margin: 0 0 var(--space-1);
-    font-size: var(--text-sm);
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
     font-weight: 600;
     color: var(--text);
+    overflow-wrap: break-word;
   }
-  .work-card p {
-    margin: 0;
+  .project-desc {
+    margin: 0 0 var(--space-3);
     font-size: var(--text-sm);
     color: var(--muted);
     line-height: 1.55;
   }
+  .project-meta {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--muted);
+  }
 
   @media (max-width: 720px) {
-    .work-grid {
+    .project-grid {
       grid-template-columns: 1fr;
     }
     .hero {
       padding: var(--space-5) 0 var(--space-4);
       text-align: left;
     }
+    .hero-title {
+      font-size: var(--text-2xl);
+    }
+    .hero-lead {
+      margin-left: 0;
+    }
+    .status-line {
+      margin-left: 0;
+      justify-content: flex-start;
+    }
     .hero-links {
       justify-content: flex-start;
+    }
+    .writing-row {
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+    .writing-date {
+      width: auto;
     }
   }
 </style>

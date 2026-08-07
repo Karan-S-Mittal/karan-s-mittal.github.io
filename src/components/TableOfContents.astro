@@ -52,11 +52,12 @@ const { headings } = Astro.props;
   }
 
   .toc-title {
+    font-family: var(--font-mono);
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 500;
     color: var(--muted);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     margin: 0;
   }
 
@@ -88,7 +89,7 @@ const { headings } = Astro.props;
   .toc-link {
     display: block;
     font-size: var(--text-xs);
-    font-weight: 500;
+    font-weight: 400;
     color: var(--muted);
     text-decoration: none;
     padding: var(--space-1) 0;

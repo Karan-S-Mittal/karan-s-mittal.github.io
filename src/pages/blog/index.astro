@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
 import YearGroup from '../../components/YearGroup.astro';
 import BlogPostCard from '../../components/BlogPostCard.astro';
 
@@ -22,7 +23,9 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
 
 <Layout title="Blog | Karan Mittal">
   <main class="container">
-    <div class="search-wrap">
+    <PageHeader label="Blog" title="Writing" />
+
+    <div class="search-wrap blog-search">
       <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -38,7 +41,7 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
 
     <p id="no-results" class="no-results" style="display: none;">No posts found.</p>
 
-    <div class="timeline" id="blog-timeline">
+    <div class="archive-list" id="blog-timeline">
       {years.map((year) => (
         <YearGroup year={year} count={postsByYear[year].length}>
           {postsByYear[year].map((post) => (
@@ -92,48 +95,8 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
 </script>
 
 <style>
-  .search-wrap {
-    position: relative;
-    margin-bottom: var(--space-6);
-  }
-  .search-wrap .search-icon {
-    position: absolute;
-    left: var(--space-3);
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--muted);
-    pointer-events: none;
-  }
-  .search-wrap input {
-    width: 100%;
+  .blog-search {
     max-width: 400px;
-    padding: var(--space-2) var(--space-3) var(--space-2) var(--space-8);
-    font-size: var(--text-sm);
-    font-family: var(--font-sans);
-    color: var(--text);
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    outline: none;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-  }
-  .search-wrap input::placeholder {
-    color: var(--muted);
-  }
-  .search-wrap input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px var(--accent-subtle);
-  }
-
-  .no-results {
-    color: var(--muted);
-    font-size: var(--text-base);
-    margin: var(--space-4) 0;
-  }
-
-  .timeline {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
+    margin-bottom: var(--space-6);
   }
 </style>

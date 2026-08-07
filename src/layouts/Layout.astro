@@ -11,7 +11,7 @@ interface Props {
 }
 const { 
   title, 
-  description = "Karan Mittal — Solutions Architect & AI Systems Leader",
+  description = "Karan Mittal — AI Systems Architect, Co-founder of Dextar",
   image = "https://karan-s-mittal.github.io/profile.jpg",
   type = "website",
   pubDate,
@@ -25,6 +25,15 @@ const rssUrl = new URL('/rss.xml', Astro.site).toString();
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fafaf9" />
+  <script is:inline>
+    (function () {
+      var theme = localStorage.getItem('theme') || 'light';
+      document.documentElement.dataset.theme = theme;
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', theme === 'dark' ? '#0c0a09' : '#fafaf9');
+    })();
+  </script>
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalURL} />

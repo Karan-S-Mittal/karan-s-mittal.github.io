@@ -2,15 +2,16 @@
 interface Props {
   year: string;
   count: number;
+  unit?: string;
 }
 
-const { year, count } = Astro.props;
+const { year, count, unit = 'post' } = Astro.props;
 ---
 
 <section class="year-group" aria-labelledby={`year-${year}`}>
   <div class="year-header">
     <h2 id={`year-${year}`} class="year-label">{year}</h2>
-    <span class="year-count" aria-hidden="true">{count} post{count === 1 ? '' : 's'}</span>
+    <span class="year-count" aria-hidden="true">{count} {unit}{count === 1 ? '' : 's'}</span>
   </div>
   <div class="year-content">
     <slot />
@@ -33,11 +34,12 @@ const { year, count } = Astro.props;
 
   .year-label {
     margin: 0;
+    font-family: var(--font-mono);
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: 500;
     color: var(--muted);
     line-height: 1;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.08em;
   }
 
   .year-count {

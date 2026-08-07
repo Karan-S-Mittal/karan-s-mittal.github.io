@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Open Source",
+    "description": "Architectural projects and experiments on deterministic RAG, CUDA patterns, and MLOps tooling.",
+    "meta": "GitHub",
+    "url": "https://github.com/Karan-S-Mittal?tab=repositories"
+  },
+  {
+    "name": "This Site",
+    "description": "The source for karan-s-mittal.github.io — Astro, content collections, zero frameworks shipped to the browser.",
+    "meta": "Astro",
+    "url": "https://github.com/Karan-S-Mittal/karan-s-mittal.github.io"
+  }
+]

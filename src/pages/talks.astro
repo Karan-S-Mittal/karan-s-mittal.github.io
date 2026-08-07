@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
 import YearGroup from '../components/YearGroup.astro';
 import TalkCard from '../components/TalkCard.astro';
 import talksData from '../data/talks.json';
@@ -23,6 +24,8 @@ const allYears = [...new Set(talks.map((t) => t.year))].sort((a, b) => Number(b)
 
 <Layout title="Talks | Karan Mittal">
   <main class="container">
+    <PageHeader label="Talks" title="Talks & Workshops" />
+
     <div class="filters">
       <div class="search-wrap">
         <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -50,9 +53,9 @@ const allYears = [...new Set(talks.map((t) => t.year))].sort((a, b) => Number(b)
 
     <p id="no-results" class="no-results" style="display: none;">No talks found.</p>
 
-    <div class="timeline" id="talks-timeline">
+    <div class="archive-list" id="talks-timeline">
       {years.map((year) => (
-        <YearGroup year={year} count={talksByYear[year].length}>
+        <YearGroup year={year} count={talksByYear[year].length} unit="talk">
           {talksByYear[year].map((talk) => (
             <TalkCard
               talk={talk}
@@ -127,39 +130,10 @@ const allYears = [...new Set(talks.map((t) => t.year))].sort((a, b) => Number(b)
     margin-bottom: var(--space-6);
     flex-wrap: wrap;
   }
-
-  .search-wrap {
-    position: relative;
+  .filters .search-wrap {
     flex: 1;
     min-width: 200px;
     max-width: 400px;
-  }
-  .search-wrap .search-icon {
-    position: absolute;
-    left: var(--space-3);
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--muted);
-    pointer-events: none;
-  }
-  .search-wrap input {
-    width: 100%;
-    padding: var(--space-2) var(--space-3) var(--space-2) var(--space-8);
-    font-size: var(--text-sm);
-    font-family: var(--font-sans);
-    color: var(--text);
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    outline: none;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-  }
-  .search-wrap input::placeholder {
-    color: var(--muted);
-  }
-  .search-wrap input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px var(--accent-subtle);
   }
 
   .year-filter select {
@@ -177,18 +151,6 @@ const allYears = [...new Set(talks.map((t) => t.year))].sort((a, b) => Number(b)
   .year-filter select:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 2px var(--accent-subtle);
-  }
-
-  .no-results {
-    color: var(--muted);
-    font-size: var(--text-base);
-    margin: var(--space-4) 0;
-  }
-
-  .timeline {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: var(--space-8);
   }
 
   .cta-section {
@@ -217,7 +179,7 @@ const allYears = [...new Set(talks.map((t) => t.year))].sort((a, b) => Number(b)
       flex-direction: column;
       align-items: stretch;
     }
-    .search-wrap {
+    .filters .search-wrap {
       max-width: none;
     }
     .cta-section {

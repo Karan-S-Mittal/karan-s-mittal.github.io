@@ -186,6 +186,17 @@ Then run `npm run sync-tags` to ensure the dictionary is up to date.
 
 ---
 
+## Design System
+
+Posts render inside the site's graph-paper notebook theme:
+
+- **Headings** (`#`–`##`) are set in Fraunces (serif); body text is Inter; dates/labels use the mono voice.
+- **Callouts**: wrap a note in `<div class="callout">…</div>` (MDX, or raw HTML in `.md`) for an accent-left-border panel.
+- **Blockquotes** render as accent-bordered pull quotes — use them for the one claim you want remembered.
+- The site has light/dark themes; never hardcode colours in post content or inline styles.
+
+---
+
 ## Tips
 
 - **Tags**: Use consistent casing. `"GraphRAG"` not `"graphrag"`.
