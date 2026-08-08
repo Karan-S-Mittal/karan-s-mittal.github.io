@@ -1,0 +1,31 @@
+{
+  "work": [
+    {
+      "id": "knowledge-systems",
+      "eyebrow": "Knowledge systems",
+      "title": "Making retrieval explainable before making it clever",
+      "summary": "Designing deterministic retrieval layers for organisations whose most important knowledge is fragmented across documents, systems, and teams.",
+      "context": "Enterprise information work breaks down when sources are inconsistent, provenance is unclear, and an answer cannot be inspected. The engineering task is to create a dependable path from source material to a useful, attributable response.",
+      "focus": ["retrieval contracts and source boundaries", "graph-aware discovery and ranking", "evaluation gates, provenance, and failure analysis"],
+      "flow": ["Source systems", "Normalise & index", "Retrieve with evidence", "Evaluate & deliver"]
+    },
+    {
+      "id": "performance-systems",
+      "eyebrow": "Performance systems",
+      "title": "Treating inference performance as an architecture problem",
+      "summary": "Engineering the path between a model and a dependable user experience: latency, throughput, cost, hardware, and operational constraints together.",
+      "context": "Performance is rarely solved by a single model swap. It comes from making the full system observable, choosing the right execution boundary, and designing for the constraints that production actually imposes.",
+      "focus": ["low-latency inference paths", "model and hardware trade-off analysis", "measurement, tuning, and operational guardrails"],
+      "flow": ["Workload", "Profile constraints", "Optimise execution", "Observe in production"]
+    },
+    {
+      "id": "delivery-systems",
+      "eyebrow": "Delivery systems",
+      "title": "Turning ambiguous data problems into buildable systems",
+      "summary": "Architecting data and AI work across high-consequence domains, where reliability, auditability, and team alignment matter as much as capability.",
+      "context": "The hard part is often not selecting a tool. It is translating an unclear business problem into system boundaries, operating assumptions, and an execution plan that a team can own after delivery.",
+      "focus": ["architecture decisions that survive handover", "production MLOps and cloud-native foundations", "technical strategy across engineering and stakeholders"],
+      "flow": ["Frame the problem", "Set system boundaries", "Build & validate", "Hand over & evolve"]
+    }
+  ]
+}

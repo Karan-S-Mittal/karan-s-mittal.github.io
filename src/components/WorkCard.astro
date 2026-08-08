@@ -1,0 +1,96 @@
+---
+interface WorkItem {
+  id: string;
+  eyebrow: string;
+  title: string;
+  summary: string;
+  context?: string;
+  focus?: string[];
+  flow?: string[];
+}
+
+interface Props {
+  item: WorkItem;
+  detailed?: boolean;
+}
+
+const { item, detailed = false } = Astro.props;
+---
+
+<article class:list={['work-card', { detailed }]}>
+  <div class="work-card-copy">
+    <p class="eyebrow">{item.eyebrow}</p>
+    <h2>{item.title}</h2>
+    <p class="summary">{item.summary}</p>
+    {detailed && item.context && <p class="context">{item.context}</p>}
+  </div>
+
+  {detailed && item.focus && (
+    <div class="detail-grid">
+      <div>
+        <p class="detail-label">Design focus</p>
+        <ul>
+          {item.focus.map((point) => <li>{point}</li>)}
+        </ul>
+      </div>
+      {item.flow && (
+        <div>
+          <p class="detail-label">System lens</p>
+          <ol class="system-flow">
+            {item.flow.map((step, index) => <li><span>{String(index + 1).padStart(2, '0')}</span>{step}</li>)}
+          </ol>
+        </div>
+      )}
+    </div>
+  )}
+</article>
+
+<style>
+  .work-card {
+    padding: var(--space-5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-elevated);
+  }
+  .work-card.detailed {
+    padding: var(--space-6);
+    background: color-mix(in srgb, var(--bg-elevated) 88%, var(--accent-subtle));
+  }
+  .eyebrow, .detail-label {
+    margin: 0 0 var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  h2 {
+    margin: 0 0 var(--space-2);
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    line-height: 1.25;
+  }
+  .summary, .context { margin: 0; color: var(--muted); line-height: 1.65; }
+  .context { margin-top: var(--space-4); color: var(--text-secondary); }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+  .detail-label { color: var(--muted); }
+  ul, .system-flow { margin: 0; padding: 0; list-style: none; }
+  ul { display: grid; gap: var(--space-2); }
+  ul li { color: var(--text-secondary); font-size: var(--text-sm); line-height: 1.5; padding-left: var(--space-3); position: relative; }
+  ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+  .system-flow { display: grid; gap: var(--space-2); }
+  .system-flow li { display: flex; align-items: baseline; gap: var(--space-2); color: var(--text-secondary); font-size: var(--text-sm); }
+  .system-flow span { color: var(--accent); font-family: var(--font-mono); font-size: var(--text-xs); }
+  @media (max-width: 640px) {
+    .work-card.detailed { padding: var(--space-5); }
+    .detail-grid { grid-template-columns: 1fr; gap: var(--space-5); }
+  }
+</style>

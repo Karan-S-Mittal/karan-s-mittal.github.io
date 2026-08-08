@@ -1,0 +1,111 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+
+const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1';
+---
+
+<Layout
+  title="Start a Conversation | Karan Mittal"
+  description="Start a consulting, collaboration, or technical conversation with Karan Mittal."
+>
+  <main class="container">
+    <PageHeader
+      label="Contact"
+      title="Bring the difficult system question."
+      description="Tell me what needs to be dependable, where the uncertainty is, and what constraints matter."
+    />
+
+    <div class="contact-layout">
+      <aside class="contact-aside">
+        <div class="aside-block">
+          <p class="aside-label">A useful first note</p>
+          <p>There is no need for a formal brief. A few honest sentences about the system, the friction, and the stakes are enough to start.</p>
+        </div>
+        <div class="aside-block">
+          <p class="aside-label">What this is for</p>
+          <ul>
+            <li>Consulting on complex data and AI systems</li>
+            <li>Architecture, reliability, and performance questions</li>
+            <li>Collaboration and technical opportunities</li>
+          </ul>
+        </div>
+        <div class="aside-block quiet-route">
+          <p class="aside-label">Prefer a lighter path?</p>
+          <a href="https://www.linkedin.com/in/karansmittal/" target="_blank" rel="noopener">Connect on LinkedIn ↗</a>
+          <a href="mailto:karanshyammittal@gmail.com">Send a concise email ↗</a>
+        </div>
+      </aside>
+
+      <section class="form-panel" aria-label="Engineering conversation form">
+        <div class="form-panel-head">
+          <p class="form-kicker">Project brief</p>
+          <p>Submitted messages arrive directly in my inbox. Please don’t include credentials, customer data, or confidential documents.</p>
+        </div>
+        <iframe
+          data-tally-src={tallyEmbedUrl}
+          loading="lazy"
+          width="100%"
+          height="220"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0"
+          title="Start an engineering conversation with Karan Mittal"
+        ></iframe>
+      </section>
+    </div>
+    <script is:inline>
+      var documentRef = document;
+      var tallyScript = 'https://tally.so/widgets/embed.js';
+      var loadTallyEmbeds = function () {
+        if (typeof Tally !== 'undefined') {
+          Tally.loadEmbeds();
+          return;
+        }
+        documentRef.querySelectorAll('iframe[data-tally-src]:not([src])').forEach(function (iframe) {
+          iframe.src = iframe.dataset.tallySrc;
+        });
+      };
+
+      if (typeof Tally !== 'undefined') {
+        loadTallyEmbeds();
+      } else if (documentRef.querySelector('script[src="' + tallyScript + '"]') === null) {
+        var script = documentRef.createElement('script');
+        script.src = tallyScript;
+        script.onload = loadTallyEmbeds;
+        script.onerror = loadTallyEmbeds;
+        documentRef.body.appendChild(script);
+      }
+    </script>
+  </main>
+</Layout>
+
+<style>
+  .contact-layout { display: grid; grid-template-columns: 0.64fr minmax(0, 1.36fr); gap: var(--space-7); align-items: start; }
+  .contact-aside { display: grid; gap: var(--space-5); padding-top: var(--space-3); }
+  .aside-block { padding-bottom: var(--space-5); border-bottom: 1px solid var(--border); }
+  .aside-label, .form-kicker { margin: 0 0 var(--space-2); font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+  .aside-block p:not(.aside-label) { margin: 0; color: var(--muted); font-size: var(--text-sm); line-height: 1.65; }
+  .aside-block ul { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+  .aside-block li { position: relative; padding-left: var(--space-3); color: var(--muted); font-size: var(--text-sm); line-height: 1.5; }
+  .aside-block li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+  .quiet-route { display: grid; gap: var(--space-2); border-bottom: 0; }
+  .quiet-route a { width: fit-content; color: var(--muted); font-size: var(--text-sm); }
+  .quiet-route a:hover { color: var(--text); }
+  .form-panel { min-height: 620px; padding: var(--space-6); border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--bg-elevated); }
+  .form-panel-head { max-width: 540px; margin-bottom: var(--space-3); }
+  .form-panel-head p:not(.form-kicker) { margin: 0; color: var(--muted); font-size: var(--text-sm); line-height: 1.55; }
+  .form-panel iframe { display: block; border: 0; }
+  @media (max-width: 720px) {
+    .contact-layout { grid-template-columns: 1fr; gap: var(--space-5); }
+    .contact-aside { grid-template-columns: repeat(3, 1fr); gap: var(--space-3); padding-top: 0; }
+    .aside-block { padding-bottom: 0; border-bottom: 0; }
+    .form-panel { min-height: 600px; padding: var(--space-5); }
+  }
+  @media (max-width: 540px) {
+    .contact-aside { grid-template-columns: 1fr; gap: var(--space-4); }
+    .aside-block { padding-bottom: var(--space-4); border-bottom: 1px solid var(--border); }
+    .quiet-route { border-bottom: 0; padding-bottom: 0; }
+    .form-panel { margin: 0 calc(var(--space-3) * -1); padding: var(--space-4); border-radius: var(--radius); }
+  }
+</style>

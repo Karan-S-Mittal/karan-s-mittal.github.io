@@ -2,10 +2,10 @@
 const currentPath = Astro.url.pathname;
 
 const nav = [
+  { href: '/work', label: 'Work' },
+  { href: '/blog', label: 'Ideas' },
+  { href: '/about#community', label: 'Community' },
   { href: '/about', label: 'About' },
-  { href: '/now', label: 'Now' },
-  { href: '/talks', label: 'Talks' },
-  { href: '/blog', label: 'Blog' },
 ];
 
 function isActive(href: string) {
@@ -16,7 +16,7 @@ function isActive(href: string) {
 
 <header>
   <div class="header-inner">
-    <a href="/" class="brand">Karan Mittal</a>
+    <a href="/" class="brand">Karan Mittal<span class="brand-mark">.</span></a>
     <nav class="main-nav">
       {nav.map(item => (
         <a href={item.href} class={isActive(item.href) ? 'active' : ''}>
@@ -41,7 +41,7 @@ function isActive(href: string) {
           <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
         </svg>
       </button>
-      <a href="mailto:karanshyammittal@gmail.com" class="contact-link">Contact</a>
+      <a href="/contact" class="contact-link">Contact</a>
     </div>
   </div>
 </header>
@@ -100,10 +100,11 @@ function isActive(href: string) {
     color: var(--muted);
     text-decoration: none;
   }
+  .brand-mark { color: var(--accent); }
 
   .main-nav {
     display: flex;
-    gap: var(--space-5);
+    gap: var(--space-4);
     align-items: center;
   }
   .main-nav a {
@@ -179,7 +180,16 @@ function isActive(href: string) {
       font-size: 0.95rem;
     }
     .main-nav {
-      gap: var(--space-3);
+      gap: var(--space-2);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .main-nav::-webkit-scrollbar {
+      display: none;
+    }
+    .main-nav a {
+      font-size: 0.65rem;
+      white-space: nowrap;
     }
     .contact-link {
       display: none;

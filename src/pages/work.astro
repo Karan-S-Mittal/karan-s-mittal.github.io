@@ -1,0 +1,72 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import WorkCard from '../components/WorkCard.astro';
+import workData from '../data/work.json';
+
+const { work } = workData;
+---
+
+<Layout
+  title="Selected Work | Karan Mittal"
+  description="How Karan Mittal approaches deterministic engineering for complex data and AI systems."
+>
+  <main class="container">
+    <PageHeader
+      label="Selected work"
+      title="Complex systems deserve deterministic engineering."
+      description="Representative system challenges and the engineering lenses I use to make them dependable. Client and implementation detail remain confidential."
+    />
+
+    <div class="principle">
+      <span aria-hidden="true">↳</span>
+      <p>Reliability is not a feature added at the end. It is a set of explicit choices about evidence, constraints, failure modes, and ownership.</p>
+    </div>
+
+    <div class="work-list">
+      {work.map((item) => <WorkCard item={item} detailed />)}
+    </div>
+
+    <section class="engagement">
+      <div>
+        <p class="label">Consulting</p>
+        <h2>Bring the difficult system question.</h2>
+        <p>I work with teams navigating knowledge systems, AI reliability, performance constraints, and the transition from prototype to production.</p>
+      </div>
+      <a href="/contact" class="btn btn-primary">Discuss an engagement</a>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .principle {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-3);
+    max-width: 620px;
+    margin: calc(var(--space-3) * -1) 0 var(--space-7);
+    padding: var(--space-4);
+    border-left: 2px solid var(--accent);
+    background: var(--accent-subtle);
+  }
+  .principle span { color: var(--accent); font-family: var(--font-mono); }
+  .principle p { margin: 0; color: var(--text-secondary); line-height: 1.6; }
+  .work-list { display: grid; gap: var(--space-5); }
+  .engagement {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+    padding: var(--space-6);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-elevated);
+  }
+  .engagement h2 { margin: 0 0 var(--space-2); font-size: var(--text-2xl); }
+  .engagement p:not(.label) { max-width: 510px; margin: 0; color: var(--muted); }
+  .engagement .btn { flex: 0 0 auto; }
+  @media (max-width: 640px) {
+    .engagement { align-items: flex-start; flex-direction: column; padding: var(--space-5); }
+  }
+</style>
