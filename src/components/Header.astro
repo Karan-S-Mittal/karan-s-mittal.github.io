@@ -19,9 +19,9 @@ function isActive(href: string) {
       <a href="/" class="brand">Karan Mittal</a>
       <span class="nameplate-tag">Deterministic data &amp; AI systems</span>
     </div>
-    <nav class="main-nav">
+    <nav class="main-nav" aria-label="Primary">
       {nav.map(item => (
-        <a href={item.href} class={isActive(item.href) ? 'active' : ''}>
+        <a href={item.href} class={isActive(item.href) ? 'active' : ''} aria-current={isActive(item.href) ? 'page' : undefined}>
           {item.label}
         </a>
       ))}
@@ -75,6 +75,10 @@ function isActive(href: string) {
     background: var(--bg);
     border-bottom: 1px solid transparent;
     transition: border-color 0.3s ease, background-color var(--transition-fast);
+  }
+
+  header.scrolled {
+    border-bottom-color: var(--border);
   }
 
   .header-inner {
@@ -183,6 +187,7 @@ function isActive(href: string) {
       gap: var(--space-3);
       overflow-x: auto;
       scrollbar-width: none;
+      padding: var(--space-1) 0;
     }
     .main-nav::-webkit-scrollbar {
       display: none;
