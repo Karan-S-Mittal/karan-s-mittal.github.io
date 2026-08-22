@@ -5,8 +5,23 @@
     "aliases": []
   },
   {
+    "name": "CUDA",
+    "slug": "cuda",
+    "aliases": []
+  },
+  {
     "name": "GraphRAG",
     "slug": "graphrag",
+    "aliases": []
+  },
+  {
+    "name": "KV-Cache",
+    "slug": "kv-cache",
+    "aliases": []
+  },
+  {
+    "name": "LLM Inference",
+    "slug": "llm-inference",
     "aliases": []
   },
   {
@@ -15,8 +30,18 @@
     "aliases": []
   },
   {
+    "name": "PagedAttention",
+    "slug": "pagedattention",
+    "aliases": []
+  },
+  {
     "name": "RAG",
     "slug": "rag",
+    "aliases": []
+  },
+  {
+    "name": "Systems Engineering",
+    "slug": "systems-engineering",
     "aliases": []
   }
 ]

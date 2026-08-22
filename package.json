@@ -17,7 +17,9 @@
     "@astrojs/mdx": "^6.0.3",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.3",
+    "@types/d3": "^7.4.3",
     "astro": "^6.4.6",
+    "d3": "^7.9.0",
     "fast-glob": "^3.3.3",
     "gray-matter": "^4.0.3",
     "mdast-util-find-and-replace": "^3.0.2"

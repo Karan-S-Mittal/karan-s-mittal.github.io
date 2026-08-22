@@ -1,0 +1,152 @@
+---
+/**
+ * ExcalidrawContainer.astro
+ * Shared canvas container with Excalidraw-inspired styling:
+ * Subtle grid paper background, soft rounded container, adaptive dark/light palette,
+ * and high-legibility typographic tokens.
+ */
+interface Props {
+  caption?: string;
+  badge?: string;
+}
+
+const { caption, badge } = Astro.props;
+---
+
+<figure class="ex-figure">
+  <div class="ex-canvas-frame">
+    {badge && <div class="ex-badge">{badge}</div>}
+    <slot />
+  </div>
+  {caption && <figcaption class="ex-caption">{caption}</figcaption>}
+</figure>
+
+<style is:global>
+  /* Excalidraw CSS Theme Variables */
+  :root {
+    --ex-bg: #ffffff;
+    --ex-grid-dot: rgba(100, 116, 139, 0.14);
+    --ex-border: #e2e8f0;
+    --ex-text-main: #1e293b;
+    --ex-text-muted: #64748b;
+    --ex-card-bg: #ffffff;
+    --ex-card-border: #cbd5e1;
+
+    /* Semantic soft pastels (Light Mode) */
+    --ex-blue-bg: #eff6ff;
+    --ex-blue-stroke: #3b82f6;
+    --ex-blue-text: #1d4ed8;
+
+    --ex-indigo-bg: #eef2ff;
+    --ex-indigo-stroke: #6366f1;
+    --ex-indigo-text: #4338ca;
+
+    --ex-purple-bg: #faf5ff;
+    --ex-purple-stroke: #a855f7;
+    --ex-purple-text: #7e22ce;
+
+    --ex-green-bg: #f0fdf4;
+    --ex-green-stroke: #22c55e;
+    --ex-green-text: #15803d;
+
+    --ex-amber-bg: #fffbeb;
+    --ex-amber-stroke: #f59e0b;
+    --ex-amber-text: #b45309;
+
+    --ex-rose-bg: #fff1f2;
+    --ex-rose-stroke: #f43f5e;
+    --ex-rose-text: #be123c;
+
+    --ex-gray-bg: #f8fafc;
+    --ex-gray-stroke: #94a3b8;
+    --ex-gray-text: #475569;
+  }
+
+  html[data-theme="dark"] {
+    --ex-bg: #141416;
+    --ex-grid-dot: rgba(255, 255, 255, 0.08);
+    --ex-border: #27272a;
+    --ex-text-main: #f4f4f5;
+    --ex-text-muted: #a1a1aa;
+    --ex-card-bg: #1c1917;
+    --ex-card-border: #3f3f46;
+
+    /* Semantic soft pastels (Dark Mode) */
+    --ex-blue-bg: rgba(59, 130, 246, 0.12);
+    --ex-blue-stroke: #60a5fa;
+    --ex-blue-text: #93c5fd;
+
+    --ex-indigo-bg: rgba(99, 102, 241, 0.14);
+    --ex-indigo-stroke: #818cf8;
+    --ex-indigo-text: #c7d2fe;
+
+    --ex-purple-bg: rgba(168, 85, 247, 0.14);
+    --ex-purple-stroke: #c084fc;
+    --ex-purple-text: #e9d5ff;
+
+    --ex-green-bg: rgba(34, 197, 94, 0.12);
+    --ex-green-stroke: #4ade80;
+    --ex-green-text: #86efac;
+
+    --ex-amber-bg: rgba(245, 158, 11, 0.12);
+    --ex-amber-stroke: #fbbf24;
+    --ex-amber-text: #fde68a;
+
+    --ex-rose-bg: rgba(244, 63, 94, 0.14);
+    --ex-rose-stroke: #fb7185;
+    --ex-rose-text: #fecdd3;
+
+    --ex-gray-bg: #1e1e24;
+    --ex-gray-stroke: #52525b;
+    --ex-gray-text: #d4d4d8;
+  }
+
+  .ex-figure {
+    margin: 2.25rem 0;
+    width: 100%;
+  }
+
+  .ex-canvas-frame {
+    position: relative;
+    background-color: var(--ex-bg);
+    background-image: radial-gradient(var(--ex-grid-dot) 1.2px, transparent 1.2px);
+    background-size: 20px 20px;
+    border: 1.5px solid var(--ex-border);
+    border-radius: 12px;
+    padding: 1.5rem 1.25rem;
+    overflow-x: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .ex-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: var(--ex-gray-bg);
+    color: var(--ex-text-muted);
+    border: 1px solid var(--ex-border);
+  }
+
+  .ex-caption {
+    margin-top: 0.65rem;
+    font-size: 0.85rem;
+    color: var(--ex-text-muted);
+    text-align: center;
+    line-height: 1.45;
+  }
+
+  .ex-svg-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+</style>

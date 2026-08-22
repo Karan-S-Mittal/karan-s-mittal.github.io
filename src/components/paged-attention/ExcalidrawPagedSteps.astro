@@ -1,0 +1,393 @@
+---
+/**
+ * ExcalidrawPagedSteps.astro
+ * Progressive, step-by-step interactive visualizer for PagedAttention.
+ * Allows reader to build up the mental model iteratively:
+ * Step 1 (Virtual Blocks) -> Step 2 (Block Table) -> Step 3 (Scattered HBM) -> Step 4 (SRAM Gather)
+ */
+import ExcalidrawContainer from './ExcalidrawContainer.astro';
+
+interface Props {
+  caption?: string;
+}
+
+const { caption = "Figure 4: The Progressive Mechanics of PagedAttention — Click the steps below to trace how virtual tokens map to scattered physical GPU memory." } = Astro.props;
+---
+
+<ExcalidrawContainer caption={caption} badge="Step-by-Step Architecture">
+  <!-- Interactive Step Switcher -->
+  <div class="ex-steps-nav" role="tablist" aria-label="PagedAttention Stages">
+    <button class="ex-step-tab active" data-target="all" role="tab" aria-selected="true">
+      Full Flow
+    </button>
+    <button class="ex-step-tab" data-target="s1" role="tab" aria-selected="false">
+      1. Virtual Blocks
+    </button>
+    <button class="ex-step-tab" data-target="s2" role="tab" aria-selected="false">
+      2. Block Table
+    </button>
+    <button class="ex-step-tab" data-target="s3" role="tab" aria-selected="false">
+      3. GPU Memory Pool
+    </button>
+    <button class="ex-step-tab" data-target="s4" role="tab" aria-selected="false">
+      4. In-Kernel Gather
+    </button>
+  </div>
+
+  <div class="ex-step-explainer" id="ex-step-desc">
+    <strong>Complete Architecture:</strong> Virtual tokens sliced into logical blocks, translated via Block Table to scattered HBM frames, gathered in GPU SRAM.
+  </div>
+
+  <!-- SVG Diagram Canvas -->
+  <svg id="ex-paged-steps-svg" class="ex-svg-canvas" viewBox="0 0 740 370" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Custom Excalidraw Arrow Markers -->
+      <marker id="ex-arrow-s1" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 1 2 L 8 5 L 1 8 z" fill="var(--ex-blue-stroke)" />
+      </marker>
+      <marker id="ex-arrow-s2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 1 2 L 8 5 L 1 8 z" fill="var(--ex-indigo-stroke)" />
+      </marker>
+      <marker id="ex-arrow-s3" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 1 2 L 8 5 L 1 8 z" fill="var(--ex-green-stroke)" />
+      </marker>
+      <marker id="ex-arrow-s4" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 1 2 L 8 5 L 1 8 z" fill="var(--ex-purple-stroke)" />
+      </marker>
+    </defs>
+
+    <!-- ==================================================== -->
+    <!-- STAGE 1: LOGICAL VIRTUAL BLOCKS -->
+    <!-- ==================================================== -->
+    <g id="step-group-s1" class="step-group">
+      <!-- Section Label -->
+      <text x="16" y="24" font-family="var(--font-sans)" font-size="13" font-weight="700" fill="var(--ex-blue-text)">
+        1. Virtual Blocks (Logical)
+      </text>
+
+      <!-- Logical Block 0 (Blue) -->
+      <g transform="translate(16, 40)">
+        <rect x="0" y="0" width="145" height="135" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1.5" />
+        <rect x="6" y="6" width="133" height="24" rx="4" fill="var(--ex-blue-bg)" />
+        <text x="72" y="22" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" font-weight="700" fill="var(--ex-blue-text)">
+          Logical Block #0
+        </text>
+
+        <!-- Tokens -->
+        <g transform="translate(10, 38)">
+          <rect x="0" y="0" width="125" height="20" rx="3" fill="var(--ex-blue-bg)" />
+          <text x="8" y="14" font-family="var(--font-mono)" font-size="10.5" fill="var(--ex-blue-text)">t₀: "The"</text>
+          
+          <rect x="0" y="24" width="125" height="20" rx="3" fill="var(--ex-blue-bg)" />
+          <text x="8" y="38" font-family="var(--font-mono)" font-size="10.5" fill="var(--ex-blue-text)">t₁: "quick"</text>
+
+          <rect x="0" y="48" width="125" height="20" rx="3" fill="var(--ex-blue-bg)" />
+          <text x="8" y="62" font-family="var(--font-mono)" font-size="10.5" fill="var(--ex-blue-text)">t₂: "brown"</text>
+
+          <rect x="0" y="72" width="125" height="20" rx="3" fill="var(--ex-blue-bg)" />
+          <text x="8" y="86" font-family="var(--font-mono)" font-size="10.5" fill="var(--ex-blue-text)">t₃: "fox"</text>
+        </g>
+      </g>
+
+      <!-- Logical Block 1 (Indigo) -->
+      <g transform="translate(16, 195)">
+        <rect x="0" y="0" width="145" height="135" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-indigo-stroke)" stroke-width="1.5" />
+        <rect x="6" y="6" width="133" height="24" rx="4" fill="var(--ex-indigo-bg)" />
+        <text x="72" y="22" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" font-weight="700" fill="var(--ex-indigo-text)">
+          Logical Block #1
+        </text>
+
+        <!-- Tokens -->
+        <g transform="translate(10, 38)">
+          <rect x="0" y="0" width="125" height="20" rx="3" fill="var(--ex-indigo-bg)" />
+          <text x="8" y="14" font-family="var(--font-mono)" font-size="10.5" fill="var(--ex-indigo-text)">t₄: "jumps"</text>
+          
+          <rect x="0" y="24" width="125" height="20" rx="3" fill="var(--ex-indigo-bg)" />
+          <text x="8" y="38" font-family="var(--font-mono)" font-size="10.5" fill="var(--ex-indigo-text)">t₅: "over"</text>
+
+          <rect x="0" y="48" width="125" height="20" rx="3" fill="var(--ex-indigo-bg)" />
+          <text x="8" y="62" font-family="var(--font-mono)" font-size="10.5" fill="var(--ex-indigo-text)">t₆: "lazy"</text>
+
+          <rect x="0" y="72" width="125" height="20" rx="3" fill="none" stroke="var(--ex-border)" stroke-dasharray="2 2" />
+          <text x="8" y="86" font-family="var(--font-mono)" font-size="10.5" fill="var(--ex-text-muted)">t₇: [pending]</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Connector S1 -> S2 -->
+    <path id="conn-s1-s2-a" d="M 161 107 L 205 107" stroke="var(--ex-blue-stroke)" stroke-width="1.5" marker-end="url(#ex-arrow-s1)" />
+    <path id="conn-s1-s2-b" d="M 161 262 L 205 262" stroke="var(--ex-indigo-stroke)" stroke-width="1.5" marker-end="url(#ex-arrow-s2)" />
+
+    <!-- ==================================================== -->
+    <!-- STAGE 2: THE BLOCK TABLE (PAGE TABLE) -->
+    <!-- ==================================================== -->
+    <g id="step-group-s2" class="step-group">
+      <text x="215" y="24" font-family="var(--font-sans)" font-size="13" font-weight="700" fill="var(--ex-amber-text)">
+        2. Block Table (MMU)
+      </text>
+
+      <g transform="translate(215, 40)">
+        <rect x="0" y="0" width="150" height="290" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-amber-stroke)" stroke-width="1.5" />
+        <rect x="6" y="6" width="138" height="24" rx="4" fill="var(--ex-amber-bg)" />
+        <text x="75" y="22" text-anchor="middle" font-family="var(--font-sans)" font-size="11.5" font-weight="700" fill="var(--ex-amber-text)">
+          Page Map O(1)
+        </text>
+
+        <!-- Entry 0 -->
+        <g transform="translate(10, 48)">
+          <rect x="0" y="0" width="130" height="48" rx="6" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
+          <text x="8" y="20" font-family="var(--font-mono)" font-size="11" font-weight="600" fill="var(--ex-blue-text)">Blk #0 ──►</text>
+          <text x="8" y="38" font-family="var(--font-mono)" font-size="12" font-weight="700" fill="var(--ex-blue-text)">Frame #12</text>
+        </g>
+
+        <!-- Entry 1 -->
+        <g transform="translate(10, 203)">
+          <rect x="0" y="0" width="130" height="48" rx="6" fill="var(--ex-indigo-bg)" stroke="var(--ex-indigo-stroke)" stroke-width="1" />
+          <text x="8" y="20" font-family="var(--font-mono)" font-size="11" font-weight="600" fill="var(--ex-indigo-text)">Blk #1 ──►</text>
+          <text x="8" y="38" font-family="var(--font-mono)" font-size="12" font-weight="700" fill="var(--ex-indigo-text)">Frame #04</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Connector S2 -> S3 -->
+    <path id="conn-s2-s3-a" d="M 365 112 C 390 112, 390 285, 410 285" stroke="var(--ex-blue-stroke)" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ex-arrow-s1)" />
+    <path id="conn-s2-s3-b" d="M 365 267 C 385 267, 390 112, 410 112" stroke="var(--ex-indigo-stroke)" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ex-arrow-s2)" />
+
+    <!-- ==================================================== -->
+    <!-- STAGE 3: NON-CONTIGUOUS GPU HBM MEMORY POOL -->
+    <!-- ==================================================== -->
+    <g id="step-group-s3" class="step-group">
+      <text x="420" y="24" font-family="var(--font-sans)" font-size="13" font-weight="700" fill="var(--ex-green-text)">
+        3. GPU HBM Page Pool
+      </text>
+
+      <g transform="translate(420, 40)">
+        <rect x="0" y="0" width="145" height="290" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
+        <rect x="6" y="6" width="133" height="24" rx="4" fill="var(--ex-green-bg)" />
+        <text x="72" y="22" text-anchor="middle" font-family="var(--font-sans)" font-size="11.5" font-weight="700" fill="var(--ex-green-text)">
+          Physical Frames
+        </text>
+
+        <!-- 4x4 Grid of 16 Physical Memory Frames -->
+        <g transform="translate(10, 40)">
+          <!-- Row 0: Frames 0..3 -->
+          <rect x="0" y="0" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="14" y="28" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#00</text>
+
+          <rect x="32" y="0" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="46" y="28" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#01</text>
+
+          <rect x="64" y="0" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="78" y="28" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#02</text>
+
+          <rect x="96" y="0" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="110" y="28" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#03</text>
+
+          <!-- Row 1: Frames 4..7 (Frame #04 active Indigo) -->
+          <rect x="0" y="56" width="28" height="48" rx="4" fill="var(--ex-indigo-bg)" stroke="var(--ex-indigo-stroke)" stroke-width="2" />
+          <text x="14" y="78" text-anchor="middle" font-family="var(--font-mono)" font-size="9" font-weight="700" fill="var(--ex-indigo-text)">#04</text>
+          <text x="14" y="94" text-anchor="middle" font-family="var(--font-mono)" font-size="7.5" fill="var(--ex-indigo-text)">Blk 1</text>
+
+          <rect x="32" y="56" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="46" y="84" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#05</text>
+
+          <rect x="64" y="56" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="78" y="84" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#06</text>
+
+          <rect x="96" y="56" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="110" y="84" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#07</text>
+
+          <!-- Row 2: Frames 8..11 -->
+          <rect x="0" y="112" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="14" y="140" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#08</text>
+
+          <rect x="32" y="112" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="46" y="140" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#09</text>
+
+          <rect x="64" y="112" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="78" y="140" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#10</text>
+
+          <rect x="96" y="112" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="110" y="140" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#11</text>
+
+          <!-- Row 3: Frames 12..15 (Frame #12 active Blue) -->
+          <rect x="0" y="168" width="28" height="48" rx="4" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="2" />
+          <text x="14" y="190" text-anchor="middle" font-family="var(--font-mono)" font-size="9" font-weight="700" fill="var(--ex-blue-text)">#12</text>
+          <text x="14" y="206" text-anchor="middle" font-family="var(--font-mono)" font-size="7.5" fill="var(--ex-blue-text)">Blk 0</text>
+
+          <rect x="32" y="168" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="46" y="196" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#13</text>
+
+          <rect x="64" y="168" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="78" y="196" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#14</text>
+
+          <rect x="96" y="168" width="28" height="48" rx="4" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
+          <text x="110" y="196" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">#15</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Connector S3 -> S4 -->
+    <path id="conn-s3-s4-a" d="M 565 152 L 595 152" stroke="var(--ex-indigo-stroke)" stroke-width="1.5" marker-end="url(#ex-arrow-s2)" />
+    <path id="conn-s3-s4-b" d="M 565 264 L 595 264" stroke="var(--ex-blue-stroke)" stroke-width="1.5" marker-end="url(#ex-arrow-s1)" />
+
+    <!-- ==================================================== -->
+    <!-- STAGE 4: SRAM GATHER & FUSED ATTENTION -->
+    <!-- ==================================================== -->
+    <g id="step-group-s4" class="step-group">
+      <text x="605" y="24" font-family="var(--font-sans)" font-size="13" font-weight="700" fill="var(--ex-purple-text)">
+        4. SRAM Gather
+      </text>
+
+      <g transform="translate(605, 40)">
+        <rect x="0" y="0" width="120" height="290" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-purple-stroke)" stroke-width="1.5" />
+        <rect x="6" y="6" width="108" height="24" rx="4" fill="var(--ex-purple-bg)" />
+        <text x="60" y="22" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="700" fill="var(--ex-purple-text)">
+          On-Chip SRAM
+        </text>
+
+        <!-- Kernel details -->
+        <g transform="translate(8, 40)">
+          <!-- Query in register -->
+          <rect x="0" y="0" width="104" height="42" rx="4" fill="var(--ex-purple-bg)" stroke="var(--ex-purple-stroke)" stroke-width="1" />
+          <text x="52" y="18" text-anchor="middle" font-family="var(--font-sans)" font-size="10.5" font-weight="700" fill="var(--ex-purple-text)">Query Vector</text>
+          <text x="52" y="32" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-purple-text)">Q_curr (SRAM)</text>
+
+          <!-- Gather Operator -->
+          <text x="52" y="68" text-anchor="middle" font-family="var(--font-mono)" font-size="13" font-weight="700" fill="var(--ex-text-muted)">▼ GATHER ▼</text>
+
+          <!-- Gathered K, V blocks -->
+          <rect x="0" y="86" width="104" height="60" rx="4" fill="var(--ex-card-bg)" stroke="var(--ex-green-stroke)" stroke-width="1" stroke-dasharray="2 2" />
+          <text x="52" y="104" text-anchor="middle" font-family="var(--font-sans)" font-size="10" font-weight="700" fill="var(--ex-green-text)">Direct Stream</text>
+          <text x="52" y="120" text-anchor="middle" font-family="var(--font-mono)" font-size="8.5" fill="var(--ex-blue-text)">• K,V from #12</text>
+          <text x="52" y="136" text-anchor="middle" font-family="var(--font-mono)" font-size="8.5" fill="var(--ex-indigo-text)">• K,V from #04</text>
+
+          <!-- Fused Attention compute -->
+          <rect x="0" y="160" width="104" height="65" rx="4" fill="var(--ex-purple-bg)" stroke="var(--ex-purple-stroke)" stroke-width="1.5" />
+          <text x="52" y="180" text-anchor="middle" font-family="var(--font-sans)" font-size="10.5" font-weight="700" fill="var(--ex-purple-text)">Fused Dot-Prod</text>
+          <text x="52" y="196" text-anchor="middle" font-family="var(--font-mono)" font-size="8.5" fill="var(--ex-purple-text)">softmax(Q·Kᵀ)·V</text>
+          <text x="52" y="214" text-anchor="middle" font-family="var(--font-mono)" font-size="8" fill="var(--ex-green-text)">Zero Temp Copy!</text>
+        </g>
+      </g>
+    </g>
+  </svg>
+</ExcalidrawContainer>
+
+<script>
+  function initPagedStepsInteractive() {
+    const tabs = document.querySelectorAll('.ex-step-tab');
+    const desc = document.getElementById('ex-step-desc');
+    const groups = {
+      s1: document.getElementById('step-group-s1'),
+      s2: document.getElementById('step-group-s2'),
+      s3: document.getElementById('step-group-s3'),
+      s4: document.getElementById('step-group-s4'),
+    };
+    const connectors = [
+      document.getElementById('conn-s1-s2-a'),
+      document.getElementById('conn-s1-s2-b'),
+      document.getElementById('conn-s2-s3-a'),
+      document.getElementById('conn-s2-s3-b'),
+      document.getElementById('conn-s3-s4-a'),
+      document.getElementById('conn-s3-s4-b'),
+    ];
+
+    const descriptions: Record<string, string> = {
+      all: '<strong>Complete Architecture:</strong> Virtual tokens sliced into logical blocks, translated via Block Table to scattered HBM frames, gathered in GPU SRAM.',
+      s1: '<strong>Step 1 (Virtual Blocks):</strong> Continuous tokens are partitioned into fixed-size logical blocks (e.g. 4 tokens). No future memory is pre-allocated.',
+      s2: '<strong>Step 2 (Block Table):</strong> Like an OS page table, the Block Table maintains virtual-to-physical pointer translations in constant O(1) time.',
+      s3: '<strong>Step 3 (Scattered HBM):</strong> Physical frames are allocated on demand across GPU memory. Non-contiguous storage eliminates external fragmentation (0% waste).',
+      s4: '<strong>Step 4 (In-Kernel Gather):</strong> CUDA/Triton kernels stream non-contiguous KV vectors straight into on-chip SRAM during GEMM without tensor copying.',
+    };
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-target') || 'all';
+
+        tabs.forEach((t) => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+
+        if (desc && descriptions[target]) {
+          desc.innerHTML = descriptions[target];
+        }
+
+        // Highlight/dim corresponding svg groups
+        Object.entries(groups).forEach(([key, el]) => {
+          if (!el) return;
+          if (target === 'all' || target === key) {
+            el.style.opacity = '1';
+            el.style.filter = 'none';
+          } else {
+            el.style.opacity = '0.18';
+            el.style.filter = 'grayscale(0.8)';
+          }
+        });
+
+        connectors.forEach((conn) => {
+          if (!conn) return;
+          conn.style.opacity = target === 'all' ? '1' : '0.2';
+        });
+      });
+    });
+  }
+
+  // Initialize on load and on astro page transitions
+  initPagedStepsInteractive();
+  document.addEventListener('astro:page-load', initPagedStepsInteractive);
+</script>
+
+<style>
+  .ex-steps-nav {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.85rem;
+    justify-content: center;
+  }
+
+  .ex-step-tab {
+    background: var(--ex-card-bg);
+    color: var(--ex-text-muted);
+    border: 1px solid var(--ex-border);
+    border-radius: 6px;
+    padding: 0.35rem 0.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .ex-step-tab:hover {
+    color: var(--ex-text-main);
+    border-color: var(--ex-blue-stroke);
+  }
+
+  .ex-step-tab.active {
+    background: var(--ex-blue-bg);
+    color: var(--ex-blue-text);
+    border-color: var(--ex-blue-stroke);
+  }
+
+  .ex-step-explainer {
+    background: var(--ex-gray-bg);
+    border: 1px solid var(--ex-border);
+    border-radius: 6px;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.86rem;
+    color: var(--ex-text-main);
+    line-height: 1.45;
+    margin-bottom: 1rem;
+    min-height: 2.8rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .step-group {
+    transition: opacity 0.25s ease, filter 0.25s ease;
+  }
+</style>

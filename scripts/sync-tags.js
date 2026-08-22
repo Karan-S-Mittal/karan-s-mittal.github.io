@@ -51,7 +51,7 @@ async function main() {
   }
 
   // 2. Scan all content files for tags
-  const files = await glob('src/content/**/*.md', { cwd: ROOT, absolute: true });
+  const files = await glob('src/content/**/*.{md,mdx}', { cwd: ROOT, absolute: true });
   const tagSet = new Set();
 
   for (const file of files) {

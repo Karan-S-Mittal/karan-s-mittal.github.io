@@ -1,0 +1,254 @@
+---
+title: "The Evolution of KV-Cache: From Naive Attention to PagedAttention"
+description: "A first-principles, step-by-step breakdown of how LLM memory evolved—from the quadratic cost of naive decoding, to MQA and GQA, to how operating system paging eliminated GPU memory fragmentation."
+pubDate: 2026-08-22
+tags: ["LLM Inference", "KV-Cache", "PagedAttention", "AI Architecture", "Systems Engineering", "CUDA"]
+draft: false
+---
+
+import ExcalidrawNaiveVsKVCache from '../../components/paged-attention/ExcalidrawNaiveVsKVCache.astro';
+import ExcalidrawKVEvolution from '../../components/paged-attention/ExcalidrawKVEvolution.astro';
+import ExcalidrawMemoryFragmentation from '../../components/paged-attention/ExcalidrawMemoryFragmentation.astro';
+import ExcalidrawPagedSteps from '../../components/paged-attention/ExcalidrawPagedSteps.astro';
+import ExcalidrawCopyOnWrite from '../../components/paged-attention/ExcalidrawCopyOnWrite.astro';
+
+When discussing Large Language Models, conversations frequently focus on compute: FLOPS, parameter counts, and matrix multiplication throughput.
+
+Yet in real-world production serving, compute is rarely the bottleneck that causes inference servers to crash or stall. The true bottleneck is **memory capacity and memory management**.
+
+To truly understand how modern high-throughput engines like **vLLM** and **SGLang** work, we must avoid jumping straight into the solution. Instead, let us build the mental model slowly from first principles:
+1. How text is generated token-by-token.
+2. Why the naive approach incurs quadratic redundant computation.
+3. How caching intermediate representations created the **KV-Cache**.
+4. How model architectures evolved (MHA &rarr; MQA &rarr; GQA) to shrink this cache.
+5. The hidden crisis: why contiguous GPU memory allocation wasted 60%–80% of HBM.
+6. How borrowing a 60-year-old operating system concept—**Virtual Memory Paging**—revolutionized AI inference with **PagedAttention**.
+
+---
+
+## 1. The Naive Decoding Loop: The Quadratic Trap
+
+Autoregressive language models generate text **one token at a time**. Each new token depends on all the tokens that came before it.
+
+Imagine prompt input: `"The quick brown"`. The model's goal is to predict the next word: `"fox"`.
+
+### What Happens Inside Self-Attention?
+In standard multi-head self-attention, every token in the sequence is projected into three vectors via learned weight matrices:
+* **Query ($Q$):** What this token is looking for.
+* **Key ($K$):** What this token contains (its indexable identity).
+* **Value ($V$):** The actual contextual information to extract.
+
+The attention calculation computes the dot product between queries and keys, scales it, applies softmax, and multiplies by the values:
+
+<div class="math-card">
+  Attention(Q, K, V) = softmax( (Q · Kᵀ) / √d_k ) · V
+</div>
+
+### The Naive Flaw
+If we implement this naively, look at what happens at each decoding step:
+
+* **Step 1:** Pass `["The"]` through the entire Transformer &rarr; compute $Q_0, K_0, V_0$ &rarr; generate `"quick"`.
+* **Step 2:** Pass `["The", "quick"]` through the entire Transformer &rarr; recompute $Q_0, K_0, V_0$ *and* compute $Q_1, K_1, V_1$ &rarr; generate `"brown"`.
+* **Step 3:** Pass `["The", "quick", "brown"]` through the entire Transformer &rarr; recompute $Q_0, K_0, V_0$, recompute $Q_1, K_1, V_1$, *and* compute $Q_2, K_2, V_2$ &rarr; generate `"fox"`.
+
+```
+Step 1: [T]                 --> 1 token projected
+Step 2: [T, q]              --> 2 tokens projected (1 redundant!)
+Step 3: [T, q, b]           --> 3 tokens projected (2 redundant!)
+Step N: [T, q, b, ..., N]   --> N tokens projected (N-1 redundant!)
+```
+
+To generate a sequence of $N$ tokens, the naive approach projects $O(N^2)$ tokens. For long sequences (e.g., 4,096 or 32,768 tokens), recalculating the exact same past representations at every step is computationally catastrophic.
+
+---
+
+## 2. The Breakthrough: The KV-Cache
+
+Notice a crucial mathematical property of autoregressive decoding:
+
+> **The Keys ($K$) and Values ($V$) of past tokens depend only on their past context. Because past tokens never change, their $K$ and $V$ vectors are completely static across future decoding steps.**
+
+Only the **Query ($Q$)** needs to come from the *current newly generated token*, because only the current token is asking: *"Which past words should I attend to?"*
+
+### The KV-Cache Solution
+Instead of recomputing past keys and values on every forward pass, we calculate them **once** when the token is first seen, and save them in GPU memory (High Bandwidth Memory, or HBM).
+
+<ExcalidrawNaiveVsKVCache caption="Figure 1: Naive Autoregressive Recomputation (O(N²) redundant passes) vs. KV Caching (O(N) single-token projection)." />
+
+With the KV-cache in place:
+1. When generating step $t$, we project **only the single new token** to get $Q_t, K_t, V_t$.
+2. We append $K_t$ and $V_t$ to the stored KV-cache in memory.
+3. $Q_t$ attends over all stored Keys $[K_0, K_1, \dots, K_t]$ and retrieves from $[V_0, V_1, \dots, V_t]$.
+4. The compute per token drops from $O(N)$ to $O(1)$ projection, turning the total generation cost from $O(N^2)$ to $O(N)$.
+
+We traded redundant compute for memory storage. But how much memory does this cache actually consume?
+
+---
+
+## 3. The Anatomy & Evolution of KV Cache Heads
+
+Let us calculate the memory footprint of storing Key and Value states for a single token.
+
+For a model with:
+* $L$ layers
+* `H_kv` key-value attention heads
+* `d_head` dimension per head
+* 16-bit precision (`FP16` or `BF16` = 2 bytes per element)
+
+Every single token requires:
+
+<div class="math-card">
+  KV Memory Per Token = 2 × (Key + Value) × L × H_kv × d_head = 4 × L × H_kv × d_head &nbsp;(bytes)
+</div>
+
+### The Architectural Evolution: MHA &rarr; MQA &rarr; GQA
+
+Because the KV cache grows linearly with sequence length and batch size, AI researchers developed architectural variants to shrink `H_kv`:
+
+<ExcalidrawKVEvolution caption="Figure 2: Architectural Evolution of KV Cache Heads — Multi-Head Attention (1:1), Multi-Query Attention (N:1), and Grouped-Query Attention (G:1)." />
+
+#### 1. Multi-Head Attention (MHA — 2017)
+* Used in original Transformer, GPT-3, and LLaMA-1.
+* **`H_kv = H_q`**: Every query head has its own dedicated key and value head ($1:1$).
+* **Footprint:** Massive. For a 70B model ($L=80, H=64, d=128$), a single 8k request consumes **over 5.2 GB** of KV cache memory.
+
+#### 2. Multi-Query Attention (MQA — Shazeer, 2019)
+* Used in Falcon, StarCoder.
+* **`H_kv = 1`**: All query heads share a single key head and a single value head ($N:1$).
+* **Footprint:** Shrinks KV memory by **8×**, but can slightly degrade model expressiveness on complex reasoning tasks.
+
+#### 3. Grouped-Query Attention (GQA — Ainslie et al., 2023)
+* Used in LLaMA-2/3, Mistral, Gemma, Qwen.
+* **`H_kv = H_q / G`**: Query heads are divided into $G$ groups (typically 8 query heads per 1 KV head).
+* **Footprint:** Delivers **4× to 8× memory reduction** with virtually zero loss in accuracy.
+
+---
+
+## 4. The Hidden Crisis: Contiguous Memory Allocation
+
+Even with GQA reducing tensor dimensions, early inference systems (such as FasterTransformer and early Hugging Face pipelines) frequently crashed with **Out of Memory (OOM)** errors when serving concurrent traffic.
+
+Why? The culprit was not the math—it was **memory allocation strategy**.
+
+### Why GPUs Prefer Contiguous Memory
+Traditional deep learning frameworks represent tensors as contiguous blocks in physical memory. When a tensor grows dynamically, reallocating memory on a GPU (`cudaMalloc` / `cudaFree`) triggers GPU synchronization barriers and fragments memory.
+
+To avoid continuous dynamic reallocations, serving engines adopted a conservative approach:
+> **When a new request arrives, allocate a contiguous memory buffer sized for the maximum possible sequence length (e.g., 4,096 or 8,192 tokens) upfront.**
+
+<ExcalidrawMemoryFragmentation caption="Figure 3: The Three Sins of Contiguous Allocation — Over-allocation, Internal Fragmentation, and External Fragmentation (causing 60–80% GPU memory waste)." />
+
+### The Three Sins of Contiguous Allocation
+
+1. **Over-Allocation (Reserved Memory):** The engine reserves memory for tokens that have not yet been generated. If a user asks a short question, 90%+ of the reserved buffer sits completely empty and locked.
+2. **Internal Fragmentation:** Because the engine cannot predict when the model will output the `&lt;eos&gt;` (end-of-sequence) token, if generation terminates at token 400 of an 8,192 buffer, the remaining 7,792 allocated slots are permanently wasted for that request's lifetime.
+3. **External Fragmentation:** Over time, requests of varying lengths start and terminate at different moments. The GPU's High Bandwidth Memory becomes a "swiss cheese" of non-contiguous free memory chunks.
+
+> **The OOM Paradox:** An inference engine could have 24 GB of aggregate free GPU memory, yet fail to admit a new request requiring a 2 GB buffer because no single chunk of 2 GB contiguous space exists.
+
+In practice, **60% to 80% of GPU memory was completely wasted**.
+
+---
+
+## 5. The Operating System Epiphany
+
+In computer systems engineering, this problem is not new. In the early 1960s, operating systems faced the exact same crisis when allocating physical RAM to user processes. 
+
+The OS solution was **Virtual Memory Paging**:
+1. Break user process memory into fixed-size **Virtual Pages**.
+2. Break physical RAM into matching fixed-size **Physical Frames**.
+3. Use a **Page Table** to map any virtual page to any physical frame anywhere in RAM.
+4. Physical memory no longer needs to be contiguous.
+
+In 2023, Woosuk Kwon and researchers at UC Berkeley asked a breakthrough question:
+
+> *Why can't an LLM KV-cache work exactly like an operating system page table?*
+
+This insight became **PagedAttention** and powered the creation of **vLLM**.
+
+---
+
+## 6. PagedAttention Built Step-by-Step
+
+PagedAttention completely decouples the **logical token stream** from **physical GPU DRAM allocation**.
+
+Let us walk through how a sequence transforms through four progressive stages:
+
+<ExcalidrawPagedSteps caption="Figure 4: The Progressive Mechanics of PagedAttention — Click the steps above to trace how virtual tokens map to scattered physical GPU memory." />
+
+### Step 1: Virtual Blocks (Logical Slicing)
+When a request enters the engine, its logical token stream is partitioned into small, fixed-size **logical blocks** (typically 16 tokens; shown with block size $B=4$ in the diagram for clarity):
+* **Logical Block #0:** Contains tokens `t₀` to `t₃` (`"The", "quick", "brown", "fox"`).
+* **Logical Block #1:** Contains tokens `t₄` to `t₆` (`"jumps", "over", "lazy"`), with slot `t₇` open for the next token.
+* No memory is reserved for distant future tokens upfront.
+
+### Step 2: The Block Table (Virtual-to-Physical Translation)
+Like an OS page table, the engine maintains a lightweight **Block Table** for each request:
+* **Logical Block #0** &rarr; **Physical Frame #12**
+* **Logical Block #1** &rarr; **Physical Frame #04**
+* Translation is a constant-time $O(1)$ index lookup.
+
+### Step 3: Scattered Physical Allocation in GPU HBM
+The engine allocates physical frames from a pre-allocated global pool wherever space exists:
+* Frame `#12` and Frame `#04` are placed in completely arbitrary, non-contiguous physical locations in HBM.
+* All other frames remain 100% free and instantly assignable to other user requests.
+* **External fragmentation drops to 0%** because all page blocks are uniformly sized.
+
+### Step 4: In-Kernel Direct SRAM Attention Gather
+If physical memory is scattered across HBM, how does the GPU compute matrix multiplication without slow tensor copying?
+
+A custom CUDA/Triton kernel reads the Block Table directly inside the GPU thread block:
+1. The kernel loads the active Query vector `Q_curr` into on-chip **Shared Memory (SRAM)**.
+2. It loops through the Block Table pointers, directly fetching the corresponding Key and Value tiles from scattered physical frames into SRAM.
+3. It performs fused scaled dot-product attention on-chip in a single fused pass.
+
+Because the memory addresses are resolved on-the-fly inside kernel registers, there is zero copying overhead.
+
+---
+
+## 7. The Superpower: Zero-Copy Sharing & Copy-on-Write
+
+Decoupling logical sequences from physical memory unlocked a capability previously impossible in static tensor architectures: **zero-copy memory sharing**.
+
+<ExcalidrawCopyOnWrite caption="Figure 5: Zero-Copy Memory Sharing & Copy-on-Write (CoW) — Shared prompt blocks are stored once in physical HBM with ref_count=2, branching only when output sequences diverge." />
+
+### 1. Parallel Sampling & Speculative Decoding
+When generating multiple candidate responses for a single prompt (e.g. $N=4$ sample voting, beam search, or speculative draft validation):
+* The prompt tokens are stored **once** in physical memory (`Frame #12`, `Frame #04`) with a reference counter (`ref_count = 2`).
+* Both parallel output streams point their block tables to the identical physical frames.
+* When branches diverge, the engine allocates new physical frames only for the diverging tokens using **Copy-on-Write (CoW)**.
+* Memory usage for parallel sampling drops by **55% to 70%**.
+
+### 2. Multi-Turn Prefix Caching (RadixAttention)
+In agentic workflows and multi-turn conversations, large system prompts or tool definitions are repeated across requests.
+
+With PagedAttention:
+* The system prompt blocks remain resident in the GPU page pool.
+* Any incoming user request instantly links its Block Table to the cached prefix pages.
+* Time-to-First-Token (TTFT) drops drastically because the prompt's KV cache is reused with **zero tensor copies**.
+
+---
+
+## 8. Summary & Systems Takeaways
+
+Transforming KV-cache management from rigid static buffers to dynamic virtual paging fundamentally transformed LLM serving economics:
+
+| Dimension | Contiguous Allocation | PagedAttention |
+|---|---|---|
+| **Memory Waste** | 60% – 80% | **&lt; 4%** (only last partial block) |
+| **External Fragmentation** | Severe (variable lifetimes) | **0%** (uniform block size) |
+| **Batch Size Capacity** | Constrained by worst-case max length | **Dynamic (scales with token count)** |
+| **Serving Throughput** | Baseline ($1.0\times$) | **$2.5\times$ to $4.0\times$ Higher** |
+| **Prefix & Prompt Sharing** | Duplicate full tensors | **Zero-copy page aliasing (CoW)** |
+
+### The Core Architectural Lesson
+
+The story of PagedAttention illustrates a fundamental principle in modern AI infrastructure:
+
+> **The most critical breakthroughs in modern machine learning systems often come from applying classical computer systems engineering principles to AI memory access patterns.**
+
+When serving throughput is constrained, the solution is rarely to shrink the model or compromise on accuracy. The solution is to inspect memory layout, eliminate artificial constraints, and build deterministic, zero-waste data machinery.
+
+---
+
+*Are you optimizing high-throughput LLM inference architectures or designing low-latency serving pipelines? Reach out via [Contact](/contact) or connect on [LinkedIn](https://www.linkedin.com/in/karansmittal/).*
