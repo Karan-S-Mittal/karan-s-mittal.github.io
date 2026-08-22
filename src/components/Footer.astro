@@ -11,9 +11,9 @@ const socials = [
   <div class="footer-inner">
     <div class="footer-left">
       <p class="copyright">© {new Date().getFullYear()} Karan Mittal</p>
-      <nav class="footer-nav">
+      <nav class="footer-nav" aria-label="Footer">
         <a href="/work">Work</a>
-        <a href="/blog">Ideas</a>
+        <a href="/blog">Essays</a>
         <a href="/about">About</a>
         <a href="/talks">Talks</a>
         <a href="/tags">Tags</a>
@@ -59,12 +59,12 @@ const socials = [
 <style>
   footer {
     border-top: 1px solid var(--border);
-    margin-top: 6rem;
+    margin-top: var(--space-9);
   }
   .footer-inner {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: var(--space-6) var(--space-5);
+    padding: var(--space-5);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -78,6 +78,7 @@ const socials = [
     flex-wrap: wrap;
   }
   .copyright {
+    font-family: var(--font-mono);
     font-size: var(--text-xs);
     color: var(--muted);
     margin: 0;
@@ -87,15 +88,15 @@ const socials = [
     gap: var(--space-4);
   }
   .footer-nav a {
+    font-family: var(--font-mono);
     font-size: var(--text-xs);
     color: var(--muted);
     text-decoration: none;
     transition: color var(--transition-fast);
   }
   .footer-nav a:hover {
-    color: var(--text);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    color: var(--accent);
+    text-decoration: none;
   }
   .footer-right {
     display: flex;
