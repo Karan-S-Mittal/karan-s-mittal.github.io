@@ -61,7 +61,7 @@ function isActive(href: string) {
     const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
     localStorage.setItem('theme', next);
-    themeMeta?.setAttribute('content', next === 'dark' ? '#0c0a09' : '#fafaf9');
+    themeMeta?.setAttribute('content', next === 'dark' ? '#171410' : '#faf8f4');
     syncToggle();
   });
 </script>
@@ -72,7 +72,7 @@ function isActive(href: string) {
     top: 0;
     z-index: 100;
     border-bottom: 1px solid var(--border-subtle);
-    background: var(--header-bg);
+    background: var(--bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     transition: border-color 0.3s ease, background-color var(--transition-fast);
