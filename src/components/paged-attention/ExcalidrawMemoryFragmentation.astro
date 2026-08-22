@@ -8,12 +8,14 @@ import ExcalidrawContainer from './ExcalidrawContainer.astro';
 
 interface Props {
   caption?: string;
+  exhibit?: string;
+  title?: string;
 }
 
-const { caption = "Figure 3: The Three Sins of Contiguous Allocation — Over-allocation, Internal Fragmentation, and External Fragmentation (causing 60–80% GPU memory waste)." } = Astro.props;
+const { caption = "Figure 3: The Three Sins of Contiguous Allocation — Over-allocation, Internal Fragmentation, and External Fragmentation (causing 60–80% GPU memory waste).", exhibit, title } = Astro.props;
 ---
 
-<ExcalidrawContainer caption={caption} badge="Memory Bottleneck">
+<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="Memory Bottleneck">
   <svg class="ex-svg-canvas" viewBox="0 0 760 380" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <!-- Hatch pattern for waste -->

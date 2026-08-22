@@ -1,36 +1,37 @@
 ---
 /**
  * ExcalidrawContainer.astro
- * Shared canvas container with Excalidraw-inspired styling:
- * Subtle grid paper background, soft rounded container, adaptive dark/light palette,
- * and high-legibility typographic tokens.
+ * Excalidraw-style canvas (dot grid, adaptive palette) inside the site's Exhibit frame.
  */
+import Exhibit from '../Exhibit.astro';
+
 interface Props {
   caption?: string;
   badge?: string;
+  exhibit?: string;
+  title?: string;
 }
 
-const { caption, badge } = Astro.props;
+const { caption, badge, exhibit, title } = Astro.props;
 ---
 
-<figure class="ex-figure">
+<Exhibit exhibit={exhibit} title={title} caption={caption}>
   <div class="ex-canvas-frame">
     {badge && <div class="ex-badge">{badge}</div>}
     <slot />
   </div>
-  {caption && <figcaption class="ex-caption">{caption}</figcaption>}
-</figure>
+</Exhibit>
 
 <style is:global>
-  /* Excalidraw CSS Theme Variables */
+  /* Excalidraw CSS Theme Variables — recalibrated to the warm editorial palette */
   :root {
-    --ex-bg: #ffffff;
-    --ex-grid-dot: rgba(100, 116, 139, 0.14);
-    --ex-border: #e2e8f0;
-    --ex-text-main: #1e293b;
-    --ex-text-muted: #64748b;
-    --ex-card-bg: #ffffff;
-    --ex-card-border: #cbd5e1;
+    --ex-bg: transparent;
+    --ex-grid-dot: rgba(110, 103, 93, 0.18);
+    --ex-border: #e5e0d5;
+    --ex-text-main: #211d18;
+    --ex-text-muted: #6e675d;
+    --ex-card-bg: #faf8f4;
+    --ex-card-border: #d8d2c4;
 
     /* Semantic soft pastels (Light Mode) */
     --ex-blue-bg: #eff6ff;
@@ -57,19 +58,19 @@ const { caption, badge } = Astro.props;
     --ex-rose-stroke: #f43f5e;
     --ex-rose-text: #be123c;
 
-    --ex-gray-bg: #f8fafc;
-    --ex-gray-stroke: #94a3b8;
-    --ex-gray-text: #475569;
+    --ex-gray-bg: #f3f0e9;
+    --ex-gray-stroke: #a8a29e;
+    --ex-gray-text: #57534e;
   }
 
   html[data-theme="dark"] {
-    --ex-bg: #141416;
-    --ex-grid-dot: rgba(255, 255, 255, 0.08);
-    --ex-border: #27272a;
-    --ex-text-main: #f4f4f5;
-    --ex-text-muted: #a1a1aa;
-    --ex-card-bg: #1c1917;
-    --ex-card-border: #3f3f46;
+    --ex-bg: transparent;
+    --ex-grid-dot: rgba(232, 226, 216, 0.1);
+    --ex-border: #332c23;
+    --ex-text-main: #e8e2d8;
+    --ex-text-muted: #9a9182;
+    --ex-card-bg: #201b15;
+    --ex-card-border: #443b2f;
 
     /* Semantic soft pastels (Dark Mode) */
     --ex-blue-bg: rgba(59, 130, 246, 0.12);
@@ -96,14 +97,9 @@ const { caption, badge } = Astro.props;
     --ex-rose-stroke: #fb7185;
     --ex-rose-text: #fecdd3;
 
-    --ex-gray-bg: #1e1e24;
-    --ex-gray-stroke: #52525b;
-    --ex-gray-text: #d4d4d8;
-  }
-
-  .ex-figure {
-    margin: 2.25rem 0;
-    width: 100%;
+    --ex-gray-bg: #2a241c;
+    --ex-gray-stroke: #6e675d;
+    --ex-gray-text: #cfc7b8;
   }
 
   .ex-canvas-frame {
@@ -111,12 +107,8 @@ const { caption, badge } = Astro.props;
     background-color: var(--ex-bg);
     background-image: radial-gradient(var(--ex-grid-dot) 1.2px, transparent 1.2px);
     background-size: 20px 20px;
-    border: 1.5px solid var(--ex-border);
-    border-radius: 12px;
     padding: 1.5rem 1.25rem;
     overflow-x: auto;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    transition: border-color 0.2s ease, background-color 0.2s ease;
   }
 
   .ex-badge {
@@ -124,23 +116,15 @@ const { caption, badge } = Astro.props;
     top: 0.75rem;
     right: 0.75rem;
     font-family: var(--font-mono, monospace);
-    font-size: 0.72rem;
-    font-weight: 600;
+    font-size: 0.65rem;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.2rem 0.6rem;
-    border-radius: 999px;
-    background: var(--ex-gray-bg);
+    letter-spacing: 0.08em;
+    padding: 0.15rem 0.5rem;
     color: var(--ex-text-muted);
     border: 1px solid var(--ex-border);
-  }
-
-  .ex-caption {
-    margin-top: 0.65rem;
-    font-size: 0.85rem;
-    color: var(--ex-text-muted);
-    text-align: center;
-    line-height: 1.45;
+    border-radius: 2px;
+    background: var(--ex-card-bg);
   }
 
   .ex-svg-canvas {

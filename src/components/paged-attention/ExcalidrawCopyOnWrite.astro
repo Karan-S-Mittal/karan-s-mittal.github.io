@@ -8,12 +8,14 @@ import ExcalidrawContainer from './ExcalidrawContainer.astro';
 
 interface Props {
   caption?: string;
+  exhibit?: string;
+  title?: string;
 }
 
-const { caption = "Figure 5: Zero-Copy Memory Sharing & Copy-on-Write (CoW) — Shared prompt blocks are stored once in physical HBM with ref_count=2, branching only when output sequences diverge." } = Astro.props;
+const { caption = "Figure 5: Zero-Copy Memory Sharing & Copy-on-Write (CoW) — Shared prompt blocks are stored once in physical HBM with ref_count=2, branching only when output sequences diverge.", exhibit, title } = Astro.props;
 ---
 
-<ExcalidrawContainer caption={caption} badge="Zero-Copy Sharing">
+<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="Zero-Copy Sharing">
   <svg class="ex-svg-canvas" viewBox="0 0 760 380" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <marker id="ex-arr-cow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">

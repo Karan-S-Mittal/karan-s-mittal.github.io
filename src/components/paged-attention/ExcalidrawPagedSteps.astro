@@ -9,12 +9,14 @@ import ExcalidrawContainer from './ExcalidrawContainer.astro';
 
 interface Props {
   caption?: string;
+  exhibit?: string;
+  title?: string;
 }
 
-const { caption = "Figure 4: The Progressive Mechanics of PagedAttention — Click the steps below to trace how virtual tokens map to scattered physical GPU memory." } = Astro.props;
+const { caption = "Figure 4: The Progressive Mechanics of PagedAttention — Click the steps below to trace how virtual tokens map to scattered physical GPU memory.", exhibit, title } = Astro.props;
 ---
 
-<ExcalidrawContainer caption={caption} badge="Step-by-Step Architecture">
+<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="Step-by-Step Architecture">
   <!-- Interactive Step Switcher -->
   <div class="ex-steps-nav" role="tablist" aria-label="PagedAttention Stages">
     <button class="ex-step-tab active" data-target="all" role="tab" aria-selected="true">

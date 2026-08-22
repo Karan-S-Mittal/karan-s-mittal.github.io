@@ -73,7 +73,7 @@ Only the **Query ($Q$)** needs to come from the *current newly generated token*,
 ### The KV-Cache Solution
 Instead of recomputing past keys and values on every forward pass, we calculate them **once** when the token is first seen, and save them in GPU memory (High Bandwidth Memory, or HBM).
 
-<ExcalidrawNaiveVsKVCache caption="Figure 1: Naive Autoregressive Recomputation (O(N²) redundant passes) vs. KV Caching (O(N) single-token projection)." />
+<ExcalidrawNaiveVsKVCache exhibit="01" title="Naive recomputation vs KV caching" caption="Naive autoregressive recomputation costs O(N²) redundant passes; KV caching projects a single token per step. Notice how the shaded re-computation region disappears." />
 
 With the KV-cache in place:
 1. When generating step $t$, we project **only the single new token** to get $Q_t, K_t, V_t$.
@@ -105,7 +105,7 @@ Every single token requires:
 
 Because the KV cache grows linearly with sequence length and batch size, AI researchers developed architectural variants to shrink `H_kv`:
 
-<ExcalidrawKVEvolution caption="Figure 2: Architectural Evolution of KV Cache Heads — Multi-Head Attention (1:1), Multi-Query Attention (N:1), and Grouped-Query Attention (G:1)." />
+<ExcalidrawKVEvolution exhibit="02" title="Evolution of KV cache heads" caption="Multi-Head Attention keeps one KV pair per head (1:1); Multi-Query shares one across all heads (N:1); Grouped-Query lands between (G:1). Notice the cache footprint shrinking left to right." />
 
 #### 1. Multi-Head Attention (MHA — 2017)
 * Used in original Transformer, GPT-3, and LLaMA-1.
@@ -136,7 +136,7 @@ Traditional deep learning frameworks represent tensors as contiguous blocks in p
 To avoid continuous dynamic reallocations, serving engines adopted a conservative approach:
 > **When a new request arrives, allocate a contiguous memory buffer sized for the maximum possible sequence length (e.g., 4,096 or 8,192 tokens) upfront.**
 
-<ExcalidrawMemoryFragmentation caption="Figure 3: The Three Sins of Contiguous Allocation — Over-allocation, Internal Fragmentation, and External Fragmentation (causing 60–80% GPU memory waste)." />
+<ExcalidrawMemoryFragmentation exhibit="03" title="The three sins of contiguous allocation" caption="Over-allocation, internal fragmentation, and external fragmentation — together wasting 60–80% of GPU memory in naive serving. Notice the gaps no request can ever use." />
 
 ### The Three Sins of Contiguous Allocation
 
@@ -174,7 +174,7 @@ PagedAttention completely decouples the **logical token stream** from **physical
 
 Let us walk through how a sequence transforms through four progressive stages:
 
-<ExcalidrawPagedSteps caption="Figure 4: The Progressive Mechanics of PagedAttention — Click the steps above to trace how virtual tokens map to scattered physical GPU memory." />
+<ExcalidrawPagedSteps exhibit="04" title="The mechanics of PagedAttention" caption="Click the steps above to trace how virtual tokens map to scattered physical GPU memory. Notice that the block table is the only contiguous structure." />
 
 ### Step 1: Virtual Blocks (Logical Slicing)
 When a request enters the engine, its logical token stream is partitioned into small, fixed-size **logical blocks** (typically 16 tokens; shown with block size $B=4$ in the diagram for clarity):
@@ -210,7 +210,7 @@ Because the memory addresses are resolved on-the-fly inside kernel registers, th
 
 Decoupling logical sequences from physical memory unlocked a capability previously impossible in static tensor architectures: **zero-copy memory sharing**.
 
-<ExcalidrawCopyOnWrite caption="Figure 5: Zero-Copy Memory Sharing & Copy-on-Write (CoW) — Shared prompt blocks are stored once in physical HBM with ref_count=2, branching only when output sequences diverge." />
+<ExcalidrawCopyOnWrite exhibit="05" title="Zero-copy sharing and copy-on-write" caption="Shared prompt blocks live once in physical HBM with ref_count=2; sequences branch only when their outputs diverge. Notice where the copy is — and isn't." />
 
 ### 1. Parallel Sampling & Speculative Decoding
 When generating multiple candidate responses for a single prompt (e.g. $N=4$ sample voting, beam search, or speculative draft validation):

@@ -8,12 +8,14 @@ import ExcalidrawContainer from './ExcalidrawContainer.astro';
 
 interface Props {
   caption?: string;
+  exhibit?: string;
+  title?: string;
 }
 
-const { caption = "Figure 1: Naive Autoregressive Recomputation (O(N²) redundant passes) vs. KV Caching (O(N) single-token projection)." } = Astro.props;
+const { caption = "Figure 1: Naive Autoregressive Recomputation (O(N²) redundant passes) vs. KV Caching (O(N) single-token projection).", exhibit, title } = Astro.props;
 ---
 
-<ExcalidrawContainer caption={caption} badge="Decoding Mechanics">
+<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="Decoding Mechanics">
   <svg class="ex-svg-canvas" viewBox="0 0 760 410" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <!-- Arrow markers -->

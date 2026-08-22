@@ -1,0 +1,75 @@
+---
+/**
+ * Exhibit.astro
+ * Numbered figure frame — the site's signature detail.
+ * Mono label above ("Exhibit 01 — Title"), hairline frame, caption below.
+ * Wraps any content: Excalidraw diagrams, images, code, demos.
+ */
+interface Props {
+  exhibit?: string;
+  title?: string;
+  caption?: string;
+  wide?: boolean;
+}
+
+const { exhibit, title, caption, wide = false } = Astro.props;
+---
+
+<figure class:list={['exhibit', { wide }]}>
+  {exhibit && (
+    <p class="exhibit-label">
+      Exhibit {exhibit}{title && <span class="exhibit-label-title">&mdash; {title}</span>}
+    </p>
+  )}
+  <div class="exhibit-frame">
+    <slot />
+  </div>
+  {caption && <figcaption class="exhibit-caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .exhibit {
+    margin: var(--space-6) 0;
+    width: 100%;
+  }
+
+  .exhibit.wide {
+    /* Break out of the reading measure on wide viewports */
+  }
+
+  .exhibit-label {
+    margin: 0 0 var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .exhibit-label-title {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .exhibit-frame {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-elevated);
+    overflow: hidden;
+  }
+
+  .exhibit-caption {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  @media (min-width: 960px) {
+    .exhibit.wide {
+      width: 110%;
+      margin-left: -5%;
+    }
+  }
+</style>

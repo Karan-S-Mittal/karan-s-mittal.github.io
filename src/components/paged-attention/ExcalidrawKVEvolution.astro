@@ -8,12 +8,14 @@ import ExcalidrawContainer from './ExcalidrawContainer.astro';
 
 interface Props {
   caption?: string;
+  exhibit?: string;
+  title?: string;
 }
 
-const { caption = "Figure 2: Architectural Evolution of KV Cache Heads — Multi-Head Attention (1:1), Multi-Query Attention (N:1), and Grouped-Query Attention (G:1)." } = Astro.props;
+const { caption = "Figure 2: Architectural Evolution of KV Cache Heads — Multi-Head Attention (1:1), Multi-Query Attention (N:1), and Grouped-Query Attention (G:1).", exhibit, title } = Astro.props;
 ---
 
-<ExcalidrawContainer caption={caption} badge="Architecture Evolution">
+<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="Architecture Evolution">
   <svg class="ex-svg-canvas" viewBox="0 0 760 380" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <marker id="ex-arr-evo" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
