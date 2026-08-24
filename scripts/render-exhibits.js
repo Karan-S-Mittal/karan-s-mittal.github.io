@@ -40,15 +40,22 @@ const exhibitRegistry = [
   },
 ];
 
-const themes = {
-  light: {
-    canvas: '#f4f7fb', card: '#ffffff', mutedCard: '#edf2f8', ink: '#13213a',
-    muted: '#68768b', border: '#aebccc', signal: '#1f66e5', signalText: '#164eaf', signalBg: '#e8f0ff',
-  },
-  dark: {
-    canvas: '#111820', card: '#18222e', mutedCard: '#202c39', ink: '#eff4fa',
-    muted: '#aab6c5', border: '#53677d', signal: '#74a9ff', signalText: '#a5c8ff', signalBg: '#20324a',
-  },
+/**
+ * Soft Architecture raster palette (spec §3) — light only.
+ * Darkness is semantic (code, conclusion planes); exhibits are always light.
+ * Values mirror the token remaps in public/styles/global.css (--ex-* block).
+ */
+const theme = {
+  canvas: '#f8f9fc',    // page surface (--neutral-050)
+  card: '#ffffff',      // node surface (--neutral-000)
+  mutedCard: '#eef1f6', // secondary plane
+  ink: '#1a1a2e',       // structure & text (--ink-900)
+  muted: '#68768b',     // annotations
+  border: '#aab4c4',    // visible hairline on white
+  signal: '#2676aa',    // primary blue (--blue-500)
+  signalText: '#246fa0',// interactive text (--blue-600)
+  signalBg: '#dceeff',  // subtle blue fill (--blue-100)
+  lavender: '#cdb4db',  // async/inferred edges (--lavender-400)
 };
 
 function svgStyles(theme) {
@@ -59,12 +66,12 @@ function svgStyles(theme) {
     .rule { stroke: ${theme.border}; stroke-width: 1.2; }
     .flow { fill: none; stroke: ${theme.ink}; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .flow-signal { fill: none; stroke: ${theme.signal}; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-    .flow-dashed { fill: none; stroke: ${theme.muted}; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 4 4; }
-    .label { fill: ${theme.muted}; font-family: monospace; font-size: 13px; letter-spacing: .06em; }
-    .label-signal { fill: ${theme.signalText}; font-family: monospace; font-size: 13px; font-weight: 600; letter-spacing: .06em; }
-    .title { fill: ${theme.ink}; font-family: sans-serif; font-size: 18px; font-weight: 600; }
-    .body { fill: ${theme.ink}; font-family: sans-serif; font-size: 14px; }
-    .body-muted { fill: ${theme.muted}; font-family: sans-serif; font-size: 14px; }
+    .flow-dashed { fill: none; stroke: ${theme.lavender}; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 4 4; }
+    .label { fill: ${theme.muted}; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; letter-spacing: .06em; }
+    .label-signal { fill: ${theme.signalText}; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; letter-spacing: .06em; }
+    .title { fill: ${theme.ink}; font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 600; }
+    .body { fill: ${theme.ink}; font-family: 'Inter', sans-serif; font-size: 14px; }
+    .body-muted { fill: ${theme.muted}; font-family: 'Inter', sans-serif; font-size: 14px; }
   `.replace(/\s+/g, ' ');
 }
 
@@ -121,23 +128,21 @@ async function main() {
     const sourcePath = resolve(sourceDirectory, sourceFile);
     const component = await readFile(sourcePath, 'utf8');
 
-    for (const [themeName, theme] of Object.entries(themes)) {
-      const outputPath = resolve(outputDirectory, `${outputSlug}.${themeName}.webp`);
-      const svgBuffer = Buffer.from(sourceSvg(component, theme, bindings));
+    const outputPath = resolve(outputDirectory, `${outputSlug}.webp`);
+    const svgBuffer = Buffer.from(sourceSvg(component, theme, bindings));
 
-      await sharp(svgBuffer, { density: 288 })
-        .resize({ width: 2400 })
-        .flatten({ background: theme.canvas })
-        .webp({ quality: 90, effort: 5 })
-        .toFile(outputPath);
+    await sharp(svgBuffer, { density: 288 })
+      .resize({ width: 2400 })
+      .flatten({ background: theme.canvas })
+      .webp({ quality: 90, effort: 5 })
+      .toFile(outputPath);
 
-      // Verify file was written and is non-empty
-      const fileStat = await stat(outputPath);
-      if (fileStat.size === 0) {
-        throw new Error(`Assertion Error: Rendered empty file for ${outputPath}`);
-      }
-      generatedOutputs.push(outputPath);
+    // Verify file was written and is non-empty
+    const fileStat = await stat(outputPath);
+    if (fileStat.size === 0) {
+      throw new Error(`Assertion Error: Rendered empty file for ${outputPath}`);
     }
+    generatedOutputs.push(outputPath);
   }
 
   const manifest = {
