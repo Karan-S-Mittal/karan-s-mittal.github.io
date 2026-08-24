@@ -5,7 +5,7 @@ import { createCopyOnWriteRoutes } from '../src/lib/diagram-routing/index.js';
 
 const root = resolve(import.meta.dirname, '..');
 const outputDirectory = resolve(root, 'public/generated/exhibits');
-const sourceDirectory = resolve(root, 'src/components/paged-attention');
+const sourceDirectory = resolve(root, 'src/components/diagram/paged-attention');
 
 /**
  * Explicit registry of exhibits to guarantee stable output names,
