@@ -282,6 +282,26 @@ li::marker {
   color: var(--accent);
 }
 
+/* ---- Arrow pointers: one optical gap everywhere, nudge on hover (spec §46) ---- */
+.arrow-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45em;
+}
+.arrow-link .arrow {
+  color: var(--accent);
+}
+@media (hover: hover) {
+  .arrow-link:hover .arrow {
+    translate: 2px 0;
+  }
+}
+
+/* Arrow list markers need real breathing room after the glyph */
+ul li::before {
+  letter-spacing: 0;
+}
+
 /* Numbers are evidence — align digits wherever comparison matters */
 time, table, .label, .proof-num, .evidence-object {
   font-variant-numeric: tabular-nums;

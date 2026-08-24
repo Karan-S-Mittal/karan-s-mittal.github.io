@@ -6,7 +6,6 @@ import Button from '../components/editorial/Button.astro';
 import Exhibit from '../components/editorial/Exhibit.astro';
 import EvidenceObject from '../components/editorial/EvidenceObject.astro';
 import DarkPlane from '../components/editorial/DarkPlane.astro';
-import TintedPlane from '../components/editorial/TintedPlane.astro';
 import workData from '../data/work.json';
 import talksData from '../data/talks.json';
 import { SITE } from '../config';
@@ -193,20 +192,9 @@ const capabilities = [
             </g>
           </svg>
         </Exhibit>
-        <p class="system-link-row"><a href="/blog/paged-attention-kv-cache/">Read the full breakdown &rarr;</a></p>
+        <p class="system-link-row"><a href="/blog/paged-attention-kv-cache/" class="arrow-link">Read the full breakdown<span class="arrow" aria-hidden="true">&rarr;</span></a></p>
       </section>
 
-      <!-- STATEMENT — quiet tinted plane (spec §24 TintedPlane) -->
-      <section class="home-section" aria-label="Working principle">
-        <TintedPlane label="How I work">
-          <h2>Ambiguity &rarr; structure &rarr; system &rarr; evidence.</h2>
-          <p>
-            Every engagement follows the same transformation: an unclear problem,
-            a boundary drawn around it, a mechanism that makes it deterministic,
-            and the measurements that prove it works.
-          </p>
-        </TintedPlane>
-      </section>
       <section class="home-section" aria-labelledby="evidence-heading">
         <MetaLabel index="03" label="Evidence" />
         <h2 id="evidence-heading" class="visually-hidden">Evidence</h2>
@@ -224,7 +212,7 @@ const capabilities = [
       <section class="home-section" aria-labelledby="work-heading">
         <div class="section-heading">
           <MetaLabel index="04" label="Selected work" />
-          <a href="/work" class="section-more">All work &rarr;</a>
+          <a href="/work" class="section-more arrow-link">All work<span class="arrow" aria-hidden="true">&rarr;</span></a>
         </div>
         <h2 id="work-heading" class="visually-hidden">Selected work</h2>
         <div class="work-list">
@@ -245,7 +233,7 @@ const capabilities = [
       <section class="home-section" aria-labelledby="essays-heading">
         <div class="section-heading">
           <MetaLabel index="05" label="Writing" />
-          <a href="/blog" class="section-more">All essays &rarr;</a>
+          <a href="/blog" class="section-more arrow-link">All essays<span class="arrow" aria-hidden="true">&rarr;</span></a>
         </div>
         <h2 id="essays-heading" class="visually-hidden">Writing</h2>
         <div class="writing-list">
@@ -266,14 +254,14 @@ const capabilities = [
       <section class="home-section" aria-labelledby="speaking-heading">
         <div class="section-heading">
           <MetaLabel index="06" label="Speaking" />
-          <a href="/talks" class="section-more">All talks &rarr;</a>
+          <a href="/talks" class="section-more arrow-link">All talks<span class="arrow" aria-hidden="true">&rarr;</span></a>
         </div>
         <h2 id="speaking-heading" class="visually-hidden">Speaking</h2>
         <div class="public-list">
           {recentTalks.map(talk => (
             <a href={talk.links[0]?.url ?? '/talks'} class="public-row" target={talk.links[0] ? '_blank' : undefined} rel={talk.links[0] ? 'noopener' : undefined}>
               <span class="public-label">{talk.title}</span>
-              <span class="public-meta">{talk.event} &middot; {formatDate(talk.date)} &rarr;</span>
+              <span class="public-meta arrow-link">{talk.event} &middot; {formatDate(talk.date)}<span class="arrow" aria-hidden="true">&rarr;</span></span>
             </a>
           ))}
         </div>
