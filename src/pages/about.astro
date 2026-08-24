@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/portfolio/PageHeader.astro';
+import Icon from '../components/chrome/Icon.astro';
+import StudioPanel from '../components/chrome/StudioPanel.astro';
 import communitiesData from '../data/communities.json';
 
 const { communities } = communitiesData;
@@ -26,10 +28,55 @@ const { communities } = communitiesData;
     </p>
 
     <nav class="local-nav">
+      <a href="#now">Now</a>
+      <span class="nav-sep">·</span>
       <a href="#capabilities">Practice</a>
       <span class="nav-sep">·</span>
       <a href="#community">Community</a>
     </nav>
+
+    <section id="now">
+      <h2>Now</h2>
+      <p class="section-desc">A living snapshot of current focus, updated periodically.</p>
+      <div class="now-grid">
+        <StudioPanel title="Work" index="01" state="signal">
+          <Icon slot="icon" name="briefcase" size={15} />
+          <ul>
+            <li>Co-founding and leading engineering at <a href="https://dextar.co">Dextar.co</a></li>
+            <li>Architecting production GraphRAG systems for enterprise clients</li>
+            <li>Consulting on MLOps infrastructure and GPU cluster optimisation</li>
+          </ul>
+        </StudioPanel>
+
+        <StudioPanel title="Building" index="02" state="model">
+          <Icon slot="icon" name="wrench" size={15} />
+          <ul>
+            <li>An open-source deterministic RAG evaluation harness</li>
+            <li>A CUDA optimisation pattern cookbook for ML inference</li>
+            <li>This blog and my GitHub presence</li>
+          </ul>
+        </StudioPanel>
+
+        <StudioPanel title="Learning" index="03" state="verified">
+          <Icon slot="icon" name="book-open" size={15} />
+          <ul>
+            <li>Advanced Rust for systems programming</li>
+            <li>CPU/GPU co-design patterns for edge LLM inference</li>
+          </ul>
+        </StudioPanel>
+
+        <StudioPanel title="Speaking" index="04" state="signal">
+          <Icon slot="icon" name="mic" size={15} />
+          <ul>
+            <li>Preparing talks on GraphRAG and deterministic retrieval for 2026</li>
+            <li><a href="/talks">View all talks and events →</a></li>
+          </ul>
+        </StudioPanel>
+      </div>
+      <p class="now-footer">
+        Last updated: August 2026 · <a href="https://nownownow.com/about">What is a /now page?</a>
+      </p>
+    </section>
 
     <section id="capabilities">
       <h2>Engineering practice</h2>
@@ -69,9 +116,7 @@ const { communities } = communitiesData;
                 {c.links.map((link: { label: string; url: string }) => (
                   <a href={link.url} target="_blank" rel="noopener">
                     {link.label}
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M7 17L17 7"/><path d="M7 7h10v10"/>
-                    </svg>
+                    <Icon name="arrow-up-right" size={12} />
                   </a>
                 ))}
               </div>
@@ -85,7 +130,7 @@ const { communities } = communitiesData;
       <h2>Let's build</h2>
       <p>For consulting engagements involving complex data, AI reliability, system performance, or technical strategy.</p>
       <div class="cta-actions">
-        <a href="/contact" class="cta-link">Discuss an engagement →</a>
+        <a href="/#contact" class="cta-link">Discuss an engagement →</a>
         <a href="https://www.linkedin.com/in/karansmittal/" class="cta-link">LinkedIn →</a>
       </div>
     </section>
@@ -153,6 +198,28 @@ const { communities } = communitiesData;
     color: var(--muted);
     margin-bottom: var(--space-5);
     margin-top: calc(var(--space-2) * -1);
+  }
+
+  .now-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+  .now-grid ul {
+    margin: 0;
+    padding-left: var(--space-4);
+    color: var(--muted);
+    font-size: var(--text-sm);
+    line-height: 1.65;
+  }
+  .now-grid li {
+    margin-bottom: var(--space-1);
+  }
+  .now-footer {
+    color: var(--muted);
+    font-size: var(--text-xs);
+    margin: 0 0 var(--space-7);
   }
 
   .community-list {
@@ -243,6 +310,9 @@ const { communities } = communitiesData;
   }
 
   @media (max-width: 720px) {
+    .now-grid {
+      grid-template-columns: 1fr;
+    }
     .capability {
       grid-template-columns: 1fr;
       gap: var(--space-1);

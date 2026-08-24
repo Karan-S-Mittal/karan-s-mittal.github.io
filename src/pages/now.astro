@@ -1,97 +1,13 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import PageHeader from '../components/portfolio/PageHeader.astro';
-import Icon from '../components/chrome/Icon.astro';
-import StudioPanel from '../components/chrome/StudioPanel.astro';
+// /now merged into /about#now — static redirect for inbound links.
 ---
-
-<Layout title="Now | Karan Mittal">
-  <main class="container">
-    <PageHeader
-      label="Now"
-      title="What I'm Doing Now"
-      description="A living snapshot of my current focus. This page is updated periodically and serves as a north star for my priorities."
-    />
-
-    <div class="now-grid">
-      <StudioPanel title="Work" index="01" state="signal">
-        <Icon slot="icon" name="briefcase" size={15} />
-        <ul>
-          <li>Co-founding and leading engineering at <a href="https://dextar.co">Dextar.co</a></li>
-          <li>Architecting production GraphRAG systems for enterprise clients</li>
-          <li>Consulting on MLOps infrastructure and GPU cluster optimisation</li>
-        </ul>
-      </StudioPanel>
-
-      <StudioPanel title="Building" index="02" state="model">
-        <Icon slot="icon" name="wrench" size={15} />
-        <ul>
-          <li>An open-source deterministic RAG evaluation harness</li>
-          <li>A CUDA optimisation pattern cookbook for ML inference</li>
-          <li>This blog and my GitHub presence</li>
-        </ul>
-      </StudioPanel>
-
-      <StudioPanel title="Learning" index="03" state="verified">
-        <Icon slot="icon" name="book-open" size={15} />
-        <ul>
-          <li>Advanced Rust for systems programming</li>
-          <li>CPU/GPU co-design patterns for edge LLM inference</li>
-        </ul>
-      </StudioPanel>
-
-      <StudioPanel title="Community" index="04" state="constraint">
-        <Icon slot="icon" name="users" size={15} />
-        <ul>
-          <li>Organising <a href="https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/">MLIndore</a> hands-on AI workshops</li>
-          <li>Mentoring at <a href="https://www.codevipassana.dev/">CodeVipassana</a></li>
-          <li>Hosting cloud-native sessions at <a href="https://gdg.community.dev/gdg-cloud-indore/">GDG Cloud Indore</a></li>
-        </ul>
-      </StudioPanel>
-
-      <StudioPanel title="Speaking" index="05" state="signal">
-        <Icon slot="icon" name="mic" size={15} />
-        <ul>
-          <li>Preparing talks on GraphRAG and deterministic retrieval for 2026</li>
-          <li>Workshop on Building Knowledge Engines with RAG</li>
-          <li><a href="/talks">View all talks and events →</a></li>
-        </ul>
-      </StudioPanel>
-    </div>
-
-    <p class="now-footer">
-      Last updated: August 2026 · <a href="https://nownownow.com/about">What is a /now page?</a>
-    </p>
-  </main>
-</Layout>
-
-<style>
-  .now-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-4);
-  }
-  .now-grid ul {
-    margin: 0;
-    padding-left: var(--space-4);
-    color: var(--muted);
-    font-size: var(--text-sm);
-    line-height: 1.65;
-  }
-  .now-grid li {
-    margin-bottom: var(--space-1);
-  }
-
-  .now-footer {
-    color: var(--muted);
-    font-size: var(--text-xs);
-    margin-top: var(--space-7);
-    text-align: center;
-  }
-
-  @media (max-width: 640px) {
-    .now-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0;url=/about#now" />
+    <link rel="canonical" href="/about#now" />
+    <title>Redirecting…</title>
+  </head>
+  <body><p>This page moved to <a href="/about#now">About · Now</a>.</p></body>
+</html>
