@@ -199,10 +199,10 @@ body {
   }
 }
 
-/* Selection */
+/* Selection — soft warm emphasis plane (spec §3.1 signal.emphasis) */
 ::selection {
-  background: var(--accent-subtle);
-  color: var(--text);
+  background: var(--pink-300);
+  color: var(--ink-900);
 }
 
 /* Focus */
@@ -387,7 +387,7 @@ article blockquote p:last-child { margin-bottom: 0; }
 
 hr {
   border: none;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid color-mix(in srgb, var(--lavender-400) 40%, var(--neutral-150));
   margin: var(--space-7) 0;
 }
 
@@ -446,7 +446,7 @@ hr {
 }
 .tag::before {
   content: '#';
-  color: var(--border);
+  color: var(--signal-secondary); /* lavender metadata mark */
   margin-right: 1px;
 }
 .tag:hover {

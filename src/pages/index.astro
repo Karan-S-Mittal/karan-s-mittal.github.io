@@ -6,7 +6,7 @@ import Button from '../components/Button.astro';
 import Exhibit from '../components/Exhibit.astro';
 import EvidenceObject from '../components/EvidenceObject.astro';
 import DarkPlane from '../components/DarkPlane.astro';
-import SectionBreak from '../components/SectionBreak.astro';
+import TintedPlane from '../components/TintedPlane.astro';
 import workData from '../data/work.json';
 import talksData from '../data/talks.json';
 
@@ -194,9 +194,17 @@ const capabilities = [
         <p class="system-link-row"><a href="/blog/paged-attention-kv-cache/">Read the full breakdown &rarr;</a></p>
       </section>
 
-      <SectionBreak />
-
-      <!-- EVIDENCE (spec §13) -->
+      <!-- STATEMENT — quiet tinted plane (spec §24 TintedPlane) -->
+      <section class="home-section" aria-label="Working principle">
+        <TintedPlane label="How I work">
+          <h2>Ambiguity &rarr; structure &rarr; system &rarr; evidence.</h2>
+          <p>
+            Every engagement follows the same transformation: an unclear problem,
+            a boundary drawn around it, a mechanism that makes it deterministic,
+            and the measurements that prove it works.
+          </p>
+        </TintedPlane>
+      </section>
       <section class="home-section" aria-labelledby="evidence-heading">
         <MetaLabel index="03" label="Evidence" />
         <h2 id="evidence-heading" class="visually-hidden">Evidence</h2>
@@ -298,6 +306,10 @@ const capabilities = [
     position: relative;
     overflow: hidden;
     border-bottom: 1px solid var(--border-subtle);
+    /* Canvas-blue ambience (spec §3.1) — the soft light comes from the top right */
+    background:
+      radial-gradient(circle at 85% 8%, var(--blue-100), transparent 58%),
+      var(--surface-page);
   }
   .hero-topology {
     position: absolute;
@@ -369,8 +381,12 @@ const capabilities = [
   }
   .capability-plane {
     padding: var(--space-5);
-    background: var(--surface-card);
-    border: 1px solid var(--border-default);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--blue-100) 38%, var(--surface-card)),
+      var(--surface-card) 70%
+    );
+    border: 1px solid color-mix(in srgb, var(--blue-300) 45%, var(--border-default));
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-card);
   }

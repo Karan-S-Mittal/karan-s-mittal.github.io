@@ -26,6 +26,14 @@ const { label, title, description, count, countLabel = 'on record' } = Astro.pro
 <style>
   .page-header {
     margin-bottom: var(--space-7);
+    padding: var(--space-6);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--blue-100) 55%, transparent),
+      transparent 65%
+    );
+    border: 1px solid color-mix(in srgb, var(--blue-300) 40%, transparent);
+    border-radius: var(--radius-card);
   }
   .page-header h1 {
     margin-bottom: var(--space-3);
@@ -42,10 +50,17 @@ const { label, title, description, count, countLabel = 'on record' } = Astro.pro
     margin-left: var(--space-2);
     font-size: var(--text-xs);
     font-weight: 600;
-    color: var(--muted);
-    background: var(--bg-elevated);
+    color: var(--blue-600);
+    background: color-mix(in srgb, var(--blue-100) 70%, var(--neutral-000));
+    border: 1px solid color-mix(in srgb, var(--blue-300) 55%, transparent);
     padding: var(--space-1) var(--space-2);
     border-radius: var(--radius-sm);
     white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .page-header {
+      padding: var(--space-5);
+    }
   }
 </style>

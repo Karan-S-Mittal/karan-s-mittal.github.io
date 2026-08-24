@@ -116,7 +116,13 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     position: relative;
     padding: clamp(2.5rem, 7vw, 5.5rem) 0 2.5rem;
     margin-bottom: 3.5rem;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid color-mix(in srgb, var(--blue-300) 40%, var(--neutral-150));
+    /* Faint canvas-blue ambience behind the title block */
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--blue-100) 40%, transparent),
+      transparent 80%
+    );
   }
   .post-memory-module {
     position: absolute;
