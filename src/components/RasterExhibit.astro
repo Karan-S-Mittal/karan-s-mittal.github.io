@@ -1,0 +1,25 @@
+---
+/**
+ * RasterExhibit.astro (Compatibility Wrapper)
+ * Retained for backwards compatibility during migration.
+ * Delegates directly to the unified Exhibit.astro component.
+ */
+import Exhibit from './Exhibit.astro';
+
+interface Props {
+  exhibit?: string;
+  title?: string;
+  badge?: string;
+  caption?: string;
+  src: string;
+  darkSrc?: string;
+  alt?: string;
+  height?: number;
+  wide?: boolean;
+}
+
+const props = Astro.props;
+---
+
+<Exhibit {...props} wide={props.wide ?? true} minimal={true} />
+

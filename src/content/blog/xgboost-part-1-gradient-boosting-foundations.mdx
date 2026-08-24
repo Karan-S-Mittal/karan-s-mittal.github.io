@@ -1,0 +1,545 @@
+---
+title: "From Decision Trees to Gradient Boosting: Optimization in Function Space"
+description: "A first-principles breakdown of recursive feature space partitioning, the bias-variance dichotomy of bagging vs boosting, and Friedman's geometric formulation of boosting as gradient descent in function space."
+pubDate: 2026-08-24
+tags: ["Machine Learning", "Gradient Boosting", "Decision Trees", "Optimization", "Algorithms", "Mathematics"]
+draft: false
+---
+
+import Exhibit from '../../components/Exhibit.astro';
+import BenchmarkChart from '../../components/BenchmarkChart.astro';
+import AlgorithmFlow from '../../components/AlgorithmFlow.astro';
+
+In modern statistical learning, tree-based ensembles occupy an unusual and resilient position. Despite the dominance of deep neural networks in perceptual domains such as computer vision and natural language processing, gradient boosted decision trees remain the foundational workhorse for structured, tabular, and heterogeneously-typed data.
+
+Yet the theoretical mechanism powering gradient boosting is often obscured behind software APIs or conflated with heuristic sample reweighting.
+
+To understand why gradient boosting works—and why it achieves such remarkable empirical sample efficiency—we must shift our mathematical vantage point. We must transition from optimizing finite parameter vectors in Euclidean weight space $\mathbb{R}^p$ to performing **steepest gradient descent directly in an infinite-dimensional function space** $\mathcal{H}$.
+
+This essay constructs that paradigm from first principles:
+1. **The Recursive Partitioning Primitive:** How decision trees carve continuous feature spaces into orthogonal hyper-rectangles.
+2. **The Bias-Variance Fork:** Why Random Forests average independent variance while Boosting sequentially contracts bias.
+3. **The Geometric Shift:** How Jerome Friedman reformulated boosting from AdaBoost's sample reweighting into functional gradient descent.
+4. **The Derivation of Pseudo-Residuals:** How arbitrary differentiable loss functions project their negative gradients onto constrained base trees.
+5. **Mechanics of Regularization:** Why shrinkage (learning rate) and stochastic subsampling govern the geometry of convergence.
+
+---
+
+## 1. First Principles of Decision Trees: Axis-Aligned Partitioning
+
+Every ensemble algorithm begins with a base hypothesis class. In tree-based modeling, that base learner is the **Classification and Regression Tree (CART)**.
+
+Let our training dataset be $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^N$, where each feature vector $\mathbf{x}_i = (x_{i,1}, x_{i,2}, \dots, x_{i,d})^{\mathsf T} \in \mathbb{R}^d$ represents a $d$-dimensional measurement, and $y_i \in \mathbb{R}$ represents the corresponding target label.
+
+### The Formal Tree Representation
+
+Mathematically, a decision tree with $J$ terminal nodes (leaves) partitions the continuous input space $\mathbb{R}^d$ into $J$ disjoint, axis-aligned hyper-rectangular regions $\{R_1, R_2, \dots, R_J\}$ such that:
+
+$$
+\bigcup_{j=1}^J R_j = \mathbb{R}^d \quad \text{and} \quad R_j \cap R_k = \emptyset \quad \forall \; j \neq k
+$$
+
+The tree assigns a single constant scalar prediction $\gamma_j \in \mathbb{R}$ to every input falling within region $R_j$. The complete mapping $f: \mathbb{R}^d \to \mathbb{R}$ is expressed as a linear combination of indicator functions:
+
+$$
+f(\mathbf{x}) = \sum_{j=1}^J \gamma_j \mathbb{I}(\mathbf{x} \in R_j)
+$$
+
+<p class="formula-note"><strong>How to read it.</strong> $\mathbb{I}(\mathbf{x} \in R_j)$ evaluates to $1$ if the input vector $\mathbf{x}$ lands inside hyper-rectangle $R_j$, and $0$ otherwise. Because the regions are mutually exclusive and collectively exhaustive, exactly one indicator fires for any input, returning that region's constant weight $\gamma_j$.</p>
+
+For a fixed partition $\{R_j\}_{j=1}^J$ under a squared error loss metric $L(y, \hat{y}) = \frac{1}{2}(y - \hat{y})^2$, the optimal leaf response $\gamma_j^*$ is analytically trivial—it is simply the arithmetic mean of all training observations mapped to leaf $R_j$:
+
+$$
+\gamma_j^* = \arg\min_{\gamma_j} \sum_{\mathbf{x}_i \in R_j} \frac{1}{2}(y_i - \gamma_j)^2 = \bar{y}_j = \frac{1}{N_j} \sum_{\mathbf{x}_i \in R_j} y_i
+$$
+
+where $N_j = |\{\mathbf{x}_i \in R_j\}|$ denotes the cardinality of training instances falling into leaf $j$.
+
+<Exhibit 
+  exhibit="01" 
+  title="Axis-Aligned Feature Space Partitioning and the Tree Topology" 
+  badge="GEOMETRIC PRIMITIVE" 
+  caption="A 2D continuous feature space partitioned into five orthogonal leaves (left) and its corresponding binary decision tree topology (right). Each internal split node corresponds to a single hyperplanar cut orthogonal to one coordinate axis.">
+
+  <svg class="sys-diagram" viewBox="0 0 800 360" role="img" aria-label="Feature space partitioning and corresponding binary decision tree">
+    <defs>
+      <marker id="xgb-p1-ex1-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+        <path d="M 0 0 L 10 4 L 0 8 Z" fill="var(--ex-text-main)" />
+      </marker>
+    </defs>
+    {/* Left: 2D Feature Space Partition */}
+    <g transform="translate(40, 30)">
+      <rect x="0" y="0" width="280" height="260" rx="4" fill="var(--ex-card-bg)" stroke="var(--ex-text-main)" stroke-width="2" />
+      
+      <text x="140" y="290" text-anchor="middle" class="label">Feature Axis x₁ →</text>
+      <text x="-130" y="-14" text-anchor="middle" transform="rotate(-90)" class="label">Feature Axis x₂ →</text>
+      
+      <line x1="150" y1="0" x2="150" y2="260" stroke="var(--ex-blue-stroke)" stroke-width="2.5" stroke-dasharray="none" />
+      <text x="155" y="18" class="label-signal" font-size="11">Split 1: x₁ = s₁</text>
+
+      <line x1="0" y1="140" x2="150" y2="140" stroke="var(--ex-indigo-stroke)" stroke-width="2" />
+      <text x="8" y="132" class="label" font-size="11" fill="var(--ex-indigo-text)">Split 2: x₂ = s₂</text>
+
+      <line x1="150" y1="90" x2="280" y2="90" stroke="var(--ex-indigo-stroke)" stroke-width="2" />
+      <text x="158" y="82" class="label" font-size="11" fill="var(--ex-indigo-text)">Split 3: x₂ = s₃</text>
+
+      <line x1="215" y1="0" x2="215" y2="90" stroke="var(--ex-amber-stroke)" stroke-width="1.8" stroke-dasharray="3 3" />
+      <text x="220" y="24" class="label" font-size="10" fill="var(--ex-amber-text)">Split 4</text>
+
+      <rect x="2" y="2" width="146" height="136" fill="var(--ex-blue-bg)" opacity="0.45" />
+      <text x="75" y="65" text-anchor="middle" class="title" font-size="14">Region R₁</text>
+      <text x="75" y="85" text-anchor="middle" class="label" font-size="11">γ₁ = 12.4</text>
+
+      <rect x="2" y="142" width="146" height="116" fill="var(--ex-green-bg)" opacity="0.45" />
+      <text x="75" y="195" text-anchor="middle" class="title" font-size="14">Region R₂</text>
+      <text x="75" y="215" text-anchor="middle" class="label" font-size="11">γ₂ = 4.2</text>
+
+      <rect x="152" y="92" width="126" height="166" fill="var(--ex-purple-bg)" opacity="0.45" />
+      <text x="215" y="170" text-anchor="middle" class="title" font-size="14">Region R₃</text>
+      <text x="215" y="190" text-anchor="middle" class="label" font-size="11">γ₃ = 28.9</text>
+
+      <rect x="152" y="2" width="61" height="86" fill="var(--ex-amber-bg)" opacity="0.45" />
+      <text x="182" y="42" text-anchor="middle" class="title" font-size="12">R₄</text>
+      <text x="182" y="58" text-anchor="middle" class="label" font-size="10">γ₄=18.1</text>
+
+      <rect x="217" y="2" width="61" height="86" fill="var(--ex-rose-bg)" opacity="0.45" />
+      <text x="248" y="42" text-anchor="middle" class="title" font-size="12">R₅</text>
+      <text x="248" y="58" text-anchor="middle" class="label" font-size="10">γ₅=34.0</text>
+    </g>
+
+    {/* Connector Arrow */}
+    <g transform="translate(350, 160)">
+      <path d="M 0 0 L 30 0" stroke="var(--ex-text-main)" stroke-width="2" marker-end="url(#xgb-p1-ex1-arrow)" />
+      <text x="15" y="-12" text-anchor="middle" class="label" font-size="11">Isomorphic</text>
+    </g>
+
+    {/* Right: Binary Decision Tree Topology */}
+    <g transform="translate(420, 20)">
+
+      <rect x="130" y="10" width="120" height="38" rx="4" class="node-signal" />
+      <text x="190" y="34" text-anchor="middle" class="label-signal" font-size="12">x₁ ≤ s₁ ?</text>
+
+      <path d="M 160 48 L 90 90" class="flow" />
+      <path d="M 220 48 L 290 90" class="flow" />
+      <text x="110" y="65" class="label" font-size="10">Yes</text>
+      <text x="260" y="65" class="label" font-size="10">No</text>
+
+      <rect x="30" y="90" width="110" height="36" rx="4" class="node" />
+      <text x="85" y="113" text-anchor="middle" class="body" font-size="12">x₂ ≤ s₂ ?</text>
+
+      <rect x="230" y="90" width="110" height="36" rx="4" class="node" />
+      <text x="285" y="113" text-anchor="middle" class="body" font-size="12">x₂ ≤ s₃ ?</text>
+
+      <path d="M 60 126 L 30 170" class="flow" />
+      <path d="M 110 126 L 120 170" class="flow" />
+
+      <rect x="0" y="170" width="68" height="32" rx="4" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1.5" />
+      <text x="34" y="191" text-anchor="middle" class="label-signal" font-size="11">R₁: 12.4</text>
+
+      <rect x="85" y="170" width="68" height="32" rx="4" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
+      <text x="119" y="191" text-anchor="middle" class="label" font-size="11" fill="var(--ex-green-text)">R₂: 4.2</text>
+
+      <path d="M 260 126 L 220 170" class="flow" />
+      <path d="M 310 126 L 320 170" class="flow" />
+
+      <rect x="185" y="170" width="68" height="32" rx="4" fill="var(--ex-purple-bg)" stroke="var(--ex-purple-stroke)" stroke-width="1.5" />
+      <text x="219" y="191" text-anchor="middle" class="label" font-size="11" fill="var(--ex-purple-text)">R₃: 28.9</text>
+
+      <rect x="275" y="170" width="90" height="32" rx="4" class="node" />
+      <text x="320" y="191" text-anchor="middle" class="body" font-size="11">x₁ ≤ s₄ ?</text>
+
+      <path d="M 300 202 L 275 240" class="flow" />
+      <path d="M 340 202 L 365 240" class="flow" />
+
+      <rect x="245" y="240" width="60" height="30" rx="4" fill="var(--ex-amber-bg)" stroke="var(--ex-amber-stroke)" stroke-width="1.5" />
+      <text x="275" y="259" text-anchor="middle" class="label" font-size="10" fill="var(--ex-amber-text)">R₄: 18.1</text>
+
+      <rect x="335" y="240" width="60" height="30" rx="4" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1.5" />
+      <text x="365" y="259" text-anchor="middle" class="label" font-size="10" fill="var(--ex-rose-text)">R₅: 34.0</text>
+    </g>
+  </svg>
+</Exhibit>
+
+### Greedy Recursive Binary Splitting (CART)
+
+Finding the globally optimal tree over all possible recursive partitions is a combinatorial search problem. A related minimum-size decision-tree consistency problem is NP-complete [1], which is why practical CART implementations use a top-down greedy search rather than enumerate every tree.
+
+Practical implementations therefore resort to a **top-down greedy heuristic**:
+1. At the current node with training subset $S \subseteq \mathcal{D}$, scan all feature dimensions $j \in \{1, 2, \dots, d\}$.
+2. For each feature $j$, scan all candidate split locations $s \in \mathbb{R}$ dividing $S$ into:
+   $$
+   R_{\text{left}}(j, s) = \{\mathbf{x} \in S \mid x_j \le s\} \quad \text{and} \quad R_{\text{right}}(j, s) = \{\mathbf{x} \in S \mid x_j > s\}
+   $$
+3. Select the optimal pair $(j^*, s^*)$ that maximizes the impurity reduction:
+
+$$
+(j^*, s^*) = \arg\max_{j, s} \left[ \sum_{\mathbf{x}_i \in S} (y_i - \bar{y}_S)^2 - \left( \sum_{\mathbf{x}_i \in R_{\text{left}}(j,s)} (y_i - \bar{y}_{\text{left}})^2 + \sum_{\mathbf{x}_i \in R_{\text{right}}(j,s)} (y_i - \bar{y}_{\text{right}})^2 \right) \right]
+$$
+
+<p class="formula-note"><strong>How to read it.</strong> The total variance of the parent node $S$ minus the combined weighted variance of the proposed left and right child subsets represents the variance explained by the split. The greedy search chooses the split that removes the most variance at this single step.</p>
+
+4. Recursively repeat this partitioning on $R_{\text{left}}$ and $R_{\text{right}}$ until a stopping condition (such as maximum depth $D$ or minimum sample count $N_{\min}$) is satisfied.
+
+---
+
+## 2. The Bias-Variance Dichotomy: Bagging vs. Boosting
+
+To understand how ensembles tame the instability of decision trees, we examine the canonical **bias-variance decomposition** of the expected generalization error for an estimator $\hat{f}(\mathbf{x})$ under squared loss:
+
+$$
+\mathbb{E}_{\mathcal{D}}\left[(y - \hat{f}(\mathbf{x}))^2\right] = \underbrace{\left(\mathbb{E}_{\mathcal{D}}[\hat{f}(\mathbf{x})] - f^*(\mathbf{x})\right)^2}_{\operatorname{Bias}^2(\hat{f}(\mathbf{x}))} + \underbrace{\mathbb{E}_{\mathcal{D}}\left[\left(\hat{f}(\mathbf{x}) - \mathbb{E}_{\mathcal{D}}[\hat{f}(\mathbf{x})]\right)^2\right]}_{\operatorname{Var}(\hat{f}(\mathbf{x}))} + \underbrace{\sigma^2_{\epsilon}}_{\text{Irreducible Noise}}
+$$
+
+<p class="formula-note"><strong>How to read it.</strong> Total generalization error decomposes into three additive components: the systematic approximation error (bias), the sensitivity of the learned model to the particular training sample draw (variance), and the irreducible noise of the data-generating process $\sigma_\epsilon^2$.</p>
+
+This decomposition creates a fundamental fork in ensemble design:
+
+| Property | Deep Decision Tree (Depth $\ge 12$) | Shallow Decision Tree / Stump (Depth $1 - 4$) |
+|---|---|---|
+| **Expressive Capacity** | Very High (overfits noise) | Low (rigid step function) |
+| **Bias Profile** | $\operatorname{Bias}^2 \approx 0$ (Low) | $\operatorname{Bias}^2 \gg 0$ (High) |
+| **Variance Profile** | $\operatorname{Var} \gg 0$ (High) | $\operatorname{Var} \approx 0$ (Low) |
+| **Ensemble Remedy** | **Bagging** (Averaging) | **Boosting** (Iterative Residuals) |
+
+<Exhibit 
+  exhibit="02" 
+  title="Structural Topology: Bagging vs. Boosting" 
+  badge="ENSEMBLE PARADIGMS" 
+  wide={true}
+  caption="Bagging (top) trains unconstrained, deep trees in parallel on bootstrap resamples and averages their outputs to eliminate variance. Boosting (bottom) trains constrained weak learners in sequence, where each base tree directly models the residual bias of the preceding ensemble.">
+
+  <svg class="sys-diagram" viewBox="0 0 800 370" role="img" aria-label="Comparison between Bagging and Boosting architectures">
+    <defs>
+      <marker id="xgb-p1-ex2-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+        <path d="M 0 0 L 10 4 L 0 8 Z" fill="var(--ex-text-main)" />
+      </marker>
+      <marker id="xgb-p1-ex2-arrow-signal" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+        <path d="M 0 0 L 10 4 L 0 8 Z" fill="var(--ex-blue-stroke)" />
+      </marker>
+    </defs>
+
+    {/* Top Panel: Bagging (Random Forest) */}
+    <g transform="translate(30 15)">
+      <rect x="0" y="0" width="740" height="155" rx="6" fill="var(--ex-card-bg)" stroke="var(--ex-border)" stroke-width="1.5" />
+      <text x="20" y="24" class="label-signal" font-size="12">PARALLEL BAGGING (RANDOM FOREST) — VARIANCE REDUCTION</text>
+
+      <rect x="20" y="58" width="108" height="64" rx="4" class="node" />
+      <text x="74" y="84" text-anchor="middle" class="body" font-size="12">Dataset 𝒟</text>
+      <text x="74" y="103" text-anchor="middle" class="label" font-size="10">N samples</text>
+
+      <path d="M 128 90 H 148 V 61 H 170" class="flow" marker-end="url(#xgb-p1-ex2-arrow)" />
+      <path d="M 128 90 H 170" class="flow" marker-end="url(#xgb-p1-ex2-arrow)" />
+      <path d="M 128 90 H 148 V 131 H 170" class="flow" marker-end="url(#xgb-p1-ex2-arrow)" />
+
+      <rect x="170" y="46" width="145" height="30" rx="4" fill="var(--ex-purple-bg)" stroke="var(--ex-purple-stroke)" stroke-width="1.2" />
+      <text x="242.5" y="65" text-anchor="middle" class="body" font-size="10.5" fill="var(--ex-purple-text)">Deep tree 1 · low bias</text>
+
+      <rect x="170" y="81" width="145" height="30" rx="4" fill="var(--ex-purple-bg)" stroke="var(--ex-purple-stroke)" stroke-width="1.2" />
+      <text x="242.5" y="100" text-anchor="middle" class="body" font-size="10.5" fill="var(--ex-purple-text)">Deep tree 2 · low bias</text>
+
+      <rect x="170" y="116" width="145" height="30" rx="4" fill="var(--ex-purple-bg)" stroke="var(--ex-purple-stroke)" stroke-width="1.2" />
+      <text x="242.5" y="135" text-anchor="middle" class="body" font-size="10.5" fill="var(--ex-purple-text)">Deep tree B · low bias</text>
+
+      <path d="M 315 61 H 338 V 90 H 360" class="flow" marker-end="url(#xgb-p1-ex2-arrow)" />
+      <path d="M 315 96 H 360" class="flow" marker-end="url(#xgb-p1-ex2-arrow)" />
+      <path d="M 315 131 H 338 V 90 H 360" class="flow" marker-end="url(#xgb-p1-ex2-arrow)" />
+
+      <rect x="360" y="58" width="175" height="64" rx="4" class="node-signal" />
+      <text x="447.5" y="83" text-anchor="middle" class="body" font-size="11.5" fill="var(--ex-blue-text)">Uniform average</text>
+      <text x="447.5" y="103" text-anchor="middle" class="label" font-size="10">F(x) = (1/B) ∑ fᵦ(x)</text>
+
+      <path d="M 535 90 H 560" class="flow" marker-end="url(#xgb-p1-ex2-arrow)" />
+
+      <rect x="560" y="58" width="176" height="64" rx="4" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.2" />
+      <text x="648" y="81" text-anchor="middle" class="body" font-size="11" fill="var(--ex-green-text)">Variance ↓</text>
+      <text x="648" y="99" text-anchor="middle" class="label" font-size="9.5" fill="var(--ex-green-text)">ρσ² + (1−ρ)σ²/B</text>
+      <text x="648" y="115" text-anchor="middle" class="label" font-size="9.5" fill="var(--ex-green-text)">bias unchanged</text>
+    </g>
+
+    {/* Bottom Panel: Boosting (Gradient Boosting) */}
+    <g transform="translate(30 190)">
+      <rect x="0" y="0" width="740" height="155" rx="6" fill="var(--ex-card-bg)" stroke="var(--ex-border)" stroke-width="1.5" />
+      <text x="20" y="24" class="label-signal" font-size="12">SEQUENTIAL BOOSTING (GRADIENT BOOSTING) — BIAS CONTRACTION</text>
+
+      <rect x="20" y="50" width="130" height="78" rx="4" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1.2" />
+      <text x="85" y="74" text-anchor="middle" class="body" font-size="11" fill="var(--ex-blue-text)">Base model</text>
+      <text x="85" y="96" text-anchor="middle" class="label" font-size="10">F₀ = argmin L</text>
+      <text x="85" y="114" text-anchor="middle" class="label" font-size="9.5">constant prior</text>
+
+      <path d="M 150 89 H 190" class="flow-signal" marker-end="url(#xgb-p1-ex2-arrow-signal)" />
+      <text x="170" y="76" text-anchor="middle" class="label" font-size="9.5" fill="var(--ex-rose-text)">residual r₁</text>
+
+      <rect x="190" y="50" width="140" height="78" rx="4" class="node" />
+      <text x="260" y="74" text-anchor="middle" class="body" font-size="11">Shallow tree h₁</text>
+      <text x="260" y="98" text-anchor="middle" class="label" font-size="9.5">fits residual r₁</text>
+
+      <path d="M 330 89 H 370" class="flow-signal" marker-end="url(#xgb-p1-ex2-arrow-signal)" />
+      <text x="350" y="76" text-anchor="middle" class="label" font-size="9.5" fill="var(--ex-rose-text)">residual r₂</text>
+
+      <rect x="370" y="50" width="140" height="78" rx="4" class="node" />
+      <text x="440" y="74" text-anchor="middle" class="body" font-size="11">Shallow tree h₂</text>
+      <text x="440" y="98" text-anchor="middle" class="label" font-size="9.5">fits residual r₂</text>
+
+      <path d="M 510 89 H 550" class="flow-dashed" marker-end="url(#xgb-p1-ex2-arrow)" />
+
+      <rect x="550" y="50" width="186" height="78" rx="4" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
+      <text x="643" y="74" text-anchor="middle" class="body" font-size="10.5" fill="var(--ex-green-text)">Additive ensemble</text>
+      <text x="643" y="96" text-anchor="middle" class="label" font-size="9.5" fill="var(--ex-green-text)">Fₘ = F₀ + η∑γₘhₘ</text>
+      <text x="643" y="114" text-anchor="middle" class="label" font-size="9.5" fill="var(--ex-green-text)">sequential update</text>
+    </g>
+  </svg>
+</Exhibit>
+
+---
+
+## 3. The Geometric Breakthrough: Optimization in Function Space
+
+Early boosting algorithms, most notably **AdaBoost** (Freund & Schapire, 1996), framed boosting as an iterative sample-reweighting procedure [4].
+
+In 2001, **Jerome H. Friedman** published a unifying conceptual breakthrough: **Greedy Function Approximation: A Gradient Boosting Machine** [5].
+
+Friedman realized that AdaBoost was not an ad-hoc sample-weighting trick. It was a specific realization of **numerical gradient descent formulated directly in an infinite-dimensional Hilbert function space** $\mathcal{H}$.
+
+<Exhibit 
+  exhibit="03" 
+  title="Steepest Descent in Function Space (Hilbert Space ℋ)" 
+  badge="MATHEMATICAL FOUNDATION" 
+  caption="In function space ℋ, the unconstrained negative gradient -g_m points in the direction of steepest loss decrease across the training points. Because arbitrary functions cannot generalize to unseen x, we project -g_m onto the constrained manifold of decision tree hypotheses via least squares, producing the base tree h_m(x).">
+
+  <svg class="sys-diagram" viewBox="0 0 800 340" role="img" aria-label="Geometric vector representation of gradient descent in function space">
+    <defs>
+      <marker id="xgb-p1-ex3-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+        <path d="M 0 0 L 10 4 L 0 8 Z" fill="var(--ex-text-main)" />
+      </marker>
+    </defs>
+    <g transform="translate(50, 20)">
+      <rect x="0" y="0" width="700" height="300" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-border)" stroke-width="1.5" />
+      <text x="25" y="32" class="label-signal" font-size="12">FUNCTION SPACE ℋ = &#123; F: ℝᵈ → ℝ &#125;</text>
+
+      <ellipse cx="480" cy="180" rx="190" ry="90" fill="none" stroke="var(--border-subtle)" stroke-width="1.2" stroke-dasharray="3 3" />
+      <ellipse cx="480" cy="180" rx="130" ry="60" fill="none" stroke="var(--border-subtle)" stroke-width="1.2" stroke-dasharray="3 3" />
+      <ellipse cx="480" cy="180" rx="70" ry="32" fill="none" stroke="var(--border-subtle)" stroke-width="1.2" stroke-dasharray="3 3" />
+      <circle cx="480" cy="180" r="4" fill="var(--ex-green-stroke)" />
+      <text x="495" y="184" class="label" font-size="11" fill="var(--ex-green-text)">F* (Global Optimal Function)</text>
+
+      <path d="M 40 240 Q 250 140 660 80" fill="none" stroke="var(--ex-indigo-stroke)" stroke-width="2.5" stroke-dasharray="5 5" />
+      <text x="80" y="270" class="label" font-size="12" fill="var(--ex-indigo-text)">Manifold of Realizable Trees ℱ_tree ⊂ ℋ</text>
+
+      <circle cx="160" cy="185" r="6" fill="var(--ex-blue-stroke)" />
+      <text x="120" y="170" class="label-signal" font-size="13">Fₘ₋₁</text>
+
+      <line x1="160" y1="185" x2="340" y2="120" stroke="var(--ex-rose-stroke)" stroke-width="2.5" marker-end="url(#xgb-p1-ex3-arrow)" />
+      <text x="270" y="115" class="label" font-size="11" fill="var(--ex-rose-text)">−gₘ = −∇F L(y, Fₘ₋₁) (Unconstrained)</text>
+
+      <line x1="340" y1="120" x2="280" y2="135" stroke="var(--ex-text-muted)" stroke-width="1.5" stroke-dasharray="3 3" />
+      <text x="315" y="145" class="label" font-size="10">Orthogonal Projection</text>
+
+      <line x1="160" y1="185" x2="280" y2="135" stroke="var(--ex-blue-stroke)" stroke-width="3" marker-end="url(#xgb-p1-ex3-arrow)" />
+      <text x="180" y="140" class="label-signal" font-size="12">hₘ(x; aₘ) ∈ ℱ_tree</text>
+
+      <circle cx="280" cy="135" r="6" fill="var(--ex-green-stroke)" />
+      <text x="295" y="130" class="label" font-size="13" fill="var(--ex-green-text)">Fₘ = Fₘ₋₁ + η γₘ hₘ</text>
+    </g>
+  </svg>
+</Exhibit>
+
+
+---
+
+## 4. Digestible Visual Execution Flow: The 4-Step Engine
+
+To cement the algorithmic intuition before examining detailed mathematical derivations, here is the complete Gradient Boosting execution cycle distilled into four discrete functional operations:
+
+<AlgorithmFlow
+  exhibit="04"
+  title="The 4-Step Gradient Boosting Engine (Friedman 2001)"
+  badge="FUNCTIONAL PIPELINE"
+  caption="How arbitrary differentiable loss functions are iteratively minimized by projecting negative gradients onto base decision trees."
+  steps={[
+    {
+      step: "01",
+      title: "Base Model Initialization",
+      tag: "Constant Prior",
+      state: "verified",
+      description: "Initialize the ensemble with a single constant scalar that minimizes aggregate empirical loss across all training samples.",
+      formula: "F₀(x) = argminᵧ ∑ L(yᵢ, ᵧ)",
+      note: "For MSE, this is the global sample mean ȳ."
+    },
+    {
+      step: "02",
+      title: "Pseudo-Residual Projection",
+      tag: "Negative Gradient",
+      state: "signal",
+      description: "Compute the negative gradient of the loss function with respect to current ensemble predictions for each training instance.",
+      formula: "rᵢₘ = −∂L(yᵢ, F(xᵢ))/∂F(xᵢ) | F=Fₘ₋₁",
+      note: "Points in the direction of steepest loss descent."
+    },
+    {
+      step: "03",
+      title: "Base Learner Fitting",
+      tag: "Greedy CART",
+      state: "model",
+      description: "Fit a shallow regression tree to the pseudo-residuals r_im using greedy recursive binary splitting to partition space into leaves R_jm.",
+      formula: "hₘ(x) = ∑ γⱼₘ · I(x ∈ Rⱼₘ)",
+      note: "Orthogonal projection onto constrained tree manifold."
+    },
+    {
+      step: "04",
+      title: "Shrinkage & Ensemble Update",
+      tag: "Learning Rate η",
+      state: "constraint",
+      description: "Perform leaf line-search for optimal multiplier γ_jm and update the additive ensemble scaled by learning rate shrinkage η.",
+      formula: "Fₘ(x) = Fₘ₋₁(x) + η · ∑ γⱼₘ · I(x ∈ Rⱼₘ)",
+      note: "Prevents immediate overfitting to training residuals."
+    }
+  ]}
+/>
+
+---
+
+## 5. Formal Derivation: Pseudo-Residuals & Canonical Loss Functions
+
+We now present the exact derivations of pseudo-residuals $r_{im}$ and leaf weights $\gamma_{jm}$ across canonical objectives.
+
+### Case A: Mean Squared Error (L2 Regression)
+
+$$
+L(y, F) = \frac{1}{2}(y - F)^2
+$$
+
+$$
+r_{im} = -\frac{\partial}{\partial F}\left[\frac{1}{2}(y_i - F)^2\right]_{F=F_{m-1}(\mathbf{x}_i)} = y_i - F_{m-1}(\mathbf{x}_i)
+$$
+
+Notice that under L2 loss, the pseudo-residual is **identically equal to the standard algebraic residual** $y_i - \hat{y}_i$.
+
+$$
+\gamma_{jm} = \arg\min_{\gamma} \sum_{\mathbf{x}_i \in R_{jm}} \frac{1}{2}\left(y_i - F_{m-1}(\mathbf{x}_i) - \gamma\right)^2 = \frac{1}{|R_{jm}|} \sum_{\mathbf{x}_i \in R_{jm}} r_{im}
+$$
+
+---
+
+### Case B: Binary Logistic Loss (Classification)
+
+$$
+p(\mathbf{x}) = \sigma(F(\mathbf{x})) = \frac{1}{1 + e^{-F(\mathbf{x})}}
+$$
+
+$$
+L(y, F) = -y F + \ln(1 + e^F)
+$$
+
+$$
+r_{im} = y_i - p_{m-1}(\mathbf{x}_i)
+$$
+
+Using a second-order Newton-Raphson approximation for leaf weights:
+
+$$
+\gamma_{jm} \approx \frac{\sum_{\mathbf{x}_i \in R_{jm}} (y_i - p_{m-1}(\mathbf{x}_i))}{\sum_{\mathbf{x}_i \in R_{jm}} p_{m-1}(\mathbf{x}_i)(1 - p_{m-1}(\mathbf{x}_i))}
+$$
+
+<p class="formula-note"><strong>How to read it.</strong> The numerator sums first derivatives (residuals), while the denominator sums the variance of the Bernoulli distribution $p(1-p)$ (second derivatives / Hessian). This exact equation forms the foundational leaf weight calculation in XGBoost and LightGBM [6].</p>
+
+---
+
+## 6. Convergence and Overfitting Dynamics (Illustrative)
+
+The following chart is a schematic teaching aid, not a measured result. Its purpose is to show the characteristic effect of shrinkage and overfitting; a quantitative claim requires a reproducible dataset, implementation, and benchmark harness.
+
+<BenchmarkChart
+  exhibit="05"
+  title="Illustrative Test-Error Shapes vs. Ensemble Iterations"
+  badge="ILLUSTRATIVE SHAPES"
+  xLabel="Iterations / Trees (M)"
+  yLabel="Test Mean Squared Error"
+  xUnit="trees"
+  yUnit="MSE"
+  annotation="Schematic — not measured"
+  caption="Illustrative error trajectories showing how shrinkage can slow optimization while improving generalization, how an aggressively fitted model can overfit, and how bagging can reach a variance-reduction plateau. Values are schematic and are not a benchmark."
+  series={[
+    {
+      name: "Gradient Boosting (η = 0.05, Subsample = 0.8)",
+      color: "#2676aa",
+      data: [
+        { x: 1, y: 1.42 },
+        { x: 10, y: 0.94 },
+        { x: 25, y: 0.58 },
+        { x: 50, y: 0.38 },
+        { x: 75, y: 0.29 },
+        { x: 100, y: 0.24 },
+        { x: 150, y: 0.21 },
+        { x: 200, y: 0.19 }
+      ]
+    },
+    {
+      name: "Gradient Boosting (η = 1.0, No Shrinkage)",
+      color: "#ffafcc",
+      dashed: true,
+      data: [
+        { x: 1, y: 0.98 },
+        { x: 10, y: 0.46 },
+        { x: 25, y: 0.32 },
+        { x: 40, y: 0.31 },
+        { x: 60, y: 0.42 },
+        { x: 100, y: 0.58 },
+        { x: 150, y: 0.72 },
+        { x: 200, y: 0.84 }
+      ]
+    },
+    {
+      name: "Random Forest (Parallel Bagging)",
+      color: "#cdb4db",
+      data: [
+        { x: 1, y: 0.82 },
+        { x: 10, y: 0.48 },
+        { x: 25, y: 0.39 },
+        { x: 50, y: 0.36 },
+        { x: 75, y: 0.35 },
+        { x: 100, y: 0.34 },
+        { x: 150, y: 0.34 },
+        { x: 200, y: 0.34 }
+      ]
+    },
+    {
+      name: "Single Deep Decision Tree (Baseline)",
+      color: "#68768b",
+      dashed: true,
+      data: [
+        { x: 1, y: 0.82 },
+        { x: 50, y: 0.82 },
+        { x: 100, y: 0.82 },
+        { x: 200, y: 0.82 }
+      ]
+    }
+  ]}
+/>
+
+---
+
+## 7. Comparative Architectural Synthesis
+
+| Dimension | Single CART Tree | Random Forest (Bagging) | Gradient Boosted Trees |
+|---|---|---|---|
+| **Base Learner Complexity** | Deep ($D \ge 12$) | Deep, unpruned ($D \ge 15$) | Shallow ($D = 2 \text{ to } 6$) |
+| **Ensemble Mechanism** | None (Standalone) | Parallel bootstrap averaging | Sequential functional gradient descent |
+| **Primary Error Targeted** | Neither (High variance) | **Variance** ($\rho \sigma^2 + \frac{1-\rho}{B}\sigma^2$) | **Bias** (Residual gradient steps) |
+| **Loss Function Flexibility** | Squared error / Gini / Entropy | Squared error / Gini / Entropy | **Any differentiable loss** $L(y, F)$ |
+| **Optimization Space** | Feature splits in $\mathbb{R}^d$ | Feature splits in $\mathbb{R}^d$ | **Function space** $\mathcal{H} = \{F: \mathbb{R}^d \to \mathbb{R}\}$ |
+| **Sensitivity to Outliers** | Moderate | Low (Averaged across trees) | High with L2; **Immune with L1/Huber** |
+| **Key Hyperparameters** | `max_depth`, `min_samples_split` | `n_estimators`, `max_features` | `learning_rate` ($\eta$), `n_estimators` ($M$), `max_depth` |
+
+---
+
+## Primary Citations & Verifications
+
+| ID | Author(s) & Year | Title / Contribution | Primary Publication / DOI |
+|---|---|---|---|
+| `[1]` | Hyafil & Rivest (1976) | NP-completeness of a minimum-size decision-tree consistency problem | *Information Processing Letters*, 5(1), 15–17. [DOI:10.1016/0020-0190(76)90095-8](https://doi.org/10.1016/0020-0190(76)90095-8) |
+| `[2]` | Leo Breiman (2001) | Random Forests (Bootstrap Aggregation and Feature Decorrelation) | *Machine Learning*, 45(1), 5–32. [DOI:10.1023/A:1010933404324](https://doi.org/10.1023/A:1010933404324) |
+| `[3]` | Robert E. Schapire (1990) | The Strength of Weak Learnability (Foundational boosting proof) | *Machine Learning*, 5(2), 197–227. [DOI:10.1007/BF00116037](https://doi.org/10.1007/BF00116037) |
+| `[4]` | Freund & Schapire (1996) | Experiments with a New Boosting Algorithm (AdaBoost) | *ICML 1996*, 148–156. [PDF](https://www.cs.princeton.edu/~schapire/papers/FreundSc96.pdf) |
+| `[5]` | Jerome H. Friedman (2001) | Greedy Function Approximation: A Gradient Boosting Machine | *The Annals of Statistics*, 29(5), 1189–1232. [JSTOR](https://www.jstor.org/stable/2699986) |
+| `[6]` | Tianqi Chen & Carlos Guestrin (2016) | XGBoost: A Scalable Tree Boosting System (Second-order Taylor boosting) | *ACM SIGKDD 2016*, 785–794. [arXiv:1603.02754](https://arxiv.org/abs/1603.02754) |
+| `[7]` | Jerome H. Friedman (2002) | Stochastic Gradient Boosting (Subsample regularization) | *Computational Statistics & Data Analysis*, 38(4), 367–378. [DOI:10.1016/S0167-9473(01)00065-2](https://doi.org/10.1016/S0167-9473(01)00065-2) |
+| `[8]` | Leo Breiman (1996) | Bagging Predictors (Bootstrap aggregation theory) | *Machine Learning*, 24(2), 123–140. [DOI:10.1007/BF00058655](https://doi.org/10.1007/BF00058655) |

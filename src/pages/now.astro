@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Icon from '../components/Icon.astro';
+import StudioPanel from '../components/StudioPanel.astro';
 ---
 
 <Layout title="Now | Karan Mittal">
@@ -13,64 +14,49 @@ import Icon from '../components/Icon.astro';
     />
 
     <div class="now-grid">
-      <div class="now-item">
-        <div class="now-header">
-          <Icon name="briefcase" size={16} />
-          <h3>Work</h3>
-        </div>
+      <StudioPanel title="Work" index="01" state="signal">
+        <Icon slot="icon" name="briefcase" size={15} />
         <ul>
           <li>Co-founding and leading engineering at <a href="https://dextar.co">Dextar.co</a></li>
           <li>Architecting production GraphRAG systems for enterprise clients</li>
           <li>Consulting on MLOps infrastructure and GPU cluster optimisation</li>
         </ul>
-      </div>
+      </StudioPanel>
 
-      <div class="now-item">
-        <div class="now-header">
-          <Icon name="wrench" size={16} />
-          <h3>Building</h3>
-        </div>
+      <StudioPanel title="Building" index="02" state="model">
+        <Icon slot="icon" name="wrench" size={15} />
         <ul>
           <li>An open-source deterministic RAG evaluation harness</li>
           <li>A CUDA optimisation pattern cookbook for ML inference</li>
           <li>This blog and my GitHub presence</li>
         </ul>
-      </div>
+      </StudioPanel>
 
-      <div class="now-item">
-        <div class="now-header">
-          <Icon name="book-open" size={16} />
-          <h3>Learning</h3>
-        </div>
+      <StudioPanel title="Learning" index="03" state="verified">
+        <Icon slot="icon" name="book-open" size={15} />
         <ul>
           <li>Advanced Rust for systems programming</li>
           <li>CPU/GPU co-design patterns for edge LLM inference</li>
         </ul>
-      </div>
+      </StudioPanel>
 
-      <div class="now-item">
-        <div class="now-header">
-          <Icon name="users" size={16} />
-          <h3>Community</h3>
-        </div>
+      <StudioPanel title="Community" index="04" state="constraint">
+        <Icon slot="icon" name="users" size={15} />
         <ul>
           <li>Organising <a href="https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/">MLIndore</a> hands-on AI workshops</li>
           <li>Mentoring at <a href="https://www.codevipassana.dev/">CodeVipassana</a></li>
           <li>Hosting cloud-native sessions at <a href="https://gdg.community.dev/gdg-cloud-indore/">GDG Cloud Indore</a></li>
         </ul>
-      </div>
+      </StudioPanel>
 
-      <div class="now-item">
-        <div class="now-header">
-          <Icon name="mic" size={16} />
-          <h3>Speaking</h3>
-        </div>
+      <StudioPanel title="Speaking" index="05" state="signal">
+        <Icon slot="icon" name="mic" size={15} />
         <ul>
           <li>Preparing talks on GraphRAG and deterministic retrieval for 2026</li>
           <li>Workshop on Building Knowledge Engines with RAG</li>
           <li><a href="/talks">View all talks and events →</a></li>
         </ul>
-      </div>
+      </StudioPanel>
     </div>
 
     <p class="now-footer">
@@ -85,32 +71,14 @@ import Icon from '../components/Icon.astro';
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-4);
   }
-  .now-item {
-    padding: var(--space-5);
-    border-radius: var(--radius-lg);
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-  }
-  .now-header {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    margin-bottom: var(--space-3);
-  }
-  .now-header h3 {
-    margin: 0;
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--text);
-  }
-  .now-item ul {
+  .now-grid ul {
     margin: 0;
     padding-left: var(--space-4);
     color: var(--muted);
     font-size: var(--text-sm);
     line-height: 1.65;
   }
-  .now-item li {
+  .now-grid li {
     margin-bottom: var(--space-1);
   }
 

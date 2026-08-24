@@ -33,7 +33,7 @@ const { communities } = communitiesData;
 
     <section id="capabilities">
       <h2>Engineering practice</h2>
-      <div class="capabilities-grid">
+      <div class="capabilities-list">
         <div class="capability">
           <h3>AI Architecture</h3>
           <p>Knowledge systems, retrieval contracts, graph-aware discovery, LLM orchestration</p>
@@ -53,17 +53,17 @@ const { communities } = communitiesData;
       </div>
     </section>
 
-    <hr />
-
     <section id="community">
       <h2>Community</h2>
       <p class="section-desc">I organise and mentor across several technical communities in Central India.</p>
-      <div class="community-grid">
+      <div class="community-list">
         {communities.map((c) => (
-          <div class="community-card">
+          <div class="community-row">
             <img src={c.logo} alt={c.name} class="community-logo" />
-            <p class="community-name">{c.name}</p>
-            <p class="community-desc">{c.description}</p>
+            <div class="community-info">
+              <p class="community-name">{c.name}</p>
+              <p class="community-desc">{c.description}</p>
+            </div>
             {c.links && c.links.length > 0 && (
               <div class="community-links">
                 {c.links.map((link: { label: string; url: string }) => (
@@ -82,11 +82,11 @@ const { communities } = communitiesData;
     </section>
 
     <section class="cta-section">
-      <h2>Let's Build</h2>
+      <h2>Let's build</h2>
       <p>For consulting engagements involving complex data, AI reliability, system performance, or technical strategy.</p>
       <div class="cta-actions">
-        <a href="/contact" class="btn btn-primary">Discuss an engagement</a>
-        <a href="https://www.linkedin.com/in/karansmittal/" class="btn btn-secondary">LinkedIn</a>
+        <a href="/contact" class="cta-link">Discuss an engagement →</a>
+        <a href="https://www.linkedin.com/in/karansmittal/" class="cta-link">LinkedIn →</a>
       </div>
     </section>
   </main>
@@ -98,11 +98,12 @@ const { communities } = communitiesData;
     padding: 0;
     border: none;
     background: none;
-    font-size: var(--text-xl);
+    max-width: 26ch;
+    font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 600;
     color: var(--text);
-    line-height: 1.4;
-    letter-spacing: -0.01em;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
   }
   .bio {
     font-size: var(--text-lg);
@@ -124,16 +125,22 @@ const { communities } = communitiesData;
     color: var(--border);
   }
 
-  .capabilities-grid {
+  .capabilities-list {
+    border-top: 1px solid var(--border);
+  }
+  .capability {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-6);
+    grid-template-columns: 12rem minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: baseline;
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--border-subtle);
   }
   .capability h3 {
-    margin-top: 0;
-    margin-bottom: var(--space-1);
+    margin: 0;
     font-size: var(--text-base);
     font-weight: 600;
+    letter-spacing: -0.01em;
   }
   .capability p {
     margin: 0;
@@ -148,26 +155,28 @@ const { communities } = communitiesData;
     margin-top: calc(var(--space-2) * -1);
   }
 
-  .community-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-4);
+  .community-list {
+    border-top: 1px solid var(--border);
   }
-  .community-card {
-    padding: var(--space-5);
-    border-radius: var(--radius-lg);
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    text-align: center;
+  .community-row {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--border-subtle);
   }
   .community-logo {
-    margin: 0 auto var(--space-3);
     display: block;
-    max-height: 48px;
-    width: auto;
-    height: auto;
+    width: 2.5rem;
+    height: 2.5rem;
     object-fit: contain;
-    opacity: 0.85;
+    margin: 0;
+    opacity: 0.9;
+    border-radius: var(--radius-sm);
+  }
+  .community-info {
+    min-width: 0;
   }
   .community-name {
     font-weight: 600;
@@ -176,16 +185,16 @@ const { communities } = communitiesData;
     font-size: var(--text-sm);
   }
   .community-desc {
-    margin: 0 0 var(--space-3);
+    margin: 0;
     color: var(--muted);
     font-size: var(--text-sm);
     line-height: 1.5;
   }
   .community-links {
     display: flex;
-    gap: var(--space-2);
-    justify-content: center;
+    gap: var(--space-4);
     flex-wrap: wrap;
+    justify-content: flex-end;
   }
   .community-links a {
     display: inline-flex;
@@ -204,41 +213,49 @@ const { communities } = communitiesData;
 
   .cta-section {
     margin-top: var(--space-8);
-    padding: var(--space-6);
-    border-radius: var(--radius-lg);
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    text-align: center;
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border);
   }
   .cta-section h2 {
     margin-top: 0;
-    font-size: var(--text-lg);
+    font-size: var(--text-2xl);
+    letter-spacing: -0.02em;
     margin-bottom: var(--space-2);
   }
   .cta-section p {
     color: var(--muted);
     margin-bottom: var(--space-4);
     max-width: 480px;
-    margin-left: auto;
-    margin-right: auto;
   }
   .cta-actions {
     display: flex;
-    gap: var(--space-2);
-    justify-content: center;
+    gap: var(--space-5);
     flex-wrap: wrap;
+  }
+  .cta-link {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .cta-link:hover {
+    color: var(--accent-hover);
   }
 
   @media (max-width: 720px) {
-    .capabilities-grid {
+    .capability {
       grid-template-columns: 1fr;
-      gap: var(--space-5);
+      gap: var(--space-1);
     }
-    .community-grid {
-      grid-template-columns: 1fr;
+    .community-row {
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+    }
+    .community-links {
+      grid-column: 2;
+      justify-content: flex-start;
     }
     .hero-quote {
-      font-size: var(--text-lg);
+      font-size: var(--text-xl);
     }
   }
 </style>

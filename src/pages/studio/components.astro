@@ -1,0 +1,375 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ComponentSpecimen from '../../components/ComponentSpecimen.astro';
+import StudioPanel from '../../components/StudioPanel.astro';
+import Exhibit from '../../components/Exhibit.astro';
+import AlgorithmFlow from '../../components/AlgorithmFlow.astro';
+import BenchmarkChart from '../../components/BenchmarkChart.astro';
+import InteractiveWalkthrough from '../../components/InteractiveWalkthrough.astro';
+import YearGroup from '../../components/YearGroup.astro';
+import BlogPostCard from '../../components/BlogPostCard.astro';
+import TalkCard from '../../components/TalkCard.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import Icon from '../../components/Icon.astro';
+import talksData from '../../data/talks.json';
+import workData from '../../data/work.json';
+import type { Talk } from '../../types/talks';
+import '../../styles/component-showroom.css';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const samplePost = posts[0];
+const sampleTalk = talksData.talks[0] as Talk;
+const sampleWork = workData.work[0];
+
+const panelStates = [
+  { state: 'signal' as const, index: '01', title: 'Active path', copy: 'The object currently being inspected or changed.' },
+  { state: 'model' as const, index: '02', title: 'Learned state', copy: 'Weights, embeddings, model decisions, and inferred structure.' },
+  { state: 'verified' as const, index: '03', title: 'Verified result', copy: 'A deterministic output, checked invariant, or validated bound.' },
+  { state: 'constraint' as const, index: '04', title: 'System limit', copy: 'Headroom, memory pressure, contention, cost, or a warning.' },
+  { state: 'failure' as const, index: '05', title: 'Failure state', copy: 'A rejected path, cache miss, overflow, or broken contract.' },
+];
+
+const flowSteps = [
+  { step: '01', title: 'Observe', tag: 'INPUT', state: 'signal' as const, description: 'Capture the request and the system boundary.', formula: 'request → contract' },
+  { step: '02', title: 'Transform', tag: 'MODEL', state: 'model' as const, description: 'Apply the learned or algorithmic operation.', formula: 'stateₜ → stateₜ₊₁' },
+  { step: '03', title: 'Check', tag: 'GUARD', state: 'constraint' as const, description: 'Evaluate the output against the explicit limit.', note: 'The bound is visible' },
+  { step: '04', title: 'Commit', tag: 'OUTPUT', state: 'verified' as const, description: 'Publish only the attributable, validated result.', formula: 'evidence ≥ threshold' },
+];
+
+const benchmarkSeries = [
+  { name: 'Paged layout', color: 'var(--signal)', data: [{ x: 1, y: 18 }, { x: 2, y: 33 }, { x: 4, y: 61 }, { x: 8, y: 108 }] },
+  { name: 'Contiguous layout', color: 'var(--muted)', dashed: true, data: [{ x: 1, y: 16 }, { x: 2, y: 26 }, { x: 4, y: 38 }, { x: 8, y: 46 }] },
+];
+
+const walkthroughStages = [
+  { id: 'request', index: '01', name: 'Request', desc: 'The request enters with an explicit token and latency budget.' },
+  { id: 'compute', index: '02', name: 'Compute', desc: 'Only the active transformation receives signal emphasis.' },
+  { id: 'result', index: '03', name: 'Result', desc: 'The result becomes verified after crossing the output guard.' },
+];
+
+const palette = [
+  { name: 'Canvas', token: '--bg', value: '#F4F7FB' },
+  { name: 'Surface', token: '--bg-elevated', value: '#FFFFFF' },
+  { name: 'Ink', token: '--text', value: '#13213A' },
+  { name: 'Signal', token: '--signal', value: '#1F66E5' },
+  { name: 'Model', token: '--model', value: '#7C3AED' },
+  { name: 'Verified', token: '--verified', value: '#168663' },
+  { name: 'Constraint', token: '--constraint', value: '#D97706' },
+  { name: 'Failure', token: '--failure', value: '#D64545' },
+];
+---
+
+<Layout
+  title="Component Showroom | Explanatory Systems Studio"
+  description="A live catalogue of the Explanatory Systems Studio visual primitives and production components."
+>
+  <main class="catalog-shell" id="showroom-page">
+    <aside class="catalog-sidebar" aria-label="Component showroom navigation">
+      <div class="sidebar-head">
+        <a href="/studio/" class="back-link">← Control room</a>
+        <p class="sidebar-caption">Components</p>
+      </div>
+      <nav>
+        <a href="#foundations"><span>01</span> Foundations</a>
+        <a href="#controls"><span>02</span> Controls</a>
+        <a href="#panels"><span>03</span> Instrument panels</a>
+        <a href="#page-header"><span>04</span> Page header</a>
+        <a href="#editorial"><span>05</span> Editorial cards</a>
+        <a href="#exhibit"><span>06</span> Exhibit frame</a>
+        <a href="#flow"><span>07</span> Algorithm flow</a>
+        <a href="#chart"><span>08</span> Benchmark chart</a>
+        <a href="#walkthrough"><span>09</span> Walkthrough</a>
+        <a href="#reading"><span>10</span> Reading elements</a>
+      </nav>
+      <p class="sidebar-note"><span class="note-dot note-live"></span>Production<span class="note-dot note-candidate"></span>Candidate</p>
+    </aside>
+
+    <div class="catalog-main">
+      <div id="showroom-intro">
+        <PageHeader
+          label="Studio system"
+          title="Component showroom"
+          description="A live approval surface for the visual system. Every production primitive appears here before it is propagated across the rest of the website."
+          count={10}
+          countLabel="component families"
+        />
+      </div>
+
+      <div class="catalog-toolbar" aria-label="Showroom controls">
+        <div>
+          <span class="toolbar-light"></span>
+          <strong>Live components</strong>
+          <small>Use the site header to inspect light and dark mode.</small>
+        </div>
+        <div class="width-switcher" role="group" aria-label="Component canvas width">
+          <button type="button" class="active" data-catalog-width="full">Full</button>
+          <button type="button" data-catalog-width="reading">Reading</button>
+          <button type="button" data-catalog-width="mobile">Mobile</button>
+        </div>
+      </div>
+
+      <div class="catalog-rail">
+        <div class="catalog-canvas" data-catalog-canvas data-width="full">
+          <ComponentSpecimen
+            id="foundations"
+            index="01"
+            title="Foundations"
+            description="Blueprint palette, typography hierarchy, spacing rhythm, and the semantic meaning carried by colour."
+            source="public/styles/global.css"
+          >
+            <div class="type-band">
+              <p class="type-label">Display / Inter 600</p>
+              <p class="type-display">Systems become dependable when their states become inspectable.</p>
+              <div class="type-subgrid">
+                <div>
+                  <p class="type-label">Body / Inter 400</p>
+                  <p class="type-body">Explain the mechanism, show the boundary, and keep the evidence near the claim.</p>
+                </div>
+                <div>
+                  <p class="type-label">Metadata / Geist Mono 500</p>
+                  <p class="type-mono">buffer[03] · bound = 512 MiB · status: verified</p>
+                </div>
+              </div>
+            </div>
+            <div class="palette-grid">
+              {palette.map((item) => (
+                <div class="colour-chip">
+                  <span class="chip-swatch" style={`--tile-colour: ${item.value}`} aria-hidden="true"></span>
+                  <div class="chip-meta">
+                    <strong>{item.name}</strong>
+                    <small>{item.value}</small>
+                    <code>{item.token}</code>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="controls"
+            index="02"
+            title="Controls and field states"
+            description="Candidate shared controls derived from the UniFi/macOS instrument language. Approval here precedes extraction into production components."
+            source="candidate primitives"
+            status="candidate"
+          >
+            <div class="control-groups">
+              <div class="control-row">
+                <button class="primary-control">Run preflight</button>
+                <button class="secondary-control">Open source</button>
+                <button class="icon-control" aria-label="More options">•••</button>
+                <button class="secondary-control" disabled>Unavailable</button>
+              </div>
+              <div class="control-row">
+                <label class="field-control"><span>Component</span><input value="AlgorithmFlow" aria-label="Component name" /></label>
+                <label class="field-control"><span>State</span><select aria-label="Component state"><option>Signal</option><option>Verified</option><option>Constraint</option></select></label>
+              </div>
+              <div class="control-row">
+                <div class="segment-control" role="group" aria-label="Density">
+                  <button>Compact</button><button class="active">Comfortable</button><button>Spacious</button>
+                </div>
+                <label class="switch-control"><input type="checkbox" checked /><span></span>Show metadata</label>
+                <span class="status-chip verified"><i></i>Verified</span>
+                <span class="status-chip constraint"><i></i>Needs review</span>
+              </div>
+            </div>
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="panels"
+            index="03"
+            title="Instrument panels"
+            description="The shared block anatomy: status light, indexed identity, contextual action, content area, and optional property footer."
+            source="StudioPanel.astro"
+          >
+            <div class="panel-grid">
+              {panelStates.map((panel) => (
+                <StudioPanel title={panel.title} index={panel.index} state={panel.state}>
+                  <span slot="actions">Inspect</span>
+                  <p class="panel-copy">{panel.copy}</p>
+                  <div slot="footer" class="property-line"><span>state</span><code>{panel.state}</code></div>
+                </StudioPanel>
+              ))}
+            </div>
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="page-header"
+            index="04"
+            title="Page header"
+            description="The standard opening hierarchy for archives, practice pages, and editorial indexes."
+            source="PageHeader.astro"
+          >
+            <div class="bounded-header">
+              <PageHeader
+                label="Field notes"
+                title="Ideas made inspectable"
+                description="Notes on systems, retrieval, and the decisions beneath dependable software."
+                count={12}
+                countLabel="essays"
+              />
+            </div>
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="editorial"
+            index="05"
+            title="Editorial and practice cards"
+            description="Real production data rendered through the archive, talk, and selected-work components."
+            source="BlogPostCard · TalkCard · WorkCard"
+          >
+            <div class="editorial-grid">
+              <div class="editorial-sample">
+                <p class="sample-label">Essay archive</p>
+                <YearGroup year={String(samplePost.data.pubDate.getFullYear())} count={1}>
+                  <BlogPostCard post={samplePost} />
+                </YearGroup>
+              </div>
+              <div class="editorial-sample">
+                <p class="sample-label">Public work</p>
+                <TalkCard talk={sampleTalk} />
+              </div>
+              <div class="editorial-sample work-sample">
+                <p class="sample-label">Selected work</p>
+                <WorkCard item={sampleWork} index="01" detailed />
+              </div>
+            </div>
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="exhibit"
+            index="06"
+            title="Exhibit frame"
+            description="The signature evidence container: numbered identity, badge, visual canvas, and explanatory caption."
+            source="Exhibit.astro"
+          >
+            <Exhibit
+              exhibit="01"
+              title="One active path through a deterministic system"
+              badge="SYSTEM MAP"
+              caption="Structure remains neutral. Signal blue identifies the current causal path; green marks the checked output."
+            >
+              <svg class="mini-system" viewBox="0 0 760 250" role="img" aria-label="Request, transform, and verified result">
+                <defs><marker id="catalog-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--text)" /></marker></defs>
+                <rect class="mini-boundary" x="24" y="24" width="712" height="174" rx="6" />
+                <g><rect class="mini-node" x="54" y="76" width="160" height="72" rx="6"/><text x="74" y="105">Request</text><text class="mini-meta" x="74" y="128">tokens = 512</text></g>
+                <g><rect class="mini-node active" x="300" y="76" width="160" height="72" rx="6"/><text x="320" y="105">Transform</text><text class="mini-meta signal" x="320" y="128">active state</text></g>
+                <g><rect class="mini-node verified" x="546" y="76" width="160" height="72" rx="6"/><text x="566" y="105">Result</text><text class="mini-meta valid" x="566" y="128">bound checked</text></g>
+                <path class="mini-flow signal-stroke" d="M214 112 H300" marker-end="url(#catalog-arrow)"/><path class="mini-flow" d="M460 112 H546" marker-end="url(#catalog-arrow)"/>
+              </svg>
+            </Exhibit>
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="flow"
+            index="07"
+            title="Algorithm flow"
+            description="Connected instrument panels for a causal or algorithmic sequence, including formulas and explanatory notices."
+            source="AlgorithmFlow.astro"
+          >
+            <AlgorithmFlow
+              title="A four-stage deterministic path"
+              badge="ALGORITHM PIPELINE"
+              caption="Each semantic state is local; the sequence and connectors carry the explanation."
+              steps={flowSteps}
+              columns={2}
+              wide={false}
+            />
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="chart"
+            index="08"
+            title="Benchmark chart"
+            description="Trade-off and performance evidence with a common grid, legend, annotation, and hover inspection."
+            source="BenchmarkChart.astro"
+          >
+            <BenchmarkChart
+              title="Throughput as concurrency increases"
+              badge="EMPIRICAL BENCHMARK"
+              caption="Illustrative showroom data. Publication charts must cite the primary benchmark source."
+              xLabel="Concurrent requests"
+              yLabel="Throughput"
+              yUnit="req/s"
+              series={benchmarkSeries}
+              annotation="Illustrative data"
+            />
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="walkthrough"
+            index="09"
+            title="Interactive walkthrough"
+            description="A reader-controlled sequence that isolates one state transition without losing the complete model."
+            source="InteractiveWalkthrough.astro"
+          >
+            <InteractiveWalkthrough
+              title="Inspect the causal path one stage at a time"
+              badge="INTERACTIVE MODEL"
+              caption="Select a stage to dim the surrounding system and preserve the active explanation."
+              stages={walkthroughStages}
+              allStageDesc="The complete path is visible. Select a stage to inspect its responsibility."
+            >
+              <svg class="walkthrough-system" viewBox="0 0 760 220" role="img" aria-label="Three-stage request walkthrough">
+                <g id="request" data-step-group="request"><rect x="40" y="70" width="170" height="80" rx="6"/><text x="62" y="104">Request</text><text class="mini-meta" x="62" y="129">budget = 120 ms</text></g>
+                <path id="conn-request-compute" data-step-connector="request compute" d="M210 110 H295" />
+                <g id="compute" data-step-group="compute"><rect x="295" y="70" width="170" height="80" rx="6"/><text x="317" y="104">Compute</text><text class="mini-meta signal" x="317" y="129">active transform</text></g>
+                <path id="conn-compute-result" data-step-connector="compute result" d="M465 110 H550" />
+                <g id="result" data-step-group="result"><rect x="550" y="70" width="170" height="80" rx="6"/><text x="572" y="104">Result</text><text class="mini-meta valid" x="572" y="129">verified</text></g>
+              </svg>
+            </InteractiveWalkthrough>
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="reading"
+            index="10"
+            title="Reading elements"
+            description="The prose-level vocabulary: links, tags, quotation, formula, code, table, and compact icon treatment."
+            source="global.css · Icon.astro"
+          >
+            <article class="reading-sample">
+              <div class="reading-prose">
+                <p class="sample-label">Prose and emphasis</p>
+                <h3>A system is inspectable when its boundaries are visible.</h3>
+                <p>Use an <a href="#reading">inline link</a> for a navigable source and an <a class="auto-tag" href="#reading">automatic topic link</a> for a recognised concept. Literal identifiers such as <code>block_table</code> stay visually distinct.</p>
+                <blockquote><p>The surprising behaviour deserves the annotation; the ordinary structure deserves restraint.</p></blockquote>
+                <span class="math-card">latency = queue + compute + transfer</span>
+                <pre><code>{`if output.within(bound):\n    commit(output)`}</code></pre>
+              </div>
+              <div class="reading-utilities">
+                <p class="sample-label">Tags and icons</p>
+                <div class="utility-row"><a class="tag" href="#reading">systems-engineering</a><a class="tag" href="#reading">inference</a><a class="tag" href="#reading">verification</a></div>
+                <div class="utility-row icon-row"><span><Icon name="briefcase" />Work</span><span><Icon name="wrench" />Build</span><span><Icon name="book-open" />Learn</span><span><Icon name="users" />Community</span></div>
+                <p class="sample-label">Evidence table</p>
+                <div class="table-wrap"><table><thead><tr><th>State</th><th>Meaning</th><th>Token</th></tr></thead><tbody><tr><td>Signal</td><td>Current causal path</td><td><code>--signal</code></td></tr><tr><td>Verified</td><td>Checked result</td><td><code>--verified</code></td></tr><tr><td>Constraint</td><td>Visible system limit</td><td><code>--constraint</code></td></tr></tbody></table></div>
+              </div>
+            </article>
+          </ComponentSpecimen>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  function initComponentShowroom() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>('[data-catalog-width]');
+    const canvas = document.querySelector<HTMLElement>('[data-catalog-canvas]');
+    if (!canvas || canvas.dataset.initialized === 'true') return;
+    canvas.dataset.initialized = 'true';
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        canvas.dataset.width = button.dataset.catalogWidth || 'full';
+        buttons.forEach((item) => item.classList.toggle('active', item === button));
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initComponentShowroom);
+  initComponentShowroom();
+</script>

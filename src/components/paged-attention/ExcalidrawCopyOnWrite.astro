@@ -1,10 +1,6 @@
 ---
-/**
- * ExcalidrawCopyOnWrite.astro
- * Visualizes Zero-Copy Memory Sharing and Copy-on-Write (CoW)
- * for Parallel Sampling, Beam Search, and Prefix Caching in an Excalidraw hand-drawn style.
- */
 import ExcalidrawContainer from './ExcalidrawContainer.astro';
+import { createCopyOnWriteRoutes } from '../../lib/diagram-routing.js';
 
 interface Props {
   caption?: string;
@@ -12,154 +8,54 @@ interface Props {
   title?: string;
 }
 
-const { caption = "Figure 5: Zero-Copy Memory Sharing & Copy-on-Write (CoW) — Shared prompt blocks are stored once in physical HBM with ref_count=2, branching only when output sequences diverge.", exhibit, title } = Astro.props;
+const { caption, exhibit, title } = Astro.props;
+const { promptA00ToFrame12, promptB00ToFrame12, promptA01ToFrame04, promptB01ToFrame04, outputAToFrame31, outputBToFrame58 } = createCopyOnWriteRoutes();
 ---
 
-<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="Zero-Copy Sharing">
-  <svg class="ex-svg-canvas" viewBox="0 0 760 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="COPY-ON-WRITE">
+  <svg class="ex-svg-canvas sys-diagram" viewBox="0 0 800 432" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two logical sequences share their prompt KV pages and allocate separate physical frames only after they diverge.">
     <defs>
-      <marker id="ex-arr-cow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 1 2 L 8 5 L 1 8 z" fill="var(--ex-blue-stroke)" />
-      </marker>
-      <marker id="ex-arr-cow-indigo" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 1 2 L 8 5 L 1 8 z" fill="var(--ex-indigo-stroke)" />
-      </marker>
-      <marker id="ex-arr-cow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 1 2 L 8 5 L 1 8 z" fill="var(--ex-green-stroke)" />
-      </marker>
-      <marker id="ex-arr-cow-purple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 1 2 L 8 5 L 1 8 z" fill="var(--ex-purple-stroke)" />
-      </marker>
+      <marker id="cow-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="var(--ex-text-main)" /></marker>
+      <marker id="cow-arrow-signal" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="var(--ex-text-main)" /></marker>
     </defs>
+    <text x="32" y="32" class="label">LOGICAL SEQUENCES</text>
+    <text x="768" y="32" class="label" text-anchor="end">PHYSICAL GPU POOL</text>
+    <line x1="32" y1="48" x2="768" y2="48" class="rule" />
 
-    <!-- ==================================================== -->
-    <!-- TOP: LOGICAL PARALLEL STREAMS (FORK) -->
-    <!-- ==================================================== -->
-    <g class="cow-logical" transform="translate(20, 16)">
-      <text x="0" y="16" font-family="var(--font-sans)" font-size="14" font-weight="700" fill="var(--ex-text-main)">
-        Parallel Sampling / Speculative Decoding (Logical Streams)
-      </text>
-
-      <!-- Stream A (Upper) -->
-      <g transform="translate(0, 32)">
-        <rect x="0" y="0" width="310" height="95" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
-        <rect x="6" y="6" width="298" height="22" rx="4" fill="var(--ex-green-bg)" />
-        <text x="12" y="21" font-family="var(--font-sans)" font-size="11" font-weight="700" fill="var(--ex-green-text)">
-          Sample Output A: "Le renard brun..."
-        </text>
-
-        <!-- Block Table A -->
-        <g transform="translate(10, 36)">
-          <rect x="0" y="0" width="88" height="46" rx="4" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <text x="44" y="18" text-anchor="middle" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="var(--ex-blue-text)">Blk #0</text>
-          <text x="44" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-blue-text)">──► Frame #12</text>
-
-          <rect x="96" y="0" width="88" height="46" rx="4" fill="var(--ex-indigo-bg)" stroke="var(--ex-indigo-stroke)" stroke-width="1" />
-          <text x="140" y="18" text-anchor="middle" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="var(--ex-indigo-text)">Blk #1</text>
-          <text x="140" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-indigo-text)">──► Frame #04</text>
-
-          <rect x="192" y="0" width="98" height="46" rx="4" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
-          <text x="241" y="18" text-anchor="middle" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="var(--ex-green-text)">Blk #2 (New)</text>
-          <text x="241" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-green-text)">──► Frame #31</text>
-        </g>
-      </g>
-
-      <!-- Stream B (Lower) -->
-      <g transform="translate(0, 140)">
-        <rect x="0" y="0" width="310" height="95" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-purple-stroke)" stroke-width="1.5" />
-        <rect x="6" y="6" width="298" height="22" rx="4" fill="var(--ex-purple-bg)" />
-        <text x="12" y="21" font-family="var(--font-sans)" font-size="11" font-weight="700" fill="var(--ex-purple-text)">
-          Sample Output B: "Un renard agile..."
-        </text>
-
-        <!-- Block Table B -->
-        <g transform="translate(10, 36)">
-          <rect x="0" y="0" width="88" height="46" rx="4" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <text x="44" y="18" text-anchor="middle" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="var(--ex-blue-text)">Blk #0</text>
-          <text x="44" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-blue-text)">──► Frame #12</text>
-
-          <rect x="96" y="0" width="88" height="46" rx="4" fill="var(--ex-indigo-bg)" stroke="var(--ex-indigo-stroke)" stroke-width="1" />
-          <text x="140" y="18" text-anchor="middle" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="var(--ex-indigo-text)">Blk #1</text>
-          <text x="140" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-indigo-text)">──► Frame #04</text>
-
-          <rect x="192" y="0" width="98" height="46" rx="4" fill="var(--ex-purple-bg)" stroke="var(--ex-purple-stroke)" stroke-width="1.5" />
-          <text x="241" y="18" text-anchor="middle" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="var(--ex-purple-text)">Blk #2 (New)</text>
-          <text x="241" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-purple-text)">──► Frame #58</text>
-        </g>
-      </g>
+    <text x="32" y="88" class="label">REQUEST A</text>
+    <g transform="translate(32 104)">
+      <rect x="0" y="0" width="88" height="40" rx="4" class="node-muted" /><text x="44" y="25" class="label" text-anchor="middle">PROMPT 00</text>
+      <rect x="104" y="0" width="88" height="40" rx="4" class="node-muted" /><text x="148" y="25" class="label" text-anchor="middle">PROMPT 01</text>
+      <rect x="208" y="0" width="88" height="40" rx="4" class="node-signal" /><text x="252" y="25" class="label-signal" text-anchor="middle">OUTPUT A</text>
     </g>
 
-    <!-- Routing Connectors to Physical HBM -->
-    <!-- Frame #12 shared pointers -->
-    <path d="M 330 92 C 370 92, 380 92, 420 92" stroke="var(--ex-blue-stroke)" stroke-width="1.5" marker-end="url(#ex-arr-cow-blue)" />
-    <path d="M 330 200 C 380 200, 380 92, 420 92" stroke="var(--ex-blue-stroke)" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ex-arr-cow-blue)" />
-
-    <!-- Frame #04 shared pointers -->
-    <path d="M 330 92 C 370 92, 380 155, 420 155" stroke="var(--ex-indigo-stroke)" stroke-width="1.5" marker-end="url(#ex-arr-cow-indigo)" />
-    <path d="M 330 200 C 380 200, 380 155, 420 155" stroke="var(--ex-indigo-stroke)" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ex-arr-cow-indigo)" />
-
-    <!-- Divergent branch pointers -->
-    <path d="M 330 92 C 370 92, 380 218, 420 218" stroke="var(--ex-green-stroke)" stroke-width="2" marker-end="url(#ex-arr-cow-green)" />
-    <path d="M 330 200 C 370 200, 380 280, 420 280" stroke="var(--ex-purple-stroke)" stroke-width="2" marker-end="url(#ex-arr-cow-purple)" />
-
-    <!-- ==================================================== -->
-    <!-- RIGHT: PHYSICAL GPU HBM (SHARED VS DIVERGED) -->
-    <!-- ==================================================== -->
-    <g class="cow-physical" transform="translate(430, 16)">
-      <text x="0" y="16" font-family="var(--font-sans)" font-size="14" font-weight="700" fill="var(--ex-green-text)">
-        Physical GPU Memory (Zero Duplication)
-      </text>
-
-      <g transform="translate(0, 32)">
-        <rect x="0" y="0" width="290" height="280" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
-        <rect x="6" y="6" width="278" height="22" rx="4" fill="var(--ex-green-bg)" />
-        <text x="145" y="21" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="700" fill="var(--ex-green-text)">
-          Allocated Physical Page Frames
-        </text>
-
-        <!-- Shared Frame #12 -->
-        <g transform="translate(12, 38)">
-          <rect x="0" y="0" width="266" height="50" rx="6" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1.5" />
-          <text x="12" y="22" font-family="var(--font-mono)" font-size="12" font-weight="700" fill="var(--ex-blue-text)">Physical Frame #12</text>
-          <text x="12" y="38" font-family="var(--font-sans)" font-size="10.5" fill="var(--ex-text-muted)">Prompt Tokens [t₀..t₃]</text>
-          <rect x="180" y="12" width="76" height="24" rx="12" fill="var(--ex-card-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <text x="218" y="28" text-anchor="middle" font-family="var(--font-mono)" font-size="10.5" font-weight="700" fill="var(--ex-blue-text)">ref_count: 2</text>
-        </g>
-
-        <!-- Shared Frame #04 -->
-        <g transform="translate(12, 98)">
-          <rect x="0" y="0" width="266" height="50" rx="6" fill="var(--ex-indigo-bg)" stroke="var(--ex-indigo-stroke)" stroke-width="1.5" />
-          <text x="12" y="22" font-family="var(--font-mono)" font-size="12" font-weight="700" fill="var(--ex-indigo-text)">Physical Frame #04</text>
-          <text x="12" y="38" font-family="var(--font-sans)" font-size="10.5" fill="var(--ex-text-muted)">Prompt Tokens [t₄..t₆]</text>
-          <rect x="180" y="12" width="76" height="24" rx="12" fill="var(--ex-card-bg)" stroke="var(--ex-indigo-stroke)" stroke-width="1" />
-          <text x="218" y="28" text-anchor="middle" font-family="var(--font-mono)" font-size="10.5" font-weight="700" fill="var(--ex-indigo-text)">ref_count: 2</text>
-        </g>
-
-        <!-- Diverged Frame #31 (Output A) -->
-        <g transform="translate(12, 158)">
-          <rect x="0" y="0" width="266" height="46" rx="6" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
-          <text x="12" y="20" font-family="var(--font-mono)" font-size="11.5" font-weight="700" fill="var(--ex-green-text)">Physical Frame #31 (Stream A)</text>
-          <text x="12" y="36" font-family="var(--font-sans)" font-size="10" fill="var(--ex-green-text)">Diverged token keys/values</text>
-          <rect x="180" y="10" width="76" height="22" rx="11" fill="var(--ex-card-bg)" stroke="var(--ex-green-stroke)" stroke-width="1" />
-          <text x="218" y="25" text-anchor="middle" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="var(--ex-green-text)">ref_count: 1</text>
-        </g>
-
-        <!-- Diverged Frame #58 (Output B) -->
-        <g transform="translate(12, 214)">
-          <rect x="0" y="0" width="266" height="46" rx="6" fill="var(--ex-purple-bg)" stroke="var(--ex-purple-stroke)" stroke-width="1.5" />
-          <text x="12" y="20" font-family="var(--font-mono)" font-size="11.5" font-weight="700" fill="var(--ex-purple-text)">Physical Frame #58 (Stream B)</text>
-          <text x="12" y="36" font-family="var(--font-sans)" font-size="10" fill="var(--ex-purple-text)">Diverged token keys/values</text>
-          <rect x="180" y="10" width="76" height="22" rx="11" fill="var(--ex-card-bg)" stroke="var(--ex-purple-stroke)" stroke-width="1" />
-          <text x="218" y="25" text-anchor="middle" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="var(--ex-purple-text)">ref_count: 1</text>
-        </g>
-      </g>
+    <text x="32" y="232" class="label">REQUEST B</text>
+    <g transform="translate(32 248)">
+      <rect x="0" y="0" width="88" height="40" rx="4" class="node-muted" /><text x="44" y="25" class="label" text-anchor="middle">PROMPT 00</text>
+      <rect x="104" y="0" width="88" height="40" rx="4" class="node-muted" /><text x="148" y="25" class="label" text-anchor="middle">PROMPT 01</text>
+      <rect x="208" y="0" width="88" height="40" rx="4" class="node-signal" /><text x="252" y="25" class="label-signal" text-anchor="middle">OUTPUT B</text>
     </g>
 
-    <!-- Bottom summary banner -->
-    <g transform="translate(20, 345)">
-      <text x="0" y="16" font-family="var(--font-sans)" font-size="12" fill="var(--ex-text-main)">
-        🚀 <tspan font-weight="700">Impact:</tspan> Storing the shared prompt once drops parallel sampling & multi-turn agent memory consumption by <tspan font-weight="700" fill="var(--ex-green-text)">55% to 70%</tspan>.
-      </text>
+    <path d={promptA00ToFrame12} class="flow" marker-end="url(#cow-arrow)" />
+    <path d={promptB00ToFrame12} class="flow-dashed" marker-end="url(#cow-arrow)" />
+    <path d={promptA01ToFrame04} class="flow" marker-end="url(#cow-arrow)" />
+    <path d={promptB01ToFrame04} class="flow-dashed" marker-end="url(#cow-arrow)" />
+    <path d={outputAToFrame31} class="flow-signal" marker-end="url(#cow-arrow-signal)" />
+    <path d={outputBToFrame58} class="flow-signal" marker-end="url(#cow-arrow-signal)" />
+
+    <g transform="translate(472 72)">
+      <text x="0" y="18" class="title">Physical page frames</text>
+      <rect x="0" y="32" width="272" height="52" rx="4" class="node-muted" />
+      <text x="16" y="55" class="title">Frame 12</text><text x="16" y="74" class="label">PROMPT 00 · REF COUNT 2</text>
+      <rect x="0" y="92" width="272" height="52" rx="4" class="node-muted" />
+      <text x="16" y="115" class="title">Frame 04</text><text x="16" y="134" class="label">PROMPT 01 · REF COUNT 2</text>
+      <rect x="0" y="152" width="272" height="52" rx="4" class="node-signal" />
+      <text x="16" y="175" class="title">Frame 31</text><text x="16" y="194" class="label-signal">OUTPUT A · REF COUNT 1</text>
+      <rect x="0" y="212" width="272" height="52" rx="4" class="node-signal" />
+      <text x="16" y="235" class="title">Frame 58</text><text x="16" y="254" class="label-signal">OUTPUT B · REF COUNT 1</text>
     </g>
+
+    <line x1="32" y1="368" x2="768" y2="368" class="rule" />
+    <text x="32" y="400" class="body-muted">Shared prompt pages have ref_count=2; new frames appear only after divergence.</text>
   </svg>
 </ExcalidrawContainer>

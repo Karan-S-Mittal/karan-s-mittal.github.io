@@ -1,7 +1,7 @@
 # Warm Editorial + Interactive Explainer — Site Redesign Design
 
 Date: 2026-08-22
-Status: Approved direction, pending implementation plan
+Status: Superseded by `docs/design-language.md` (2026-08-23)
 
 ## Context
 

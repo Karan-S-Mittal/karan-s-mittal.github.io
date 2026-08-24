@@ -1,6 +1,7 @@
 # Astro
 .astro/
 dist/
+public/generated/
 
 # Dependencies
 node_modules/
@@ -17,3 +18,6 @@ pnpm-debug.log*
 
 # macOS
 .DS_Store
+
+# Local editor state
+.obsidian/

@@ -1,7 +1,7 @@
 ---
 /**
  * ExcalidrawContainer.astro
- * Excalidraw-style canvas (dot grid, adaptive palette) inside the site's Exhibit frame.
+ * Technical diagram canvas with a shared semantic palette inside the site's Exhibit frame.
  */
 import Exhibit from '../Exhibit.astro';
 
@@ -15,122 +15,92 @@ interface Props {
 const { caption, badge, exhibit, title } = Astro.props;
 ---
 
-<Exhibit exhibit={exhibit} title={title} caption={caption}>
+<Exhibit exhibit={exhibit} title={title} caption={caption} wide>
   <div class="ex-canvas-frame">
-    {badge && <div class="ex-badge">{badge}</div>}
+    {badge && <p class="ex-badge">{badge}</p>}
     <slot />
+    <p class="ex-canvas-hint">On small screens, the figure scales to the reading column.</p>
   </div>
 </Exhibit>
 
 <style is:global>
-  /* Excalidraw CSS Theme Variables — recalibrated to the warm editorial palette */
-  :root {
-    --ex-bg: transparent;
-    --ex-grid-dot: rgba(110, 103, 93, 0.18);
-    --ex-border: #e5e0d5;
-    --ex-text-main: #211d18;
-    --ex-text-muted: #6e675d;
-    --ex-card-bg: #faf8f4;
-    --ex-card-border: #d8d2c4;
-
-    /* Semantic soft pastels (Light Mode) */
-    --ex-blue-bg: #eff6ff;
-    --ex-blue-stroke: #3b82f6;
-    --ex-blue-text: #1d4ed8;
-
-    --ex-indigo-bg: #eef2ff;
-    --ex-indigo-stroke: #6366f1;
-    --ex-indigo-text: #4338ca;
-
-    --ex-purple-bg: #faf5ff;
-    --ex-purple-stroke: #a855f7;
-    --ex-purple-text: #7e22ce;
-
-    --ex-green-bg: #f0fdf4;
-    --ex-green-stroke: #22c55e;
-    --ex-green-text: #15803d;
-
-    --ex-amber-bg: #fffbeb;
-    --ex-amber-stroke: #f59e0b;
-    --ex-amber-text: #b45309;
-
-    --ex-rose-bg: #fff1f2;
-    --ex-rose-stroke: #f43f5e;
-    --ex-rose-text: #be123c;
-
-    --ex-gray-bg: #f3f0e9;
-    --ex-gray-stroke: #a8a29e;
-    --ex-gray-text: #57534e;
-  }
-
-  html[data-theme="dark"] {
-    --ex-bg: transparent;
-    --ex-grid-dot: rgba(232, 226, 216, 0.1);
-    --ex-border: #332c23;
-    --ex-text-main: #e8e2d8;
-    --ex-text-muted: #9a9182;
-    --ex-card-bg: #201b15;
-    --ex-card-border: #443b2f;
-
-    /* Semantic soft pastels (Dark Mode) */
-    --ex-blue-bg: rgba(59, 130, 246, 0.12);
-    --ex-blue-stroke: #60a5fa;
-    --ex-blue-text: #93c5fd;
-
-    --ex-indigo-bg: rgba(99, 102, 241, 0.14);
-    --ex-indigo-stroke: #818cf8;
-    --ex-indigo-text: #c7d2fe;
-
-    --ex-purple-bg: rgba(168, 85, 247, 0.14);
-    --ex-purple-stroke: #c084fc;
-    --ex-purple-text: #e9d5ff;
-
-    --ex-green-bg: rgba(34, 197, 94, 0.12);
-    --ex-green-stroke: #4ade80;
-    --ex-green-text: #86efac;
-
-    --ex-amber-bg: rgba(245, 158, 11, 0.12);
-    --ex-amber-stroke: #fbbf24;
-    --ex-amber-text: #fde68a;
-
-    --ex-rose-bg: rgba(244, 63, 94, 0.14);
-    --ex-rose-stroke: #fb7185;
-    --ex-rose-text: #fecdd3;
-
-    --ex-gray-bg: #2a241c;
-    --ex-gray-stroke: #6e675d;
-    --ex-gray-text: #cfc7b8;
-  }
-
+  /* Diagram palette lives in /styles/global.css — this file holds structure only */
   .ex-canvas-frame {
     position: relative;
-    background-color: var(--ex-bg);
-    background-image: radial-gradient(var(--ex-grid-dot) 1.2px, transparent 1.2px);
-    background-size: 20px 20px;
-    padding: 1.5rem 1.25rem;
+    background: var(--ex-bg);
+    padding: var(--exhibit-pad-block) var(--exhibit-pad-inline) 0;
     overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-color: var(--ex-border) transparent;
   }
 
   .ex-badge {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    font-family: var(--font-mono, monospace);
+    position: static;
+    margin: 0 0 1rem;
+    font-family: 'JetBrains Mono', var(--font-mono, monospace);
     font-size: 0.65rem;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    padding: 0.15rem 0.5rem;
+    padding: 0;
     color: var(--ex-text-muted);
-    border: 1px solid var(--ex-border);
-    border-radius: 2px;
-    background: var(--ex-card-bg);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .ex-canvas-hint {
+    display: none;
   }
 
   .ex-svg-canvas {
     display: block;
     width: 100%;
+    min-width: 760px;
     height: auto;
-    max-width: 100%;
+    max-width: none;
+  }
+
+  .sys-diagram .node {
+    fill: var(--ex-card-bg);
+    stroke: var(--ex-text-main);
+    stroke-width: 1.8;
+  }
+
+  .sys-diagram .node-muted {
+    fill: var(--ex-gray-bg);
+    stroke: var(--ex-border);
+    stroke-width: 1.6;
+  }
+
+  .sys-diagram .node-signal {
+    fill: var(--ex-blue-bg);
+    stroke: var(--ex-blue-stroke);
+    stroke-width: 1.8;
+  }
+
+  .sys-diagram .rule { stroke: var(--ex-border); stroke-width: 1.2; }
+  .sys-diagram .flow { fill: none; stroke: var(--ex-text-main); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .sys-diagram .flow-signal { fill: none; stroke: var(--ex-blue-stroke); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .sys-diagram .flow-dashed { fill: none; stroke: var(--diagram-edge-secondary); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 4 4; }
+  .sys-diagram .label { fill: var(--ex-text-muted); font-family: 'JetBrains Mono', var(--font-mono); font-size: 13px; letter-spacing: 0.06em; }
+  .sys-diagram .label-signal { fill: var(--ex-blue-text); font-family: 'JetBrains Mono', var(--font-mono); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; }
+  .sys-diagram .title { fill: var(--ex-text-main); font-family: 'Inter', var(--font-sans); font-size: 18px; font-weight: 600; }
+  .sys-diagram .body { fill: var(--ex-text-main); font-family: 'Inter', var(--font-sans); font-size: 14px; }
+  .sys-diagram .body-muted { fill: var(--ex-text-muted); font-family: 'Inter', var(--font-sans); font-size: 14px; }
+
+  @media (max-width: 759px) {
+    .ex-svg-canvas {
+      min-width: 0;
+    }
+
+    .ex-canvas-hint {
+      display: block;
+      margin: 0.75rem 0 0;
+      color: var(--ex-text-muted);
+      font-family: 'JetBrains Mono', var(--font-mono, monospace);
+      font-size: 0.68rem;
+      line-height: 1.45;
+    }
   }
 </style>

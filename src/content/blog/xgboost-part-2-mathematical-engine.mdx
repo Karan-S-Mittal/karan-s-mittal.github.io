@@ -1,0 +1,395 @@
+---
+title: "The Mathematical Engine of XGBoost: 2nd-Order Taylor Expansion & Regularized Tree Optimization"
+description: "A first-principles derivation of XGBoost's regularized objective, second-order Taylor expansion, closed-form optimal leaf weights, and candidate split-gain mechanics."
+pubDate: 2026-08-24
+tags: ["Machine Learning", "XGBoost", "Gradient Boosting", "Optimization", "Algorithms", "Mathematics"]
+draft: false
+---
+
+import Exhibit from '../../components/Exhibit.astro';
+import BenchmarkChart from '../../components/BenchmarkChart.astro';
+import AlgorithmFlow from '../../components/AlgorithmFlow.astro';
+
+When machine learning practitioners discuss Gradient Boosted Decision Trees (GBDT), the conversation often defaults to tree depth, subsampling rates, or raw hyperparameter tuning.
+
+Yet the defining mathematical contribution of **XGBoost** (Chen & Guestrin, 2016) beyond classical GBDT frameworks (Friedman, 2001) is neither an ad-hoc heuristic nor a purely engineering optimization. It is a principled reformulation of the boosting objective: **transforming each tree update into a regularized second-order surrogate problem with closed-form leaf weights.**
+
+Classical gradient boosting approximates the negative gradient with a regression tree and then performs a separate, post-hoc line search to determine leaf values. In contrast, XGBoost expands twice-differentiable loss functions using a local second-order Taylor approximation. This couples the determination of split topology and optimal leaf weights into a single quadratic surrogate objective; once child statistics are available, a candidate split's Gain can be evaluated in $O(1)$ time.
+
+To understand why this mathematical formulation scales so reliably across tabular domains, we deconstruct the engine from first principles:
+1. **The Regularized Objective:** Framing tree learning as an explicit trade-off between empirical loss and tree structural complexity.
+2. **The 2nd-Order Taylor Engine:** Approximating twice-differentiable loss functions with instance-level gradients ($g_i$) and Hessians ($h_i$).
+3. **Closed-Form Optimal Leaf Weights:** Regrouping the objective by leaf partitions to solve for optimal weights analytically.
+4. **The Exact Split Scoring Metric:** Deriving the mathematical Gain formula that governs recursive node splitting and post-pruning.
+5. **Newton-Raphson in Function Space:** Why accounting for second-order curvature outperforms first-order gradient descent.
+
+---
+
+## 1. The Regularized Objective Function
+
+Like all additive ensemble methods, XGBoost predicts an output $\hat{y}_i$ for an instance $x_i$ by summing the outputs of $K$ base regression trees:
+
+$$
+\hat{y}_i = \sum_{k=1}^K f_k(x_i), \quad f_k \in \mathcal{F}
+$$
+
+<p class="formula-note"><strong>How to read it.</strong> <code>K</code> is the total number of trees, <code>fₖ</code> is an individual regression tree function, and <code>ℱ</code> denotes the functional space of all possible Classification and Regression Trees (CART).</p>
+
+In boosted learning, trees are trained sequentially. Let $\hat{y}_i^{(t-1)}$ be the ensemble prediction for sample $i$ after step $t-1$. At round $t$, we seek a new tree $f_t(x)$ that minimizes the regularized objective:
+
+$$
+\mathcal{L}^{(t)} = \sum_{i=1}^n l\left(y_i, \hat{y}_i^{(t-1)} + f_t(x_i)\right) + \Omega(f_t)
+$$
+
+<p class="formula-note"><strong>How to read it.</strong> <code>l(yᵢ, ŷᵢ)</code> is a convex, twice-differentiable loss function comparing label <code>yᵢ</code> to current prediction <code>ŷᵢ</code>. <code>Ω(fₜ)</code> is the formal regularization penalty on the tree structure.</p>
+
+```
+Ensemble at Step t:
+========================================================================
+   F_{t-1}(x)       +          f_t(x)          =         F_t(x)
+[Frozen History]       [Active Optimization]       [Updated Ensemble]
+========================================================================
+```
+
+### Deconstructing the Complexity Penalty $\Omega(f)$
+
+In classical CART or early GBDT formulations, regularization was applied heuristically via early stopping, tree depth constraints, or post-hoc cost-complexity pruning. XGBoost introduces an explicit functional penalty $\Omega(f)$ directly into the loss minimized during tree growth:
+
+$$
+\Omega(f) = \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2 + \alpha \sum_{j=1}^T |w_j|
+$$
+
+<p class="formula-note"><strong>How to read it.</strong> <code>T</code> is the total number of terminal leaves in tree <code>f</code>. <code>wⱼ</code> is the continuous scalar weight assigned to leaf <code>j</code>. <code>γ</code> penalizes tree complexity (leaf count), <code>λ</code> enforces L2 shrinkage (Ridge), and <code>α</code> enforces optional L1 sparsity (Lasso).</p>
+
+This regularization term addresses two distinct modes of overfitting simultaneously:
+* **Structural Regularization ($\gamma T$):** Every additional leaf node added to the tree incurs an immediate penalty $\gamma$. A split is only retained if the loss reduction strictly exceeds $\gamma$.
+* **Magnitude Regularization ($\frac{1}{2}\lambda \|w\|_2^2$):** By shrinking leaf output values $w_j$ toward zero, the L2 penalty prevents individual leaves with small sample counts from producing extreme, high-variance predictions.
+
+---
+
+## 2. The 2nd-Order Taylor Engine
+
+The primary challenge in optimizing $\mathcal{L}^{(t)}$ is that $l(y_i, \hat{y}_i^{(t-1)} + f_t(x_i))$ cannot be optimized easily in closed form for general, non-quadratic loss functions (such as logistic loss or Cox proportional hazards).
+
+To bypass this barrier, XGBoost computes a **second-order Taylor series expansion** of the loss function around the current ensemble prediction $\hat{y}_i^{(t-1)}$.
+
+Recall the classical scalar Taylor expansion of a twice-differentiable function $h(a + \Delta)$ around operating point $a$:
+
+$$
+h(a + \Delta) \approx h(a) + h'(a)\Delta + \frac{1}{2}h''(a)\Delta^2
+$$
+
+Setting the operating base point $a = \hat{y}_i^{(t-1)}$ and the perturbation $\Delta = f_t(x_i)$, the instance loss becomes:
+
+$$
+l\left(y_i, \hat{y}_i^{(t-1)} + f_t(x_i)\right) \approx l\left(y_i, \hat{y}_i^{(t-1)}\right) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)
+$$
+
+<p class="formula-note"><strong>How to read it.</strong> <code>gᵢ</code> is the first-order gradient and <code>hᵢ</code> is the second-order Hessian of the loss function with respect to the previous prediction <code>ŷᵢ⁽ᵗ⁻¹⁾</code>.</p>
+
+### Defining Gradients and Hessians
+
+The first and second partial derivatives are computed explicitly for each training instance $i$:
+
+$$
+g_i = \left. \frac{\partial l(y_i, \hat{y})}{\partial \hat{y}} \right|_{\hat{y} = \hat{y}_i^{(t-1)}}
+$$
+
+$$
+h_i = \left. \frac{\partial^2 l(y_i, \hat{y})}{\partial \hat{y}^2} \right|_{\hat{y} = \hat{y}_i^{(t-1)}}
+$$
+
+### Concrete Loss Function Examples
+
+#### 1. Mean Squared Error (Regression)
+$$
+l(y_i, \hat{y}_i) = \frac{1}{2}(y_i - \hat{y}_i)^2
+$$
+
+* **First Derivative (Gradient):** $g_i = \hat{y}_i^{(t-1)} - y_i$ (the residual error)
+* **Second Derivative (Hessian):** $h_i = 1$ (constant, uniform curvature)
+
+Under MSE, the Taylor approximation is **exact** because higher-order derivatives beyond the second order vanish identically ($l''' = 0$).
+
+#### 2. Logistic Loss / Binary Cross-Entropy (Classification)
+$$
+l(y_i, \hat{y}_i) = - y_i \ln(p_i) - (1 - y_i) \ln(1 - p_i), \quad \text{where } p_i = \sigma(\hat{y}_i) = \frac{1}{1 + e^{-\hat{y}_i}}
+$$
+
+* **First Derivative (Gradient):** $g_i = p_i - y_i$
+* **Second Derivative (Hessian):** $h_i = p_i (1 - p_i)$
+
+Here, the Hessian $h_i = p_i(1 - p_i)$ represents the variance of a Bernoulli trial. When the model is already confident ($p_i \approx 0$ or $p_i \approx 1$), $h_i \to 0$. When the prediction is uncertain ($p_i \approx 0.5$), $h_i \to 0.25$. As we will see, $h_i$ acts as an automatic instance-level weight.
+
+<Exhibit 
+  exhibit="01" 
+  title="1st-Order Linear vs. 2nd-Order Quadratic Taylor Approximation" 
+  badge="MATHEMATICAL FOUNDATION" 
+  caption="First-order methods approximate the loss landscape linearly, while XGBoost uses a local quadratic surrogate. The closed-form minimum belongs to that surrogate, not necessarily to the full loss outside the local neighborhood.">
+
+  <svg class="sys-diagram" viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparison of first order linear approximation and second order quadratic approximation of a loss function">
+    <defs>
+      <linearGradient id="curveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="var(--interactive-primary)" stop-opacity="0.15" />
+        <stop offset="100%" stop-color="var(--interactive-primary)" stop-opacity="0.0" />
+      </linearGradient>
+    </defs>
+
+    <line x1="60" y1="260" x2="700" y2="260" stroke="var(--border)" stroke-width="1.2" />
+    <line x1="60" y1="60" x2="60" y2="260" stroke="var(--border)" stroke-width="1.2" />
+
+    <path d="M 100 240 C 220 230, 320 210, 420 120 C 500 48, 620 40, 680 40" fill="none" stroke="var(--text)" stroke-width="2.5" />
+    <text x="690" y="45" class="label" font-weight="600" fill="var(--text)">True Loss L(y, ŷ + f)</text>
+
+    <circle cx="380" cy="155" r="5" fill="var(--interactive-primary)" />
+    <line x1="380" y1="155" x2="380" y2="260" stroke="var(--interactive-primary)" stroke-dasharray="3 3" stroke-width="1.2" />
+    <text x="365" y="278" class="label" fill="var(--interactive-primary)" font-weight="600">f_t(x) = 0</text>
+    <text x="350" y="145" class="label-signal">Operating Point ŷ^(t-1)</text>
+
+    <line x1="220" y1="247" x2="540" y2="63" stroke="var(--signal-warm)" stroke-width="2" stroke-dasharray="6 4" />
+    <text x="548" y="70" class="label" fill="var(--signal-warm)" font-weight="600">1st-Order Linear: L ≈ L₀ + g · f</text>
+    <text x="210" y="258" class="label" fill="var(--signal-warm)">No inherent minimum (needs line search)</text>
+
+    <path d="M 240 240 Q 380 70 520 240" fill="none" stroke="var(--blue-500)" stroke-width="2.2" />
+    <text x="525" y="235" class="label" fill="var(--blue-500)" font-weight="600">2nd-Order Taylor: L ≈ L₀ + g · f + ½ h · f²</text>
+
+    <circle cx="380" cy="115" r="4" fill="var(--blue-500)" />
+    <line x1="380" y1="115" x2="430" y2="90" stroke="var(--blue-500)" stroke-width="1.2" />
+    <rect x="435" y="75" width="180" height="30" rx="4" fill="var(--ex-card-bg)" stroke="var(--blue-500)" stroke-width="1" />
+    <text x="445" y="95" class="label" fill="var(--blue-500)" font-size="12">Optimal Step: w* = -g / (h + λ)</text>
+  </svg>
+</Exhibit>
+
+### Removing Constant Terms
+
+Dropping terms independent of $f_t(x_i)$ leaves the simplified surrogate objective $\tilde{\mathcal{L}}^{(t)}$:
+
+$$
+\tilde{\mathcal{L}}^{(t)} = \sum_{i=1}^n \left[ g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i) \right] + \Omega(f_t)
+$$
+
+---
+
+## 3. Tree Parametrization & Closed-Form Optimal Leaf Weights
+
+Formally, we define a tree $f_t(x)$ as:
+
+$$
+f_t(x) = w_{q(x)}, \quad w \in \mathbb{R}^T, \quad q: \mathbb{R}^d \to \{1, 2, \dots, T\}
+$$
+
+Let $I_j = \{i \mid q(x_i) = j\}$ represent the set of sample indices mapped to leaf $j$.
+
+Defining the aggregate leaf gradient $G_j$ and aggregate leaf Hessian $H_j$:
+
+$$
+G_j = \sum_{i \in I_j} g_i, \quad H_j = \sum_{i \in I_j} h_i
+$$
+
+The surrogate objective regrouped by leaves becomes:
+
+$$
+\tilde{\mathcal{L}}^{(t)} = \sum_{j=1}^T \left[ G_j w_j + \frac{1}{2}(H_j + \lambda) w_j^2 \right] + \gamma T
+$$
+
+Taking the partial derivative with respect to $w_j$ and setting to zero yields the **optimal leaf weight formula**:
+
+$$
+w_j^* = -\frac{G_j}{H_j + \lambda}
+$$
+
+Substituting $w_j^*$ back gives the **Tree Structure Score**:
+
+$$
+\tilde{\mathcal{L}}^{(t)*}(q) = -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j + \lambda} + \gamma T
+$$
+
+---
+
+## 4. The Optimal Split Scoring Metric (Gain)
+
+When partitioning a parent node $P$ into Left ($L$) and Right ($R$) subsets:
+
+$$
+\text{Gain} = \frac{1}{2} \left[ \frac{G_L^2}{H_L + \lambda} + \frac{G_R^2}{H_R + \lambda} - \frac{(G_L + G_R)^2}{H_L + H_R + \lambda} \right] - \gamma
+$$
+
+<Exhibit 
+  exhibit="02" 
+  title="Candidate Split Geometry and Metric Accumulation" 
+  badge="SPLIT MECHANICS" 
+  wide={true} 
+  caption="To evaluate a split at threshold v, instances are sorted by feature value. Cumulative gradient (G_L) and Hessian (H_L) sums are maintained in a single linear pass, computing the exact Gain in O(1) time.">
+
+  <svg class="sys-diagram" viewBox="0 0 800 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tree node split evaluation showing parent node partitioning into left and right children with gradient and Hessian accumulation">
+    <defs>
+      <marker id="xgb-p2-ex2-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+        <path d="M 0 0 L 10 4 L 0 8 Z" fill="var(--ex-text-main)" />
+      </marker>
+    </defs>
+    <rect x="270" y="20" width="260" height="90" rx="8" class="node" />
+    <text x="400" y="45" text-anchor="middle" class="title" font-size="16">Parent Node (P)</text>
+    <text x="400" y="70" text-anchor="middle" class="label">I = I_L ∪ I_R | G_P = G_L + G_R | H_P = H_L + H_R</text>
+    <text x="400" y="92" text-anchor="middle" class="label-signal">Score_P = -½ · G_P² / (H_P + λ)</text>
+
+    <path d="M 330 110 L 210 180" class="flow" marker-end="url(#xgb-p2-ex2-arrow)" />
+    <path d="M 470 110 L 590 180" class="flow" marker-end="url(#xgb-p2-ex2-arrow)" />
+    <text x="240" y="140" class="label" fill="var(--interactive-primary)">x_k ≤ v</text>
+    <text x="540" y="140" class="label" fill="var(--interactive-primary)">x_k > v</text>
+
+    <rect x="70" y="180" width="260" height="90" rx="8" class="node-signal" />
+    <text x="200" y="205" text-anchor="middle" class="title" font-size="15" fill="var(--interactive-primary)">Left Child (L)</text>
+    <text x="200" y="230" text-anchor="middle" class="label">I_L = &#123; i | x_ik ≤ v &#125;</text>
+    <text x="200" y="252" text-anchor="middle" class="label-signal">Score_L = ½ · G_L² / (H_L + λ)</text>
+
+    <rect x="470" y="180" width="260" height="90" rx="8" class="node-signal" />
+    <text x="600" y="205" text-anchor="middle" class="title" font-size="15" fill="var(--interactive-primary)">Right Child (R)</text>
+    <text x="600" y="230" text-anchor="middle" class="label">I_R = &#123; i | x_ik > v &#125;</text>
+    <text x="600" y="252" text-anchor="middle" class="label-signal">Score_R = ½ · G_R² / (H_R + λ)</text>
+
+    <rect x="70" y="290" width="660" height="32" rx="4" fill="var(--ex-card-bg)" stroke="var(--border)" />
+    <text x="400" y="311" text-anchor="middle" class="label" font-weight="600">Gain = ½ [ Score_L + Score_R − Score_P ] − γ  ⟹  Split accepted only if Gain &gt; 0</text>
+  </svg>
+</Exhibit>
+
+---
+
+## 5. Digestible Visual Execution Flow: The Exact Split Engine
+
+Here is the complete second-order tree-growth cycle structured into four sequential operational stages:
+
+<AlgorithmFlow
+  exhibit="03"
+  title="The 4-Step Second-Order Tree Construction Pipeline"
+  badge="XGBOOST SPLIT ENGINE"
+  caption="How gradients, Hessians, and regularization combine into an O(1) candidate split evaluator once aggregate child statistics are available."
+  steps={[
+    {
+      step: "01",
+      title: "Evaluate Instance Derivatives",
+      tag: "O(N) Compute Pass",
+      state: "verified",
+      description: "Compute 1st-order gradient g_i and 2nd-order Hessian h_i for every training sample under current predictions.",
+      formula: "gᵢ = ∂l/∂ŷ,  hᵢ = ∂²l/∂ŷ²",
+      note: "Decouples loss function from tree structure."
+    },
+    {
+      step: "02",
+      title: "Greedy Prefix Sum Accumulation",
+      tag: "O(1) Scan per Threshold",
+      state: "signal",
+      description: "Iterate across sorted feature columns, maintaining running sums G_L and H_L to evaluate candidate splits in O(1) time.",
+      formula: "Gᵣ = Gₚ − Gₗ,  Hᵣ = Hₚ − Hₗ",
+      note: "Enables single-pass linear evaluation."
+    },
+    {
+      step: "03",
+      title: "Split Gain & Regularization Pruning",
+      tag: "γ Complexity Check",
+      state: "constraint",
+      description: "Evaluate energy reduction against structural penalty γ. If maximum gain is negative, branch splitting terminates.",
+      formula: "Gain = ½ [Gₗ²/(Hₗ+λ) + Gᵣ²/(Hᵣ+λ) − Gₚ²/(Hₚ+λ)] − γ",
+      note: "Automatic bottom-up pruning mechanism."
+    },
+    {
+      step: "04",
+      title: "Closed-Form Leaf Assignment",
+      tag: "Exact Newton Step",
+      state: "model",
+      description: "Assign optimal scalar weight to each leaf without numerical line search, modulated by learning rate shrinkage η.",
+      formula: "wⱼ* = −Gⱼ / (Hⱼ + λ)",
+      note: "L2 damping λ prevents weight explosion."
+    }
+  ]}
+/>
+
+---
+
+## 6. Optimization Behavior (Illustrative)
+
+The following chart is a schematic comparison of optimization behavior, not a measured Higgs-dataset benchmark. Its curves illustrate why curvature-aware updates can make progress differently from fixed-step first-order updates; the magnitude and iteration count depend on the loss, tree learner, regularization, and dataset.
+
+<BenchmarkChart
+  exhibit="04"
+  title="Illustrative Objective-Loss Convergence"
+  badge="ILLUSTRATIVE SHAPES"
+  xLabel="Boosting Iteration (Trees Added)"
+  yLabel="Log Training Loss (Binary Cross-Entropy)"
+  xUnit="trees"
+  yUnit="loss"
+  annotation="Schematic — not measured"
+  caption="Illustrative loss trajectories contrasting fixed-step first-order updates with curvature-aware second-order updates. Values are schematic and should not be read as a measured speedup or dataset result."
+  series={[
+    {
+      name: "XGBoost (2nd-Order Newton + λ Regularization)",
+      color: "#2676aa",
+      data: [
+        { x: 0, y: 0.693 },
+        { x: 10, y: 0.442 },
+        { x: 20, y: 0.318 },
+        { x: 30, y: 0.245 },
+        { x: 40, y: 0.198 },
+        { x: 50, y: 0.165 },
+        { x: 60, y: 0.142 },
+        { x: 80, y: 0.118 },
+        { x: 100, y: 0.104 }
+      ]
+    },
+    {
+      name: "Classical GBDT (1st-Order Pseudo-Residuals + Line Search)",
+      color: "#ffafcc",
+      dashed: true,
+      data: [
+        { x: 0, y: 0.693 },
+        { x: 10, y: 0.535 },
+        { x: 20, y: 0.428 },
+        { x: 30, y: 0.354 },
+        { x: 40, y: 0.298 },
+        { x: 50, y: 0.256 },
+        { x: 60, y: 0.224 },
+        { x: 80, y: 0.185 },
+        { x: 100, y: 0.162 }
+      ]
+    },
+    {
+      name: "Fixed-Step Gradient Descent (No Line Search)",
+      color: "#68768b",
+      dashed: true,
+      data: [
+        { x: 0, y: 0.693 },
+        { x: 10, y: 0.612 },
+        { x: 20, y: 0.548 },
+        { x: 30, y: 0.495 },
+        { x: 40, y: 0.452 },
+        { x: 50, y: 0.418 },
+        { x: 60, y: 0.389 },
+        { x: 80, y: 0.345 },
+        { x: 100, y: 0.312 }
+      ]
+    }
+  ]}
+/>
+
+---
+
+## 7. Comparative Architectural Summary
+
+| Dimension | Classical GBDT (Friedman 2001) | XGBoost Engine (Chen & Guestrin 2016) | Delta / Architectural Impact |
+|---|---|---|---|
+| **Optimization Base** | 1st-order functional gradient descent | **2nd-order Taylor expansion (Newton step)** | Incorporates local curvature ($h_i$) directly into split search |
+| **Leaf Weight Formula** | Post-hoc numerical line search per leaf | **Closed-form: $w_j^* = -G_j / (H_j + \lambda)$** | Eliminates separate line search; exact analytic solution |
+| **Split Quality Metric** | Mean squared error on pseudo-residuals | **Regularized Gain reduction** | Split scoring evaluates the second-order surrogate objective directly |
+| **Regularization** | Depth limits, shrinkage ($\eta$), subsampling | **Structural penalty: $\gamma T + \frac{1}{2}\lambda \|w\|_2^2 + \alpha \|w\|_1$** | Built directly into objective; prevents over-allocation of leaves |
+| **Loss Generality** | Custom heuristics required per loss | **Universal for any twice-differentiable $l(y, \hat{y})$** | Framework requires only $(g_i, h_i)$ oracle definitions |
+| **Pruning Mechanism** | Pre-stopping or post-hoc cost-complexity | **Gain thresholding ($-\gamma$) + gain-based pruning** | Rejects non-beneficial branches according to the regularized split score |
+
+---
+
+## Primary Citations & Verifications
+
+| ID | Concept / Equation | Primary Source | Formal Reference / Section |
+|---|---|---|---|
+| `[1]` | 2nd-Order Objective, Leaf Weights, Split Gain Metric | Chen & Guestrin (2016) | *XGBoost: A Scalable Tree Boosting System*, Section 2.1–2.2, Eqs. 2–7. [arXiv:1603.02754](https://arxiv.org/abs/1603.02754) |
+| `[2]` | Greedy Function Approximation & Gradient Descent in Function Space | Friedman, J. H. (2001) | *Greedy Function Approximation: A Gradient Boosting Machine*, Annals of Statistics, 29(5), pp. 1189–1232. [JSTOR:2699986](https://www.jstor.org/stable/2699986) |
+| `[3]` | Functional Gradient Descent Framework | Mason, Baxter, Bartlett, & Frean (1999) | *Boosting Algorithms as Gradient Descent*, NeurIPS 12. [NeurIPS paper](https://papers.neurips.cc/paper_files/paper/1999/file/96a93ba89a5b5c6c226e49b88973f46e-Paper.pdf) |
+| `[4]` | Second-Order Newton-Raphson Optimization | Nocedal & Wright (2006) | *Numerical Optimization*, 2nd Edition, Springer, Chapters 3–4. [DOI:10.1007/978-0-387-40065-5](https://doi.org/10.1007/978-0-387-40065-5) |

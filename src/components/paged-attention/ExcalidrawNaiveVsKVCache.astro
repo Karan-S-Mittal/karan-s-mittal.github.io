@@ -1,9 +1,4 @@
 ---
-/**
- * ExcalidrawNaiveVsKVCache.astro
- * Visualizes the fundamental difference between Naive Autoregressive Recomputation
- * and KV Cache reuse in an intuitive, Excalidraw hand-drawn aesthetic.
- */
 import ExcalidrawContainer from './ExcalidrawContainer.astro';
 
 interface Props {
@@ -12,167 +7,58 @@ interface Props {
   title?: string;
 }
 
-const { caption = "Figure 1: Naive Autoregressive Recomputation (O(N²) redundant passes) vs. KV Caching (O(N) single-token projection).", exhibit, title } = Astro.props;
+const { caption, exhibit, title } = Astro.props;
 ---
 
-<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="Decoding Mechanics">
-  <svg class="ex-svg-canvas" viewBox="0 0 760 410" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="COMPUTE MODEL">
+  <svg class="ex-svg-canvas sys-diagram" viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="At decoding step three, naive decoding recomputes three token projections while KV caching projects only the active token and reuses stored keys and values.">
     <defs>
-      <!-- Arrow markers -->
-      <marker id="ex-arrow-rose" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 1 2 L 8 5 L 1 8 z" fill="var(--ex-rose-stroke)" />
-      </marker>
-      <marker id="ex-arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 1 2 L 8 5 L 1 8 z" fill="var(--ex-green-stroke)" />
-      </marker>
-      <marker id="ex-arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 1 2 L 8 5 L 1 8 z" fill="var(--ex-blue-stroke)" />
-      </marker>
+      <marker id="naive-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="var(--ex-text-main)" /></marker>
+      <marker id="naive-arrow-signal" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="var(--ex-text-main)" /></marker>
+      <pattern id="naive-hatch" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="8" stroke="var(--ex-text-muted)" stroke-opacity=".22" stroke-width="2" /></pattern>
     </defs>
 
-    <!-- ==================================================== -->
-    <!-- PANEL A: NAIVE RECOMPUTATION (NO CACHE) -->
-    <!-- ==================================================== -->
-    <g class="panel-naive">
-      <!-- Title -->
-      <rect x="20" y="16" width="310" height="30" rx="6" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1.5" stroke-dasharray="2 2" />
-      <text x="32" y="36" font-family="var(--font-sans)" font-size="14" font-weight="700" fill="var(--ex-rose-text)">
-        1. Naive Generation (No Cache)
-      </text>
-      <text x="740" y="36" text-anchor="end" font-family="var(--font-mono)" font-size="12" font-weight="600" fill="var(--ex-rose-text)">
-        Complexity: O(N²) Compute
-      </text>
+    <text x="32" y="32" class="label">DECODE STEP 03</text>
+    <text x="768" y="32" class="label" text-anchor="end">SAME NEXT TOKEN</text>
+    <line x1="32" y1="48" x2="768" y2="48" class="rule" />
 
-      <!-- Step 1 row -->
-      <g transform="translate(20, 60)">
-        <text x="0" y="24" font-family="var(--font-mono)" font-size="12" fill="var(--ex-text-muted)">Step 1:</text>
-        <rect x="60" y="6" width="56" height="32" rx="6" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1.5" />
-        <text x="88" y="26" text-anchor="middle" font-family="var(--font-sans)" font-size="12.5" font-weight="600" fill="var(--ex-blue-text)">"The"</text>
-        
-        <path d="M 126 22 L 180 22" stroke="var(--ex-text-muted)" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ex-arrow-blue)" />
-        <text x="210" y="26" font-family="var(--font-mono)" font-size="12" fill="var(--ex-text-muted)">Transformer</text>
-        <path d="M 296 22 L 340 22" stroke="var(--ex-blue-stroke)" stroke-width="1.5" marker-end="url(#ex-arrow-blue)" />
+    <text x="32" y="88" class="title">Naive decoding</text>
+    <text x="32" y="108" class="body-muted">Run the entire sequence through the transformer again.</text>
 
-        <rect x="350" y="6" width="68" height="32" rx="6" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
-        <text x="384" y="26" text-anchor="middle" font-family="var(--font-sans)" font-size="12.5" font-weight="700" fill="var(--ex-green-text)">"quick"</text>
-        <text x="430" y="26" font-family="var(--font-mono)" font-size="11.5" fill="var(--ex-text-muted)">(1 token computed)</text>
-      </g>
-
-      <!-- Step 2 row -->
-      <g transform="translate(20, 108)">
-        <text x="0" y="24" font-family="var(--font-mono)" font-size="12" fill="var(--ex-text-muted)">Step 2:</text>
-        
-        <!-- Recomputed "The" -->
-        <rect x="60" y="6" width="56" height="32" rx="6" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1.5" stroke-dasharray="3 3" />
-        <text x="88" y="26" text-anchor="middle" font-family="var(--font-sans)" font-size="12.5" font-weight="600" fill="var(--ex-rose-text)">"The"</text>
-        
-        <!-- "quick" -->
-        <rect x="122" y="6" width="62" height="32" rx="6" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1.5" />
-        <text x="153" y="26" text-anchor="middle" font-family="var(--font-sans)" font-size="12.5" font-weight="600" fill="var(--ex-blue-text)">"quick"</text>
-
-        <path d="M 194 22 L 240 22" stroke="var(--ex-text-muted)" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ex-arrow-blue)" />
-        <text x="270" y="26" font-family="var(--font-mono)" font-size="12" fill="var(--ex-text-muted)">Transformer</text>
-        <path d="M 356 22 L 400 22" stroke="var(--ex-blue-stroke)" stroke-width="1.5" marker-end="url(#ex-arrow-blue)" />
-
-        <rect x="410" y="6" width="68" height="32" rx="6" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
-        <text x="444" y="26" text-anchor="middle" font-family="var(--font-sans)" font-size="12.5" font-weight="700" fill="var(--ex-green-text)">"brown"</text>
-        <text x="490" y="26" font-family="var(--font-mono)" font-size="11.5" fill="var(--ex-rose-text)">⚠️ Recomputed "The"!</text>
-      </g>
-
-      <!-- Step 3 row -->
-      <g transform="translate(20, 156)">
-        <text x="0" y="24" font-family="var(--font-mono)" font-size="12" fill="var(--ex-text-muted)">Step 3:</text>
-        
-        <!-- Recomputed tokens -->
-        <rect x="60" y="6" width="56" height="32" rx="6" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1.5" stroke-dasharray="3 3" />
-        <text x="88" y="26" text-anchor="middle" font-family="var(--font-sans)" font-size="12.5" font-weight="600" fill="var(--ex-rose-text)">"The"</text>
-        
-        <rect x="122" y="6" width="62" height="32" rx="6" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1.5" stroke-dasharray="3 3" />
-        <text x="153" y="26" text-anchor="middle" font-family="var(--font-sans)" font-size="12.5" font-weight="600" fill="var(--ex-rose-text)">"quick"</text>
-
-        <rect x="190" y="6" width="68" height="32" rx="6" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1.5" />
-        <text x="224" y="26" text-anchor="middle" font-family="var(--font-sans)" font-size="12.5" font-weight="600" fill="var(--ex-blue-text)">"brown"</text>
-
-        <path d="M 268 22 L 310 22" stroke="var(--ex-text-muted)" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ex-arrow-blue)" />
-        <text x="335" y="26" font-family="var(--font-mono)" font-size="12" fill="var(--ex-text-muted)">Transformer</text>
-        <path d="M 420 22 L 460 22" stroke="var(--ex-blue-stroke)" stroke-width="1.5" marker-end="url(#ex-arrow-blue)" />
-
-        <rect x="470" y="6" width="60" height="32" rx="6" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
-        <text x="500" y="26" text-anchor="middle" font-family="var(--font-sans)" font-size="12.5" font-weight="700" fill="var(--ex-green-text)">"fox"</text>
-        <text x="542" y="26" font-family="var(--font-mono)" font-size="11.5" fill="var(--ex-rose-text)">⚠️ Recomputed 2 tokens!</text>
-      </g>
+    <g transform="translate(32 136)">
+      <rect x="0" y="0" width="80" height="48" rx="4" class="node-muted" />
+      <rect x="0" y="0" width="80" height="48" rx="4" fill="url(#naive-hatch)" />
+      <text x="40" y="20" class="body" text-anchor="middle">The</text><text x="40" y="36" class="label" text-anchor="middle">REPEAT</text>
+      <rect x="96" y="0" width="80" height="48" rx="4" class="node-muted" />
+      <rect x="96" y="0" width="80" height="48" rx="4" fill="url(#naive-hatch)" />
+      <text x="136" y="20" class="body" text-anchor="middle">quick</text><text x="136" y="36" class="label" text-anchor="middle">REPEAT</text>
+      <rect x="192" y="0" width="80" height="48" rx="4" class="node-muted" />
+      <text x="232" y="20" class="body" text-anchor="middle">brown</text><text x="232" y="36" class="label" text-anchor="middle">ACTIVE</text>
+      <path d="M 272 24 H 376" class="flow" marker-end="url(#naive-arrow)" />
+      <rect x="376" y="0" width="160" height="48" rx="4" class="node" />
+      <text x="456" y="21" class="title" text-anchor="middle">Transformer</text><text x="456" y="37" class="label" text-anchor="middle">3 PROJECTIONS</text>
+      <path d="M 536 24 H 640" class="flow" marker-end="url(#naive-arrow)" />
+      <rect x="640" y="0" width="96" height="48" rx="4" class="node-muted" />
+      <text x="688" y="21" class="body" text-anchor="middle">fox</text><text x="688" y="37" class="label" text-anchor="middle">OUTPUT</text>
     </g>
 
-    <!-- Divider -->
-    <line x1="20" y1="206" x2="740" y2="206" stroke="var(--ex-border)" stroke-width="1.5" stroke-dasharray="4 4" />
+    <line x1="32" y1="224" x2="768" y2="224" class="rule" />
 
-    <!-- ==================================================== -->
-    <!-- PANEL B: WITH KV CACHE -->
-    <!-- ==================================================== -->
-    <g class="panel-kv-cache" transform="translate(0, 220)">
-      <!-- Title -->
-      <rect x="20" y="0" width="310" height="30" rx="6" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
-      <text x="32" y="20" font-family="var(--font-sans)" font-size="14" font-weight="700" fill="var(--ex-green-text)">
-        2. With KV-Cache (Keys & Values Cached)
-      </text>
-      <text x="740" y="20" text-anchor="end" font-family="var(--font-mono)" font-size="12" font-weight="600" fill="var(--ex-green-text)">
-        Complexity: O(N) Compute per Step
-      </text>
+    <text x="32" y="264" class="title">KV-cached decoding</text>
+    <text x="32" y="284" class="body-muted">Reuse prior keys and values; project only the token that just arrived.</text>
 
-      <!-- Step 3 with Cache -->
-      <g transform="translate(20, 44)">
-        <text x="0" y="32" font-family="var(--font-mono)" font-size="12" fill="var(--ex-text-muted)">Step 3:</text>
-
-        <!-- Cached KV Storage Box -->
-        <rect x="60" y="4" width="220" height="74" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" stroke-dasharray="4 2" />
-        <text x="72" y="24" font-family="var(--font-sans)" font-size="11.5" font-weight="700" fill="var(--ex-green-text)">
-          ⚡ Cached in GPU Memory (HBM):
-        </text>
-
-        <!-- Slot 0 -->
-        <rect x="72" y="34" width="60" height="36" rx="4" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1" />
-        <text x="102" y="49" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="var(--ex-green-text)">"The"</text>
-        <text x="102" y="63" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">[K₀, V₀]</text>
-
-        <!-- Slot 1 -->
-        <rect x="138" y="34" width="64" height="36" rx="4" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1" />
-        <text x="170" y="49" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="var(--ex-green-text)">"quick"</text>
-        <text x="170" y="63" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">[K₁, V₁]</text>
-
-        <!-- Slot 2 -->
-        <rect x="208" y="34" width="64" height="36" rx="4" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1" />
-        <text x="240" y="49" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="var(--ex-green-text)">"brown"</text>
-        <text x="240" y="63" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-text-muted)">[K₂, V₂]</text>
-
-        <!-- Plus new query -->
-        <text x="294" y="46" font-family="var(--font-sans)" font-size="16" font-weight="700" fill="var(--ex-text-muted)">+</text>
-
-        <!-- Active Token Compute -->
-        <rect x="316" y="16" width="105" height="52" rx="6" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1.5" />
-        <text x="368" y="35" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="700" fill="var(--ex-blue-text)">New: "brown"</text>
-        <text x="368" y="54" text-anchor="middle" font-family="var(--font-mono)" font-size="10.5" fill="var(--ex-blue-text)">Project Q₃, K₃, V₃</text>
-
-        <!-- Attention Operator -->
-        <path d="M 430 42 L 468 42" stroke="var(--ex-green-stroke)" stroke-width="2" marker-end="url(#ex-arrow-green)" />
-
-        <rect x="478" y="16" width="100" height="52" rx="6" fill="var(--ex-purple-bg)" stroke="var(--ex-purple-stroke)" stroke-width="1.5" />
-        <text x="528" y="36" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="700" fill="var(--ex-purple-text)">Attention</text>
-        <text x="528" y="54" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--ex-purple-text)">Q₃ · [K₀..K₃]ᵀ</text>
-
-        <path d="M 586 42 L 620 42" stroke="var(--ex-green-stroke)" stroke-width="2" marker-end="url(#ex-arrow-green)" />
-
-        <!-- Output Token -->
-        <rect x="630" y="16" width="70" height="52" rx="6" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="2" />
-        <text x="665" y="38" text-anchor="middle" font-family="var(--font-sans)" font-size="14" font-weight="700" fill="var(--ex-green-text)">"fox"</text>
-        <text x="665" y="55" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ex-green-text)">Next Token</text>
-      </g>
-
-      <!-- Explanatory footer -->
-      <g transform="translate(80, 142)">
-        <text x="0" y="16" font-family="var(--font-sans)" font-size="12.5" fill="var(--ex-text-main)">
-          💡 <tspan font-weight="700">Key Insight:</tspan> Past tokens' Key and Value representations never change. By saving them in memory, we compute <tspan font-weight="700" fill="var(--ex-green-text)">exactly 1 new token vector per step</tspan>.
-        </text>
-      </g>
+    <g transform="translate(32 312)">
+      <rect x="0" y="0" width="176" height="56" rx="4" class="node-muted" />
+      <text x="16" y="20" class="title">Stored KV cache</text>
+      <text x="16" y="40" class="label">THE · QUICK</text>
+      <rect x="224" y="0" width="80" height="56" rx="4" class="node-signal" />
+      <text x="264" y="22" class="body" text-anchor="middle">brown</text><text x="264" y="42" class="label-signal" text-anchor="middle">NEW QKV</text>
+      <path d="M 304 28 H 408" class="flow-signal" marker-end="url(#naive-arrow-signal)" />
+      <rect x="408" y="0" width="160" height="56" rx="4" class="node" />
+      <text x="488" y="22" class="title" text-anchor="middle">Attention</text><text x="488" y="42" class="label" text-anchor="middle">REUSE + 1 PROJ.</text>
+      <path d="M 568 28 H 672" class="flow-signal" marker-end="url(#naive-arrow-signal)" />
+      <rect x="672" y="0" width="64" height="56" rx="4" class="node-signal" />
+      <text x="704" y="22" class="body" text-anchor="middle">fox</text><text x="704" y="42" class="label-signal" text-anchor="middle">OUTPUT</text>
     </g>
   </svg>
 </ExcalidrawContainer>

@@ -1,9 +1,4 @@
 ---
-/**
- * ExcalidrawMemoryFragmentation.astro
- * Visualizes the 3 Sins of Contiguous KV-Cache Allocation:
- * Over-allocation, Internal Fragmentation, and External Fragmentation.
- */
 import ExcalidrawContainer from './ExcalidrawContainer.astro';
 
 interface Props {
@@ -12,115 +7,45 @@ interface Props {
   title?: string;
 }
 
-const { caption = "Figure 3: The Three Sins of Contiguous Allocation — Over-allocation, Internal Fragmentation, and External Fragmentation (causing 60–80% GPU memory waste).", exhibit, title } = Astro.props;
+const { caption, exhibit, title } = Astro.props;
 ---
 
-<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="Memory Bottleneck">
-  <svg class="ex-svg-canvas" viewBox="0 0 760 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="MEMORY ALLOCATION">
+  <svg class="ex-svg-canvas sys-diagram" viewBox="0 0 800 448" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Contiguous allocation reserves a long buffer, leaves the unused tail locked after a request finishes, and creates fragmented free memory across requests.">
     <defs>
-      <!-- Hatch pattern for waste -->
-      <pattern id="ex-waste-hatch" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-        <line x1="0" y1="0" x2="0" y2="10" stroke="var(--ex-rose-stroke)" stroke-width="1.5" stroke-opacity="0.35" />
-      </pattern>
+      <pattern id="fragment-hatch" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="8" stroke="var(--ex-text-muted)" stroke-opacity=".30" stroke-width="2" /></pattern>
     </defs>
+    <text x="32" y="32" class="label">CONTIGUOUS ALLOCATION</text>
+    <text x="768" y="32" class="label" text-anchor="end">CAPACITY IS RESERVED, NOT EARNED</text>
+    <line x1="32" y1="48" x2="768" y2="48" class="rule" />
 
-    <!-- ==================================================== -->
-    <!-- TOP: SINGLE REQUEST CONTIGUOUS BUFFER ALLOCATION -->
-    <!-- ==================================================== -->
-    <g class="sec-buffer" transform="translate(20, 16)">
-      <text x="0" y="16" font-family="var(--font-sans)" font-size="14" font-weight="700" fill="var(--ex-text-main)">
-        Traditional Serving: Pre-allocating Max Sequence Length (e.g., 8,192 tokens)
-      </text>
-
-      <!-- 720px width memory strip -->
-      <g transform="translate(0, 30)">
-        <!-- Entire buffer border -->
-        <rect x="0" y="0" width="720" height="64" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-border)" stroke-width="1.5" />
-
-        <!-- 1. Prompt chunk (Blue) -->
-        <rect x="0" y="0" width="80" height="64" rx="8 0 0 8" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1.5" />
-        <text x="40" y="28" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="700" fill="var(--ex-blue-text)">Prompt</text>
-        <text x="40" y="46" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--ex-blue-text)">500 tok</text>
-
-        <!-- 2. Generated chunk (Indigo) -->
-        <rect x="80" y="0" width="60" height="64" fill="var(--ex-indigo-bg)" stroke="var(--ex-indigo-stroke)" stroke-width="1.5" />
-        <text x="110" y="28" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="700" fill="var(--ex-indigo-text)">Gen</text>
-        <text x="110" y="46" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--ex-indigo-text)">250 tok</text>
-
-        <!-- 3. Reserved & Locked Waste (Rose Hatch) -->
-        <rect x="140" y="0" width="580" height="64" rx="0 8 8 0" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1.5" />
-        <rect x="140" y="0" width="580" height="64" rx="0 8 8 0" fill="url(#ex-waste-hatch)" />
-
-        <text x="430" y="28" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="700" fill="var(--ex-rose-text)">
-          🔒 Reserved & Locked Memory (~75% Wasted Buffer)
-        </text>
-        <text x="430" y="46" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--ex-rose-text)">
-          7,442 unused token slots reserved upfront · Cannot be shared with other requests
-        </text>
-      </g>
+    <text x="32" y="88" class="label">01 / ADMISSION</text>
+    <text x="176" y="88" class="body-muted">Reserve the maximum sequence length before the request starts.</text>
+    <g transform="translate(176 108)">
+      <rect x="0" y="0" width="560" height="48" rx="4" class="node-muted" />
+      <rect x="0" y="0" width="96" height="48" rx="4" class="node-signal" />
+      <rect x="96" y="0" width="464" height="48" fill="url(#fragment-hatch)" />
+      <text x="48" y="21" class="body" text-anchor="middle">prompt</text><text x="48" y="37" class="label-signal" text-anchor="middle">750 TOKENS</text>
+      <text x="328" y="21" class="body-muted" text-anchor="middle">reserved capacity</text><text x="328" y="37" class="label" text-anchor="middle">7,442 TOKENS</text>
     </g>
 
-    <!-- Divider -->
-    <line x1="20" y1="130" x2="740" y2="130" stroke="var(--ex-border)" stroke-width="1.5" stroke-dasharray="3 3" />
+    <line x1="32" y1="184" x2="768" y2="184" class="rule" />
+    <text x="32" y="224" class="label">02 / EARLY STOP</text>
+    <text x="176" y="224" class="body-muted">When generation ends, the unused tail stays unavailable for this request.</text>
+    <g transform="translate(176 244)">
+      <rect x="0" y="0" width="560" height="48" rx="4" class="node-muted" />
+      <rect x="0" y="0" width="144" height="48" rx="4" class="node-signal" />
+      <rect x="144" y="0" width="416" height="48" fill="url(#fragment-hatch)" />
+      <text x="72" y="21" class="body" text-anchor="middle">used</text><text x="72" y="37" class="label-signal" text-anchor="middle">750 TOKENS</text>
+      <text x="352" y="21" class="body-muted" text-anchor="middle">locked, never touched</text><text x="352" y="37" class="label" text-anchor="middle">INTERNAL FRAGMENTATION</text>
+    </g>
 
-    <!-- ==================================================== -->
-    <!-- BOTTOM: THE 3 SINS CARDS -->
-    <!-- ==================================================== -->
-    <g class="sec-sins" transform="translate(20, 150)">
-      <text x="0" y="16" font-family="var(--font-sans)" font-size="14" font-weight="700" fill="var(--ex-rose-text)">
-        The 3 Inherent Flaws of Contiguous Allocation:
-      </text>
-
-      <!-- Card 1: Reserved Memory -->
-      <g transform="translate(0, 30)">
-        <rect x="0" y="0" width="225" height="170" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1.5" />
-        <rect x="8" y="8" width="209" height="24" rx="4" fill="var(--ex-rose-bg)" />
-        <text x="112" y="24" text-anchor="middle" font-family="var(--font-sans)" font-size="11.5" font-weight="700" fill="var(--ex-rose-text)">
-          1. Over-Allocation
-        </text>
-        
-        <text x="12" y="52" font-family="var(--font-sans)" font-size="11.5" font-weight="600" fill="var(--ex-text-main)">Sized for the worst-case:</text>
-        <text x="12" y="72" font-family="var(--font-sans)" font-size="11" fill="var(--ex-text-muted)">
-          The engine reserves memory for the maximum sequence length (e.g. 8k) before generation even starts.
-        </text>
-        <text x="12" y="125" font-family="var(--font-sans)" font-size="10.5" font-style="italic" fill="var(--ex-rose-text)">
-          "Paying for 8k tokens when the user might only ask for 50."
-        </text>
-      </g>
-
-      <!-- Card 2: Internal Fragmentation -->
-      <g transform="translate(247, 30)">
-        <rect x="0" y="0" width="225" height="170" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-amber-stroke)" stroke-width="1.5" />
-        <rect x="8" y="8" width="209" height="24" rx="4" fill="var(--ex-amber-bg)" />
-        <text x="112" y="24" text-anchor="middle" font-family="var(--font-sans)" font-size="11.5" font-weight="700" fill="var(--ex-amber-text)">
-          2. Internal Fragmentation
-        </text>
-        
-        <text x="12" y="52" font-family="var(--font-sans)" font-size="11.5" font-weight="600" fill="var(--ex-text-main)">Early termination waste:</text>
-        <text x="12" y="72" font-family="var(--font-sans)" font-size="11" fill="var(--ex-text-muted)">
-          When the model emits an &lt;eos&gt; token at token 400, the remaining 7,792 allocated slots stay locked until the entire request completes.
-        </text>
-        <text x="12" y="125" font-family="var(--font-sans)" font-size="10.5" font-style="italic" fill="var(--ex-amber-text)">
-          "Slots are allocated inside the buffer, but never touched."
-        </text>
-      </g>
-
-      <!-- Card 3: External Fragmentation -->
-      <g transform="translate(495, 30)">
-        <rect x="0" y="0" width="225" height="170" rx="8" fill="var(--ex-card-bg)" stroke="var(--ex-purple-stroke)" stroke-width="1.5" />
-        <rect x="8" y="8" width="209" height="24" rx="4" fill="var(--ex-purple-bg)" />
-        <text x="112" y="24" text-anchor="middle" font-family="var(--font-sans)" font-size="11.5" font-weight="700" fill="var(--ex-purple-text)">
-          3. External Fragmentation
-        </text>
-        
-        <text x="12" y="52" font-family="var(--font-sans)" font-size="11.5" font-weight="600" fill="var(--ex-text-main)">Memory Swiss-Cheese:</text>
-        <text x="12" y="72" font-family="var(--font-sans)" font-size="11" fill="var(--ex-text-muted)">
-          Requests start and finish at different times. Free memory gets fragmented into small, non-contiguous holes.
-        </text>
-        <text x="12" y="125" font-family="var(--font-sans)" font-size="10.5" font-style="italic" fill="var(--ex-purple-text)">
-          "10 GB free in aggregate, but cannot admit a 2 GB request!"
-        </text>
-      </g>
+    <line x1="32" y1="320" x2="768" y2="320" class="rule" />
+    <text x="32" y="348" class="label">03 / MANY REQUESTS</text>
+    <text x="176" y="366" class="body-muted">Free capacity remains, but no request-sized region is contiguous.</text>
+    <g transform="translate(176 380)">
+      <rect x="0" y="0" width="72" height="24" class="node-muted" /><rect x="80" y="0" width="40" height="24" fill="url(#fragment-hatch)" /><rect x="128" y="0" width="96" height="24" class="node-muted" /><rect x="232" y="0" width="40" height="24" fill="url(#fragment-hatch)" /><rect x="280" y="0" width="112" height="24" class="node-muted" /><rect x="400" y="0" width="40" height="24" fill="url(#fragment-hatch)" /><rect x="448" y="0" width="112" height="24" class="node-muted" />
+      <text x="280" y="48" class="label" text-anchor="middle">SCATTERED FREE REGIONS</text>
     </g>
   </svg>
 </ExcalidrawContainer>

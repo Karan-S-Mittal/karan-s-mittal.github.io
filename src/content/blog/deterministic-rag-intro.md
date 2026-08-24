@@ -1,79 +1,92 @@
 ---
 title: "Deterministic RAG: Beyond Probabilistic Retrieval"
-description: "Why enterprise knowledge systems need guarantees, not just probabilities."
+description: "A retrieval replay contract for enterprise knowledge systems: what can be made deterministic, what cannot, and where graphs help."
 pubDate: 2026-05-25
-updatedDate: 2026-08-08
+updatedDate: 2026-08-24
 tags: ["RAG", "GraphRAG", "AI Architecture", "MLOps"]
 ---
 
-Most RAG systems in production are probabilistic black boxes. You chunk documents, embed them, retrieve the top-k, and hope the LLM cites the right source. For a demo, hope is fine. For a system that answers questions about a drug trial, a supply contract, or a loan book, hope is not a strategy.
+Most RAG systems are built as a chain of useful approximations: chunk a corpus, embed it, retrieve a small candidate set, then ask a model to synthesize an answer. That can be an excellent product architecture. It is not, by itself, a replayable one. [4]
 
-This post is about what it actually takes to make retrieval deterministic — and where the honest limits of that goal are.
+For a knowledge system that will be audited—a trial record, supply contract, or loan book—the useful question is narrower than “is RAG deterministic?” It is: *can we reproduce the retrieval decision that supplied this answer?*
 
-## First, Define the Claim
+## Define the Contract Before Calling It Deterministic
 
-"Deterministic RAG" is sloppy phrasing if we don't say *which part* is deterministic. Generation never will be — even at temperature zero, LLM outputs can drift across model versions and hardware. The claim worth making is narrower and stronger:
+Generation, retrieval, and the corpus evolve independently. A temperature setting alone cannot make the whole pipeline reproducible. The contract I want is explicit:
 
-> For a given query and a given knowledge base state, the retrieved context is identical every time.
+> Given a query, a named corpus snapshot, an embedding-model artifact, an index artifact, retrieval parameters, and a stable tie-break rule, return the same ordered context bundle and a trace explaining why each item is present.
 
-That is a property you can test, replay, and audit. Everything downstream — synthesis, citation formatting — sits on top of that guarantee.
+That scope is deliberately smaller than “the model always says the same thing.” It is also far more useful operationally. The answer generator can then be evaluated against a fixed evidence bundle; if the bundle changes, the system can show exactly which input changed.
 
-## Where the Variance Actually Comes From
+## Where Retrieval Variance Enters
 
-It's worth being precise here, because the usual explanation is wrong. Temperature is a generation-time knob; it has nothing to do with retrieval. The non-determinism in a standard vector pipeline comes from the retrieval stack itself:
+Approximate nearest-neighbour indexes trade exhaustive search for latency and memory efficiency. HNSW, for example, constructs a multi-layer proximity graph and searches a subset of points rather than every vector. IVF and product-quantization indexes likewise make explicit accuracy–cost trade-offs. [1][2]
 
-- **Approximate nearest neighbour search.** ANN indices (HNSW, IVF, PQ) trade exactness for speed. Graph traversal order, quantisation error, and tie-breaking among equidistant vectors mean the same query can return different neighbour sets — [sometimes subtly, sometimes not](https://mikulskibartosz.name/approximate-nearest-neighbor-vs-rag).
-- **Index churn.** Incremental updates, deletions with tombstones, segment merges — the index you query today is not byte-identical to yesterday's, and results shift with it.
-- **Embedding-model drift.** Upgrade the embedder and the entire vector space moves. Unless you re-embed the corpus atomically and version the pair (model + index) together, "the same query" stops meaning anything.
-- **Tie-breaking and reranking.** Equal scores get broken by insertion order or internal IDs — stable only until the next rebuild.
+That does not make them unsuitable for enterprise work. It means the retrieval result is a function of more than the query text:
 
-Individually these look like edge cases. Compounded over thousands of queries a day, they mean you cannot answer the simplest audit question: *why did the system see these documents and not those?*
+- **Corpus and chunk snapshot.** A new document, deleted passage, or changed chunk boundary changes the candidate set.
+- **Embedding artifact.** Changing the model, pooling method, normalization, or tokenizer changes the vector space.
+- **Index artifact and parameters.** HNSW construction/search settings, IVF probe count, and PQ configuration change the search procedure and its approximation boundary. [1][2]
+- **Ranking policy.** Equal or near-equal scores need a documented secondary sort, such as an immutable document identifier, or the final ordering is underspecified.
 
-## Why Enterprises Care
+The operational mistake is treating an index as a transparent implementation detail. For an audited system, it is an input artifact. Version it accordingly.
 
-A vector store returns a relevance score. A relevance score is not proof. In finance, healthcare, and legal work, explainability is not a nice-to-have — [it's governance](https://flur.ee/solutions/graph-rag). When a regulator, an auditor, or your own incident review asks how an answer was produced, "the embedding model ranked these chunks highest" is not an answer that survives contact with a compliance team.
+## The Replay Record
 
-What survives is a replayable path: this query, against this immutable snapshot, traversed these edges, returned these records, at this timestamp.
-
-## What Determinism Actually Requires
-
-From building these systems, four properties do the heavy lifting:
-
-1. **Versioned, immutable indices.** Knowledge base states are snapshots, never mutated in place. A query always names the snapshot it ran against.
-2. **Pinned embedding models.** The model version is part of the index identity. Upgrade means a new index, not a silent drift.
-3. **Exact or symbolic retrieval paths.** Either exact kNN (viable at more scales than people assume, especially with GPU brute force) or graph-structured traversal where each hop is an explicit, inspectable edge.
-4. **Logged traversal.** Every retrieval emits its own audit record — what was visited, in what order, and why it was included.
-
-There's also an emerging direction worth watching: dropping the vector layer entirely and having the agent drive symbolic, reproducible queries over a relational store — the [MOSS architecture](https://arxiv.org/html/2607.04391v1) is a recent example, arguing that once a query is formulated, no LLM should participate in the retrieval loop at all.
-
-## Where GraphRAG Helps — and Where It Doesn't
-
-GraphRAG shifts retrieval from "find similar text" to "traverse verified relationships." Grounding in explicit edges gives you the audit trail for free:
+The minimum useful record is small enough to emit for every request:
 
 ```text
-Query → Entity Extraction → Graph Traversal → Citation Bundle → LLM Synthesis
+query hash
+corpus snapshot ID
+chunking + embedding-model artifact IDs
+index build ID + retrieval parameters
+ordered candidates: document ID, chunk ID, score, rank
+filters, reranker version, and stable tie-break rule
 ```
 
-Each step is logged, versioned, and reproducible. That part of the pitch is real.
+With that record, “why did the system see this?” becomes a query over evidence rather than an incident-room argument. It also makes regressions testable: a CI job can replay a fixed evaluation set against a candidate index and flag any changed context bundle before release.
 
-But the honest trade-offs matter more than the pitch. The graph's cost is paid **at index time** — entity extraction and relationship building across the whole corpus, before a single query is answered. The alternative, agentic multi-hop retrieval, pays its cost **at query time**, only for queries that need it — but the follow-up queries are chosen by an LLM, which means [two runs of the same hard question can take different reasoning paths](https://aloknecessary.github.io/blogs/graph-rag-vs-rag/). You've moved the non-determinism, not removed it.
+## Where GraphRAG Helps—and Where It Does Not
 
-And GraphRAG is not a strict upgrade. [Recent evaluations](https://arxiv.org/html/2606.25656v1) show simpler RAG variants staying competitive on many workloads, and they surface a retrieval–generation gap worth internalising: expanded retrieval does not translate into proportionally better answers. More context is not more correctness.
+Graph-based retrieval is useful when the question is relational: it asks for a chain, dependency, or cross-document connection rather than a semantically similar paragraph. Microsoft’s GraphRAG implementation indexes text units, extracts entities and relationships, builds a community hierarchy, and uses those structures to assemble context. [3]
 
-So the engineering question isn't "vector or graph?" It's: *which queries in my workload are relational, and what does an audit of those queries need to show?*
+That structure can make a retrieval path easier to inspect, but it is not an audit trail for free. The graph itself is an artifact with its own provenance requirements:
 
-## The Spectrum, Not the Binary
+1. Store the source text units behind every entity, relationship, and summary.
+2. Version the extraction model, prompt, schema, and clustering configuration.
+3. Record the traversal and the source records selected at query time.
+4. Treat generated graph summaries as derived evidence, not as replacements for their source passages.
 
-In practice I treat determinism as a ladder, and climb only as high as the compliance bar demands:
+This is the real trade-off. Graph construction pays work at index time—extraction, reconciliation, clustering, and summaries—so it can answer some relational questions through explicit structure later. Agentic multi-hop retrieval pays more of that reasoning at query time. Neither path is automatically reproducible; reproducibility comes from recording inputs, decisions, and versioned artifacts.
 
-1. **Baseline hardening** — pinned embedder, snapshot indices, exact kNN where the corpus allows. Cheap, and eliminates most silent variance.
-2. **Hybrid** — vector recall for the broad net, graph traversal for the relational queries, everything logged against a named snapshot.
-3. **Full symbolic** — relational/graph stores only, no similarity search in the loop. Maximum auditability, maximum index-time cost.
+## The Practical Spectrum
 
-Most enterprise systems I work on belong at rung two.
+I use three levels of control:
 
-## What I'm Building
+1. **Replayable vector retrieval.** Immutable corpus snapshots, pinned embedding and index artifacts, fixed search parameters, stable ranking, and logged candidates.
+2. **Hybrid retrieval.** Vector recall for broad discovery, followed by an explicit graph or relational traversal where the question demands relationships. Both paths emit the same provenance record.
+3. **Symbolic retrieval.** The query is compiled into a constrained relational or graph traversal. This maximizes inspectability, but only when the domain model is complete enough to carry the question.
 
-Over the next few months I'm open-sourcing a reproducible evaluation harness for GraphRAG systems. The premise is simple: if you claim your pipeline is deterministic, you should be able to prove it — same query, same snapshot, same context bundle, reported by CI on every change. A determinism claim without a replay report is marketing.
+Most teams do not need to abandon vector retrieval. They need to stop treating it as unversioned magic.
+
+## The Test That Matters
+
+A determinism claim should survive a replay report:
+
+```text
+same query + same artifacts + same parameters
+→ same ordered context bundle + same provenance trace
+```
+
+If any element changes, report the delta: which artifact changed, which candidates moved, and whether the answer-quality evaluation changed with them. That is a standard an engineering team can maintain—not just a promise in a sales deck.
+
+## Primary Citations & Verifications
+
+| ID | Claim / component | Primary source |
+|---|---|---|
+| `[1]` | HNSW's graph-based approximate nearest-neighbour search | [Malkov & Yashunin, *Efficient and Robust Approximate Nearest Neighbor Search Using HNSW Graphs*](https://arxiv.org/abs/1603.09320) |
+| `[2]` | IVF/PQ implementation and its encoded index construction | [Faiss `IndexIVFPQ` implementation](https://github.com/facebookresearch/faiss/blob/main/faiss/IndexIVFPQ.cpp#L39-L65) |
+| `[3]` | GraphRAG indexing pipeline and graph/context construction | [Microsoft GraphRAG source and documentation](https://github.com/microsoft/graphrag) |
+| `[4]` | Retrieval-augmented generation as a model architecture | [Lewis et al., *Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks*](https://arxiv.org/abs/2005.11401) |
 
 If this interests you, reach out on [LinkedIn](https://www.linkedin.com/in/karansmittal/).

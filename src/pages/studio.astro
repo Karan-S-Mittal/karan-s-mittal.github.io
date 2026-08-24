@@ -1,0 +1,945 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Exhibit from '../components/Exhibit.astro';
+import AlgorithmFlow from '../components/AlgorithmFlow.astro';
+
+const themeDirections = [
+  {
+    id: 'blueprint',
+    index: 'A',
+    name: 'Technical Blueprint',
+    fit: 'Exacting · analytical · future-facing',
+    description: 'A refined version of the current language: cool laboratory surfaces, navy structure, and disciplined signal blue.',
+    judgement: 'Chosen direction. Its colour logic is right; the component grammar now needs to make it unmistakably yours.',
+    recommended: true,
+    palette: [
+      { name: 'Canvas', value: '#F4F7FB' },
+      { name: 'Ink', value: '#13213A' },
+      { name: 'Signal', value: '#1F66E5' },
+      { name: 'Verified', value: '#168663' },
+    ],
+  },
+  {
+    id: 'graphite',
+    index: 'B',
+    name: 'Graphite & Copper',
+    fit: 'Engineered · grounded · human',
+    description: 'Mineral-white paper, graphite structure, and a burnished copper signal inspired by traces, contacts, and physical systems.',
+    judgement: 'A strong alternative for warmth, but it shifts attention away from the blueprint precision you preferred.',
+    palette: [
+      { name: 'Canvas', value: '#F6F5F2' },
+      { name: 'Ink', value: '#1D232B' },
+      { name: 'Signal', value: '#B94724' },
+      { name: 'Verified', value: '#218A68' },
+    ],
+  },
+  {
+    id: 'teal',
+    index: 'C',
+    name: 'Deep Teal Lab',
+    fit: 'Investigative · calm · distinctive',
+    description: 'A restrained research palette: pale mineral-green surfaces, petrol ink, and a precise teal active path.',
+    judgement: 'Most distinctive and least SaaS-like, though it reads slightly more scientific than computational.',
+    palette: [
+      { name: 'Canvas', value: '#F3F8F7' },
+      { name: 'Ink', value: '#0E292D' },
+      { name: 'Signal', value: '#00777D' },
+      { name: 'Verified', value: '#2B8568' },
+    ],
+  },
+];
+
+const semanticTokens = [
+  { name: 'Signal', token: '--signal', use: 'Active path, current step, key idea' },
+  { name: 'Model', token: '--model', use: 'Learned state, weights, embeddings' },
+  { name: 'Verified', token: '--verified', use: 'Checked result, invariant, cache hit' },
+  { name: 'Constraint', token: '--constraint', use: 'Limit, contention, cost, headroom' },
+  { name: 'Failure', token: '--failure', use: 'Rejected path, miss, overflow, error' },
+];
+
+const flowSteps = [
+  {
+    step: '01',
+    title: 'Name the failure',
+    tag: 'OBSERVE',
+    state: 'failure' as const,
+    description: 'Identify the concrete visual or explanatory breakdown before changing coordinates.',
+    note: 'One issue at a time',
+  },
+  {
+    step: '02',
+    title: 'Update the rule',
+    tag: 'CONTRACT',
+    state: 'model' as const,
+    description: 'Turn the diagnosis into a reusable design-language decision with explicit geometry.',
+    formula: 'rule → token or primitive',
+  },
+  {
+    step: '03',
+    title: 'Repair the primitive',
+    tag: 'SYSTEM',
+    state: 'signal' as const,
+    description: 'Fix the shared component, route, or generator before touching the one-off exhibit.',
+    formula: 'shared fix > local patch',
+  },
+  {
+    step: '04',
+    title: 'Verify the result',
+    tag: 'EVIDENCE',
+    state: 'verified' as const,
+    description: 'Check desktop, narrow width, both themes, the production build, and source claims.',
+    note: 'Rendered output is the evidence',
+  },
+];
+---
+
+<Layout
+  title="Studio Engine | Karan Mittal"
+  description="A working control room for the Explanatory Systems Studio visual system and publishing workflow."
+>
+  <main class="studio-page">
+    <section class="studio-hero">
+      <p class="studio-kicker">Explanatory Systems Studio · Control Room</p>
+      <h1>A visual language that behaves like an engine.</h1>
+      <p class="studio-lede">
+        Inspect the primitives, test them at real reading widths, capture a precise issue, and run the same
+        preflight before every publication. This page is intentionally unlinked from the public navigation.
+      </p>
+      <div class="studio-status" aria-label="Studio engine status">
+        <span><i class="status-dot ready"></i> Shared tokens</span>
+        <span><i class="status-dot ready"></i> Live primitives</span>
+        <span><i class="status-dot ready"></i> Visual preflight</span>
+        <span><i class="status-dot next"></i> Manifest-driven exhibits next</span>
+      </div>
+    </section>
+
+    <nav class="studio-index" aria-label="Studio sections">
+      <a href="#themes">00 · Theme lab</a>
+      <a href="#contract">01 · Contract</a>
+      <a href="#preview">02 · Preview lab</a>
+      <a href="#workflow">03 · Repair loop</a>
+      <a href="#brief">04 · Issue brief</a>
+      <a href="#automation">05 · Automation</a>
+      <a href="/studio/components/">06 · Components</a>
+    </nav>
+
+    <section id="themes" class="studio-section theme-lab">
+      <div class="section-heading theme-heading">
+        <div>
+          <p class="section-index">00 · Personal theme directions</p>
+          <h2>Three readings of the same engineer.</h2>
+          <p>
+            These directions come from the work itself: deterministic systems, low-level performance, evidence,
+            teaching, and community. Switch between them here, then inspect the rest of this page in both themes.
+          </p>
+        </div>
+        <button type="button" class="reset-theme" data-reset-studio-theme>Use site default</button>
+      </div>
+
+      <div class="theme-grid">
+        {themeDirections.map((theme) => (
+          <article class:list={['theme-card', { recommended: theme.recommended }]} data-theme-card={theme.id}>
+            <div class="theme-card-topline">
+              <div class="theme-title-group">
+                <span class="theme-index">{theme.index}</span>
+                <div>
+                  <h3>{theme.name}</h3>
+                  <p class="theme-fit">{theme.fit}</p>
+                </div>
+              </div>
+              {theme.recommended && <span class="theme-recommendation">Selected foundation</span>}
+            </div>
+            <div class="theme-card-body">
+              <p class="theme-description">{theme.description}</p>
+              <div class="theme-palette" aria-label={`${theme.name} palette`}>
+                {theme.palette.map((colour) => (
+                  <span class="theme-colour" title={`${colour.name}: ${colour.value}`} style={`--swatch: ${colour.value}`}>
+                    <i aria-hidden="true"></i>
+                    <span class="colour-property">
+                      <small>{colour.name}</small>
+                      <code>{colour.value}</code>
+                    </span>
+                  </span>
+                ))}
+              </div>
+              <p class="theme-judgement"><strong>Critical read.</strong> {theme.judgement}</p>
+            </div>
+            <div class="theme-card-footer">
+              <button type="button" class="apply-theme" data-apply-studio-theme={theme.id}>
+                Preview {theme.name}
+              </button>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="theme-note" data-theme-note aria-live="polite">
+        Theme previews are local to this browser. Nothing is committed until we choose and refine one.
+      </p>
+    </section>
+
+    <section id="contract" class="studio-section">
+      <div class="section-heading">
+        <p class="section-index">01 · Visual contract</p>
+        <h2>Colour describes state. Space describes structure.</h2>
+        <p>These tokens are semantic controls, not a palette to distribute decoratively.</p>
+      </div>
+
+      <div class="token-grid">
+        {semanticTokens.map((item) => (
+          <article class="token-row" style={`--token-colour: var(${item.token})`}>
+            <span class="token-swatch" aria-hidden="true"></span>
+            <div>
+              <h3>{item.name}</h3>
+              <code>{item.token}</code>
+            </div>
+            <p>{item.use}</p>
+          </article>
+        ))}
+      </div>
+
+      <div class="geometry-contract" aria-label="Diagram geometry contract">
+        <div><strong>32</strong><span>outer inset</span></div>
+        <div><strong>16</strong><span>node inset</span></div>
+        <div><strong>24</strong><span>zone gap</span></div>
+        <div><strong>1.5</strong><span>base stroke</span></div>
+        <p>Text is measured before export. Connectors own a corridor. Captions carry the prose.</p>
+      </div>
+    </section>
+
+    <section id="preview" class="studio-section">
+      <div class="section-heading split-heading">
+        <div>
+          <p class="section-index">02 · Preview lab</p>
+          <h2>Test the component, not a screenshot.</h2>
+        </div>
+        <div class="preview-controls" role="group" aria-label="Preview width">
+          <button type="button" class="preview-button active" data-preview-width="wide">Wide</button>
+          <button type="button" class="preview-button" data-preview-width="reading">Reading</button>
+          <button type="button" class="preview-button" data-preview-width="mobile">Mobile</button>
+        </div>
+      </div>
+
+      <div class="preview-rail" data-preview-rail data-width="wide">
+        <div class="preview-canvas">
+          <Exhibit
+            exhibit="00"
+            title="The reusable causal path"
+            badge="REFERENCE PRIMITIVE"
+            caption="Only the changing state receives signal colour. Structure remains inked and legible without colour."
+          >
+            <svg class="reference-diagram" viewBox="0 0 760 270" role="img" aria-labelledby="studio-diagram-title studio-diagram-desc">
+              <title id="studio-diagram-title">Reference system flow</title>
+              <desc id="studio-diagram-desc">A request crosses a queue and model boundary to produce a verified result.</desc>
+              <defs>
+                <marker id="studio-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="var(--text)" />
+                </marker>
+              </defs>
+              <rect class="diagram-boundary" x="24" y="28" width="712" height="184" rx="4" />
+              <text class="diagram-meta" x="44" y="54">INFERENCE PATH</text>
+              <rect class="diagram-node" x="48" y="82" width="152" height="82" rx="4" />
+              <text class="diagram-title" x="64" y="112">Request</text>
+              <text class="diagram-meta" x="64" y="139">tokens = 512</text>
+              <rect class="diagram-node active" x="304" y="82" width="152" height="82" rx="4" />
+              <text class="diagram-title" x="320" y="112">Model step</text>
+              <text class="diagram-meta active-text" x="320" y="139">current state</text>
+              <rect class="diagram-node verified" x="560" y="82" width="152" height="82" rx="4" />
+              <text class="diagram-title" x="576" y="112">Result</text>
+              <text class="diagram-meta verified-text" x="576" y="139">bound checked</text>
+              <path class="diagram-flow active-flow" d="M200 123 H304" marker-end="url(#studio-arrow)" />
+              <path class="diagram-flow" d="M456 123 H560" marker-end="url(#studio-arrow)" />
+              <text class="diagram-annotation" x="286" y="196">← notice: only the causal step is active</text>
+              <path class="diagram-leader" d="M380 184 V166" />
+            </svg>
+          </Exhibit>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow" class="studio-section">
+      <div class="section-heading">
+        <p class="section-index">03 · Repair loop</p>
+        <h2>The decision sequence from our earlier reviews.</h2>
+        <p>A local correction is complete only after it improves the system that produced it.</p>
+      </div>
+      <AlgorithmFlow
+        title="From visual failure to reusable rule"
+        badge="STUDIO OPERATING MODEL"
+        caption="This is the default collaboration loop: diagnose, generalise, repair, verify."
+        steps={flowSteps}
+        columns={2}
+        wide={false}
+      />
+    </section>
+
+    <section id="brief" class="studio-section">
+      <div class="section-heading">
+        <p class="section-index">04 · Issue brief</p>
+        <h2>Turn “this feels wrong” into a fixable unit.</h2>
+        <p>Use the form to create a compact brief we can work through one issue at a time.</p>
+      </div>
+
+      <form class="brief-builder" data-brief-builder>
+        <label>
+          <span>Surface</span>
+          <select name="surface">
+            <option>Exhibit or diagram</option>
+            <option>Article reading experience</option>
+            <option>Site shell or page</option>
+            <option>Typography or spacing</option>
+            <option>Automation or publishing</option>
+          </select>
+        </label>
+        <label>
+          <span>Location</span>
+          <input name="location" placeholder="Page URL, post slug, or Exhibit 02" />
+        </label>
+        <label class="full-field">
+          <span>What is failing?</span>
+          <textarea name="failure" rows="4" placeholder="Describe the visible or explanatory failure—not the proposed CSS fix."></textarea>
+        </label>
+        <label class="full-field">
+          <span>What should become true?</span>
+          <textarea name="outcome" rows="3" placeholder="For example: labels stay inside nodes at mobile width and the connector path remains clear."></textarea>
+        </label>
+        <div class="brief-actions full-field">
+          <button type="button" class="copy-brief" data-copy-brief>Copy structured brief</button>
+          <span class="copy-status" data-copy-status aria-live="polite"></span>
+        </div>
+      </form>
+    </section>
+
+    <section id="automation" class="studio-section automation-section">
+      <div class="section-heading">
+        <p class="section-index">05 · Automation</p>
+        <h2>One preflight, used locally and at deployment.</h2>
+      </div>
+      <div class="automation-grid">
+        <article>
+          <span class="automation-label">AUTHOR</span>
+          <code>npm run new</code>
+          <p>Scaffold a first-principles post with the exhibit and citation structure.</p>
+        </article>
+        <article>
+          <span class="automation-label">INSPECT</span>
+          <code>npm run studio:check</code>
+          <p>Catch legacy styling, invalid SVG markup, and incomplete exhibit metadata.</p>
+        </article>
+        <article>
+          <span class="automation-label">PUBLISH</span>
+          <code>npm run build</code>
+          <p>Synchronise tags, render high-resolution exhibits, and compile the production site.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  function initStudio() {
+    const themeButtons = document.querySelectorAll<HTMLButtonElement>('[data-apply-studio-theme]');
+    const themeCards = document.querySelectorAll<HTMLElement>('[data-theme-card]');
+    const resetThemeButton = document.querySelector<HTMLButtonElement>('[data-reset-studio-theme]');
+    const themeNote = document.querySelector<HTMLElement>('[data-theme-note]');
+
+    function applyStudioTheme(theme?: string | null) {
+      if (theme) {
+        document.documentElement.dataset.studioTheme = theme;
+        localStorage.setItem('studio-theme-direction', theme);
+      } else {
+        delete document.documentElement.dataset.studioTheme;
+        localStorage.removeItem('studio-theme-direction');
+      }
+
+      themeCards.forEach((card) => card.classList.toggle('selected', card.dataset.themeCard === theme));
+      themeButtons.forEach((button) => {
+        const active = button.dataset.applyStudioTheme === theme;
+        button.classList.toggle('active', active);
+        button.textContent = active ? 'Previewing this direction' : `Preview ${button.dataset.applyStudioTheme === 'blueprint' ? 'Technical Blueprint' : button.dataset.applyStudioTheme === 'graphite' ? 'Graphite & Copper' : 'Deep Teal Lab'}`;
+      });
+      if (themeNote) {
+        themeNote.textContent = theme
+          ? 'Preview active across this page. Toggle dark mode and inspect the diagram and repair flow below.'
+          : 'Theme previews are local to this browser. Nothing is committed until we choose and refine one.';
+      }
+    }
+
+    const savedStudioTheme = localStorage.getItem('studio-theme-direction');
+    applyStudioTheme(savedStudioTheme);
+    themeButtons.forEach((button) => button.addEventListener('click', () => applyStudioTheme(button.dataset.applyStudioTheme)));
+    resetThemeButton?.addEventListener('click', () => applyStudioTheme(null));
+
+    const rail = document.querySelector<HTMLElement>('[data-preview-rail]');
+    const widthButtons = document.querySelectorAll<HTMLButtonElement>('[data-preview-width]');
+
+    widthButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const width = button.dataset.previewWidth;
+        if (!rail || !width) return;
+        rail.dataset.width = width;
+        widthButtons.forEach((item) => item.classList.toggle('active', item === button));
+      });
+    });
+
+    const builder = document.querySelector<HTMLFormElement>('[data-brief-builder]');
+    const copyButton = document.querySelector<HTMLButtonElement>('[data-copy-brief]');
+    const status = document.querySelector<HTMLElement>('[data-copy-status]');
+
+    copyButton?.addEventListener('click', async () => {
+      if (!builder) return;
+      const data = new FormData(builder);
+      const brief = [
+        'Studio visual issue',
+        `Surface: ${data.get('surface') || 'Not specified'}`,
+        `Location: ${data.get('location') || 'Not specified'}`,
+        `Failure: ${data.get('failure') || 'Not specified'}`,
+        `Desired invariant: ${data.get('outcome') || 'Not specified'}`,
+        '',
+        'Please update the reusable design-language rule first, then the shared primitive, then this instance. Verify both themes, desktop, and narrow width.',
+      ].join('\n');
+
+      try {
+        await navigator.clipboard.writeText(brief);
+        if (status) status.textContent = 'Brief copied.';
+      } catch {
+        if (status) status.textContent = 'Copy failed; select and copy the fields manually.';
+      }
+    });
+  }
+
+  initStudio();
+  document.addEventListener('astro:page-load', initStudio);
+</script>
+
+<style>
+  .studio-page {
+    max-width: var(--page-max-width);
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-5) var(--space-9);
+  }
+
+  .studio-hero {
+    max-width: 820px;
+  }
+
+  .studio-kicker,
+  .section-index,
+  .automation-label {
+    margin: 0 0 var(--space-3);
+    color: var(--signal);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .studio-hero h1 {
+    max-width: 760px;
+    font-size: clamp(2.6rem, 6vw, 4.6rem);
+  }
+
+  .studio-lede {
+    max-width: 700px;
+    font-size: var(--text-lg);
+  }
+
+  .studio-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
+    margin-top: var(--space-5);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-right: 0.45rem;
+    border-radius: 50%;
+  }
+
+  .status-dot.ready { background: var(--verified); }
+  .status-dot.next { background: var(--constraint); }
+
+  .studio-index {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    margin: var(--space-8) 0 var(--space-9);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .studio-index a {
+    padding: var(--space-4) var(--space-3);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    border-right: 1px solid var(--border-subtle);
+  }
+
+  .studio-index a:last-child { border-right: 0; }
+  .studio-index a:hover { color: var(--signal); text-decoration: none; }
+
+  .studio-section {
+    padding: var(--space-8) 0;
+    border-top: 1px solid var(--border);
+    scroll-margin-top: 6rem;
+  }
+
+  .section-heading {
+    max-width: 720px;
+    margin-bottom: var(--space-6);
+  }
+
+  .section-heading h2 {
+    margin: 0 0 var(--space-3);
+    font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+  }
+
+  .section-heading p:last-child { margin-bottom: 0; }
+
+  .theme-heading {
+    max-width: none;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+
+  .theme-heading > div { max-width: 720px; }
+
+  .reset-theme {
+    flex: 0 0 auto;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    background: transparent;
+    font: 500 var(--text-xs)/1 var(--font-mono);
+    cursor: pointer;
+  }
+
+  .reset-theme:hover { color: var(--text); border-color: var(--muted); }
+
+  .theme-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+
+  .theme-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--panel-radius);
+    box-shadow: var(--panel-shadow);
+    transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  }
+
+  .theme-card:hover { border-color: var(--panel-border-strong); }
+  .theme-card.selected {
+    background: var(--panel-selected-bg);
+    border-color: var(--panel-selected-border);
+    box-shadow: var(--panel-selected-shadow);
+  }
+
+  .theme-card-topline {
+    min-height: var(--panel-header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: 0.55rem var(--space-3);
+    background: var(--panel-header-bg);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .theme-title-group { display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
+
+  .theme-index {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--muted);
+    background: var(--panel-property-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 7px;
+    font: 600 0.65rem/1 var(--font-mono);
+  }
+
+  .theme-recommendation {
+    color: var(--signal);
+    font: 600 0.65rem/1.2 var(--font-mono);
+    text-align: right;
+  }
+
+  .theme-card h3 { margin: 0; font-size: 0.82rem; line-height: 1.25; }
+  .theme-fit { margin: 0.1rem 0 0; color: var(--muted); font: 500 0.6rem/1.3 var(--font-mono); }
+  .theme-card-body { display: flex; flex: 1; flex-direction: column; padding: var(--space-3); }
+  .theme-description { min-height: 6.5rem; margin-bottom: var(--space-4); font-size: var(--text-sm); }
+
+  .theme-palette {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--space-4);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .theme-colour {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    min-width: 0;
+    min-height: 2.25rem;
+    margin-top: -1px;
+    background: var(--panel-property-bg);
+    border-top: 1px solid var(--panel-border);
+  }
+  .theme-colour:first-child { margin-top: 0; border-top: 0; }
+  .theme-colour i { display: block; background: var(--swatch); border-right: 1px solid var(--panel-border); }
+  .colour-property { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); min-width: 0; padding: 0.35rem 0.55rem; }
+  .theme-colour small,
+  .theme-colour code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .theme-colour small { color: var(--muted); font: 500 0.62rem/1.2 var(--font-mono); }
+  .theme-colour code { color: var(--text-secondary); font-size: 0.62rem; }
+
+  .theme-judgement { min-height: 5.2rem; margin: 0; padding-top: var(--space-3); border-top: 1px solid var(--panel-border); font-size: var(--text-xs); line-height: 1.55; }
+
+  .theme-card-footer { padding: var(--space-2); background: var(--panel-header-bg); border-top: 1px solid var(--panel-border); }
+
+  .apply-theme {
+    width: 100%;
+    min-height: 2rem;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--panel-border-strong);
+    border-radius: 8px;
+    color: var(--text);
+    background: var(--panel-bg);
+    font: 500 var(--text-xs)/1 var(--font-sans);
+    cursor: pointer;
+  }
+
+  .apply-theme:hover,
+  .apply-theme.active { color: white; background: var(--signal); border-color: var(--signal); }
+
+  .theme-note { margin: var(--space-3) 0 0; color: var(--muted); font: 400 var(--text-xs)/1.5 var(--font-mono); }
+
+  .split-heading {
+    max-width: none;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-5);
+  }
+
+  .token-grid {
+    border-top: 1px solid var(--border);
+  }
+
+  .token-row {
+    display: grid;
+    grid-template-columns: 32px minmax(150px, 0.7fr) 1.5fr;
+    gap: var(--space-4);
+    align-items: center;
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .token-swatch {
+    width: 24px;
+    height: 24px;
+    background: var(--token-colour);
+    border: 1px solid color-mix(in srgb, var(--token-colour), var(--text) 20%);
+    border-radius: var(--radius-sm);
+  }
+
+  .token-row h3,
+  .token-row p { margin: 0; }
+  .token-row h3 { font-size: var(--text-base); }
+  .token-row p { font-size: var(--text-sm); }
+  .token-row code { font-size: var(--text-xs); color: var(--muted); }
+
+  .geometry-contract {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: var(--space-6);
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+  }
+
+  .geometry-contract > div {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-5);
+    border-right: 1px solid var(--border);
+  }
+
+  .geometry-contract > div:nth-child(4) { border-right: 0; }
+  .geometry-contract strong { font-family: var(--font-mono); font-size: var(--text-2xl); color: var(--text); }
+  .geometry-contract span { font-size: var(--text-xs); color: var(--muted); }
+  .geometry-contract p { grid-column: 1 / -1; margin: 0; padding: var(--space-4) var(--space-5); border-top: 1px solid var(--border); font-size: var(--text-sm); }
+
+  .preview-controls {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .preview-button {
+    border: 0;
+    border-right: 1px solid var(--border);
+    padding: 0.55rem 0.8rem;
+    color: var(--muted);
+    background: var(--bg-elevated);
+    font: 500 var(--text-xs)/1 var(--font-mono);
+    cursor: pointer;
+  }
+
+  .preview-button:last-child { border-right: 0; }
+  .preview-button.active { color: white; background: var(--signal); }
+
+  .preview-rail {
+    padding: var(--space-5);
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: var(--panel-radius);
+    overflow-x: auto;
+  }
+
+  .preview-canvas {
+    margin: 0 auto;
+    padding: var(--space-4);
+    background: var(--bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    transition: width var(--transition);
+  }
+
+  .preview-rail[data-width='wide'] .preview-canvas { width: 100%; }
+  .preview-rail[data-width='reading'] .preview-canvas { width: min(680px, 100%); }
+  .preview-rail[data-width='mobile'] .preview-canvas { width: 390px; }
+
+  .preview-rail[data-width='mobile'] .preview-canvas :global(.exhibit-frame) {
+    align-items: flex-start;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+
+  .reference-diagram { display: block; width: 100%; min-width: 620px; height: auto; }
+  .diagram-boundary { fill: none; stroke: var(--border); stroke-width: 1.5; }
+  .diagram-node { fill: var(--bg-elevated); stroke: var(--text); stroke-width: 1.5; }
+  .diagram-node.active { stroke: var(--signal); }
+  .diagram-node.verified { stroke: var(--verified); }
+  .diagram-title { fill: var(--text); font: 600 16px var(--font-sans); }
+  .diagram-meta { fill: var(--muted); font: 500 12px var(--font-mono); letter-spacing: 0.04em; }
+  .active-text { fill: var(--signal); }
+  .verified-text { fill: var(--verified); }
+  .diagram-flow { fill: none; stroke: var(--text); stroke-width: 1.8; }
+  .active-flow { stroke: var(--signal); stroke-width: 2.2; }
+  .diagram-annotation { fill: var(--muted); font: 400 12px var(--font-mono); }
+  .diagram-leader { fill: none; stroke: var(--muted); stroke-width: 1; }
+
+  .brief-builder {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+    max-width: 860px;
+    padding: var(--space-6);
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--panel-radius);
+    box-shadow: var(--panel-shadow);
+  }
+
+  .brief-builder label { display: flex; flex-direction: column; gap: var(--space-2); }
+  .brief-builder label > span { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--muted); }
+  .brief-builder input,
+  .brief-builder select,
+  .brief-builder textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem;
+    color: var(--text);
+    background: var(--bg-elevated);
+    font: inherit;
+  }
+
+  .brief-builder textarea { resize: vertical; }
+  .full-field { grid-column: 1 / -1; }
+  .brief-actions { display: flex; align-items: center; gap: var(--space-4); }
+  .copy-brief {
+    border: 1px solid var(--signal);
+    border-radius: 8px;
+    padding: 0.7rem 0.9rem;
+    color: white;
+    background: var(--signal);
+    font: 600 var(--text-sm)/1 var(--font-sans);
+    cursor: pointer;
+  }
+  .copy-status { color: var(--verified); font-family: var(--font-mono); font-size: var(--text-xs); }
+
+  .automation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .automation-grid article { padding: var(--space-5); border-right: 1px solid var(--border); }
+  .automation-grid article:last-child { border-right: 0; }
+  .automation-grid code { display: block; margin-bottom: var(--space-3); color: var(--text); font-size: var(--text-base); }
+  .automation-grid p { margin: 0; font-size: var(--text-sm); }
+
+  @media (max-width: 780px) {
+    .studio-page { padding-inline: var(--space-4); }
+    .studio-index { grid-template-columns: 1fr 1fr; }
+    .studio-index a { border-bottom: 1px solid var(--border-subtle); }
+    .split-heading { align-items: flex-start; flex-direction: column; }
+    .theme-heading { align-items: flex-start; flex-direction: column; }
+    .theme-grid { grid-template-columns: 1fr; }
+    .theme-description,
+    .theme-judgement { min-height: 0; }
+    .geometry-contract { grid-template-columns: 1fr 1fr; }
+    .geometry-contract > div:nth-child(2) { border-right: 0; }
+    .geometry-contract > div:nth-child(-n + 2) { border-bottom: 1px solid var(--border); }
+    .brief-builder { grid-template-columns: 1fr; padding: var(--space-4); }
+    .brief-builder > * { grid-column: 1; }
+    .automation-grid { grid-template-columns: 1fr; }
+    .automation-grid article { border-right: 0; border-bottom: 1px solid var(--border); }
+    .automation-grid article:last-child { border-bottom: 0; }
+  }
+
+  @media (max-width: 520px) {
+    .token-row { grid-template-columns: 28px 1fr; }
+    .token-row p { grid-column: 2; }
+    .preview-rail { padding: var(--space-3); }
+  }
+</style>
+
+<style is:global>
+  html[data-studio-theme='blueprint'] {
+    --bg: #f4f7fb;
+    --bg-elevated: #ffffff;
+    --bg-inset: #edf2f8;
+    --text: #13213a;
+    --text-secondary: #293852;
+    --muted: #68768b;
+    --border: #d6dee9;
+    --border-subtle: rgba(214, 222, 233, 0.68);
+    --signal: #1f66e5;
+    --accent: #1f66e5;
+    --accent-hover: #164eaf;
+    --accent-subtle: rgba(31, 102, 229, 0.09);
+    --link: #1f66e5;
+    --verified: #168663;
+  }
+
+  html[data-studio-theme='blueprint'][data-theme='dark'] {
+    --bg: #111820;
+    --bg-elevated: #18222e;
+    --bg-inset: #202c39;
+    --text: #eff4fa;
+    --text-secondary: #d2dce8;
+    --muted: #aab6c5;
+    --border: #344456;
+    --border-subtle: rgba(52, 68, 86, 0.75);
+    --signal: #74a9ff;
+    --accent: #74a9ff;
+    --accent-hover: #a5c8ff;
+    --accent-subtle: rgba(116, 169, 255, 0.13);
+    --link: #74a9ff;
+    --verified: #69d2a5;
+  }
+
+  html[data-studio-theme='graphite'] {
+    --bg: #f6f5f2;
+    --bg-elevated: #ffffff;
+    --bg-inset: #efeeea;
+    --text: #1d232b;
+    --text-secondary: #343b44;
+    --muted: #707780;
+    --border: #d8d9d7;
+    --border-subtle: rgba(216, 217, 215, 0.72);
+    --signal: #b94724;
+    --accent: #b94724;
+    --accent-hover: #8f351b;
+    --accent-subtle: rgba(185, 71, 36, 0.09);
+    --link: #a83f20;
+    --model: #6f5bd6;
+    --verified: #218a68;
+    --constraint: #b66b12;
+    --failure: #c94f52;
+  }
+
+  html[data-studio-theme='graphite'][data-theme='dark'] {
+    --bg: #151719;
+    --bg-elevated: #1d2023;
+    --bg-inset: #272a2d;
+    --text: #f2f1ed;
+    --text-secondary: #d7d5cf;
+    --muted: #b0b0aa;
+    --border: #3a3e42;
+    --border-subtle: rgba(58, 62, 66, 0.76);
+    --signal: #f08a5d;
+    --accent: #f08a5d;
+    --accent-hover: #ffad88;
+    --accent-subtle: rgba(240, 138, 93, 0.14);
+    --link: #f39a73;
+    --model: #b5a7ff;
+    --verified: #71d0aa;
+    --constraint: #e9ad5f;
+    --failure: #ef8587;
+  }
+
+  html[data-studio-theme='teal'] {
+    --bg: #f3f8f7;
+    --bg-elevated: #ffffff;
+    --bg-inset: #eaf2f1;
+    --text: #0e292d;
+    --text-secondary: #294348;
+    --muted: #668084;
+    --border: #d2e0de;
+    --border-subtle: rgba(210, 224, 222, 0.72);
+    --signal: #00777d;
+    --accent: #00777d;
+    --accent-hover: #005a5e;
+    --accent-subtle: rgba(0, 119, 125, 0.09);
+    --link: #006c72;
+    --model: #6957c7;
+    --verified: #2b8568;
+    --constraint: #b66f17;
+    --failure: #c64f52;
+  }
+
+  html[data-studio-theme='teal'][data-theme='dark'] {
+    --bg: #0e191a;
+    --bg-elevated: #152426;
+    --bg-inset: #1d3032;
+    --text: #edf7f5;
+    --text-secondary: #d1e5e1;
+    --muted: #a8c2be;
+    --border: #31484a;
+    --border-subtle: rgba(49, 72, 74, 0.78);
+    --signal: #52d0cc;
+    --accent: #52d0cc;
+    --accent-hover: #87e5e1;
+    --accent-subtle: rgba(82, 208, 204, 0.13);
+    --link: #66d9d5;
+    --model: #b0a1ff;
+    --verified: #73d0aa;
+    --constraint: #e5af68;
+    --failure: #ef8588;
+  }
+</style>

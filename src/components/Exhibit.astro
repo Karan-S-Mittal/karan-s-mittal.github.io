@@ -2,27 +2,87 @@
 /**
  * Exhibit.astro
  * Numbered figure frame — the site's signature detail.
- * Mono label above ("Exhibit 01 — Title"), hairline frame, caption below.
- * Wraps any content: Excalidraw diagrams, images, code, demos.
+ * Mono label above ("Exhibit 01 — Title"), optional badge, hairline frame, caption below.
+ * Wraps any content: Excalidraw SVGs, custom components, images, code, interactive scrubbers.
  */
 interface Props {
   exhibit?: string;
   title?: string;
+  badge?: string;
   caption?: string;
+  src?: string;
+  darkSrc?: string;
+  alt?: string;
+  height?: number;
   wide?: boolean;
+  minimal?: boolean;
+  zoomable?: boolean;
 }
 
-const { exhibit, title, caption, wide = false } = Astro.props;
+const {
+  exhibit,
+  title,
+  badge,
+  caption,
+  src,
+  darkSrc,
+  alt = "",
+  height,
+  wide = false,
+  minimal = false,
+  zoomable = true,
+} = Astro.props;
+
+const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
 ---
 
-<figure class:list={['exhibit', { wide }]}>
-  {exhibit && (
-    <p class="exhibit-label">
-      Exhibit {exhibit}{title && <span class="exhibit-label-title">&mdash; {title}</span>}
-    </p>
+<figure class:list={['exhibit', { wide, minimal }]}>
+  {(exhibit || title || badge) && (
+    <div class="exhibit-header">
+      {exhibit && (
+        <p class="exhibit-label">
+          Exhibit {exhibit}{title && <span class="exhibit-label-title">&mdash; {title}</span>}
+        </p>
+      )}
+      {!exhibit && title && <p class="exhibit-label">{title}</p>}
+      {badge && <span class="exhibit-badge">{badge}</span>}
+    </div>
   )}
   <div class="exhibit-frame">
-    <slot />
+    {src ? (
+      <div class="raster-exhibit-canvas">
+        {zoomable ? (
+          <a class="raster-exhibit-link" href={src} target="_blank" rel="noopener" aria-label={`Open full-resolution diagram: ${imageAlt}`}>
+            <img
+              class="raster-exhibit-image exhibit-img"
+              src={src}
+              data-light-src={src}
+              data-dark-src={darkSrc}
+              alt={imageAlt}
+              width="2400"
+              height={height}
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        ) : (
+          <img
+            class="raster-exhibit-image exhibit-img"
+            src={src}
+            data-light-src={src}
+            data-dark-src={darkSrc}
+            alt={imageAlt}
+            width="2400"
+            height={height}
+            loading="lazy"
+            decoding="async"
+          />
+        )}
+        <p class="raster-exhibit-hint">Swipe to inspect on small screens · tap to open full resolution</p>
+      </div>
+    ) : (
+      <slot />
+    )}
   </div>
   {caption && <figcaption class="exhibit-caption">{caption}</figcaption>}
 </figure>
@@ -33,18 +93,26 @@ const { exhibit, title, caption, wide = false } = Astro.props;
     width: 100%;
   }
 
-  .exhibit.wide {
-    /* Break out of the reading measure on wide viewports */
+  .exhibit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
   }
 
   .exhibit-label {
-    margin: 0 0 var(--space-2);
+    margin: 0;
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     font-weight: 500;
-    color: var(--accent);
+    color: var(--interactive-primary);
     text-transform: uppercase;
     letter-spacing: 0.1em;
+    line-height: 1.4;
+    min-width: 0;
+    flex: 1 1 16rem;
   }
 
   .exhibit-label-title {
@@ -52,15 +120,105 @@ const { exhibit, title, caption, wide = false } = Astro.props;
     font-weight: 400;
   }
 
-  .exhibit-frame {
+  .exhibit-badge {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--muted);
+    background: var(--bg-inset);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
+    padding: 0.15rem 0.4rem;
+    border-radius: var(--radius-sm);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .exhibit-frame {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-subtle);
     background: var(--bg-elevated);
-    overflow: hidden;
+    padding: var(--exhibit-pad-block) var(--exhibit-pad-inline);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  .exhibit.minimal .exhibit-frame {
+    display: block;
+    overflow: visible;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .exhibit-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .raster-exhibit-canvas {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    background: transparent;
+    padding: 0;
+    width: 100%;
+  }
+
+  .raster-exhibit-link {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    cursor: zoom-in;
+  }
+
+  .raster-exhibit-image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .raster-exhibit-hint {
+    display: none;
+  }
+
+  @media (min-width: 760px) {
+    .raster-exhibit-link {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 759px) {
+    .raster-exhibit-canvas {
+      padding-bottom: 0.25rem;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .raster-exhibit-link {
+      max-width: none;
+    }
+
+    .raster-exhibit-hint {
+      display: block;
+      margin: var(--space-3) 0 0;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.03em;
+      line-height: 1.45;
+    }
   }
 
   .exhibit-caption {
-    margin-top: var(--space-2);
+    margin: var(--space-3) 0 0;
+    padding-left: var(--space-3);
+    border-left: 2px solid var(--border);
     font-size: var(--text-sm);
     color: var(--muted);
     line-height: 1.55;
@@ -68,8 +226,8 @@ const { exhibit, title, caption, wide = false } = Astro.props;
 
   @media (min-width: 960px) {
     .exhibit.wide {
-      width: 110%;
-      margin-left: -5%;
+      width: 112%;
+      margin-left: -6%;
     }
   }
 </style>

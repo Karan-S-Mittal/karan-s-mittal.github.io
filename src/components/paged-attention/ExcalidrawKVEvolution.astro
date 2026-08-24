@@ -1,9 +1,4 @@
 ---
-/**
- * ExcalidrawKVEvolution.astro
- * Visualizes the evolution of KV Cache architectures: MHA -> MQA -> GQA
- * in a clean, hand-drawn Excalidraw style with clear head-mapping ratios.
- */
 import ExcalidrawContainer from './ExcalidrawContainer.astro';
 
 interface Props {
@@ -12,209 +7,40 @@ interface Props {
   title?: string;
 }
 
-const { caption = "Figure 2: Architectural Evolution of KV Cache Heads — Multi-Head Attention (1:1), Multi-Query Attention (N:1), and Grouped-Query Attention (G:1).", exhibit, title } = Astro.props;
+const { caption, exhibit, title } = Astro.props;
 ---
 
-<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="Architecture Evolution">
-  <svg class="ex-svg-canvas" viewBox="0 0 760 380" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <marker id="ex-arr-evo" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 1 2 L 8 5 L 1 8 z" fill="var(--ex-text-muted)" />
-      </marker>
-    </defs>
+<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="CACHE FOOTPRINT">
+  <svg class="ex-svg-canvas sys-diagram" viewBox="0 0 800 392" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A comparison of MHA, MQA, and GQA showing how many key-value heads are cached for eight query heads.">
+    <text x="32" y="32" class="label">8 QUERY HEADS</text>
+    <text x="768" y="32" class="label" text-anchor="end">FEWER KV HEADS, SMALLER CACHE</text>
+    <line x1="32" y1="48" x2="768" y2="48" class="rule" />
 
-    <!-- Header info banner -->
-    <text x="20" y="24" font-family="var(--font-sans)" font-size="14.5" font-weight="700" fill="var(--ex-text-main)">
-      How Model Architecture Evolved to Shrink KV Cache Footprint
-    </text>
-    <text x="740" y="24" text-anchor="end" font-family="var(--font-mono)" font-size="12" fill="var(--ex-text-muted)">
-      (Example: 8 Query Heads)
-    </text>
-
-    <!-- ==================================================== -->
-    <!-- COLUMN 1: MHA (Multi-Head Attention) -->
-    <!-- ==================================================== -->
-    <g class="col-mha" transform="translate(20, 46)">
-      <!-- Card background -->
-      <rect x="0" y="0" width="225" height="310" rx="10" fill="var(--ex-card-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1.5" stroke-dasharray="3 3" />
-      
-      <!-- Card Title -->
-      <rect x="12" y="12" width="201" height="28" rx="6" fill="var(--ex-rose-bg)" />
-      <text x="112" y="30" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="700" fill="var(--ex-rose-text)">
-        MHA (Original 2017)
-      </text>
-
-      <text x="112" y="58" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--ex-text-muted)">
-        1 KV Head per Q Head (1 : 1)
-      </text>
-
-      <!-- 8 Q Heads -->
-      <g transform="translate(18, 70)">
-        <text x="0" y="10" font-family="var(--font-mono)" font-size="10.5" font-weight="600" fill="var(--ex-blue-text)">8 Query Heads:</text>
-        <g transform="translate(0, 16)">
-          <rect x="0" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="24" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="48" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="72" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="96" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="120" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="144" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="168" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-        </g>
-      </g>
-
-      <!-- Connecting arrows -->
-      <g transform="translate(18, 120)">
-        <line x1="10" y1="0" x2="10" y2="20" stroke="var(--ex-rose-stroke)" stroke-width="1.5" />
-        <line x1="34" y1="0" x2="34" y2="20" stroke="var(--ex-rose-stroke)" stroke-width="1.5" />
-        <line x1="58" y1="0" x2="58" y2="20" stroke="var(--ex-rose-stroke)" stroke-width="1.5" />
-        <line x1="82" y1="0" x2="82" y2="20" stroke="var(--ex-rose-stroke)" stroke-width="1.5" />
-        <line x1="106" y1="0" x2="106" y2="20" stroke="var(--ex-rose-stroke)" stroke-width="1.5" />
-        <line x1="130" y1="0" x2="130" y2="20" stroke="var(--ex-rose-stroke)" stroke-width="1.5" />
-        <line x1="154" y1="0" x2="154" y2="20" stroke="var(--ex-rose-stroke)" stroke-width="1.5" />
-        <line x1="178" y1="0" x2="178" y2="20" stroke="var(--ex-rose-stroke)" stroke-width="1.5" />
-      </g>
-
-      <!-- 8 KV Heads -->
-      <g transform="translate(18, 150)">
-        <text x="0" y="10" font-family="var(--font-mono)" font-size="10.5" font-weight="600" fill="var(--ex-rose-text)">8 KV Heads (Cached):</text>
-        <g transform="translate(0, 16)">
-          <rect x="0" y="0" width="20" height="20" rx="3" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1" />
-          <rect x="24" y="0" width="20" height="20" rx="3" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1" />
-          <rect x="48" y="0" width="20" height="20" rx="3" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1" />
-          <rect x="72" y="0" width="20" height="20" rx="3" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1" />
-          <rect x="96" y="0" width="20" height="20" rx="3" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1" />
-          <rect x="120" y="0" width="20" height="20" rx="3" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1" />
-          <rect x="144" y="0" width="20" height="20" rx="3" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1" />
-          <rect x="168" y="0" width="20" height="20" rx="3" fill="var(--ex-rose-bg)" stroke="var(--ex-rose-stroke)" stroke-width="1" />
-        </g>
-      </g>
-
-      <!-- Stat Badge -->
-      <g transform="translate(16, 215)">
-        <rect x="0" y="0" width="193" height="75" rx="6" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
-        <text x="10" y="22" font-family="var(--font-mono)" font-size="11" font-weight="600" fill="var(--ex-rose-text)">KV Memory: 100% (Baseline)</text>
-        <text x="10" y="42" font-family="var(--font-sans)" font-size="10.5" fill="var(--ex-text-muted)">• GPT-3, LLaMA-1 65B</text>
-        <text x="10" y="60" font-family="var(--font-sans)" font-size="10.5" fill="var(--ex-rose-text)">• Massive GPU memory drain</text>
-      </g>
+    <text x="32" y="88" class="title">Query heads stay constant</text>
+    <g transform="translate(288 68)">
+      <rect x="0" y="0" width="32" height="32" rx="4" class="node-muted" /><rect x="40" y="0" width="32" height="32" rx="4" class="node-muted" /><rect x="80" y="0" width="32" height="32" rx="4" class="node-muted" /><rect x="120" y="0" width="32" height="32" rx="4" class="node-muted" />
+      <rect x="160" y="0" width="32" height="32" rx="4" class="node-muted" /><rect x="200" y="0" width="32" height="32" rx="4" class="node-muted" /><rect x="240" y="0" width="32" height="32" rx="4" class="node-muted" /><rect x="280" y="0" width="32" height="32" rx="4" class="node-muted" />
     </g>
 
-    <!-- ==================================================== -->
-    <!-- COLUMN 2: MQA (Multi-Query Attention) -->
-    <!-- ==================================================== -->
-    <g class="col-mqa" transform="translate(268, 46)">
-      <rect x="0" y="0" width="225" height="310" rx="10" fill="var(--ex-card-bg)" stroke="var(--ex-amber-stroke)" stroke-width="1.5" stroke-dasharray="3 3" />
-      
-      <rect x="12" y="12" width="201" height="28" rx="6" fill="var(--ex-amber-bg)" />
-      <text x="112" y="30" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="700" fill="var(--ex-amber-text)">
-        MQA (Shazeer 2019)
-      </text>
-
-      <text x="112" y="58" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--ex-text-muted)">
-        1 Shared KV Head (8 : 1)
-      </text>
-
-      <!-- 8 Q Heads -->
-      <g transform="translate(18, 70)">
-        <text x="0" y="10" font-family="var(--font-mono)" font-size="10.5" font-weight="600" fill="var(--ex-blue-text)">8 Query Heads:</text>
-        <g transform="translate(0, 16)">
-          <rect x="0" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="24" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="48" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="72" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="96" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="120" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="144" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="168" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-        </g>
-      </g>
-
-      <!-- Funnel arrows into 1 head -->
-      <g transform="translate(18, 120)">
-        <path d="M 10 0 L 94 20 M 34 0 L 94 20 M 58 0 L 94 20 M 82 0 L 94 20 M 106 0 L 94 20 M 130 0 L 94 20 M 154 0 L 94 20 M 178 0 L 94 20" stroke="var(--ex-amber-stroke)" stroke-width="1.2" stroke-dasharray="2 2" />
-      </g>
-
-      <!-- 1 KV Head -->
-      <g transform="translate(18, 150)">
-        <text x="0" y="10" font-family="var(--font-mono)" font-size="10.5" font-weight="600" fill="var(--ex-amber-text)">1 KV Head (Shared):</text>
-        <g transform="translate(0, 16)">
-          <rect x="52" y="0" width="85" height="22" rx="4" fill="var(--ex-amber-bg)" stroke="var(--ex-amber-stroke)" stroke-width="1.5" />
-          <text x="94" y="15" text-anchor="middle" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="var(--ex-amber-text)">KV Head 0</text>
-        </g>
-      </g>
-
-      <!-- Stat Badge -->
-      <g transform="translate(16, 215)">
-        <rect x="0" y="0" width="193" height="75" rx="6" fill="var(--ex-gray-bg)" stroke="var(--ex-border)" stroke-width="1" />
-        <text x="10" y="22" font-family="var(--font-mono)" font-size="11" font-weight="600" fill="var(--ex-amber-text)">KV Memory: 12.5% (8× Less)</text>
-        <text x="10" y="42" font-family="var(--font-sans)" font-size="10.5" fill="var(--ex-text-muted)">• Falcon-40B, StarCoder</text>
-        <text x="10" y="60" font-family="var(--font-sans)" font-size="10.5" fill="var(--ex-amber-text)">• Minor quality drop on nuances</text>
-      </g>
+    <line x1="32" y1="132" x2="768" y2="132" class="rule" />
+    <text x="32" y="168" class="title">MHA</text><text x="32" y="188" class="label">1 : 1 MAPPING</text>
+    <text x="176" y="176" class="body-muted">8 KV heads cached</text>
+    <g transform="translate(448 148)">
+      <rect x="0" y="0" width="32" height="40" rx="4" class="node-muted" /><rect x="40" y="0" width="32" height="40" rx="4" class="node-muted" /><rect x="80" y="0" width="32" height="40" rx="4" class="node-muted" /><rect x="120" y="0" width="32" height="40" rx="4" class="node-muted" />
+      <rect x="160" y="0" width="32" height="40" rx="4" class="node-muted" /><rect x="200" y="0" width="32" height="40" rx="4" class="node-muted" /><rect x="240" y="0" width="32" height="40" rx="4" class="node-muted" /><rect x="280" y="0" width="32" height="40" rx="4" class="node-muted" />
     </g>
+    <text x="768" y="176" class="label" text-anchor="end">100%</text>
 
-    <!-- ==================================================== -->
-    <!-- COLUMN 3: GQA (Grouped-Query Attention) -->
-    <!-- ==================================================== -->
-    <g class="col-gqa" transform="translate(515, 46)">
-      <rect x="0" y="0" width="225" height="310" rx="10" fill="var(--ex-card-bg)" stroke="var(--ex-green-stroke)" stroke-width="2" />
-      
-      <rect x="12" y="12" width="201" height="28" rx="6" fill="var(--ex-green-bg)" />
-      <text x="112" y="30" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="700" fill="var(--ex-green-text)">
-        GQA (Modern Standard)
-      </text>
+    <line x1="32" y1="220" x2="768" y2="220" class="rule" />
+    <text x="32" y="256" class="title">MQA</text><text x="32" y="276" class="label">8 : 1 MAPPING</text>
+    <text x="176" y="264" class="body-muted">1 shared KV head</text>
+    <g transform="translate(448 236)"><rect x="0" y="0" width="32" height="40" rx="4" class="node-muted" /></g>
+    <text x="768" y="264" class="label" text-anchor="end">12.5%</text>
 
-      <text x="112" y="58" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--ex-green-text)">
-        Groups Share 1 KV Head (4 : 1)
-      </text>
-
-      <!-- 8 Q Heads grouped into 2 boxes of 4 -->
-      <g transform="translate(18, 70)">
-        <text x="0" y="10" font-family="var(--font-mono)" font-size="10.5" font-weight="600" fill="var(--ex-blue-text)">8 Query Heads (2 Groups):</text>
-        
-        <!-- Group 1 -->
-        <rect x="-2" y="14" width="92" height="24" rx="4" fill="none" stroke="var(--ex-blue-stroke)" stroke-width="1" stroke-dasharray="2 2" />
-        <g transform="translate(0, 16)">
-          <rect x="0" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="22" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="44" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-          <rect x="66" y="0" width="20" height="20" rx="3" fill="var(--ex-blue-bg)" stroke="var(--ex-blue-stroke)" stroke-width="1" />
-        </g>
-
-        <!-- Group 2 -->
-        <rect x="98" y="14" width="92" height="24" rx="4" fill="none" stroke="var(--ex-indigo-stroke)" stroke-width="1" stroke-dasharray="2 2" />
-        <g transform="translate(100, 16)">
-          <rect x="0" y="0" width="20" height="20" rx="3" fill="var(--ex-indigo-bg)" stroke="var(--ex-indigo-stroke)" stroke-width="1" />
-          <rect x="22" y="0" width="20" height="20" rx="3" fill="var(--ex-indigo-bg)" stroke="var(--ex-indigo-stroke)" stroke-width="1" />
-          <rect x="44" y="0" width="20" height="20" rx="3" fill="var(--ex-indigo-bg)" stroke="var(--ex-indigo-stroke)" stroke-width="1" />
-          <rect x="66" y="0" width="20" height="20" rx="3" fill="var(--ex-indigo-bg)" stroke="var(--ex-indigo-stroke)" stroke-width="1" />
-        </g>
-      </g>
-
-      <!-- Group funnel arrows -->
-      <g transform="translate(18, 120)">
-        <path d="M 44 0 L 44 20" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
-        <path d="M 144 0 L 144 20" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
-      </g>
-
-      <!-- 2 KV Heads -->
-      <g transform="translate(18, 150)">
-        <text x="0" y="10" font-family="var(--font-mono)" font-size="10.5" font-weight="600" fill="var(--ex-green-text)">2 KV Heads (Grouped):</text>
-        <g transform="translate(0, 16)">
-          <rect x="8" y="0" width="72" height="22" rx="4" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
-          <text x="44" y="15" text-anchor="middle" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="var(--ex-green-text)">KV Head 0</text>
-
-          <rect x="108" y="0" width="72" height="22" rx="4" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1.5" />
-          <text x="144" y="15" text-anchor="middle" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="var(--ex-green-text)">KV Head 1</text>
-        </g>
-      </g>
-
-      <!-- Stat Badge -->
-      <g transform="translate(16, 215)">
-        <rect x="0" y="0" width="193" height="75" rx="6" fill="var(--ex-green-bg)" stroke="var(--ex-green-stroke)" stroke-width="1" />
-        <text x="10" y="22" font-family="var(--font-mono)" font-size="11" font-weight="700" fill="var(--ex-green-text)">KV Memory: 25% (4× Less)</text>
-        <text x="10" y="42" font-family="var(--font-sans)" font-size="10.5" fill="var(--ex-text-main)">• LLaMA-2/3, Mistral, Gemma</text>
-        <text x="10" y="60" font-family="var(--font-sans)" font-size="10.5" font-weight="600" fill="var(--ex-green-text)">⭐ Zero quality degradation!</text>
-      </g>
-    </g>
+    <line x1="32" y1="308" x2="768" y2="308" class="rule" />
+    <text x="32" y="344" class="title">GQA</text><text x="32" y="364" class="label-signal">4 : 1 MAPPING</text>
+    <text x="176" y="352" class="body-muted">2 KV heads shared across groups</text>
+    <g transform="translate(448 324)"><rect x="0" y="0" width="32" height="40" rx="4" class="node-signal" /><rect x="40" y="0" width="32" height="40" rx="4" class="node-signal" /></g>
+    <text x="768" y="352" class="label-signal" text-anchor="end">25%</text>
   </svg>
 </ExcalidrawContainer>

@@ -5,13 +5,33 @@
     "aliases": []
   },
   {
+    "name": "Algorithms",
+    "slug": "algorithms",
+    "aliases": []
+  },
+  {
     "name": "CUDA",
     "slug": "cuda",
     "aliases": []
   },
   {
+    "name": "Decision Trees",
+    "slug": "decision-trees",
+    "aliases": []
+  },
+  {
+    "name": "Gradient Boosting",
+    "slug": "gradient-boosting",
+    "aliases": []
+  },
+  {
     "name": "GraphRAG",
     "slug": "graphrag",
+    "aliases": []
+  },
+  {
+    "name": "Hardware Microarchitecture",
+    "slug": "hardware-microarchitecture",
     "aliases": []
   },
   {
@@ -25,13 +45,48 @@
     "aliases": []
   },
   {
+    "name": "Machine Learning",
+    "slug": "machine-learning",
+    "aliases": []
+  },
+  {
+    "name": "Machine Learning Systems",
+    "slug": "machine-learning-systems",
+    "aliases": []
+  },
+  {
+    "name": "Mathematics",
+    "slug": "mathematics",
+    "aliases": []
+  },
+  {
+    "name": "Memory Hierarchy",
+    "slug": "memory-hierarchy",
+    "aliases": []
+  },
+  {
     "name": "MLOps",
     "slug": "mlops",
     "aliases": []
   },
   {
+    "name": "Optimization",
+    "slug": "optimization",
+    "aliases": []
+  },
+  {
     "name": "PagedAttention",
     "slug": "pagedattention",
+    "aliases": []
+  },
+  {
+    "name": "Parallel Systems",
+    "slug": "parallel-systems",
+    "aliases": []
+  },
+  {
+    "name": "Quantile Sketch",
+    "slug": "quantile-sketch",
     "aliases": []
   },
   {
@@ -42,6 +97,11 @@
   {
     "name": "Systems Engineering",
     "slug": "systems-engineering",
+    "aliases": []
+  },
+  {
+    "name": "XGBoost",
+    "slug": "xgboost",
     "aliases": []
   }
 ]

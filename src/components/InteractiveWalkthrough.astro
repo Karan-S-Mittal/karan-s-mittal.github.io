@@ -1,0 +1,320 @@
+---
+/**
+ * InteractiveWalkthrough.astro
+ * Generic, accessible, component-scoped diagram walkthrough.
+ *
+ * Provides tab-based stage switching, status updates, descriptive explainers,
+ * and progressive enhancement with a robust no-JS fallback.
+ */
+import Exhibit from './Exhibit.astro';
+
+export interface WalkthroughStage {
+  id: string;
+  index: string;
+  name: string;
+  desc: string;
+  targetGroup?: string;
+}
+
+interface Props {
+  exhibit?: string;
+  title?: string;
+  badge?: string;
+  caption?: string;
+  kicker?: string;
+  allStageName?: string;
+  allStageDesc?: string;
+  stages: WalkthroughStage[];
+  wide?: boolean;
+}
+
+const {
+  exhibit,
+  title,
+  badge = 'INTERACTIVE MODEL',
+  caption,
+  kicker = 'Interactive walkthrough',
+  allStageName = 'Full model',
+  allStageDesc = 'Complete model. All components and pathways are visible.',
+  stages = [],
+  wide = false,
+} = Astro.props;
+---
+
+<Exhibit exhibit={exhibit} title={title} badge={badge} caption={caption} wide={wide}>
+  <div class="walkthrough-container" data-walkthrough-root>
+    <div class="walkthrough-header">
+      <span class="walkthrough-kicker">{kicker}</span>
+      <span class="walkthrough-status" data-walkthrough-status>All stages visible</span>
+    </div>
+
+    <div class="walkthrough-nav" role="tablist" aria-label={title || 'Diagram stages'}>
+      <button
+        type="button"
+        class="walkthrough-tab active"
+        data-step-target="all"
+        role="tab"
+        aria-selected="true"
+      >
+        <span class="walkthrough-tab-index">00</span>
+        <span class="walkthrough-tab-name">{allStageName}</span>
+      </button>
+
+      {stages.map((stage) => (
+        <button
+          type="button"
+          class="walkthrough-tab"
+          data-step-target={stage.id}
+          data-target-group={stage.targetGroup || stage.id}
+          data-stage-desc={stage.desc}
+          role="tab"
+          aria-selected="false"
+        >
+          <span class="walkthrough-tab-index">{stage.index}</span>
+          <span class="walkthrough-tab-name">{stage.name}</span>
+        </button>
+      ))}
+    </div>
+
+    <p class="walkthrough-explainer" data-walkthrough-desc set:html={allStageDesc} />
+
+    <div class="walkthrough-canvas-wrapper" data-walkthrough-canvas>
+      <slot />
+    </div>
+  </div>
+</Exhibit>
+
+<script>
+  function initWalkthroughs() {
+    const roots = document.querySelectorAll<HTMLElement>('[data-walkthrough-root]');
+
+    roots.forEach((root) => {
+      if (root.dataset.initialized === 'true') return;
+      root.dataset.initialized = 'true';
+      root.classList.add('is-interactive');
+
+      const tabs = root.querySelectorAll<HTMLButtonElement>('.walkthrough-tab');
+      const descEl = root.querySelector<HTMLElement>('[data-walkthrough-desc]');
+      const statusEl = root.querySelector<HTMLElement>('[data-walkthrough-status]');
+      const canvasEl = root.querySelector<HTMLElement>('[data-walkthrough-canvas]');
+      if (!descEl || !statusEl || !canvasEl) return;
+
+      const initialDesc = descEl.innerHTML;
+      const descriptions: Record<string, string> = {
+        all: initialDesc,
+      };
+
+      const stepGroups: Record<string, Element | null> = {};
+      const connectors = Array.from(canvasEl.querySelectorAll('[data-step-connector], [id^="conn-"]'));
+
+      tabs.forEach((tab) => {
+        const target = tab.dataset.stepTarget;
+        const targetGroupId = tab.dataset.targetGroup;
+        const stageDesc = tab.dataset.stageDesc;
+        if (!target) return;
+
+        if (stageDesc) {
+          descriptions[target] = stageDesc;
+        }
+
+        if (target !== 'all' && targetGroupId) {
+          stepGroups[target] =
+            canvasEl.querySelector(`[data-step-group="${targetGroupId}"]`) ||
+            canvasEl.querySelector(`#${targetGroupId}`) ||
+            canvasEl.querySelector(`#step-group-${target}`);
+        }
+      });
+
+      const totalStages = tabs.length - 1;
+
+      function activateStage(target: string, tabElement: HTMLButtonElement) {
+        tabs.forEach((t) => {
+          const isActive = t === tabElement;
+          t.classList.toggle('active', isActive);
+          t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        if (target === 'all') {
+          statusEl.textContent = 'All stages visible';
+          descEl.innerHTML = descriptions.all;
+
+          Object.values(stepGroups).forEach((group) => {
+            if (group instanceof HTMLElement || group instanceof SVGElement) {
+              group.style.opacity = '1';
+              group.style.filter = 'none';
+            }
+          });
+          connectors.forEach((conn) => {
+            if (conn instanceof HTMLElement || conn instanceof SVGElement) {
+              conn.style.opacity = '1';
+            }
+          });
+          return;
+        }
+
+        const stageIndex = tabElement.querySelector('.walkthrough-tab-index')?.textContent || '01';
+        statusEl.textContent = `Stage ${stageIndex} of ${String(totalStages).padStart(2, '0')}`;
+
+        if (descriptions[target]) {
+          descEl.innerHTML = descriptions[target];
+        }
+
+        Object.entries(stepGroups).forEach(([key, group]) => {
+          if (!(group instanceof HTMLElement || group instanceof SVGElement)) return;
+          const isTarget = key === target;
+          group.style.opacity = isTarget ? '1' : '0.22';
+          group.style.filter = isTarget ? 'none' : 'grayscale(60%)';
+        });
+
+        connectors.forEach((conn) => {
+          if (!(conn instanceof HTMLElement || conn instanceof SVGElement)) return;
+          const connId = conn.getAttribute('data-step-connector') || conn.id;
+          const isRelevant = connId.includes(target);
+          conn.style.opacity = isRelevant ? '1' : '0.15';
+        });
+      }
+
+      tabs.forEach((tab) => {
+        const target = tab.dataset.stepTarget;
+        if (!target) return;
+
+        tab.addEventListener('click', () => {
+          activateStage(target, tab);
+        });
+      });
+    });
+  }
+
+  // Support instant load and view transitions
+  initWalkthroughs();
+  document.addEventListener('astro:page-load', initWalkthroughs);
+</script>
+
+<style>
+  .walkthrough-container {
+    width: 100%;
+    margin: 0 0 1rem;
+    padding: 0.9rem;
+    border: 1px solid var(--ex-border);
+    border-radius: 6px;
+    background: var(--ex-gray-bg);
+  }
+
+  .walkthrough-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .walkthrough-kicker,
+  .walkthrough-status {
+    font-family: 'JetBrains Mono', var(--font-mono, monospace);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .walkthrough-kicker {
+    color: var(--ex-text-main);
+    font-weight: 600;
+  }
+
+  .walkthrough-status {
+    color: var(--ex-text-muted);
+  }
+
+  .walkthrough-nav {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.15rem;
+    scrollbar-color: var(--ex-border) transparent;
+  }
+
+  .walkthrough-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    flex: 1 0 8.5rem;
+    min-height: 3rem;
+    padding: 0.65rem 0.7rem;
+    background: var(--ex-card-bg);
+    border: 1px solid var(--ex-border);
+    border-radius: 4px;
+    color: var(--ex-text-muted);
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Inter', var(--font-sans, sans-serif);
+    font-size: 0.82rem;
+    line-height: 1.2;
+    transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+  }
+
+  .walkthrough-tab:hover {
+    color: var(--ex-text-main);
+    border-color: var(--ex-text-main);
+  }
+
+  .walkthrough-tab.active {
+    color: var(--ex-blue-text);
+    border-color: var(--ex-blue-stroke);
+    background: var(--ex-blue-bg);
+    box-shadow: inset 0 -2px 0 var(--ex-blue-stroke);
+  }
+
+  .walkthrough-tab-index {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 1.55rem;
+    height: 1.55rem;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', var(--font-mono, monospace);
+    font-size: 0.65rem;
+  }
+
+  .walkthrough-tab-name {
+    font-weight: 600;
+  }
+
+  .walkthrough-explainer {
+    margin: 0.8rem 0 0;
+    color: var(--ex-text-main);
+    font-family: 'Inter', var(--font-sans, sans-serif);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .walkthrough-canvas-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    padding-top: var(--space-2);
+  }
+
+  /* Progressive enhancement & no-JS fallback */
+  .walkthrough-canvas-wrapper :global([data-step-group]),
+  .walkthrough-canvas-wrapper :global([id^="step-group-"]),
+  .walkthrough-canvas-wrapper :global([data-step-connector]),
+  .walkthrough-canvas-wrapper :global([id^="conn-"]) {
+    transition: opacity 180ms ease, filter 180ms ease;
+  }
+
+  @media (max-width: 759px) {
+    .walkthrough-container {
+      padding: 0.75rem;
+    }
+
+    .walkthrough-header {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .walkthrough-tab {
+      flex-basis: 8rem;
+    }
+  }
+</style>

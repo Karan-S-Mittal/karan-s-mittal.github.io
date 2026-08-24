@@ -24,7 +24,7 @@ const { work } = workData;
     </div>
 
     <div class="work-list">
-      {work.map((item) => <WorkCard item={item} detailed />)}
+      {work.map((item, index) => <WorkCard item={item} index={String(index + 1).padStart(2, '0')} detailed />)}
     </div>
 
     <section class="engagement">
@@ -33,7 +33,7 @@ const { work } = workData;
         <h2>Bring the difficult system question.</h2>
         <p>I work with teams navigating knowledge systems, AI reliability, performance constraints, and the transition from prototype to production.</p>
       </div>
-      <a href="/contact" class="btn btn-primary">Discuss an engagement</a>
+      <a href="/contact" class="quiet-btn">Discuss an engagement</a>
     </section>
   </main>
 </Layout>
@@ -65,7 +65,9 @@ const { work } = workData;
   }
   .engagement h2 { margin: 0 0 var(--space-2); font-size: var(--text-2xl); }
   .engagement p:not(.label) { max-width: 510px; margin: 0; color: var(--muted); }
-  .engagement .btn { flex: 0 0 auto; }
+  .engagement .quiet-btn { flex: 0 0 auto; }
+  .quiet-btn { display: inline-flex; align-items: center; gap: var(--space-1); padding: var(--space-2) var(--space-4); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: var(--text-sm); font-weight: 500; text-decoration: none; transition: border-color var(--transition-fast), color var(--transition-fast); }
+  .quiet-btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
   @media (max-width: 640px) {
     .engagement { align-items: flex-start; flex-direction: column; padding: var(--space-5); }
   }

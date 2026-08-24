@@ -1,0 +1,399 @@
+---
+/**
+ * BenchmarkChart.astro
+ * Publication-grade interactive SVG/D3 benchmark chart.
+ * Renders multi-series trade-off and throughput curves with hover tooltips,
+ * mono tick labels, and Explanatory Studio semantic palette styling.
+ */
+import Exhibit from './Exhibit.astro';
+
+export interface DataPoint {
+  x: number;
+  y: number;
+}
+
+export interface Series {
+  name: string;
+  color: string;
+  strokeWidth?: number;
+  dashed?: boolean;
+  data: DataPoint[];
+}
+
+interface Props {
+  exhibit?: string;
+  title?: string;
+  badge?: string;
+  caption?: string;
+  xLabel: string;
+  yLabel: string;
+  xUnit?: string;
+  yUnit?: string;
+  series: Series[];
+  annotation?: string;
+  wide?: boolean;
+}
+
+const {
+  exhibit,
+  title,
+  badge = 'EMPIRICAL BENCHMARK',
+  caption,
+  xLabel,
+  yLabel,
+  xUnit = '',
+  yUnit = '',
+  series = [],
+  annotation,
+  wide = false,
+} = Astro.props;
+
+// Calculate chart mathematics statically
+const width = 760;
+const height = 360;
+const margin = { top: 40, right: 36, bottom: 56, left: 68 };
+const innerWidth = width - margin.left - margin.right;
+const innerHeight = height - margin.top - margin.bottom;
+
+const allPoints = series.flatMap((s) => s.data);
+const xValues = allPoints.map((p) => p.x);
+const yValues = allPoints.map((p) => p.y);
+
+const minX = Math.min(...xValues, 0);
+const maxX = Math.max(...xValues, 10);
+const minY = Math.min(...yValues, 0);
+const maxY = Math.max(...yValues, 10) * 1.15; // 15% headroom for annotations
+
+function scaleX(val: number) {
+  return margin.left + ((val - minX) / (maxX - minX)) * innerWidth;
+}
+
+function scaleY(val: number) {
+  return margin.top + innerHeight - ((val - minY) / (maxY - minY)) * innerHeight;
+}
+
+// Generate smooth SVG paths
+function makePath(data: DataPoint[]) {
+  if (data.length === 0) return '';
+  return data.reduce((acc, point, i) => {
+    const x = scaleX(point.x);
+    const y = scaleY(point.y);
+    return i === 0 ? `M ${x} ${y}` : `${acc} L ${x} ${y}`;
+  }, '');
+}
+
+// Generate 5 horizontal and 5 vertical grid ticks
+const yTicks = Array.from({ length: 5 }, (_, i) => minY + (i / 4) * (maxY - minY));
+const xTicks = Array.from({ length: 6 }, (_, i) => minX + (i / 5) * (maxX - minX));
+---
+
+<Exhibit exhibit={exhibit} title={title} badge={badge} caption={caption} wide={wide}>
+  <div class="benchmark-chart-container" data-chart-root>
+    <div class="chart-legend">
+      {series.map((s) => (
+        <div class="legend-item">
+          <span class="legend-swatch" style={`background-color: ${s.color};`}></span>
+          <span class="legend-label">{s.name}</span>
+        </div>
+      ))}
+      {annotation && <span class="chart-annotation-badge">{annotation}</span>}
+    </div>
+
+    <div class="chart-svg-wrapper">
+      <svg
+        class="benchmark-svg"
+        viewBox={`0 0 ${width} ${height}`}
+        role="img"
+        aria-label={title || 'Empirical benchmark chart'}
+      >
+        <defs>
+          <linearGradient id="chart-signal-glow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--interactive-primary)" stop-opacity="0.18" />
+            <stop offset="100%" stop-color="var(--interactive-primary)" stop-opacity="0.0" />
+          </linearGradient>
+        </defs>
+
+        <!-- Horizontal Gridlines & Y-Axis Labels -->
+        {yTicks.map((tick) => {
+          const y = scaleY(tick);
+          return (
+            <g class="grid-row">
+              <line x1={margin.left} y1={y} x2={width - margin.right} y2={y} class="grid-line" />
+              <text x={margin.left - 12} y={y + 4} class="axis-tick-text" text-anchor="end">
+                {Math.round(tick).toLocaleString()}
+              </text>
+            </g>
+          );
+        })}
+
+        <!-- Vertical Gridlines & X-Axis Labels -->
+        {xTicks.map((tick) => {
+          const x = scaleX(tick);
+          return (
+            <g class="grid-col">
+              <line x1={x} y1={margin.top} x2={x} y2={height - margin.bottom} class="grid-line-vertical" />
+              <text x={x} y={height - margin.bottom + 20} class="axis-tick-text" text-anchor="middle">
+                {Number.isInteger(tick) ? tick : tick.toFixed(1)}
+              </text>
+            </g>
+          );
+        })}
+
+        <!-- Axis Titles -->
+        <text x={margin.left} y={margin.top - 16} class="axis-title-y">
+          ↑ {yLabel} {yUnit && `(${yUnit})`}
+        </text>
+        <text x={width - margin.right} y={height - margin.bottom + 42} class="axis-title-x" text-anchor="end">
+          {xLabel} {xUnit && `(${xUnit})`} →
+        </text>
+
+        <!-- Series Line Paths & Dots -->
+        {series.map((s, sIndex) => {
+          const pathD = makePath(s.data);
+          const isPrimary = sIndex === 0;
+          return (
+            <g class="series-group" data-series-name={s.name}>
+              {isPrimary && (
+                <path
+                  d={`${pathD} L ${scaleX(s.data[s.data.length - 1].x)} ${scaleY(minY)} L ${scaleX(s.data[0].x)} ${scaleY(minY)} Z`}
+                  fill="url(#chart-signal-glow)"
+                />
+              )}
+              <path
+                d={pathD}
+                fill="none"
+                stroke={s.color}
+                stroke-width={s.strokeWidth || 2.4}
+                stroke-dasharray={s.dashed ? '5 5' : 'none'}
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="series-path"
+              />
+              {s.data.map((p) => (
+                <circle
+                  cx={scaleX(p.x)}
+                  cy={scaleY(p.y)}
+                  r={isPrimary ? 4.5 : 3.5}
+                  fill={s.color}
+                  stroke="var(--bg-elevated)"
+                  stroke-width="1.5"
+                  class="series-point"
+                  data-x={p.x}
+                  data-y={p.y}
+                  data-series={s.name}
+                />
+              ))}
+            </g>
+          );
+        })}
+
+        <!-- Interactive Hover Crosshair & Tooltip Overlay Elements -->
+        <line
+          class="hover-crosshair"
+          x1={margin.left}
+          y1={margin.top}
+          x2={margin.left}
+          y2={height - margin.bottom}
+        />
+      </svg>
+
+      <div class="chart-tooltip" data-chart-tooltip>
+        <div class="tooltip-header" data-tooltip-header></div>
+        <div class="tooltip-body" data-tooltip-body></div>
+      </div>
+    </div>
+  </div>
+</Exhibit>
+
+<script>
+  function initBenchmarkCharts() {
+    const charts = document.querySelectorAll<HTMLElement>('[data-chart-root]');
+
+    charts.forEach((container) => {
+      if (container.dataset.initialized === 'true') return;
+      container.dataset.initialized = 'true';
+
+      const svg = container.querySelector<SVGSVGElement>('.benchmark-svg');
+      const tooltip = container.querySelector<HTMLElement>('[data-chart-tooltip]');
+      const tooltipHeader = container.querySelector<HTMLElement>('[data-tooltip-header]');
+      const tooltipBody = container.querySelector<HTMLElement>('[data-tooltip-body]');
+      const crosshair = container.querySelector<SVGLineElement>('.hover-crosshair');
+      const points = container.querySelectorAll<SVGCircleElement>('.series-point');
+
+      if (!svg || !tooltip || !tooltipHeader || !tooltipBody || !crosshair) return;
+
+      points.forEach((point) => {
+        point.addEventListener('mouseenter', (e) => {
+          const x = point.dataset.x;
+          const y = point.dataset.y;
+          const series = point.dataset.series;
+          if (!x || !y) return;
+
+          tooltipHeader.textContent = `Point: ${x}`;
+          tooltipBody.innerHTML = `<strong>${series}:</strong> ${Number(y).toLocaleString()}`;
+          tooltip.classList.add('visible');
+
+          const rect = point.getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+
+          tooltip.style.left = `${rect.left - containerRect.left + 10}px`;
+          tooltip.style.top = `${rect.top - containerRect.top - 40}px`;
+
+          const cx = point.getAttribute('cx');
+          if (cx) {
+            crosshair.setAttribute('x1', cx);
+            crosshair.setAttribute('x2', cx);
+            crosshair.style.opacity = '1';
+          }
+        });
+
+        point.addEventListener('mouseleave', () => {
+          tooltip.classList.remove('visible');
+          crosshair.style.opacity = '0';
+        });
+      });
+    });
+  }
+
+  initBenchmarkCharts();
+  document.addEventListener('astro:page-load', initBenchmarkCharts);
+</script>
+
+<style>
+  .benchmark-chart-container {
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .chart-legend {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    padding: 0.25rem 0.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+  }
+
+  .legend-label {
+    font-family: 'JetBrains Mono', var(--font-mono, monospace);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .chart-annotation-badge {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', var(--font-mono, monospace);
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--interactive-primary);
+    background: var(--ex-blue-bg);
+    border: 1px solid var(--ex-blue-stroke);
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .chart-svg-wrapper {
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+
+  .benchmark-svg {
+    display: block;
+    width: 100%;
+    min-width: 600px;
+    height: auto;
+  }
+
+  .grid-line,
+  .grid-line-vertical {
+    stroke: var(--border-subtle);
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+  }
+
+  .axis-tick-text {
+    fill: var(--muted);
+    font-family: 'JetBrains Mono', var(--font-mono, monospace);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+
+  .axis-title-x,
+  .axis-title-y {
+    fill: var(--text);
+    font-family: 'JetBrains Mono', var(--font-mono, monospace);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .series-point {
+    cursor: pointer;
+    transition: r 150ms ease, stroke-width 150ms ease;
+  }
+
+  .series-point:hover {
+    r: 6.5;
+    stroke-width: 2.5;
+  }
+
+  .hover-crosshair {
+    stroke: var(--border);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 3;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+  }
+
+  .chart-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.35rem 0.6rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 150ms ease, transform 150ms ease;
+    z-index: 10;
+    font-size: 0.75rem;
+    font-family: 'Inter', var(--font-sans, sans-serif);
+  }
+
+  .chart-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .tooltip-header {
+    font-family: 'JetBrains Mono', var(--font-mono, monospace);
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-bottom: 0.15rem;
+  }
+
+  .tooltip-body {
+    color: var(--text);
+  }
+</style>

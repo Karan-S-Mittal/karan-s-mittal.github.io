@@ -51,12 +51,17 @@ async function main() {
   }
 
   // 2. Scan all content files for tags
-  const files = await glob('src/content/**/*.{md,mdx}', { cwd: ROOT, absolute: true });
+  const files = await glob('src/content/**/*.{md,mdx}', {
+    cwd: ROOT,
+    absolute: true,
+    ignore: ['src/content/**/_*.{md,mdx}'],
+  });
   const tagSet = new Set();
 
   for (const file of files) {
     const content = await readFile(file, 'utf-8');
     const { data } = matter(content);
+    if (data.draft === true) continue;
     if (Array.isArray(data.tags)) {
       data.tags.forEach((t) => tagSet.add(t.trim()));
     }

@@ -1,159 +1,399 @@
 ---
+/**
+ * TableOfContents.astro
+ * Hierarchical, accordion-style scrollspy Table of Contents.
+ *
+ * Automatically tracks reading progress, expands active chapter sub-headings,
+ * collapses inactive sections, and auto-scrolls the sidebar container.
+ */
 interface Heading {
   depth: number;
   slug: string;
   text: string;
 }
 
-interface Props {
-  headings: Heading[];
+interface Chapter {
+  slug: string;
+  text: string;
+  depth: number;
+  subchapters: Heading[];
 }
 
-const { headings } = Astro.props;
+interface Props {
+  headings: Heading[];
+  idPrefix?: string;
+}
+
+const { headings, idPrefix = 'toc' } = Astro.props;
+
+function buildHierarchy(items: Heading[]): Chapter[] {
+  const chapters: Chapter[] = [];
+  let currentChapter: Chapter | null = null;
+
+  for (const h of items) {
+    if (h.depth === 2) {
+      currentChapter = {
+        slug: h.slug,
+        text: h.text,
+        depth: h.depth,
+        subchapters: [],
+      };
+      chapters.push(currentChapter);
+    } else if (h.depth === 3 && currentChapter) {
+      currentChapter.subchapters.push(h);
+    } else {
+      chapters.push({
+        slug: h.slug,
+        text: h.text,
+        depth: h.depth,
+        subchapters: [],
+      });
+    }
+  }
+  return chapters;
+}
+
+const chapters = buildHierarchy(headings);
 ---
 
-<nav class="toc" aria-label="Table of contents">
-  <button class="toc-toggle" aria-expanded="true" aria-controls="toc-list">
+<nav class="toc-root" aria-label="Table of contents" data-toc-container id={idPrefix}>
+  <div class="toc-header">
     <span class="toc-title">Contents</span>
-    <span class="toc-chevron" aria-hidden="true">−</span>
-  </button>
-  <ul class="toc-list" id="toc-list">
-    {headings.map((heading) => (
-      <li class={`toc-item depth-${heading.depth}`}>
-        <a href={`#${heading.slug}`} class="toc-link" data-heading={heading.slug}>
-          {heading.text}
-        </a>
-      </li>
-    ))}
+    <span class="toc-progress-pct" data-toc-progress>0%</span>
+  </div>
+
+  <div class="toc-progress-track">
+    <div class="toc-progress-bar" data-toc-progress-bar></div>
+  </div>
+
+  <ul class="toc-chapter-list" id={`${idPrefix}-list`}>
+    {chapters.map((ch, chIdx) => {
+      const hasSubs = ch.subchapters.length > 0;
+      return (
+        <li class="toc-chapter-item" data-chapter-slug={ch.slug}>
+          <div class="toc-chapter-header">
+            <a href={`#${ch.slug}`} class="toc-link toc-chapter-link" data-heading={ch.slug}>
+              <span class="toc-chapter-text">{ch.text}</span>
+            </a>
+            {hasSubs && (
+              <button
+                type="button"
+                class="toc-accordion-btn"
+                aria-label={`Toggle subsections for ${ch.text}`}
+                data-toggle-target={ch.slug}
+              >
+                <svg class="toc-chevron-svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            )}
+          </div>
+
+          {hasSubs && (
+            <div class="toc-subchapters-wrapper" data-sub-wrapper={ch.slug}>
+              <ul class="toc-subchapter-list">
+                {ch.subchapters.map((sub) => (
+                  <li class="toc-subchapter-item">
+                    <a href={`#${sub.slug}`} class="toc-link toc-subchapter-link" data-heading={sub.slug}>
+                      {sub.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </li>
+      );
+    })}
   </ul>
 </nav>
 
-<style>
-  .toc {
-    max-height: calc(100vh - 8rem);
-    overflow-y: auto;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-4);
+<script>
+  function initAccordionScrollspy() {
+    const containers = document.querySelectorAll<HTMLElement>('[data-toc-container]');
+
+    containers.forEach((container) => {
+      if (container.dataset.initialized === 'true') return;
+      container.dataset.initialized = 'true';
+
+      const chapterItems = container.querySelectorAll<HTMLElement>('.toc-chapter-item');
+      const allLinks = container.querySelectorAll<HTMLAnchorElement>('.toc-link');
+      const progressBar = container.querySelector<HTMLElement>('[data-toc-progress-bar]');
+      const progressText = container.querySelector<HTMLElement>('[data-toc-progress]');
+      const accordionBtns = container.querySelectorAll<HTMLButtonElement>('.toc-accordion-btn');
+
+      // Manual accordion toggle support
+      accordionBtns.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const targetSlug = btn.dataset.toggleTarget;
+          const chapterEl = container.querySelector<HTMLElement>(`[data-chapter-slug="${targetSlug}"]`);
+          if (chapterEl) {
+            chapterEl.classList.toggle('manual-open');
+          }
+        });
+      });
+
+      // Heading elements in article content
+      const headingElements: HTMLElement[] = [];
+      allLinks.forEach((link) => {
+        const slug = link.dataset.heading;
+        if (!slug) return;
+        const el = document.getElementById(slug);
+        if (el) headingElements.push(el);
+      });
+
+      if (headingElements.length === 0) return;
+
+      function updateActiveState() {
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const docHeight = document.documentElement.scrollHeight - windowHeight;
+
+        // Reading progress percentage
+        const progress = Math.min(100, Math.max(0, Math.round((scrollY / (docHeight || 1)) * 100)));
+        if (progressBar) progressBar.style.width = `${progress}%`;
+        if (progressText) progressText.textContent = `${progress}%`;
+
+        // Determine currently active heading
+        let activeHeading: HTMLElement | null = headingElements[0];
+        const offset = 140; // top offset trigger boundary
+
+        for (let i = 0; i < headingElements.length; i++) {
+          const el = headingElements[i];
+          const top = el.getBoundingClientRect().top;
+          if (top <= offset) {
+            activeHeading = el;
+          } else {
+            break;
+          }
+        }
+
+        if (!activeHeading) return;
+        const activeSlug = activeHeading.id;
+
+        let activeLinkEl: HTMLAnchorElement | null = null;
+
+        allLinks.forEach((link) => {
+          const isCurrent = link.dataset.heading === activeSlug;
+          link.classList.toggle('active', isCurrent);
+          if (isCurrent) activeLinkEl = link;
+        });
+
+        // Expand matching parent chapter & collapse others
+        chapterItems.forEach((chapterItem) => {
+          const chapterSlug = chapterItem.dataset.chapterSlug;
+          const hasActiveLink = chapterItem.querySelector(`.toc-link.active`) !== null;
+          const isDirectChapter = chapterSlug === activeSlug;
+
+          const shouldBeOpen = hasActiveLink || isDirectChapter || chapterItem.classList.contains('manual-open');
+          chapterItem.classList.toggle('is-open', shouldBeOpen);
+          chapterItem.classList.toggle('has-active', hasActiveLink || isDirectChapter);
+        });
+
+        // Auto-scroll the sidebar container if active item is offscreen
+        if (activeLinkEl && container.scrollHeight > container.clientHeight) {
+          const linkRect = (activeLinkEl as HTMLAnchorElement).getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+
+          if (linkRect.top < containerRect.top + 30 || linkRect.bottom > containerRect.bottom - 30) {
+            (activeLinkEl as HTMLAnchorElement).scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          }
+        }
+      }
+
+      window.addEventListener('scroll', updateActiveState, { passive: true });
+      window.addEventListener('resize', updateActiveState, { passive: true });
+      updateActiveState();
+    });
   }
 
-  .toc-toggle {
+  initAccordionScrollspy();
+  document.addEventListener('astro:page-load', initAccordionScrollspy);
+</script>
+
+<style>
+  .toc-root {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: calc(100vh - 7.5rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    padding: var(--space-4);
+    background: var(--bg-surface, var(--bg-elevated));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .toc-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-    padding: 0;
-    margin-bottom: var(--space-3);
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: inherit;
+    margin-bottom: var(--space-2);
   }
 
   .toc-title {
     font-family: var(--font-mono);
     font-size: var(--text-xs);
-    font-weight: 500;
+    font-weight: 600;
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    margin: 0;
   }
 
-  .toc-chevron {
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--muted);
-    line-height: 1;
+  .toc-progress-pct {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--accent);
   }
 
-  .toc-toggle[aria-expanded="false"] + .toc-list {
-    display: none;
+  .toc-progress-track {
+    width: 100%;
+    height: 2px;
+    background: var(--border-subtle);
+    border-radius: var(--radius-pill);
+    margin-bottom: var(--space-3);
+    overflow: hidden;
   }
 
-  .toc-list {
+  .toc-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--accent);
+    transition: width 120ms ease;
+  }
+
+  .toc-chapter-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: 0.2rem;
   }
 
-  .toc-item {
+  .toc-chapter-item {
     margin: 0;
-    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toc-chapter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
   }
 
   .toc-link {
     display: block;
-    font-size: var(--text-xs);
-    font-weight: 400;
+    text-decoration: none;
     color: var(--muted);
-    text-decoration: none;
-    padding: var(--space-1) 0;
-    padding-left: var(--space-2);
-    border-left: 1.5px solid transparent;
+    transition: color 150ms ease, border-color 150ms ease;
   }
 
-  .toc-link:hover {
+  .toc-chapter-link {
+    flex: 1;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.35;
+    padding: 0.35rem 0.5rem;
+    border-left: 2px solid transparent;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  .toc-chapter-link:hover {
     color: var(--text);
-    text-decoration: none;
+    background: var(--bg-inset);
   }
 
-  .toc-link.active {
+  .toc-chapter-link.active,
+  .toc-chapter-item.has-active > .toc-chapter-header > .toc-chapter-link {
     color: var(--accent);
+    font-weight: 600;
     border-left-color: var(--accent);
+    background: var(--accent-subtle);
   }
 
-  .depth-3 .toc-link {
-    padding-left: var(--space-4);
+  .toc-accordion-btn {
+    display: grid;
+    place-items: center;
+    background: none;
+    border: none;
+    padding: 0.3rem 0.4rem;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: color 150ms ease, transform 200ms ease;
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    html {
-      scroll-behavior: smooth;
+  .toc-accordion-btn:hover {
+    color: var(--text);
+  }
+
+  .toc-chevron-svg {
+    transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  /* Accordion Expansion */
+  .toc-subchapters-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 220ms cubic-bezier(0.2, 0, 0, 1);
+    overflow: hidden;
+  }
+
+  .toc-chapter-item.is-open > .toc-subchapters-wrapper {
+    grid-template-rows: 1fr;
+  }
+
+  .toc-chapter-item.is-open .toc-chevron-svg {
+    transform: rotate(180deg);
+  }
+
+  .toc-subchapter-list {
+    min-height: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0.15rem 0 0.3rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    border-left: 1px solid var(--border-subtle);
+    margin-left: 0.65rem;
+  }
+
+  .toc-subchapter-item {
+    margin: 0;
+  }
+
+  .toc-subchapter-link {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 400;
+    line-height: 1.35;
+    padding: 0.2rem 0.4rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .toc-subchapter-link:hover {
+    color: var(--text);
+  }
+
+  .toc-subchapter-link.active {
+    color: var(--accent);
+    font-weight: 600;
+    background: var(--accent-subtle);
+  }
+
+  @media (max-width: 960px) {
+    .toc-root {
+      max-height: none;
     }
   }
 </style>
-
-<script is:inline>
-  (function () {
-    const tocLinks = document.querySelectorAll('.toc-link');
-    if (!tocLinks.length) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            tocLinks.forEach((link) => link.classList.remove('active'));
-            const active = document.querySelector(
-              '.toc-link[href="#' + entry.target.id + '"]'
-            );
-            if (active) active.classList.add('active');
-          }
-        });
-      },
-      {
-        rootMargin: '-80px 0px -60% 0px',
-        threshold: 0,
-      }
-    );
-
-    document.querySelectorAll('article :is(h2, h3)').forEach((heading) => {
-      observer.observe(heading);
-    });
-
-    const toggle = document.querySelector('.toc-toggle');
-    const list = document.getElementById('toc-list');
-    const chevron = document.querySelector('.toc-chevron');
-    if (toggle && list && chevron) {
-      toggle.addEventListener('click', () => {
-        const expanded = toggle.getAttribute('aria-expanded') === 'true';
-        toggle.setAttribute('aria-expanded', String(!expanded));
-        chevron.textContent = expanded ? '+' : '−';
-      });
-    }
-  })();
-</script>

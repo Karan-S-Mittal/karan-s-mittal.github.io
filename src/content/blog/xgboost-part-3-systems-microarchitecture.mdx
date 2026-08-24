@@ -1,0 +1,385 @@
+---
+title: "How XGBoost Runs on Bare Metal: Quantile Sketches, Sparsity, and Cache-Aware Blocks"
+description: "A hardware-level breakdown of XGBoost's systems design: weighted quantile sketches, sparsity-aware routing, cache-conscious column blocks, and out-of-core data movement."
+pubDate: 2026-08-24
+tags: ["Machine Learning Systems", "XGBoost", "Hardware Microarchitecture", "Quantile Sketch", "Memory Hierarchy", "Parallel Systems"]
+draft: false
+---
+
+import Exhibit from '../../components/Exhibit.astro';
+import BenchmarkChart from '../../components/BenchmarkChart.astro';
+import AlgorithmFlow from '../../components/AlgorithmFlow.astro';
+
+When machine learning literature discusses Gradient Boosted Decision Trees (GBDTs), the focus almost universally settles on the mathematics: sequentially fitting shallow trees to the negative gradients of an arbitrary differentiable loss function.
+
+Yet when Tianqi Chen and Carlos Guestrin introduced **XGBoost** in 2016, the decisive breakthrough was not merely the addition of second-order Taylor expansions or tree complexity regularization. The fundamental achievement was **systems co-design**: building an algorithmic engine explicitly tailored to the microarchitecture of modern CPUs, cache hierarchies, memory buses, and out-of-core storage.
+
+Tree construction is inherently bound by **memory bandwidth and latency**, not arithmetic ALU throughput. Without careful hardware alignment, finding optimal split points on gigabyte- or terabyte-scale datasets degenerates into continuous sorting passes, severe L1/L2 cache thrashing, and random memory stalls across DRAM channels.
+
+To understand how XGBoost achieves near-linear multi-core scaling and processes out-of-core datasets on bare metal, we examine its execution engine from first principles:
+
+1. **The Exact Greedy Bottleneck:** Why continuous sorting and pointer dereferencing saturate the CPU-memory bus.
+2. **The Second-Order Objective:** How Hessian terms transform split scoring into a weighted squared loss minimization.
+3. **The Weighted Quantile Sketch:** Formal $\epsilon$-approximation bounds for split proposals under non-uniform Hessian distributions.
+4. **Sparsity-Aware Split Finding:** Dual-direction default routing achieving $O(\|\mathcal{I}_{\text{non-missing}}\|)$ time complexity.
+5. **Cache-Aware Block Storage:** Column-based Compressed Sparse Column (CSC) blocks, thread-local accumulation buffers, and cacheline prefetching.
+6. **Out-of-Core Pipelining:** Compressed blocks, disk sharding, and overlapping I/O with computation.
+
+---
+
+## 1. The Memory Bandwidth Bottleneck of Exact Greedy Splitting
+
+To construct a decision tree node, an algorithm must evaluate potential split points across all features to maximize the reduction in training loss.
+
+### The Naive Greedy Workflow
+
+In a classical tree-building implementation:
+
+1. For every tree level and every active node, iterate through all $d$ features.
+2. For each feature $k$, sort the $n$ instance values $x_{ik}$ along that feature axis: an $O(d \cdot n \log n)$ compute step.
+3. Perform a linear scan over sorted values, maintaining running sums of first-order gradients ($G = \sum g_i$) and second-order Hessians ($H = \sum h_i$) to calculate candidate split gains.
+4. Select the feature and threshold that yields the maximum gain $\mathcal{L}_{\text{split}}$.
+
+```
+Feature Matrix (n × d)        Sorted Index Scan            DRAM Random Access
+[ x₁₁  x₁₂  ...  x₁d ]       [ x(₁), x(₂), ... x(n) ]     g₁  h₁  (offset 0x0040)
+[ x₂₁  x₂₂  ...  x₂d ]  -->  [ i=42, i=7,  ... i=19 ] --> g₄₂ h₄₂ (offset 0x8F20) <- CACHE MISS
+[ ...   ...  ...  ... ]                                    g₇  h₇  (offset 0x1100) <- CACHE MISS
+```
+
+### The Hardware Failure Mode
+
+While $O(d \cdot n \log n)$ arithmetic operations are tractable for modest datasets, on modern hardware this naive workflow breaks down across three distinct physical bottlenecks: [1]
+
+* **Continuous Sorting Overhead:** Sorting $n$ rows repeatedly at each tree depth wastes CPU cycles re-ordering data points whose relative order along any single feature axis never changes.
+* **Non-Contiguous Gradient Gathering:** Fetching $g_i$ and $h_i$ requires indirect pointer dereferencing ($x_{ik} \to \text{row } i \to (g_i, h_i)$), resulting in an **L1/L2 cache line miss** (150–250 cycle stall) on nearly every read.
+* **Working Set Saturation:** When dataset size $n \times d$ exceeds L3 cache capacity, DDR memory bus bandwidth saturates, capping multi-threaded scaling.
+
+---
+
+## 2. Mathematical Foundation: The Second-Order Loss Landscape
+
+XGBoost resolves these hardware bottlenecks by replacing continuous exact scanning with an approximate, cache-conscious histogram-and-sketch framework.
+
+Let $\mathcal{D} = \{(x_i, y_i)\}_{i=1}^n$ be a dataset with $n$ examples and $d$ features. At round $t$:
+
+$$
+\mathcal{L}^{(t)} \approx \sum_{i=1}^n \left[ l\left(y_i, \hat{y}_i^{(t-1)}\right) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i) \right] + \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2
+$$
+
+where the derivatives are defined as:
+
+$$
+g_i = \partial_{\hat{y}^{(t-1)}} l\left(y_i, \hat{y}^{(t-1)}\right), \qquad h_i = \partial^2_{\hat{y}^{(t-1)}} l\left(y_i, \hat{y}^{(t-1)}\right)
+$$
+
+### Optimal Leaf Weight and Split Gain
+
+$$
+w_j^* = -\frac{\sum_{i \in I_j} g_i}{\sum_{i \in I_j} h_i + \lambda} = -\frac{G_j}{H_j + \lambda}
+$$
+
+$$
+\mathcal{L}_{\text{split}} = \frac{1}{2} \left[ \frac{G_L^2}{H_L + \lambda} + \frac{G_R^2}{H_R + \lambda} - \frac{(G_L + G_R)^2}{H_L + H_R + \lambda} \right] - \gamma
+$$
+
+---
+
+## 3. The Weighted Quantile Sketch
+
+Because instances contribute non-uniformly according to Hessian $h_i$, candidate splits must partition the **cumulative Hessian distribution** into equal-weight buckets.
+
+<Exhibit 
+  exhibit="01" 
+  title="Exact Sorting vs. Weighted Quantile Sketch Partitioning" 
+  badge="ALGORITHMIC MECHANISM" 
+  caption="Exact greedy splitting requires testing every unique value boundary. The weighted quantile sketch maps continuous feature values onto discrete buckets containing equal cumulative Hessian mass hᵢ, guaranteeing bounded rank error ε.">
+
+```
+Exact Greedy Splitting (Exhaustive scan across all n instances):
+Feature Values:   [ 0.12 | 0.15 | 0.19 | 0.28 | 0.31 | ... | 0.89 | 0.94 ]
+Evaluations:        ^      ^      ^      ^      ^              ^      ^
+Overhead:         O(n) split evaluations per feature per tree level.
+
+Weighted Quantile Sketch (Partitioning by cumulative Hessian mass):
+Instances (x, h): (0.12, 1.2)  (0.19, 0.2)  (0.31, 4.8)  (0.55, 0.1)  (0.89, 3.2)
+Cumulative H:     |--- 1.2 ---|--- 1.4 ---|--- 6.2 ---|--- 6.3 ---|--- 9.5 ---|
+                                          ▲                       ▲
+Candidate Splits:                   Bucket Split s₁         Bucket Split s₂
+Sketch Property:  Rank distance |r_k(s_j) - r_k(s_{j+1})| < ε
+```
+</Exhibit>
+
+---
+
+## 4. Digestible Visual Execution Flow: The 4-Layer Systems Engine
+
+To understand how XGBoost bridges high-level mathematical objectives and low-level CPU execution, consider the 4-layer systems execution pipeline:
+
+<AlgorithmFlow
+  exhibit="02"
+  title="The 4-Layer Hardware Execution Architecture"
+  badge="MICROARCHITECTURE PIPELINE"
+  caption="How XGBoost transforms memory-bound tree learning into a cache-resident, compute-bound execution pipeline."
+  steps={[
+    {
+      step: "01",
+      title: "Pre-Sorted CSC Column Blocks",
+      tag: "Memory Layout",
+      state: "verified",
+      description: "Data is sorted once at initialization and stored in immutable Compressed Sparse Column blocks, enabling lock-free multi-core parallelism.",
+      formula: "col_ptr[]  -->  data[],  row_idx[]",
+      note: "Eliminates sorting during tree growth."
+    },
+    {
+      step: "02",
+      title: "Weighted Quantile Sketching",
+      tag: "Distributed ε-Bound",
+      state: "signal",
+      description: "Computes Hessian CDF rank buckets in parallel using Merge and Prune operations to produce bounded candidate split sets.",
+      formula: "|rₖ(sⱼ) − rₖ(sⱼ₊₁)| < ε",
+      note: "Reduces candidate split count from O(N) to O(1/ε)."
+    },
+    {
+      step: "03",
+      title: "Sparsity-Aware Default Routing",
+      tag: "Dual-Direction Pass",
+      state: "model",
+      description: "Scans only present non-missing values in O(|I_non-missing|) time, assigning missing entries to the direction yielding maximum Gain.",
+      formula: "Gᵣ = Gₜₒₜₐₗ − Gₗ,  Hᵣ = Hₜₒₜₐₗ − Hₗ",
+      note: "The work scales with present entries; the realized speedup is workload-dependent."
+    },
+    {
+      step: "04",
+      title: "Cache Buffers & Out-of-Core Data",
+      tag: "Cache Locality & Storage",
+      state: "constraint",
+      description: "Organizes column blocks and intermediate statistics to improve locality while out-of-core execution overlaps storage movement with computation.",
+      formula: "thread-local buffers + overlapped I/O",
+      note: "The benefit depends on hardware, block size, compression, and workload."
+    }
+  ]}
+/>
+
+---
+
+## 5. Sparsity-Aware Split Finding
+
+```python
+def find_optimal_sparse_split(node_instances, feature_k, G_total, H_total):
+    """
+    Computes optimal split threshold and default direction in O(|non-missing|) time.
+    """
+    best_gain = -float("inf")
+    best_split = None
+    best_default_dir = None
+    
+    # Pass 1: Default missing instances to RIGHT child (I_R = I \ I_L)
+    G_L, H_L = 0.0, 0.0
+    for x_ik, g_i, h_i in sorted_non_missing_entries(feature_k, node_instances):
+        G_L += g_i
+        H_L += h_i
+        gain = calc_split_gain(G_L, H_L, G_total - G_L, H_total - H_L)
+        if gain > best_gain:
+            best_gain, best_split, best_default_dir = gain, x_ik, "RIGHT"
+            
+    # Pass 2: Default missing instances to LEFT child (I_L = I \ I_R)
+    G_R, H_R = 0.0, 0.0
+    for x_ik, g_i, h_i in reverse_sorted_non_missing_entries(feature_k, node_instances):
+        G_R += g_i
+        H_R += h_i
+        gain = calc_split_gain(G_total - G_R, H_total - H_R, G_R, H_R)
+        if gain > best_gain:
+            best_gain, best_split, best_default_dir = gain, x_ik, "LEFT"
+            
+    return best_split, best_default_dir, best_gain
+```
+
+<Exhibit 
+  exhibit="03" 
+  title="Sparsity-Aware Dual-Direction Split Scanning" 
+  badge="ALGORITHM MECHANIC" 
+  caption="By computing total node gradient and Hessian sums (G, H) upfront, the algorithm scans only present feature values. The missing entries are implicitly accounted for by subtraction, testing both Left and Right default assignments in linear time.">
+
+```
+Total Node Aggregates: G = ∑ gᵢ = 14.2,  H = ∑ hᵢ = 28.0 (over ALL n=1000 instances)
+Present Non-Missing Instances: |I_k| = 4 instances (99.6% sparse)
+
+Pass 1: Missing Assigned to RIGHT (I_R = Total - I_L)
+Threshold   G_L    H_L   |   G_R (G - G_L)   H_R (H - H_L)   |   Gain
+x < 1.2     2.1    4.0   |   12.1            24.0            |   3.42
+x < 3.5     5.4   10.0   |    8.8            18.0            |   5.12  <-- Best Pass 1
+x < 7.8     8.0   16.0   |    6.2            12.0            |   4.89
+
+Pass 2: Missing Assigned to LEFT (I_L = Total - I_R)
+Threshold   G_R    H_R   |   G_L (G - G_R)   H_L (H - H_R)   |   Gain
+x > 7.8     6.2   12.0   |    8.0            16.0            |   4.89
+x > 3.5     8.8   18.0   |    5.4            10.0            |   6.84  <-- OPTIMAL SPLIT (Default: LEFT)
+x > 1.2    12.1   24.0   |    2.1             4.0            |   3.42
+```
+</Exhibit>
+
+---
+
+## 6. Cache-Aware Block Architecture & Out-of-Core Storage
+
+<Exhibit 
+  exhibit="04" 
+  title="Compressed Sparse Column (CSC) Block Memory Layout" 
+  badge="MEMORY LAYOUT" 
+  caption="Data is stored in column-major blocks. A single initialization pass sorts feature values and retains their 32-bit row indices. Pointer offsets (col_ptr) index each feature column directly into contiguous value and row index arrays.">
+
+```
+Logical Feature Table (Sparse Matrix):
+           Col 0    Col 1    Col 2
+Row 0:   [  0.0   |  1.42  |  0.0   ]
+Row 1:   [  4.85  |  0.0   |  0.19  ]
+Row 2:   [  1.12  |  0.0   |  0.0   ]
+Row 3:   [  0.0   |  9.21  |  0.88  ]
+
+In-Memory CSC Block Representation:
+col_ptr Array:  [  0,        2,        4,        6  ]
+                   │         │         │         │
+                   └────┬────┴────┬────┴────┬────┘
+                        │         │         │
+data Array:       [ 1.12, 4.85 | 1.42, 9.21 | 0.19, 0.88 ] (Feature Values)
+row_idx Array:    [   2 ,   1  |   0 ,   3  |   1 ,   3  ] (Original Row IDs)
+                        ▲                   ▲
+                 Col 0 Values        Col 2 Values
+                 (Pre-sorted)        (Pre-sorted)
+```
+</Exhibit>
+
+<Exhibit 
+  exhibit="05" 
+  title="Random DRAM Thrashing vs. Cache-Aware Thread-Local Buffers" 
+  badge="HARDWARE MICROARCHITECTURE" 
+  caption="Naive split finding generates continuous L1/L2 cache misses by reading non-contiguous gradients from DRAM. The cache-aware block engine prefetches gradient and Hessian tuples into a contiguous thread-local cache buffer of size B, executing local accumulations entirely within high-speed CPU L1/L2 caches.">
+
+```
+NAIVE GRADIENT ACCESS (Continuous Cache Thrashing):
+CSC row_idx:     [ 10423,   12,  98234,   501,  88312 ]
+                      │      │       │      │       │
+                      ▼      ▼       ▼      ▼       ▼
+DRAM Memory:     [ ... g10423 ... g12 ... g98234 ... g501 ... g88312 ... ]
+Cache State:     [ MISS ][ MISS ][ MISS ][ MISS ][ MISS ] -> Pipeline Stalls (200 cycles)
+
+CACHE-AWARE BLOCK BUFFERING (Pre-fetched Accumulation):
+CSC row_idx:     [ Block 0 (IDs: 0 ... B-1) ]  [ Block 1 (IDs: B ... 2B-1) ]
+                              │
+                              ▼ Prefetch Batch into L1/L2 Cache
+Local Buffer:    [ (g₀, h₀), (g₁, h₁), (g₂, h₂), ..., (g_B, h_B) ]
+Accumulation:    [ Contiguous In-Cache Histogram Aggregation ] -> 1-2 cycle latency
+```
+</Exhibit>
+
+---
+
+## 7. Throughput & Scaling (Illustrative)
+
+The following chart is a schematic systems model, not a recorded AMD EPYC benchmark. It shows the expected shape of memory-bandwidth saturation and improved scaling from locality-aware organization; reproducible measurements require publishing the harness, compiler, XGBoost version, data generator, and hardware counters.
+
+<BenchmarkChart
+  exhibit="06"
+  title="Illustrative Training Throughput vs. CPU Concurrency"
+  badge="ILLUSTRATIVE SCALING"
+  xLabel="CPU Thread Count"
+  yLabel="Training Throughput"
+  xUnit="threads"
+  yUnit="k rows/sec"
+  annotation="Schematic — not measured"
+  caption="Illustrative throughput curves showing memory-bandwidth saturation in a sorting-heavy baseline and better scaling for locality-aware blocks. Values are schematic and are not a measured AMD EPYC result."
+  series={[
+    {
+      name: "XGBoost (Cache-Aware + Approx Sketch)",
+      color: "#2676aa",
+      data: [
+        { x: 1, y: 48 },
+        { x: 2, y: 94 },
+        { x: 4, y: 184 },
+        { x: 8, y: 362 },
+        { x: 16, y: 698 },
+        { x: 32, y: 1210 },
+        { x: 48, y: 1460 },
+        { x: 64, y: 1555 }
+      ]
+    },
+    {
+      name: "XGBoost (Without Cache-Aware Buffering)",
+      color: "#ffafcc",
+      dashed: true,
+      data: [
+        { x: 1, y: 36 },
+        { x: 2, y: 68 },
+        { x: 4, y: 128 },
+        { x: 8, y: 232 },
+        { x: 16, y: 394 },
+        { x: 32, y: 560 },
+        { x: 48, y: 610 },
+        { x: 64, y: 625 }
+      ]
+    },
+    {
+      name: "Exact Greedy Baseline (Continuous Sort)",
+      color: "#cdb4db",
+      dashed: true,
+      data: [
+        { x: 1, y: 12 },
+        { x: 2, y: 22 },
+        { x: 4, y: 41 },
+        { x: 8, y: 68 },
+        { x: 16, y: 84 },
+        { x: 32, y: 91 },
+        { x: 48, y: 92 },
+        { x: 64, y: 93 }
+      ]
+    }
+  ]}
+/>
+
+### Microarchitectural Effects to Measure
+
+The effects below are hypotheses for a benchmark harness, not recorded measurements from this post. The actual deltas depend on CPU generation, compiler flags, data density, block size, thread placement, and XGBoost version.
+
+| Microarchitecture Metric | Exact Greedy Baseline | Cache-Aware Block Engine | Expected Direction |
+|---|---|---|---|
+| **L1 / L2 data-cache misses** | Irregular accesses during repeated scans | More locality in block-local accumulation | Lower, workload-dependent |
+| **LLC and DRAM traffic** | Sorting and pointer-heavy access | Reuse through compressed column blocks | Lower or more predictable |
+| **Instructions per cycle (IPC)** | More cycles stalled on memory | More useful work per cache miss | Higher when memory-bound |
+| **End-to-end training time** | Sensitive to sorting and I/O | Sensitive to block construction and scheduling | Requires measurement |
+
+---
+
+## 8. Summary: The Systems Engineering Hierarchy of XGBoost
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      MATHEMATICAL FORMULATION                           │
+│  Second-Order Taylor Approximation + Weighted Squared Loss Equivalence │
+└────────────────────────────────────┬────────────────────────────────────┘
+                                     │
+┌────────────────────────────────────▼────────────────────────────────────┐
+│                       ALGORITHMIC ABSTRACTIONS                          │
+│  • Weighted Quantile Sketch: Bounded ε-error rank partitioning          │
+│  • Sparsity-Aware Split Finding: O(|non-missing|) linear scan           │
+└────────────────────────────────────┬────────────────────────────────────┘
+                                     │
+┌────────────────────────────────────▼────────────────────────────────────┐
+│                    HARDWARE MICROARCHITECTURE DESIGN                    │
+│  • Pre-sorted CSC Column Blocks: Zero-lock feature parallelism          │
+│  • Cache-Aware Accumulation Buffers: Eliminates DRAM pointer stalls     │
+│  • Out-of-Core Pipeline: Compressed blocks + asynchronous I/O double     │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Primary Citations & Verifications
+
+| ID | Claim / Component | Primary Source | Reference / Commit |
+|---|---|---|---|
+| `[1]` | XGBoost Architecture, Quantile Sketch, Sparsity, Cache Blocks | Tianqi Chen & Carlos Guestrin, KDD 2016 | [*XGBoost: A Scalable Tree Boosting System*](https://arxiv.org/abs/1603.02754) |
+| `[2]` | Streaming Quantile Computation & Error Bounds | Michael Greenwald & Sanjeev Khanna, SIGMOD 2001 | [*Space-Efficient Online Computation of Quantile Summaries*](https://doi.org/10.1145/375663.375670) |
+| `[3]` | Gradient Boosting Machines & Greedy Tree Induction | Jerome H. Friedman, Annals of Statistics 2001 | [*Greedy Function Approximation: A Gradient Boosting Machine*](https://doi.org/10.1214/aos/1013203451) |
+| `[4]` | LightGBM Histogram Binning & GOSS (Comparative Architecture) | Guolin Ke et al., NeurIPS 2017 | [*LightGBM: A Highly Efficient Gradient Boosting Decision Tree*](https://proceedings.neurips.cc/paper_files/paper/2017/file/6449f44a102fde848669bdd9eb6b76fa-Paper.pdf) |
+| `[5]` | XGBoost quantile-data implementation | DMLC / XGBoost Repository | [`src/data/quantile_dmatrix.h`](https://github.com/dmlc/xgboost/blob/master/src/data/quantile_dmatrix.h) |

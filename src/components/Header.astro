@@ -15,10 +15,7 @@ function isActive(href: string) {
 
 <header>
   <div class="header-inner">
-    <div class="nameplate">
-      <a href="/" class="brand">Karan Mittal</a>
-      <span class="nameplate-tag">Deterministic data &amp; AI systems</span>
-    </div>
+    <a href="/" class="brand">Karan Mittal</a>
     <nav class="main-nav" aria-label="Primary">
       {nav.map(item => (
         <a href={item.href} class={isActive(item.href) ? 'active' : ''} aria-current={isActive(item.href) ? 'page' : undefined}>
@@ -62,7 +59,7 @@ function isActive(href: string) {
     const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
     localStorage.setItem('theme', next);
-    themeMeta?.setAttribute('content', next === 'dark' ? '#171410' : '#faf8f4');
+    themeMeta?.setAttribute('content', next === 'dark' ? '#111820' : '#f4f7fb');
     syncToggle();
   });
 </script>
@@ -72,7 +69,9 @@ function isActive(href: string) {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: var(--bg);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
     border-bottom: 1px solid transparent;
     transition: border-color 0.3s ease, background-color var(--transition-fast);
   }
@@ -82,7 +81,7 @@ function isActive(href: string) {
   }
 
   .header-inner {
-    max-width: var(--max-width);
+    max-width: var(--page-max-width);
     margin: 0 auto;
     padding: var(--space-3) var(--space-5);
     display: flex;
@@ -91,49 +90,30 @@ function isActive(href: string) {
     gap: var(--space-4);
   }
 
-  .nameplate {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-3);
-    min-width: 0;
-  }
-
   .brand {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-weight: 600;
     font-size: 1.05rem;
     color: var(--text);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
     text-decoration: none;
     white-space: nowrap;
+    transition: opacity var(--transition-fast);
   }
   .brand:hover {
-    color: var(--accent);
+    opacity: 0.65;
     text-decoration: none;
-  }
-
-  .nameplate-tag {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .main-nav {
     display: flex;
-    gap: var(--space-4);
+    gap: var(--space-5);
     align-items: center;
   }
   .main-nav a {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
     color: var(--muted);
     text-decoration: none;
     padding: var(--space-1) 0;
@@ -144,7 +124,8 @@ function isActive(href: string) {
     text-decoration: none;
   }
   .main-nav a.active {
-    color: var(--accent);
+    color: var(--text);
+    font-weight: 600;
   }
 
   .header-actions {
@@ -169,12 +150,6 @@ function isActive(href: string) {
     color: var(--text);
   }
 
-  @media (max-width: 720px) {
-    .nameplate-tag {
-      display: none;
-    }
-  }
-
   @media (max-width: 640px) {
     .header-inner {
       padding: var(--space-3);
@@ -193,7 +168,7 @@ function isActive(href: string) {
       display: none;
     }
     .main-nav a {
-      font-size: 0.65rem;
+      font-size: 0.8rem;
       white-space: nowrap;
     }
   }
