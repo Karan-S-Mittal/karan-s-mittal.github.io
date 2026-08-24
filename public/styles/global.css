@@ -374,13 +374,13 @@ article img {
 }
 
 article blockquote {
-  margin: var(--space-6) 0;
-  padding: var(--space-4) var(--space-5);
-  border-left: 2px solid var(--accent);
-  background: var(--accent-subtle);
+  margin: var(--space-7) 0;
+  padding: 0 0 0 var(--space-5);
+  border-left: 3px solid var(--accent);
   color: var(--text-secondary);
-  border-radius: 0 var(--radius) var(--radius) 0;
-  font-size: var(--text-lg);
+  font-size: 1.5rem; /* 24px, spec §15.4 */
+  font-weight: 500;
+  line-height: 1.45;
 }
 
 article blockquote p:last-child { margin-bottom: 0; }

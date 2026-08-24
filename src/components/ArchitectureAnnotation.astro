@@ -1,0 +1,82 @@
+---
+/**
+ * ArchitectureAnnotation.astro — spec §12
+ * A technical note, not a callout box.
+ * JetBrains Mono index, thin blue rule, compact title, normal body,
+ * optional warm consequence line.
+ */
+interface Props {
+  index?: string;
+  label: string;
+  consequence?: string;
+}
+
+const { index, label, consequence } = Astro.props;
+---
+
+<aside class="arch-annotation">
+  <p class="aa-head">
+    {index && <span class="aa-index">{index} /</span>}
+    <span class="aa-label">{label}</span>
+  </p>
+  <div class="aa-body">
+    <slot />
+  </div>
+  {consequence && (
+    <p class="aa-consequence">
+      <span class="aa-consequence-mark" aria-hidden="true">&#9492;&#9472;</span>
+      consequence &rarr; {consequence}
+    </p>
+  )}
+</aside>
+
+<style>
+  .arch-annotation {
+    margin: var(--space-6) 0;
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--border-accent);
+  }
+
+  .aa-head {
+    margin: 0 0 var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .aa-index {
+    color: var(--interactive-primary);
+  }
+
+  .aa-label {
+    color: var(--text-secondary);
+  }
+
+  .aa-body {
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .aa-body > :global(*:first-child) {
+    margin-top: 0;
+  }
+
+  .aa-body > :global(*:last-child) {
+    margin-bottom: 0;
+  }
+
+  .aa-consequence {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin: var(--space-3) 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.02em;
+    /* Warm attention tone, darkened for AA contrast on light surfaces */
+    color: color-mix(in srgb, var(--signal-warm) 55%, var(--ink-900));
+  }
+</style>

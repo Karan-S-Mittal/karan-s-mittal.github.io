@@ -1,0 +1,46 @@
+---
+/**
+ * MetaLabel.astro — spec §8.2
+ * Canonical editorial meta label: "01 · KNOWLEDGE SYSTEMS"
+ * Number → blue, separator → lavender, category → secondary ink.
+ */
+interface Props {
+  index?: string;
+  label: string;
+}
+
+const { index, label } = Astro.props;
+---
+
+<p class="meta-label">
+  {index && <span class="meta-label-index">{index}</span>}
+  {index && <span class="meta-label-sep" aria-hidden="true">&middot;</span>}
+  <span class="meta-label-category">{label}</span>
+</p>
+
+<style>
+  .meta-label {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.4;
+  }
+
+  .meta-label-index {
+    color: var(--interactive-primary);
+  }
+
+  .meta-label-sep {
+    color: var(--signal-secondary);
+  }
+
+  .meta-label-category {
+    color: var(--text-secondary);
+  }
+</style>

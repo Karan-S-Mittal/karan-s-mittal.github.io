@@ -1,0 +1,98 @@
+---
+/**
+ * Button.astro — spec §8.3 / §25
+ * Primary: blue surface, white text, 8px radius, subtle 1px lift on hover.
+ * Secondary: transparent, hairline border, ink text, blue hover.
+ * No scale, no bounce, no glow. Full state contract incl. focus-visible + reduced-motion (global kill-switch).
+ */
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary';
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
+}
+
+const { href, variant = 'primary', type = 'button', disabled = false } = Astro.props;
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  class:list={['btn', `btn-${variant}`, { 'btn-disabled': disabled }]}
+  href={href}
+  type={href ? undefined : type}
+  disabled={href ? undefined : disabled}
+  aria-disabled={disabled ? 'true' : undefined}
+>
+  <slot />
+</Tag>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: 0.625rem var(--space-5);
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.4;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--interactive-focus);
+    outline-offset: 3px;
+  }
+
+  /* Primary — blue carries the action (spec §3.3) */
+  .btn-primary {
+    background: var(--interactive-primary);
+    color: var(--neutral-000);
+  }
+
+  .btn-primary:hover:not(.btn-disabled) {
+    background: var(--interactive-primary-hover);
+    color: var(--neutral-000);
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(38, 118, 170, 0.28);
+  }
+
+  .btn-primary:active:not(.btn-disabled) {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  /* Secondary — quiet, bordered, ink text */
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border-default);
+  }
+
+  .btn-secondary:hover:not(.btn-disabled) {
+    color: var(--interactive-primary);
+    border-color: var(--interactive-primary);
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary:active:not(.btn-disabled) {
+    transform: translateY(0);
+  }
+
+  .btn-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+</style>

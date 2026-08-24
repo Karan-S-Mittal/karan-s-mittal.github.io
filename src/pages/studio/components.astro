@@ -13,6 +13,12 @@ import BlogPostCard from '../../components/BlogPostCard.astro';
 import TalkCard from '../../components/TalkCard.astro';
 import WorkCard from '../../components/WorkCard.astro';
 import Icon from '../../components/Icon.astro';
+import MetaLabel from '../../components/MetaLabel.astro';
+import Button from '../../components/Button.astro';
+import EvidenceObject from '../../components/EvidenceObject.astro';
+import ArchitectureAnnotation from '../../components/ArchitectureAnnotation.astro';
+import SectionBreak from '../../components/SectionBreak.astro';
+import DarkPlane from '../../components/DarkPlane.astro';
 import talksData from '../../data/talks.json';
 import workData from '../../data/work.json';
 import type { Talk } from '../../types/talks';
@@ -52,14 +58,14 @@ const walkthroughStages = [
 ];
 
 const palette = [
-  { name: 'Canvas', token: '--bg', value: '#F4F7FB' },
-  { name: 'Surface', token: '--bg-elevated', value: '#FFFFFF' },
-  { name: 'Ink', token: '--text', value: '#13213A' },
-  { name: 'Signal', token: '--signal', value: '#1F66E5' },
-  { name: 'Model', token: '--model', value: '#7C3AED' },
-  { name: 'Verified', token: '--verified', value: '#168663' },
-  { name: 'Constraint', token: '--constraint', value: '#D97706' },
-  { name: 'Failure', token: '--failure', value: '#D64545' },
+  { name: 'Anchor', token: '--blue-500', value: '#2676AA' },
+  { name: 'Surface blue', token: '--blue-400', value: '#A2D2FF' },
+  { name: 'Canvas blue', token: '--blue-300', value: '#BDE0FE' },
+  { name: 'Signal warm', token: '--pink-400', value: '#FFAFCC' },
+  { name: 'Emphasis', token: '--pink-300', value: '#FFC8DD' },
+  { name: 'Lavender', token: '--lavender-400', value: '#CDB4DB' },
+  { name: 'Ink', token: '--ink-900', value: '#1A1A2E' },
+  { name: 'Page', token: '--neutral-050', value: '#F8F9FC' },
 ];
 ---
 
@@ -84,6 +90,12 @@ const palette = [
         <a href="#chart"><span>08</span> Benchmark chart</a>
         <a href="#walkthrough"><span>09</span> Walkthrough</a>
         <a href="#reading"><span>10</span> Reading elements</a>
+        <a href="#meta-label"><span>11</span> Meta label</a>
+        <a href="#buttons"><span>12</span> Buttons</a>
+        <a href="#evidence"><span>13</span> Evidence object</a>
+        <a href="#annotation"><span>14</span> Architecture annotation</a>
+        <a href="#section-break"><span>15</span> Section break</a>
+        <a href="#dark-plane"><span>16</span> Dark plane</a>
       </nav>
       <p class="sidebar-note"><span class="note-dot note-live"></span>Production<span class="note-dot note-candidate"></span>Candidate</p>
     </aside>
@@ -94,7 +106,7 @@ const palette = [
           label="Studio system"
           title="Component showroom"
           description="A live approval surface for the visual system. Every production primitive appears here before it is propagated across the rest of the website."
-          count={10}
+          count={16}
           countLabel="component families"
         />
       </div>
@@ -103,7 +115,7 @@ const palette = [
         <div>
           <span class="toolbar-light"></span>
           <strong>Live components</strong>
-          <small>Use the site header to inspect light and dark mode.</small>
+          <small>Light-only by design — darkness is reserved for conclusion and code (spec §21).</small>
         </div>
         <div class="width-switcher" role="group" aria-label="Component canvas width">
           <button type="button" class="active" data-catalog-width="full">Full</button>
@@ -118,7 +130,7 @@ const palette = [
             id="foundations"
             index="01"
             title="Foundations"
-            description="Blueprint palette, typography hierarchy, spacing rhythm, and the semantic meaning carried by colour."
+            description="Soft Architecture palette (spec §3), typography hierarchy, spacing rhythm, and the semantic meaning carried by colour."
             source="public/styles/global.css"
           >
             <div class="type-band">
@@ -130,7 +142,7 @@ const palette = [
                   <p class="type-body">Explain the mechanism, show the boundary, and keep the evidence near the claim.</p>
                 </div>
                 <div>
-                  <p class="type-label">Metadata / Geist Mono 500</p>
+                  <p class="type-label">Metadata / JetBrains Mono 500</p>
                   <p class="type-mono">buffer[03] · bound = 512 MiB · status: verified</p>
                 </div>
               </div>
@@ -251,7 +263,7 @@ const palette = [
               exhibit="01"
               title="One active path through a deterministic system"
               badge="SYSTEM MAP"
-              caption="Structure remains neutral. Signal blue identifies the current causal path; green marks the checked output."
+              caption="Structure remains neutral. Anchor blue identifies the active causal path; ink marks the concluded, checked output."
             >
               <svg class="mini-system" viewBox="0 0 760 250" role="img" aria-label="Request, transform, and verified result">
                 <defs><marker id="catalog-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--text)" /></marker></defs>
@@ -345,10 +357,103 @@ const palette = [
                 <div class="utility-row"><a class="tag" href="#reading">systems-engineering</a><a class="tag" href="#reading">inference</a><a class="tag" href="#reading">verification</a></div>
                 <div class="utility-row icon-row"><span><Icon name="briefcase" />Work</span><span><Icon name="wrench" />Build</span><span><Icon name="book-open" />Learn</span><span><Icon name="users" />Community</span></div>
                 <p class="sample-label">Evidence table</p>
-                <div class="table-wrap"><table><thead><tr><th>State</th><th>Meaning</th><th>Token</th></tr></thead><tbody><tr><td>Signal</td><td>Current causal path</td><td><code>--signal</code></td></tr><tr><td>Verified</td><td>Checked result</td><td><code>--verified</code></td></tr><tr><td>Constraint</td><td>Visible system limit</td><td><code>--constraint</code></td></tr></tbody></table></div>
+                <div class="table-wrap"><table><thead><tr><th>State</th><th>Meaning</th><th>Token</th></tr></thead><tbody><tr><td>Structure</td><td>Nodes, links, primary action</td><td><code>--blue-500</code></td></tr><tr><td>Attention</td><td>Bottleneck, decision, constraint</td><td><code>--pink-400</code></td></tr><tr><td>Secondary</td><td>Async / inferred edges, metadata</td><td><code>--lavender-400</code></td></tr></tbody></table></div>
               </div>
             </article>
           </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="meta-label"
+            index="11"
+            title="Meta label"
+            description="Canonical editorial index: number in blue, separator in lavender, category in secondary ink. Mono, uppercase, 0.05em tracking."
+            source="MetaLabel.astro"
+          >
+            <div class="metalabel-row">
+              <MetaLabel index="01" label="Knowledge systems" />
+              <MetaLabel index="02" label="Performance / Inference" />
+              <MetaLabel label="Infrastructure" />
+            </div>
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="buttons"
+            index="12"
+            title="Buttons"
+            description="Primary (blue surface, 1px lift) and secondary (hairline border, blue hover). No scale, no bounce, no glow."
+            source="Button.astro"
+          >
+            <div class="button-row">
+              <Button href="#buttons">Start a project</Button>
+              <Button href="#buttons" variant="secondary">Read the approach</Button>
+              <Button disabled>Unavailable</Button>
+            </div>
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="evidence"
+            index="13"
+            title="Evidence object"
+            description="Compact proof fragment connecting constraint → decision → result. Not a metric card: the reasoning chain is the content."
+            source="EvidenceObject.astro"
+          >
+            <div class="evidence-grid">
+              <EvidenceObject
+                index="02"
+                label="Scale"
+                metric="500M rows"
+                method="Parquet + DuckDB"
+                outcome="< 1 sec targeted aggregation"
+              />
+              <EvidenceObject index="03" label="Decision">
+                <p>RAG &darr; GraphRAG</p>
+                <p><strong>Why</strong> — cross-document relationships were part of the question.</p>
+              </EvidenceObject>
+            </div>
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="annotation"
+            index="14"
+            title="Architecture annotation"
+            description="A technical note, not a callout box: mono index, thin blue rule, normal body, optional warm consequence line."
+            source="ArchitectureAnnotation.astro"
+          >
+            <ArchitectureAnnotation
+              index="03"
+              label="Memory"
+              consequence="higher utilization"
+            >
+              KV blocks do not need to occupy contiguous physical memory.
+            </ArchitectureAnnotation>
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="section-break"
+            index="15"
+            title="Section break"
+            description="Replaces a generic hr with a faint topology strip: three to four nodes, semantic edge grammar, low opacity."
+            source="SectionBreak.astro"
+          >
+            <SectionBreak />
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="dark-plane"
+            index="16"
+            title="Dark plane"
+            description="Darkness is semantic: conclusion, decision, final CTA. Ink surface with a soft radial blue glow — never a pink primary action here."
+            source="DarkPlane.astro"
+          >
+            <DarkPlane>
+              <h2>Have a system that needs to be right?</h2>
+              <p>For engagements involving AI reliability, knowledge systems, performance, or technical strategy.</p>
+              <div class="dark-plane-actions">
+                <Button href="/contact">Start a project</Button>
+              </div>
+            </DarkPlane>
+          </ComponentSpecimen>
+
         </div>
       </div>
     </div>

@@ -201,3 +201,13 @@
   .width-switcher { width: 100%; }
   .width-switcher button { flex: 1; }
 }
+
+/* ---------- Soft Architecture editorial kit (specimens 11–16) ---------- */
+
+.metalabel-row { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); }
+
+.button-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
+
+.evidence-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-5); }
+
+.dark-plane-actions { margin-top: var(--space-5); }
