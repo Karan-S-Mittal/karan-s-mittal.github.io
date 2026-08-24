@@ -133,9 +133,9 @@
   --radius-panel: 10px;
   --radius-pill: 999px;
 
-  /* Shadows — soft blue-tinted (spec §8.1) */
-  --shadow-card: 0 4px 24px rgba(162, 210, 255, 0.12);
-  --shadow-card-hover: 0 8px 32px rgba(162, 210, 255, 0.22);
+  /* Shadows — soft blue-tinted with a tactile inner highlight (spec §8.1) */
+  --shadow-card: 0 4px 24px rgba(162, 210, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --shadow-card-hover: 0 8px 32px rgba(162, 210, 255, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 
   /* Typography families */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -174,6 +174,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* clear the sticky header on anchor jumps */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -226,6 +227,7 @@ h1 {
   line-height: 1.15;
   color: var(--text);
   margin-bottom: var(--space-4);
+  text-wrap: balance;
 }
 
 h2 {
@@ -236,6 +238,7 @@ h2 {
   line-height: 1.2;
   color: var(--text);
   margin: var(--space-7) 0 var(--space-3);
+  text-wrap: balance;
 }
 
 h3 {
@@ -244,11 +247,13 @@ h3 {
   line-height: 1.25;
   color: var(--text);
   margin: var(--space-6) 0 var(--space-2);
+  text-wrap: balance;
 }
 
 p {
   margin-bottom: var(--space-4);
   color: var(--text-secondary);
+  text-wrap: pretty; /* avoid typographic orphans (Tailwind text-pretty) */
 }
 
 a {
@@ -272,6 +277,18 @@ li {
   margin-bottom: var(--space-2);
   color: var(--text-secondary);
 }
+
+li::marker {
+  color: var(--accent);
+}
+
+/* Numbers are evidence — align digits wherever comparison matters */
+time, table, .label, .proof-num, .evidence-object {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Native form controls pick up the anchor blue */
+:root { accent-color: var(--blue-500); }
 
 /* ================================================================
    Labels & Meta — mono editorial voice

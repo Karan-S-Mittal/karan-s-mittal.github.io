@@ -54,18 +54,28 @@ const Tag = href ? 'a' : 'button';
     outline-offset: 3px;
   }
 
-  /* Primary — blue carries the action (spec §3.3) */
+  /* Primary — blue carries the action (spec §3.3). Hover is pointer-only
+     so touch taps don't leave a stuck lift state. */
   .btn-primary {
     background: var(--interactive-primary);
     color: var(--neutral-000);
   }
 
-  .btn-primary:hover:not(.btn-disabled) {
-    background: var(--interactive-primary-hover);
-    color: var(--neutral-000);
-    text-decoration: none;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(38, 118, 170, 0.28);
+  @media (hover: hover) {
+    .btn-primary:hover:not(.btn-disabled) {
+      background: var(--interactive-primary-hover);
+      color: var(--neutral-000);
+      text-decoration: none;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(38, 118, 170, 0.28);
+    }
+
+    .btn-secondary:hover:not(.btn-disabled) {
+      color: var(--interactive-primary);
+      border-color: var(--interactive-primary);
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
   }
 
   .btn-primary:active:not(.btn-disabled) {
@@ -78,13 +88,6 @@ const Tag = href ? 'a' : 'button';
     background: transparent;
     color: var(--text);
     border-color: var(--border-default);
-  }
-
-  .btn-secondary:hover:not(.btn-disabled) {
-    color: var(--interactive-primary);
-    border-color: var(--interactive-primary);
-    text-decoration: none;
-    transform: translateY(-1px);
   }
 
   .btn-secondary:active:not(.btn-disabled) {

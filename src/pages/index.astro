@@ -445,8 +445,30 @@ const capabilities = [
     margin-top: var(--space-5);
   }
 
+  /* ---- Ruled rows: Material-3 style state layers ---- */
+  .work-list, .writing-list, .public-list {
+    border-top: 1px solid var(--border);
+    margin-top: var(--space-5);
+  }
+  .work-row, .writing-row, .public-row {
+    border-radius: var(--radius);
+    transition:
+      background-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+  /* State layer: ~8% blue wash, pointer only — no sticky hover on touch */
+  @media (hover: hover) {
+    .work-row:hover, .writing-row:hover, .public-row:hover {
+      background: color-mix(in srgb, var(--blue-100) 45%, transparent);
+      text-decoration: none;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+  }
+  .work-row:hover .work-title, .writing-row:hover .writing-title, .public-row:hover .public-label {
+    color: var(--accent);
+  }
+
   /* ---- Work rows ---- */
-  .work-list { border-top: 1px solid var(--border); margin-top: var(--space-5); }
   .work-row {
     display: grid;
     grid-template-columns: 2.5rem minmax(0, 1fr) auto;
@@ -457,8 +479,6 @@ const capabilities = [
     color: inherit;
     text-decoration: none;
   }
-  .work-row:hover { text-decoration: none; }
-  .work-row:hover .work-title { color: var(--accent); }
   .work-index { color: var(--accent); font-family: var(--font-mono); font-size: var(--text-xs); }
   .work-body { display: grid; gap: var(--space-1); }
   .work-title {
@@ -471,7 +491,6 @@ const capabilities = [
   .work-summary { color: var(--muted); font-size: var(--text-sm); line-height: 1.5; }
 
   /* ---- Writing rows ---- */
-  .writing-list { border-top: 1px solid var(--border); margin-top: var(--space-5); }
   .writing-row {
     display: grid;
     grid-template-columns: 6rem minmax(0, 1fr) auto;
@@ -482,8 +501,6 @@ const capabilities = [
     color: inherit;
     text-decoration: none;
   }
-  .writing-row:hover { text-decoration: none; }
-  .writing-row:hover .writing-title { color: var(--accent); }
   .writing-date { color: var(--muted); font-family: var(--font-mono); font-size: var(--text-xs); }
   .writing-body { display: grid; gap: var(--space-1); }
   .writing-title {
@@ -497,7 +514,6 @@ const capabilities = [
   .row-arrow { color: var(--muted); }
 
   /* ---- Speaking rows ---- */
-  .public-list { border-top: 1px solid var(--border); margin-top: var(--space-5); }
   .public-row {
     display: flex;
     justify-content: space-between;
@@ -508,8 +524,6 @@ const capabilities = [
     color: inherit;
     text-decoration: none;
   }
-  .public-row:hover { text-decoration: none; }
-  .public-row:hover .public-label { color: var(--accent); }
   .public-label {
     color: var(--text);
     font-weight: 500;
