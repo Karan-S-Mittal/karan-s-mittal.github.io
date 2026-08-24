@@ -19,6 +19,7 @@ import EvidenceObject from '../../components/EvidenceObject.astro';
 import ArchitectureAnnotation from '../../components/ArchitectureAnnotation.astro';
 import SectionBreak from '../../components/SectionBreak.astro';
 import DarkPlane from '../../components/DarkPlane.astro';
+import TintedPlane from '../../components/TintedPlane.astro';
 import talksData from '../../data/talks.json';
 import workData from '../../data/work.json';
 import type { Talk } from '../../types/talks';
@@ -96,6 +97,7 @@ const palette = [
         <a href="#annotation"><span>14</span> Architecture annotation</a>
         <a href="#section-break"><span>15</span> Section break</a>
         <a href="#dark-plane"><span>16</span> Dark plane</a>
+        <a href="#tinted-plane"><span>17</span> Tinted plane</a>
       </nav>
       <p class="sidebar-note"><span class="note-dot note-live"></span>Production<span class="note-dot note-candidate"></span>Candidate</p>
     </aside>
@@ -106,7 +108,7 @@ const palette = [
           label="Studio system"
           title="Component showroom"
           description="A live approval surface for the visual system. Every production primitive appears here before it is propagated across the rest of the website."
-          count={16}
+          count={17}
           countLabel="component families"
         />
       </div>
@@ -452,6 +454,22 @@ const palette = [
                 <Button href="/contact">Start a project</Button>
               </div>
             </DarkPlane>
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="tinted-plane"
+            index="17"
+            title="Tinted plane"
+            description="Soft blue-gradient statement surface: meta label, large ink heading, secondary body — with a faint node-and-line motif. Visible enough to feel engineered, faint enough to stay atmospheric."
+            source="TintedPlane.astro"
+          >
+            <TintedPlane label="The motif">
+              <h2>Sparse node-and-line networks that suggest structure without clutter.</h2>
+              <p>
+                Used as section backgrounds, statement planes, and subtle ambient texture.
+                The lines connect — because that's what you do.
+              </p>
+            </TintedPlane>
           </ComponentSpecimen>
 
         </div>
