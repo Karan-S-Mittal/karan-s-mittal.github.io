@@ -3,58 +3,12 @@ import Layout from '../layouts/Layout.astro';
 import Exhibit from '../components/editorial/Exhibit.astro';
 import AlgorithmFlow from '../components/diagram/AlgorithmFlow.astro';
 
-const themeDirections = [
-  {
-    id: 'blueprint',
-    index: 'A',
-    name: 'Technical Blueprint',
-    fit: 'Exacting · analytical · future-facing',
-    description: 'A refined version of the current language: cool laboratory surfaces, navy structure, and disciplined signal blue.',
-    judgement: 'Chosen direction. Its colour logic is right; the component grammar now needs to make it unmistakably yours.',
-    recommended: true,
-    palette: [
-      { name: 'Canvas', value: '#F4F7FB' },
-      { name: 'Ink', value: '#13213A' },
-      { name: 'Signal', value: '#1F66E5' },
-      { name: 'Verified', value: '#168663' },
-    ],
-  },
-  {
-    id: 'graphite',
-    index: 'B',
-    name: 'Graphite & Copper',
-    fit: 'Engineered · grounded · human',
-    description: 'Mineral-white paper, graphite structure, and a burnished copper signal inspired by traces, contacts, and physical systems.',
-    judgement: 'A strong alternative for warmth, but it shifts attention away from the blueprint precision you preferred.',
-    palette: [
-      { name: 'Canvas', value: '#F6F5F2' },
-      { name: 'Ink', value: '#1D232B' },
-      { name: 'Signal', value: '#B94724' },
-      { name: 'Verified', value: '#218A68' },
-    ],
-  },
-  {
-    id: 'teal',
-    index: 'C',
-    name: 'Deep Teal Lab',
-    fit: 'Investigative · calm · distinctive',
-    description: 'A restrained research palette: pale mineral-green surfaces, petrol ink, and a precise teal active path.',
-    judgement: 'Most distinctive and least SaaS-like, though it reads slightly more scientific than computational.',
-    palette: [
-      { name: 'Canvas', value: '#F3F8F7' },
-      { name: 'Ink', value: '#0E292D' },
-      { name: 'Signal', value: '#00777D' },
-      { name: 'Verified', value: '#2B8568' },
-    ],
-  },
-];
-
 const semanticTokens = [
-  { name: 'Signal', token: '--signal', use: 'Active path, current step, key idea' },
-  { name: 'Model', token: '--model', use: 'Learned state, weights, embeddings' },
-  { name: 'Verified', token: '--verified', use: 'Checked result, invariant, cache hit' },
-  { name: 'Constraint', token: '--constraint', use: 'Limit, contention, cost, headroom' },
-  { name: 'Failure', token: '--failure', use: 'Rejected path, miss, overflow, error' },
+  { name: 'Anchor blue', token: '--blue-500', use: 'Structure, links, primary action, diagram nodes' },
+  { name: 'Signal warm', token: '--pink-400', use: 'Attention, bottleneck, decision, constraint — sparse' },
+  { name: 'Lavender', token: '--lavender-400', use: 'Async/inferred edges, metadata, secondary separators' },
+  { name: 'Ink', token: '--ink-900', use: 'Body text, code surfaces, conclusion planes' },
+  { name: 'Border', token: '--neutral-150', use: 'Hairlines, default card edges' },
 ];
 
 const flowSteps = [
@@ -87,7 +41,7 @@ const flowSteps = [
     title: 'Verify the result',
     tag: 'EVIDENCE',
     state: 'verified' as const,
-    description: 'Check desktop, narrow width, both themes, the production build, and source claims.',
+    description: 'Check desktop, narrow width, the production build, and source claims.',
     note: 'Rendered output is the evidence',
   },
 ];
@@ -114,72 +68,17 @@ const flowSteps = [
     </section>
 
     <nav class="studio-index" aria-label="Studio sections">
-      <a href="#themes">00 · Theme lab</a>
-      <a href="#contract">01 · Contract</a>
-      <a href="#preview">02 · Preview lab</a>
-      <a href="#workflow">03 · Repair loop</a>
-      <a href="#brief">04 · Issue brief</a>
-      <a href="#automation">05 · Automation</a>
-      <a href="/studio/components/">06 · Components</a>
+      <a href="#contract">00 · Contract</a>
+      <a href="#preview">01 · Preview lab</a>
+      <a href="#workflow">02 · Repair loop</a>
+      <a href="#brief">03 · Issue brief</a>
+      <a href="#automation">04 · Automation</a>
+      <a href="/studio/components/">05 · Components</a>
     </nav>
-
-    <section id="themes" class="studio-section theme-lab">
-      <div class="section-heading theme-heading">
-        <div>
-          <p class="section-index">00 · Personal theme directions</p>
-          <h2>Three readings of the same engineer.</h2>
-          <p>
-            These directions come from the work itself: deterministic systems, low-level performance, evidence,
-            teaching, and community. Switch between them here, then inspect the rest of this page in both themes.
-          </p>
-        </div>
-        <button type="button" class="reset-theme" data-reset-studio-theme>Use site default</button>
-      </div>
-
-      <div class="theme-grid">
-        {themeDirections.map((theme) => (
-          <article class:list={['theme-card', { recommended: theme.recommended }]} data-theme-card={theme.id}>
-            <div class="theme-card-topline">
-              <div class="theme-title-group">
-                <span class="theme-index">{theme.index}</span>
-                <div>
-                  <h3>{theme.name}</h3>
-                  <p class="theme-fit">{theme.fit}</p>
-                </div>
-              </div>
-              {theme.recommended && <span class="theme-recommendation">Selected foundation</span>}
-            </div>
-            <div class="theme-card-body">
-              <p class="theme-description">{theme.description}</p>
-              <div class="theme-palette" aria-label={`${theme.name} palette`}>
-                {theme.palette.map((colour) => (
-                  <span class="theme-colour" title={`${colour.name}: ${colour.value}`} style={`--swatch: ${colour.value}`}>
-                    <i aria-hidden="true"></i>
-                    <span class="colour-property">
-                      <small>{colour.name}</small>
-                      <code>{colour.value}</code>
-                    </span>
-                  </span>
-                ))}
-              </div>
-              <p class="theme-judgement"><strong>Critical read.</strong> {theme.judgement}</p>
-            </div>
-            <div class="theme-card-footer">
-              <button type="button" class="apply-theme" data-apply-studio-theme={theme.id}>
-                Preview {theme.name}
-              </button>
-            </div>
-          </article>
-        ))}
-      </div>
-      <p class="theme-note" data-theme-note aria-live="polite">
-        Theme previews are local to this browser. Nothing is committed until we choose and refine one.
-      </p>
-    </section>
 
     <section id="contract" class="studio-section">
       <div class="section-heading">
-        <p class="section-index">01 · Visual contract</p>
+        <p class="section-index">00 · Visual contract</p>
         <h2>Colour describes state. Space describes structure.</h2>
         <p>These tokens are semantic controls, not a palette to distribute decoratively.</p>
       </div>
@@ -209,7 +108,7 @@ const flowSteps = [
     <section id="preview" class="studio-section">
       <div class="section-heading split-heading">
         <div>
-          <p class="section-index">02 · Preview lab</p>
+          <p class="section-index">01 · Preview lab</p>
           <h2>Test the component, not a screenshot.</h2>
         </div>
         <div class="preview-controls" role="group" aria-label="Preview width">
@@ -258,7 +157,7 @@ const flowSteps = [
 
     <section id="workflow" class="studio-section">
       <div class="section-heading">
-        <p class="section-index">03 · Repair loop</p>
+        <p class="section-index">02 · Repair loop</p>
         <h2>The decision sequence from our earlier reviews.</h2>
         <p>A local correction is complete only after it improves the system that produced it.</p>
       </div>
@@ -274,7 +173,7 @@ const flowSteps = [
 
     <section id="brief" class="studio-section">
       <div class="section-heading">
-        <p class="section-index">04 · Issue brief</p>
+        <p class="section-index">03 · Issue brief</p>
         <h2>Turn “this feels wrong” into a fixable unit.</h2>
         <p>Use the form to create a compact brief we can work through one issue at a time.</p>
       </div>
@@ -311,7 +210,7 @@ const flowSteps = [
 
     <section id="automation" class="studio-section automation-section">
       <div class="section-heading">
-        <p class="section-index">05 · Automation</p>
+        <p class="section-index">04 · Automation</p>
         <h2>One preflight, used locally and at deployment.</h2>
       </div>
       <div class="automation-grid">
@@ -337,38 +236,6 @@ const flowSteps = [
 
 <script>
   function initStudio() {
-    const themeButtons = document.querySelectorAll<HTMLButtonElement>('[data-apply-studio-theme]');
-    const themeCards = document.querySelectorAll<HTMLElement>('[data-theme-card]');
-    const resetThemeButton = document.querySelector<HTMLButtonElement>('[data-reset-studio-theme]');
-    const themeNote = document.querySelector<HTMLElement>('[data-theme-note]');
-
-    function applyStudioTheme(theme?: string | null) {
-      if (theme) {
-        document.documentElement.dataset.studioTheme = theme;
-        localStorage.setItem('studio-theme-direction', theme);
-      } else {
-        delete document.documentElement.dataset.studioTheme;
-        localStorage.removeItem('studio-theme-direction');
-      }
-
-      themeCards.forEach((card) => card.classList.toggle('selected', card.dataset.themeCard === theme));
-      themeButtons.forEach((button) => {
-        const active = button.dataset.applyStudioTheme === theme;
-        button.classList.toggle('active', active);
-        button.textContent = active ? 'Previewing this direction' : `Preview ${button.dataset.applyStudioTheme === 'blueprint' ? 'Technical Blueprint' : button.dataset.applyStudioTheme === 'graphite' ? 'Graphite & Copper' : 'Deep Teal Lab'}`;
-      });
-      if (themeNote) {
-        themeNote.textContent = theme
-          ? 'Preview active across this page. Toggle dark mode and inspect the diagram and repair flow below.'
-          : 'Theme previews are local to this browser. Nothing is committed until we choose and refine one.';
-      }
-    }
-
-    const savedStudioTheme = localStorage.getItem('studio-theme-direction');
-    applyStudioTheme(savedStudioTheme);
-    themeButtons.forEach((button) => button.addEventListener('click', () => applyStudioTheme(button.dataset.applyStudioTheme)));
-    resetThemeButton?.addEventListener('click', () => applyStudioTheme(null));
-
     const rail = document.querySelector<HTMLElement>('[data-preview-rail]');
     const widthButtons = document.querySelectorAll<HTMLButtonElement>('[data-preview-width]');
 
@@ -395,7 +262,7 @@ const flowSteps = [
         `Failure: ${data.get('failure') || 'Not specified'}`,
         `Desired invariant: ${data.get('outcome') || 'Not specified'}`,
         '',
-        'Please update the reusable design-language rule first, then the shared primitive, then this instance. Verify both themes, desktop, and narrow width.',
+        'Please update the reusable design-language rule first, then the shared primitive, then this instance. Verify light surfaces, desktop, and narrow width.',
       ].join('\n');
 
       try {
@@ -499,140 +366,6 @@ const flowSteps = [
     margin: 0 0 var(--space-3);
     font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
   }
-
-  .section-heading p:last-child { margin-bottom: 0; }
-
-  .theme-heading {
-    max-width: none;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: var(--space-6);
-  }
-
-  .theme-heading > div { max-width: 720px; }
-
-  .reset-theme {
-    flex: 0 0 auto;
-    padding: 0.65rem 0.8rem;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--muted);
-    background: transparent;
-    font: 500 var(--text-xs)/1 var(--font-mono);
-    cursor: pointer;
-  }
-
-  .reset-theme:hover { color: var(--text); border-color: var(--muted); }
-
-  .theme-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-3);
-  }
-
-  .theme-card {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    overflow: hidden;
-    background: var(--panel-bg);
-    border: 1px solid var(--panel-border);
-    border-radius: var(--panel-radius);
-    box-shadow: var(--panel-shadow);
-    transition: border-color var(--transition-fast), background-color var(--transition-fast);
-  }
-
-  .theme-card:hover { border-color: var(--panel-border-strong); }
-  .theme-card.selected {
-    background: var(--panel-selected-bg);
-    border-color: var(--panel-selected-border);
-    box-shadow: var(--panel-selected-shadow);
-  }
-
-  .theme-card-topline {
-    min-height: var(--panel-header-height);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2);
-    padding: 0.55rem var(--space-3);
-    background: var(--panel-header-bg);
-    border-bottom: 1px solid var(--panel-border);
-  }
-
-  .theme-title-group { display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
-
-  .theme-index {
-    display: grid;
-    place-items: center;
-    flex: 0 0 auto;
-    width: 1.5rem;
-    height: 1.5rem;
-    color: var(--muted);
-    background: var(--panel-property-bg);
-    border: 1px solid var(--panel-border);
-    border-radius: 7px;
-    font: 600 0.65rem/1 var(--font-mono);
-  }
-
-  .theme-recommendation {
-    color: var(--accent);
-    font: 600 0.65rem/1.2 var(--font-mono);
-    text-align: right;
-  }
-
-  .theme-card h3 { margin: 0; font-size: 0.82rem; line-height: 1.25; }
-  .theme-fit { margin: 0.1rem 0 0; color: var(--muted); font: 500 0.6rem/1.3 var(--font-mono); }
-  .theme-card-body { display: flex; flex: 1; flex-direction: column; padding: var(--space-3); }
-  .theme-description { min-height: 6.5rem; margin-bottom: var(--space-4); font-size: var(--text-sm); }
-
-  .theme-palette {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: var(--space-4);
-    border: 1px solid var(--panel-border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .theme-colour {
-    display: grid;
-    grid-template-columns: 2.25rem minmax(0, 1fr);
-    min-width: 0;
-    min-height: 2.25rem;
-    margin-top: -1px;
-    background: var(--panel-property-bg);
-    border-top: 1px solid var(--panel-border);
-  }
-  .theme-colour:first-child { margin-top: 0; border-top: 0; }
-  .theme-colour i { display: block; background: var(--swatch); border-right: 1px solid var(--panel-border); }
-  .colour-property { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); min-width: 0; padding: 0.35rem 0.55rem; }
-  .theme-colour small,
-  .theme-colour code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .theme-colour small { color: var(--muted); font: 500 0.62rem/1.2 var(--font-mono); }
-  .theme-colour code { color: var(--text-secondary); font-size: 0.62rem; }
-
-  .theme-judgement { min-height: 5.2rem; margin: 0; padding-top: var(--space-3); border-top: 1px solid var(--panel-border); font-size: var(--text-xs); line-height: 1.55; }
-
-  .theme-card-footer { padding: var(--space-2); background: var(--panel-header-bg); border-top: 1px solid var(--panel-border); }
-
-  .apply-theme {
-    width: 100%;
-    min-height: 2rem;
-    padding: 0.5rem 0.65rem;
-    border: 1px solid var(--panel-border-strong);
-    border-radius: 8px;
-    color: var(--text);
-    background: var(--panel-bg);
-    font: 500 var(--text-xs)/1 var(--font-sans);
-    cursor: pointer;
-  }
-
-  .apply-theme:hover,
-  .apply-theme.active { color: white; background: var(--accent); border-color: var(--accent); }
-
-  .theme-note { margin: var(--space-3) 0 0; color: var(--muted); font: 400 var(--text-xs)/1.5 var(--font-mono); }
 
   .split-heading {
     max-width: none;
@@ -807,10 +540,6 @@ const flowSteps = [
     .studio-index { grid-template-columns: 1fr 1fr; }
     .studio-index a { border-bottom: 1px solid var(--border-subtle); }
     .split-heading { align-items: flex-start; flex-direction: column; }
-    .theme-heading { align-items: flex-start; flex-direction: column; }
-    .theme-grid { grid-template-columns: 1fr; }
-    .theme-description,
-    .theme-judgement { min-height: 0; }
     .geometry-contract { grid-template-columns: 1fr 1fr; }
     .geometry-contract > div:nth-child(2) { border-right: 0; }
     .geometry-contract > div:nth-child(-n + 2) { border-bottom: 1px solid var(--border); }
@@ -824,122 +553,5 @@ const flowSteps = [
   @media (max-width: 520px) {
     .token-row { grid-template-columns: 28px 1fr; }
     .token-row p { grid-column: 2; }
-    .preview-rail { padding: var(--space-3); }
-  }
-</style>
-
-<style is:global>
-  html[data-studio-theme='blueprint'] {
-    --bg: #f4f7fb;
-    --bg-elevated: #ffffff;
-    --bg-inset: #edf2f8;
-    --text: #13213a;
-    --text-secondary: #293852;
-    --muted: #68768b;
-    --border: #d6dee9;
-    --border-subtle: rgba(214, 222, 233, 0.68);
-    --signal: #1f66e5;
-    --accent: #1f66e5;
-    --accent-hover: #164eaf;
-    --accent-subtle: rgba(31, 102, 229, 0.09);
-    --link: #1f66e5;
-    --verified: #168663;
-  }
-
-  html[data-studio-theme='blueprint'][data-theme='dark'] {
-    --bg: #111820;
-    --bg-elevated: #18222e;
-    --bg-inset: #202c39;
-    --text: #eff4fa;
-    --text-secondary: #d2dce8;
-    --muted: #aab6c5;
-    --border: #344456;
-    --border-subtle: rgba(52, 68, 86, 0.75);
-    --signal: #74a9ff;
-    --accent: #74a9ff;
-    --accent-hover: #a5c8ff;
-    --accent-subtle: rgba(116, 169, 255, 0.13);
-    --link: #74a9ff;
-    --verified: #69d2a5;
-  }
-
-  html[data-studio-theme='graphite'] {
-    --bg: #f6f5f2;
-    --bg-elevated: #ffffff;
-    --bg-inset: #efeeea;
-    --text: #1d232b;
-    --text-secondary: #343b44;
-    --muted: #707780;
-    --border: #d8d9d7;
-    --border-subtle: rgba(216, 217, 215, 0.72);
-    --signal: #b94724;
-    --accent: #b94724;
-    --accent-hover: #8f351b;
-    --accent-subtle: rgba(185, 71, 36, 0.09);
-    --link: #a83f20;
-    --model: #6f5bd6;
-    --verified: #218a68;
-    --constraint: #b66b12;
-    --failure: #c94f52;
-  }
-
-  html[data-studio-theme='graphite'][data-theme='dark'] {
-    --bg: #151719;
-    --bg-elevated: #1d2023;
-    --bg-inset: #272a2d;
-    --text: #f2f1ed;
-    --text-secondary: #d7d5cf;
-    --muted: #b0b0aa;
-    --border: #3a3e42;
-    --border-subtle: rgba(58, 62, 66, 0.76);
-    --signal: #f08a5d;
-    --accent: #f08a5d;
-    --accent-hover: #ffad88;
-    --accent-subtle: rgba(240, 138, 93, 0.14);
-    --link: #f39a73;
-    --model: #b5a7ff;
-    --verified: #71d0aa;
-    --constraint: #e9ad5f;
-    --failure: #ef8587;
-  }
-
-  html[data-studio-theme='teal'] {
-    --bg: #f3f8f7;
-    --bg-elevated: #ffffff;
-    --bg-inset: #eaf2f1;
-    --text: #0e292d;
-    --text-secondary: #294348;
-    --muted: #668084;
-    --border: #d2e0de;
-    --border-subtle: rgba(210, 224, 222, 0.72);
-    --signal: #00777d;
-    --accent: #00777d;
-    --accent-hover: #005a5e;
-    --accent-subtle: rgba(0, 119, 125, 0.09);
-    --link: #006c72;
-    --model: #6957c7;
-    --verified: #2b8568;
-    --constraint: #b66f17;
-    --failure: #c64f52;
-  }
-
-  html[data-studio-theme='teal'][data-theme='dark'] {
-    --bg: #0e191a;
-    --bg-elevated: #152426;
-    --bg-inset: #1d3032;
-    --text: #edf7f5;
-    --text-secondary: #d1e5e1;
-    --muted: #a8c2be;
-    --border: #31484a;
-    --border-subtle: rgba(49, 72, 74, 0.78);
-    --signal: #52d0cc;
-    --accent: #52d0cc;
-    --accent-hover: #87e5e1;
-    --accent-subtle: rgba(82, 208, 204, 0.13);
-    --link: #66d9d5;
-    --model: #b0a1ff;
-    --verified: #73d0aa;
-    --constraint: #e5af68;
-    --failure: #ef8588;
   }
 </style>

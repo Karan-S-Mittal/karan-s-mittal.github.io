@@ -9,10 +9,12 @@ import DarkPlane from '../components/editorial/DarkPlane.astro';
 import TintedPlane from '../components/editorial/TintedPlane.astro';
 import workData from '../data/work.json';
 import talksData from '../data/talks.json';
+import { SITE } from '../config';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
+const postCount = (await getCollection('blog', ({ data }) => !data.draft)).length;
 
 const featuredWork = workData.work.slice(0, 3);
 const recentTalks = [...talksData.talks]
@@ -54,8 +56,8 @@ const capabilities = [
 ---
 
 <Layout
-  title="Karan Mittal | Deterministic Engineering"
-  description="Karan Mittal turns ambiguous AI problems into deterministic systems - knowledge architecture, inference engineering, and technical leadership."
+  title={SITE.title}
+  description={SITE.description}
 >
   <main>
     <!-- HERO — QUIET (spec §7/§23.1/§35) -->
@@ -209,8 +211,8 @@ const capabilities = [
         <MetaLabel index="03" label="Evidence" />
         <h2 id="evidence-heading" class="visually-hidden">Evidence</h2>
         <div class="evidence-grid">
-          <EvidenceObject index="01" label="Writing" metric="5 deep dives" method="Long-form engineering essays" outcome="Primary citations, working diagrams, no hype" />
-          <EvidenceObject index="02" label="Teaching" metric={String(talkCount) + ' sessions'} method="Workshops & conference talks" outcome="RAG, GraphRAG, LLMOps taught hands-on" />
+          <EvidenceObject index="01" label="Writing" metric={`${postCount} deep dives`} method="Long-form engineering essays" outcome="Primary citations, working diagrams, no hype" />
+          <EvidenceObject index="02" label="Teaching" metric={`${talkCount}+ sessions`} method="Workshops & conference talks" outcome="RAG, GraphRAG, LLMOps taught hands-on" />
           <EvidenceObject index="03" label="Decision">
             <p>RAG &darr; GraphRAG</p>
             <p><strong>Why</strong> &mdash; cross-document relationships were part of the question.</p>
@@ -282,7 +284,7 @@ const capabilities = [
         <h2>Start a project</h2>
         <p>Bringing an ambiguous AI or data problem into focus? The fastest path is a direct conversation about constraints, evidence, and the system that has to exist.</p>
         <div class="contact-actions">
-          <Button href="mailto:karanshyammittal@gmail.com">Email Karan</Button>
+          <Button href={`mailto:${SITE.email}`}>Email Karan</Button>
           <Button href="/about" variant="secondary">Background &amp; community</Button>
         </div>
       </DarkPlane>
@@ -445,16 +447,25 @@ const capabilities = [
     margin-top: var(--space-5);
   }
 
-  /* ---- Ruled rows: Material-3 style state layers ---- */
+  /* ---- Ruled rows: one shared base, Material-3 style state layers ---- */
   .work-list, .writing-list, .public-list {
     border-top: 1px solid var(--border);
     margin-top: var(--space-5);
   }
   .work-row, .writing-row, .public-row {
+    gap: var(--space-3);
+    align-items: baseline;
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--border);
     border-radius: var(--radius);
+    color: inherit;
+    text-decoration: none;
     transition:
       background-color var(--transition-fast),
       box-shadow var(--transition-fast);
+  }
+  .work-row:hover .work-title, .writing-row:hover .writing-title, .public-row:hover .public-label {
+    color: var(--accent);
   }
   /* State layer: ~8% blue wash, pointer only — no sticky hover on touch */
   @media (hover: hover) {
@@ -464,20 +475,11 @@ const capabilities = [
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
     }
   }
-  .work-row:hover .work-title, .writing-row:hover .writing-title, .public-row:hover .public-label {
-    color: var(--accent);
-  }
 
   /* ---- Work rows ---- */
   .work-row {
     display: grid;
     grid-template-columns: 2.5rem minmax(0, 1fr) auto;
-    gap: var(--space-3);
-    align-items: baseline;
-    padding: var(--space-4) 0;
-    border-bottom: 1px solid var(--border);
-    color: inherit;
-    text-decoration: none;
   }
   .work-index { color: var(--accent); font-family: var(--font-mono); font-size: var(--text-xs); }
   .work-body { display: grid; gap: var(--space-1); }
@@ -494,12 +496,6 @@ const capabilities = [
   .writing-row {
     display: grid;
     grid-template-columns: 6rem minmax(0, 1fr) auto;
-    gap: var(--space-3);
-    align-items: baseline;
-    padding: var(--space-4) 0;
-    border-bottom: 1px solid var(--border);
-    color: inherit;
-    text-decoration: none;
   }
   .writing-date { color: var(--muted); font-family: var(--font-mono); font-size: var(--text-xs); }
   .writing-body { display: grid; gap: var(--space-1); }
@@ -517,12 +513,7 @@ const capabilities = [
   .public-row {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    gap: var(--space-4);
-    padding: var(--space-3) 0;
-    border-bottom: 1px solid var(--border);
-    color: inherit;
-    text-decoration: none;
+    padding-block: var(--space-3);
   }
   .public-label {
     color: var(--text);

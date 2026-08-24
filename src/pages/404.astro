@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/editorial/Button.astro';
+---
+
+<Layout title="Page not found | Karan Mittal" description="This path does not resolve.">
+  <main class="container lost">
+    <p class="label">404 / Unresolved</p>
+    <h1>This path does not resolve.</h1>
+    <p class="lost-copy">
+      The page you asked for was moved, renamed, or never existed.
+      The rest of the site is intact.
+    </p>
+    <div class="lost-actions">
+      <Button href="/">Back to the homepage</Button>
+      <Button href="/blog" variant="secondary">Read the essays</Button>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .lost {
+    padding-block: var(--space-9);
+  }
+  .lost h1 {
+    max-width: 16ch;
+  }
+  .lost-copy {
+    max-width: 46ch;
+    margin-bottom: var(--space-6);
+  }
+  .lost-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+</style>

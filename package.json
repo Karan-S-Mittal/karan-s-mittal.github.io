@@ -29,10 +29,12 @@
     "gray-matter": "^4.0.3",
     "katex": "^0.18.4",
     "mdast-util-find-and-replace": "^3.0.2",
+    "rehype-autolink-headings": "^7.1.0",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0"
   },
   "devDependencies": {
+    "rehype-slug": "^6.0.0",
     "sharp": "^0.34.5"
   }
 }

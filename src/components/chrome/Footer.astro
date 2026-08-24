@@ -1,16 +1,13 @@
 ---
-const socials = [
-  { href: 'https://github.com/Karan-S-Mittal', label: 'GitHub', icon: 'github' },
-  { href: 'https://www.linkedin.com/in/karansmittal/', label: 'LinkedIn', icon: 'linkedin' },
-  { href: 'https://twitter.com/KaranSMittal', label: 'X', icon: 'x' },
-  { href: 'mailto:karanshyammittal@gmail.com', label: 'Email', icon: 'email' },
-];
+import { SOCIALS, SITE } from '../../config';
+
+const socials = SOCIALS;
 ---
 
 <footer>
   <div class="footer-inner">
     <div class="footer-left">
-      <p class="copyright">© {new Date().getFullYear()} Karan Mittal</p>
+      <p class="copyright">&copy; {new Date().getFullYear()} {SITE.name}</p>
       <nav class="footer-nav" aria-label="Footer">
         <a href="/work">Work</a>
         <a href="/blog">Essays</a>

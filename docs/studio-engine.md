@@ -24,7 +24,7 @@ A local patch is incomplete when the same failure can still be produced elsewher
 | --- | --- | --- |
 | Identity and semantics | `docs/design-language.md` | Voice, palette meanings, typography, geometry, interaction rules |
 | Agent behaviour | `.agents/skills/explanatory-studio/SKILL.md` and `AGENTS.md` | Research, primary-source verification, exhibit and syndication protocol |
-| Runtime tokens | `public/styles/global.css` | The values actually used by pages and components |
+| Runtime tokens | `src/styles/global.css` | The values actually used by pages and components |
 | Reusable primitives | `src/components/` | Tool panels, exhibit frames, flows, charts, walkthroughs, and article chrome |
 | Diagram geometry | `src/lib/diagram-routing/` | Deterministic connector paths and clearance rules |
 | Visual control room | `src/pages/studio.astro` | Live inspection at multiple reading widths and structured issue capture |

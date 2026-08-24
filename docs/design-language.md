@@ -44,7 +44,7 @@ Rules: never hardcode palette values in components when a semantic token exists 
 
 ## Type
 
-- **Sans:** Inter (documented deviation from Google Sans Flex — not available under an open licence; recorded in `public/styles/global.css`). **Mono:** JetBrains Mono.
+- **Sans:** Inter (documented deviation from Google Sans Flex — not available under an open licence; recorded in `src/styles/global.css`). **Mono:** JetBrains Mono.
 - Reading column: 680px, 18px body, 1.7 line height, ≤75 characters per line.
 - Display 48–64px / H1 42–56 / H2 30–40 / H3 22–30 per the spec §4.2 scale.
 - Evidence metrics: 36–64px, weight 600–700, tight leading.

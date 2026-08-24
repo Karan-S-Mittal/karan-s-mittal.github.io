@@ -6,7 +6,7 @@
    ================================================================ */
 
 .catalog-shell {
-  --showroom-radius: 14px;
+  --showroom-radius: var(--radius-card);
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
   width: min(1480px, 100%);
