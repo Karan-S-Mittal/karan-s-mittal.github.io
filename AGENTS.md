@@ -28,17 +28,17 @@ When assisting Karan with content creation, architectural diagrams, technical wr
 
 ## 3. Visual & Diagram Grammar
 
-All diagrams must adhere to the **Explanatory Systems Studio** visual language ([`docs/design-language.md`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/design-language.md)):
+All diagrams must adhere to the **Soft Architecture** visual language ([`docs/design-language.md`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/design-language.md); canonical spec at repo root):
 
 ### Semantic Palette:
-- **Canvas / Surface**: `#F4F7FB` (Light) / `#111820` (Dark)
-- **Ink / Structure**: `#13213A` (Headlines, strokes, primary boxes)
-- **Signal (`#1F66E5`)**: Active step, highlighted flow, current buffer, key insight.
-- **Model (`#7C3AED`)**: Neural network layers, weights, learned embeddings.
-- **Verified (`#168663`)**: Deterministic outputs, cache hits, validated bounds.
-- **Constraint (`#D97706`)**: Headroom limits, memory pressure, lock contention, warnings.
-- **Failure (`#D64545`)**: OOM threshold, cache miss, packet drop.
+- **Page / Card**: `#F8F9FC` (page) / `#FFFFFF` (card)
+- **Ink / Structure**: `#1A1A2E` (`--ink-900`; text, code surfaces, dark CTA planes)
+- **Anchor blue (`#2676AA`, `--blue-500`)**: Headings, links, primary action, diagram nodes, active nav.
+- **Signal warm (`#FFAFCC`, `--pink-400`)**: Attention, bottleneck/decision/constraint nodes, editorial marks — sparse by rule; never a default CTA.
+- **Emphasis (`#FFC8DD`, `--pink-300`)**: Soft emphasis plane only.
+- **Lavender (`#CDB4DB`, `--lavender-400`)**: Async/inferred edges, metadata, secondary separators.
 - **Muted (`#68768B`)**: Dimensions, byte offsets, secondary annotations.
+- Shadows are blue-tinted (`rgba(162, 210, 255, …)`). No site-wide dark mode — darkness is semantic (conclusion/code planes only).
 
 ### Standard Visual Archetypes:
 1. **C4 & System Maps**: Clean subsystem boundaries, data vs. control plane separation.
@@ -47,8 +47,10 @@ All diagrams must adhere to the **Explanatory Systems Studio** visual language (
 4. **Trade-Off Curves**: Multi-axis latency vs. memory vs. cost comparisons.
 
 ### Diagram Rules:
-- 1.5px stroke weight, sharp/subtle 4px corners, clean font settings (Inter / Geist Mono).
+- 1.5px stroke weight, solid edges = direct/synchronous, dashed lavender edges = async/inferred, one pink attention node max per diagram.
+- Fonts: Inter (sans) + JetBrains Mono (labels/metrics).
 - Use leader line callouts for unexpected behavior: `"← notice zero allocation here"`.
+- Every diagram needs an accessible text explanation; no meaning carried by colour alone.
 
 ---
 

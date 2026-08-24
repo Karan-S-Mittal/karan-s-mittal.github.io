@@ -1,3 +1,5 @@
+> **SUPERSEDED (2026-08-25)** by Soft Architecture — see `docs/design-language.md` and the spec at repo root. Kept for history.
+
 # Warm Editorial + Interactive Explainer — Site Redesign Design
 
 Date: 2026-08-22

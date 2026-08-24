@@ -1,3 +1,5 @@
+> **SUPERSEDED (2026-08-25)** by Soft Architecture — see `docs/design-language.md` and the spec at repo root. Kept for history.
+
 # Warm Editorial Redesign Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

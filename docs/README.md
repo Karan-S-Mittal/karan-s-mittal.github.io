@@ -8,7 +8,7 @@ This directory contains the central design, visual, and authoring guidelines for
 
 | Document | Purpose & Contents |
 |---|---|
-| [**`design-language.md`**](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/design-language.md) | **Visual Design & Philosophy**<br>• Core identity ("Explanatory Systems Studio")<br>• Semantic color tokens (`Signal`, `Model`, `Verified`, `Constraint`, `Failure`)<br>• Typography rules (Inter & Geist Mono)<br>• Diagram grammar, spacing, and constraints |
+| [**`design-language.md`**](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/design-language.md) | **Visual Design & Philosophy**<br>• Core identity ("Soft Architecture")<br>• Semantic color tokens (Anchor blue, Signal warm, Lavender, Ink)<br>• Typography rules (Inter & JetBrains Mono)<br>• Diagram grammar, spacing, and constraints |
 | [**`authoring-workflow.md`**](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/authoring-workflow.md) | **Content & Production Workflow**<br>• Obsidian vault & Excalidraw setup<br>• Using the `<Exhibit />` component<br>• Primary Citations & Verifications protocol<br>• Multi-platform syndication (LinkedIn Carousels & Medium) |
 | [**`studio-engine.md`**](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/studio-engine.md) | **Studio Engine**<br>• Visual repair operating loop<br>• Runtime sources of truth<br>• Local control room and issue briefs<br>• Automated preflight and next engine layers |
 
