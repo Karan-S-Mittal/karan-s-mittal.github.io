@@ -69,7 +69,7 @@ Only the **query (`Q`)** needs to come from the *current newly generated token*,
 ### The KV-Cache Solution
 Instead of recomputing past keys and values on every forward pass, we calculate them **once** when each token is first seen, and save them in GPU device memory.
 
-<RasterExhibit exhibit="01" title="Naive recomputation vs KV caching" badge="COMPUTE MODEL" src="/generated/exhibits/naive-vs-kv-cache.light.webp" darkSrc="/generated/exhibits/naive-vs-kv-cache.dark.webp" height={1200} alt="Naive decoding recomputes previous token projections; KV-cached decoding reuses stored keys and values." caption="At the same decoding step, the naive path projects the full sequence again; the cached path reuses the past and projects only the new token." />
+<RasterExhibit exhibit="01" title="Naive recomputation vs KV caching" badge="COMPUTE MODEL" src="/generated/exhibits/naive-vs-kv-cache.light.webp" height={1200} alt="Naive decoding recomputes previous token projections; KV-cached decoding reuses stored keys and values." caption="At the same decoding step, the naive path projects the full sequence again; the cached path reuses the past and projects only the new token." />
 
 During **prefill**, the model processes the prompt and materializes the prompt's keys and values. During **decode**, each new token supplies a fresh `Q`, `K`, and `V`; the new `K` and `V` are appended while the query reads the accumulated cache. The exact kernel organization varies by model and implementation, but this prefill/decode distinction is the basis of KV caching. [1]
 
@@ -103,7 +103,7 @@ $$
 
 Because the KV cache grows linearly with sequence length and batch size, AI researchers developed architectural variants to shrink $H_{\mathrm{kv}}$:
 
-<RasterExhibit exhibit="02" title="Evolution of KV cache heads" badge="CACHE FOOTPRINT" src="/generated/exhibits/kv-head-evolution.light.webp" darkSrc="/generated/exhibits/kv-head-evolution.dark.webp" height={1176} alt="Comparison of MHA, MQA, and GQA cache-head counts for eight query heads." caption="With eight query heads held constant, MHA stores eight KV heads, MQA stores one, and GQA chooses a middle ground between cache size and expressiveness." />
+<RasterExhibit exhibit="02" title="Evolution of KV cache heads" badge="CACHE FOOTPRINT" src="/generated/exhibits/kv-head-evolution.light.webp" height={1176} alt="Comparison of MHA, MQA, and GQA cache-head counts for eight query heads." caption="With eight query heads held constant, MHA stores eight KV heads, MQA stores one, and GQA chooses a middle ground between cache size and expressiveness." />
 
 #### 1. Multi-Head Attention (MHA — 2017)
 * **$H_{\mathrm{kv}} = H_q$**: Every query head has its own dedicated key and value head (1:1).
@@ -129,7 +129,7 @@ The usual tensor abstraction presents a contiguous logical region. If a server r
 To avoid continuous dynamic reallocations, serving engines adopted a conservative approach: [4]
 > **When a new request arrives, allocate a contiguous memory buffer sized for the maximum possible sequence length (e.g., 4,096 or 8,192 tokens) upfront.**
 
-<RasterExhibit exhibit="03" title="The three sins of contiguous allocation" badge="MEMORY ALLOCATION" src="/generated/exhibits/memory-fragmentation.light.webp" darkSrc="/generated/exhibits/memory-fragmentation.dark.webp" height={1344} alt="Three stages of contiguous allocation: admission, early stop, and scattered free regions." caption="Contiguous allocation reserves capacity early, leaves unused tails locked, and eventually scatters the remaining free space into unusable fragments." />
+<RasterExhibit exhibit="03" title="The three sins of contiguous allocation" badge="MEMORY ALLOCATION" src="/generated/exhibits/memory-fragmentation.light.webp" height={1344} alt="Three stages of contiguous allocation: admission, early stop, and scattered free regions." caption="Contiguous allocation reserves capacity early, leaves unused tails locked, and eventually scatters the remaining free space into unusable fragments." />
 
 ### The Three Sins of Contiguous Allocation
 
@@ -190,7 +190,7 @@ The attention kernel receives the block table and uses it to address the KV bloc
 
 Decoupling logical sequences from physical memory makes **zero-copy memory sharing** practical for a serving system. [4]
 
-<RasterExhibit exhibit="05" title="Zero-copy sharing and copy-on-write" badge="COPY-ON-WRITE" src="/generated/exhibits/copy-on-write.light.webp" darkSrc="/generated/exhibits/copy-on-write.dark.webp" height={1296} alt="Two request sequences share prompt frames and allocate distinct output frames after divergence." caption="Shared prompt blocks live once in physical device memory with ref_count=2; a shared block is copied only when a branch must write to it." />
+<RasterExhibit exhibit="05" title="Zero-copy sharing and copy-on-write" badge="COPY-ON-WRITE" src="/generated/exhibits/copy-on-write.light.webp" height={1296} alt="Two request sequences share prompt frames and allocate distinct output frames after divergence." caption="Shared prompt blocks live once in physical device memory with ref_count=2; a shared block is copied only when a branch must write to it." />
 
 ### 1. Parallel Sampling and Beam Search
 When several candidate continuations begin from one prompt:

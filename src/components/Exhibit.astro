@@ -11,7 +11,6 @@ interface Props {
   badge?: string;
   caption?: string;
   src?: string;
-  darkSrc?: string;
   alt?: string;
   height?: number;
   wide?: boolean;
@@ -25,7 +24,6 @@ const {
   badge,
   caption,
   src,
-  darkSrc,
   alt = "",
   height,
   wide = false,
@@ -56,8 +54,6 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
             <img
               class="raster-exhibit-image exhibit-img"
               src={src}
-              data-light-src={src}
-              data-dark-src={darkSrc}
               alt={imageAlt}
               width="2400"
               height={height}
@@ -69,8 +65,6 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
           <img
             class="raster-exhibit-image exhibit-img"
             src={src}
-            data-light-src={src}
-            data-dark-src={darkSrc}
             alt={imageAlt}
             width="2400"
             height={height}

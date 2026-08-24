@@ -27,14 +27,6 @@ const rssUrl = new URL('/rss.xml', Astro.site).toString();
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#f8f9fc" />
-  <script is:inline>
-    (function () {
-      var theme = localStorage.getItem('theme') || 'light';
-      document.documentElement.dataset.theme = theme;
-      var meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute('content', theme === 'dark' ? '#111820' : '#f4f7fb');
-    })();
-  </script>
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalURL} />
@@ -95,26 +87,6 @@ const rssUrl = new URL('/rss.xml', Astro.site).toString();
         }
       });
     }
-
-    // Raster exhibits have a light and dark export. Keep the visible image in
-    // sync with the persisted theme without making the diagram interactive.
-    function syncRasterExhibitTheme() {
-      const useDark = document.documentElement.dataset.theme === 'dark';
-      document.querySelectorAll<HTMLImageElement>('img[data-light-src][data-dark-src]').forEach((image) => {
-        const nextSource = useDark ? image.dataset.darkSrc : image.dataset.lightSrc;
-        if (nextSource && image.getAttribute('src') !== nextSource) {
-          image.src = nextSource;
-          const fullResolutionLink = image.closest<HTMLAnchorElement>('.raster-exhibit-link');
-          if (fullResolutionLink) fullResolutionLink.href = nextSource;
-        }
-      });
-    }
-
-    syncRasterExhibitTheme();
-    new MutationObserver(syncRasterExhibitTheme).observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
   </script>
 </body>
 </html>
