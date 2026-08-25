@@ -170,7 +170,7 @@
 .reading-prose pre { margin-bottom: 0; }
 .reading-utilities { min-width: 0; padding-left: var(--space-6); border-left: 1px solid var(--border-subtle); }
 .utility-row { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-5); }
-.icon-row span { display: inline-flex; align-items: center; color: var(--text-secondary); font-size: var(--text-xs); }
+.icon-row span { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--text-secondary); font-size: var(--text-xs); }
 .table-wrap { overflow-x: auto; }
 .table-wrap table { width: 100%; border-collapse: collapse; font-size: var(--text-xs); }
 .table-wrap th, .table-wrap td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--panel-border); text-align: left; }

@@ -143,7 +143,7 @@ Here, the Hessian $h_i = p_i(1 - p_i)$ represents the variance of a Bernoulli tr
 
     <circle cx="380" cy="155" r="5" fill="var(--interactive-primary)" />
     <line x1="380" y1="155" x2="380" y2="260" stroke="var(--interactive-primary)" stroke-dasharray="3 3" stroke-width="1.2" />
-    <text x="365" y="278" class="label" fill="var(--interactive-primary)" font-weight="600">f_t(x) = 0</text>
+    <text x="365" y="278" class="label" fill="var(--interactive-primary)" font-weight="600">f<tspan font-size="0.75em" dy="3">t</tspan><tspan dy="-3">(x) = 0</tspan></text>
     <text x="350" y="145" class="label-signal">Operating Point ŷ^(t-1)</text>
 
     <line x1="220" y1="247" x2="540" y2="63" stroke="var(--signal-warm)" stroke-width="2" stroke-dasharray="6 4" />
@@ -229,26 +229,26 @@ $$
     </defs>
     <rect x="270" y="20" width="260" height="90" rx="8" class="node" />
     <text x="400" y="45" text-anchor="middle" class="title" font-size="16">Parent Node (P)</text>
-    <text x="400" y="70" text-anchor="middle" class="label">I = I_L ∪ I_R | G_P = G_L + G_R | H_P = H_L + H_R</text>
-    <text x="400" y="92" text-anchor="middle" class="label-signal">Score_P = -½ · G_P² / (H_P + λ)</text>
+    <text x="400" y="70" text-anchor="middle" class="label">I = I<tspan font-size="0.75em" dy="3">L</tspan><tspan dy="-3"> ∪ </tspan>I<tspan font-size="0.75em" dy="3">R</tspan><tspan dy="-3"> | </tspan>G<tspan font-size="0.75em" dy="3">P</tspan><tspan dy="-3"> = </tspan>G<tspan font-size="0.75em" dy="3">L</tspan><tspan dy="-3"> + </tspan>G<tspan font-size="0.75em" dy="3">R</tspan><tspan dy="-3"> | </tspan>H<tspan font-size="0.75em" dy="3">P</tspan><tspan dy="-3"> = </tspan>H<tspan font-size="0.75em" dy="3">L</tspan><tspan dy="-3"> + </tspan>H<tspan font-size="0.75em" dy="3">R</tspan></text>
+    <text x="400" y="92" text-anchor="middle" class="label-signal">Score<tspan font-size="0.75em" dy="3">P</tspan><tspan dy="-3"> = -½ · </tspan>G<tspan font-size="0.75em" dy="3">P</tspan><tspan dy="-3">² / (</tspan>H<tspan font-size="0.75em" dy="3">P</tspan><tspan dy="-3"> + λ)</tspan></text>
 
     <path d="M 330 110 L 210 180" class="flow" marker-end="url(#xgb-p2-ex2-arrow)" />
     <path d="M 470 110 L 590 180" class="flow" marker-end="url(#xgb-p2-ex2-arrow)" />
-    <text x="240" y="140" class="label" fill="var(--interactive-primary)">x_k ≤ v</text>
-    <text x="540" y="140" class="label" fill="var(--interactive-primary)">x_k > v</text>
+    <text x="240" y="140" class="label" fill="var(--interactive-primary)">x<tspan font-size="0.75em" dy="3">k</tspan><tspan dy="-3"> ≤ v</tspan></text>
+    <text x="540" y="140" class="label" fill="var(--interactive-primary)">x<tspan font-size="0.75em" dy="3">k</tspan><tspan dy="-3"> > v</tspan></text>
 
     <rect x="70" y="180" width="260" height="90" rx="8" class="node-signal" />
     <text x="200" y="205" text-anchor="middle" class="title" font-size="15" fill="var(--interactive-primary)">Left Child (L)</text>
-    <text x="200" y="230" text-anchor="middle" class="label">I_L = &#123; i | x_ik ≤ v &#125;</text>
-    <text x="200" y="252" text-anchor="middle" class="label-signal">Score_L = ½ · G_L² / (H_L + λ)</text>
+    <text x="200" y="230" text-anchor="middle" class="label">I<tspan font-size="0.75em" dy="3">L</tspan><tspan dy="-3"> = &#123; i | </tspan>x<tspan font-size="0.75em" dy="3">ik</tspan><tspan dy="-3"> ≤ v &#125;</tspan></text>
+    <text x="200" y="252" text-anchor="middle" class="label-signal">Score<tspan font-size="0.75em" dy="3">L</tspan><tspan dy="-3"> = ½ · </tspan>G<tspan font-size="0.75em" dy="3">L</tspan><tspan dy="-3">² / (</tspan>H<tspan font-size="0.75em" dy="3">L</tspan><tspan dy="-3"> + λ)</tspan></text>
 
     <rect x="470" y="180" width="260" height="90" rx="8" class="node-signal" />
     <text x="600" y="205" text-anchor="middle" class="title" font-size="15" fill="var(--interactive-primary)">Right Child (R)</text>
-    <text x="600" y="230" text-anchor="middle" class="label">I_R = &#123; i | x_ik > v &#125;</text>
-    <text x="600" y="252" text-anchor="middle" class="label-signal">Score_R = ½ · G_R² / (H_R + λ)</text>
+    <text x="600" y="230" text-anchor="middle" class="label">I<tspan font-size="0.75em" dy="3">R</tspan><tspan dy="-3"> = &#123; i | </tspan>x<tspan font-size="0.75em" dy="3">ik</tspan><tspan dy="-3"> > v &#125;</tspan></text>
+    <text x="600" y="252" text-anchor="middle" class="label-signal">Score<tspan font-size="0.75em" dy="3">R</tspan><tspan dy="-3"> = ½ · </tspan>G<tspan font-size="0.75em" dy="3">R</tspan><tspan dy="-3">² / (</tspan>H<tspan font-size="0.75em" dy="3">R</tspan><tspan dy="-3"> + λ)</tspan></text>
 
     <rect x="70" y="290" width="660" height="32" rx="4" fill="var(--ex-card-bg)" stroke="var(--border)" />
-    <text x="400" y="311" text-anchor="middle" class="label" font-weight="600">Gain = ½ [ Score_L + Score_R − Score_P ] − γ  ⟹  Split accepted only if Gain &gt; 0</text>
+    <text x="400" y="311" text-anchor="middle" class="label" font-weight="600">Gain = ½ [ Score<tspan font-size="0.75em" dy="3">L</tspan><tspan dy="-3"> + Scor</tspan>e<tspan font-size="0.75em" dy="3">R</tspan><tspan dy="-3"> − Scor</tspan>e<tspan font-size="0.75em" dy="3">P</tspan><tspan dy="-3"> ] − γ  ⟹  Split accepted only if Gain &gt; 0</tspan></text>
   </svg>
 </Exhibit>
 

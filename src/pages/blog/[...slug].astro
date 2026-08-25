@@ -34,7 +34,13 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   description={post.data.description}
   type="article"
   pubDate={post.data.pubDate}
-  image={isSystemsEssay ? new URL('/generated/exhibits/paged-attention-model.webp', Astro.site).toString() : undefined}
+  image={
+    post.data.image
+      ? new URL(post.data.image, Astro.site).toString()
+      : isSystemsEssay
+        ? new URL('/generated/exhibits/paged-attention-model.webp', Astro.site).toString()
+        : undefined
+  }
 >
   <main class="container post-layout">
     <article class="post-content">
