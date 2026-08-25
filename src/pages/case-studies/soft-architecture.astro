@@ -1,0 +1,209 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/portfolio/PageHeader.astro';
+import MetaLabel from '../../components/editorial/MetaLabel.astro';
+import ArchitectureAnnotation from '../../components/editorial/ArchitectureAnnotation.astro';
+import EvidenceObject from '../../components/editorial/EvidenceObject.astro';
+import SectionBreak from '../../components/editorial/SectionBreak.astro';
+---
+
+<Layout
+  title="Case study: rebuilding this site on Soft Architecture | Karan Mittal"
+  description="A complete walk through the redesign of this site using the case-study spine: ambiguity, constraint, model, system, decision, evidence, aftermath."
+>
+  <main class="container case-layout">
+    <PageHeader
+      label="Case study"
+      title="Rebuilding this site on a written design contract"
+      description="Every design decision on this page is verifiable in the repository itself. That is the point: the site documents its own construction the way a system should document its own architecture."
+    />
+
+    <div class="case-body">
+      <section class="cs-section" aria-labelledby="cs-ambiguity">
+        <MetaLabel index="01" label="Ambiguity" />
+        <h2 id="cs-ambiguity">The brief was a feeling.</h2>
+        <p>
+          The original direction for this site was <em>warm editorial</em>: soft serif display type,
+          cream paper tones, generous italic pull quotes. It photographed well and it was wrong.
+          The problem was never articulable as a bug list &mdash; the pages were individually pleasant and
+          collectively incoherent. Three pages described three different engineers.
+        </p>
+        <p>
+          The actual uncertainty: nobody could state, in one sentence, what visual fact made a page
+          feel like <em>this engineer</em> rather than a template. Until that was stated, every component
+          was a coin flip.
+        </p>
+      </section>
+
+      <SectionBreak />
+
+      <section class="cs-section" aria-labelledby="cs-constraint">
+        <MetaLabel index="02" label="Constraint" />
+        <h2 id="cs-constraint">What made it difficult</h2>
+        <ArchitectureAnnotation index="02" label="CONSTRAINT" consequence="the spec became the test oracle">
+          The design language existed as a 2,885-line written specification before implementation
+          resumed &#8212; palette, type scale, density rhythm, diagram grammar, dark-mode policy,
+          anti-patterns, acceptance criteria.
+        </ArchitectureAnnotation>
+        <ul>
+          <li>The stack was fixed: Astro static output on GitHub Pages; no server runtime, no client framework.</li>
+          <li>Existing essays and exhibits had to survive the migration without content rewrites.</li>
+          <li>The spec bans what most portfolios reach for first: site-wide dark mode, hover scale, decorative topology, neon gradients (§34).</li>
+          <li>One documented deviation allowed: Inter stands in for Google Sans Flex (licensing and self-hosting weight), recorded in the token file header.</li>
+        </ul>
+      </section>
+
+      <SectionBreak />
+
+      <section class="cs-section" aria-labelledby="cs-model">
+        <MetaLabel index="03" label="Model" />
+        <h2 id="cs-model">Colour is state, not decoration</h2>
+        <p>
+          The mental model that made the problem manageable: treat the palette as a
+          <strong>type system for meaning</strong>. Blue is structure. Pink is attention &mdash;
+          one node per composition, never a default CTA. Lavender is inferred or secondary.
+          Ink planes are conclusions. If a colour cannot say what it <em>means</em>, it does not ship.
+        </p>
+        <p>
+          The second half of the model is the density rhythm. Pages move through
+          <code>quiet &rarr; explanation &rarr; complexity &rarr; evidence &rarr; quiet</code>.
+          Visual noise is concentrated where the idea is systemic and stripped everywhere else.
+          This single rule settled most of the arguments the warm-editorial direction kept losing.
+        </p>
+      </section>
+
+      <SectionBreak />
+
+      <section class="cs-section" aria-labelledby="cs-system">
+        <MetaLabel index="04" label="System" />
+        <h2 id="cs-system">What was built</h2>
+        <ul>
+          <li>A semantic token layer (<code>--blue-500</code>, <code>--signal-warm</code>, <code>--lavender-400</code>, spacing, radii, shadows) with zero raw hex values outside the token definitions.</li>
+          <li>A component kit in four folders: <code>editorial/</code> (Exhibit, MetaLabel, EvidenceObject, Annotation, DarkPlane, TintedPlane), <code>chrome/</code>, <code>diagram/</code>, <code>portfolio/</code>.</li>
+          <li>An exhibit render pipeline that re-skins Excalidraw exports into the Soft Architecture palette at build time &mdash; light-only exports, because darkness is semantic (§21).</li>
+          <li>A specimen page (<a href="/studio/components/">/studio/components</a>) that exercises every primitive before pages multiply.</li>
+          <li>This case-study spine, applied to itself.</li>
+        </ul>
+      </section>
+
+      <SectionBreak />
+
+      <section class="cs-section" aria-labelledby="cs-decision">
+        <MetaLabel index="05" label="Decision" />
+        <h2 id="cs-decision">What was deliberately not built</h2>
+        <p>
+          A theme lab shipped early: three full directions, each with light and dark token sets,
+          switchable from the studio page. It was removed in the same migration that finished the rest.
+        </p>
+        <ArchitectureAnnotation index="05" label="DECISION" consequence="one language, maintained">
+          Three themes means three palettes to keep accessible, three diagram skins to re-render,
+          and three chances to dilute the identity. The lab's real output was the decision it forced:
+          pick one direction and delete the rest.
+        </ArchitectureAnnotation>
+        <p>
+          Also rejected: Tailwind (the spec mandates semantic tokens over utility classes &mdash;
+          §27.1), per-page dark variants, a contact form (§23.7: the homepage dark plane is canonical),
+          and a standalone /now page (folded into About).
+        </p>
+      </section>
+
+      <SectionBreak />
+
+      <section class="cs-section" aria-labelledby="cs-evidence">
+        <MetaLabel index="06" label="Evidence" />
+        <h2 id="cs-evidence">What changed</h2>
+        <div class="evidence-grid">
+          <EvidenceObject
+            index="01"
+            label="Tokens"
+            metric="0"
+            method="dangling or undocumented token references"
+            outcome="grep-verified across all source files"
+          />
+          <EvidenceObject
+            index="02"
+            label="Regression"
+            metric="18"
+            method="full-page baselines × 375/768/1440"
+            outcome="Playwright suite, deterministic across runs"
+          />
+          <EvidenceObject
+            index="03"
+            label="Static QA"
+            metric="0"
+            method="warnings from the studio preflight"
+            outcome="raw hexes, dead tokens, SVG typography all resolved"
+          />
+        </div>
+        <p>
+          Primary sources: the migration commit chain in this repository's history, the
+          <a href="/studio/">studio control room</a>, the preflight script
+          (<code>scripts/studio-check.js</code>), and the visual baselines under
+          <code>tests/visual/__screenshots__/</code>.
+        </p>
+      </section>
+
+      <SectionBreak />
+
+      <section class="cs-section" aria-labelledby="cs-aftermath">
+        <MetaLabel index="07" label="Aftermath" />
+        <h2 id="cs-aftermath">What I would do differently</h2>
+        <p>
+          The specimen-first milestone (spec §40) arrived late. Components were built for real pages
+          before a single place exercised them in isolation, which is why the theme lab existed at all
+          &mdash; it was a makeshift specimen. Built today, the specimen page comes first and the lab
+          never ships.
+        </p>
+        <p>
+          Still open, deliberately: diagrams are hand-coded SVG rather than data-driven primitives
+          (spec §28 wants nodes and edges as typed data); social derivative cards are designed but not
+          generated (§31). Both are queued behind the same principle that killed the theme lab:
+          do not multiply artefacts until the language holds.
+        </p>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .case-layout {
+    max-width: 720px;
+  }
+  .case-body {
+    margin-top: var(--space-6);
+  }
+  .cs-section h2 {
+    margin: var(--space-2) 0 var(--space-4);
+    font-size: clamp(var(--text-xl), 3vw, var(--text-2xl));
+    letter-spacing: -0.02em;
+  }
+  .cs-section p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-4);
+    max-width: 66ch;
+  }
+  .cs-section ul {
+    margin: 0 0 var(--space-4);
+    padding-left: var(--space-5);
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .cs-section li {
+    margin-bottom: var(--space-2);
+  }
+  .cs-section code {
+    padding: 0.1em 0.35em;
+    background: var(--blue-100);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--ink-900);
+  }
+  .evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+</style>

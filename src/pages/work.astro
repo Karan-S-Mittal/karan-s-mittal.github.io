@@ -27,6 +27,15 @@ const { work } = workData;
       {work.map((item, index) => <WorkCard item={item} index={String(index + 1).padStart(2, '0')} detailed />)}
     </div>
 
+    <section class="case-study-row">
+      <div>
+        <p class="label">Case study</p>
+        <h2>Rebuilding this site on a written design contract.</h2>
+        <p>The full reasoning spine &mdash; ambiguity to aftermath &mdash; applied to the design system you are looking at. Every claim verifiable in the repository itself.</p>
+      </div>
+      <a href="/case-studies/soft-architecture/" class="arrow-link">Read the case study<span class="arrow" aria-hidden="true">&rarr;</span></a>
+    </section>
+
     <section class="engagement">
       <div>
         <p class="label">Consulting</p>
@@ -52,6 +61,18 @@ const { work } = workData;
   .principle span { color: var(--accent); font-family: var(--font-mono); }
   .principle p { margin: 0; color: var(--text-secondary); line-height: 1.6; }
   .work-list { display: grid; gap: var(--space-5); }
+  .case-study-row {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-6);
+    margin-top: var(--space-7);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border);
+  }
+  .case-study-row h2 { margin: 0 0 var(--space-2); font-size: var(--text-xl); letter-spacing: -0.01em; }
+  .case-study-row p:not(.label) { max-width: 520px; margin: 0; color: var(--muted); }
+  .case-study-row .arrow-link { flex: 0 0 auto; font-size: var(--text-sm); font-weight: 500; color: var(--accent); text-decoration: none; }
   .engagement {
     display: flex;
     align-items: end;
