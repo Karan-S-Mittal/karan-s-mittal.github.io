@@ -47,8 +47,11 @@ const rssUrl = new URL('/rss.xml', Astro.site).toString();
   {pubDate && <meta property="article:published_time" content={pubDate.toISOString()} />}
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <Header />
-  <slot />
+  <div id="main-content">
+    <slot />
+  </div>
   <Footer />
 
   <script>

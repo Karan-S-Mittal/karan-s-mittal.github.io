@@ -16,7 +16,11 @@ export default defineConfig({
   base: '/',
   // Link prefetch on hover/viewport — perceived-instant navigation, zero JS cost
   prefetch: { prefetchAll: true },
-  integrations: [sitemap(), mdx()],
+  integrations: [
+    // Keep redirect stubs (/now, /contact) out of the sitemap
+    sitemap({ filter: (page) => !/karan-s-mittal\.github\.io\/(contact|now)\/?$/.test(page) }),
+    mdx(),
+  ],
   markdown: {
     processor: unified({
       remarkPlugins: [remarkMath, remarkAutoTag],

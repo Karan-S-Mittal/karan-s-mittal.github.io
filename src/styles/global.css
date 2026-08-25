@@ -213,6 +213,25 @@ body {
   border-radius: var(--radius-sm);
 }
 
+/* Skip link — visible only when keyboard-focused (WCAG 2.4.1) */
+.skip-link {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  background: var(--ink-900);
+  color: #fff;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
 /* Static — no page-load animations */
 
 /* ================================================================
@@ -295,11 +314,6 @@ li::marker {
   .arrow-link:hover .arrow {
     translate: 2px 0;
   }
-}
-
-/* Arrow list markers need real breathing room after the glyph */
-ul li::before {
-  letter-spacing: 0;
 }
 
 /* Numbers are evidence — align digits wherever comparison matters */
