@@ -85,3 +85,17 @@ A reader changes a meaningful input and observes resulting behaviour. Allowed ho
 ## Things we deliberately avoid
 
 Neon gradients · blurred glowing orbs · dense random node backgrounds · particle fields · exaggerated glass panels · capsule buttons by default · spring animation · hover scale · constant scroll-triggered animation · generic metric-card dashboards · technology logo walls · random pink CTAs · deep grey shadows · pure black body copy · decorative graph edges with no meaning · any site-wide dark mode.
+
+## Visual regression (spec §26)
+
+`npm run test:visual` captures the six canonical pages (home, essay, work, talks,
+about, specimen) at 375×812, 768×1024, and 1440×900 — full-page, reduced motion,
+animations disabled — and diffs them against committed baselines in
+`tests/visual/__screenshots__/`.
+
+- Baselines are per-OS (font rasterisation differs); regenerate on a new machine
+  with `npm run test:visual:update` and review the diff before committing.
+- Threshold is 2% pixel ratio to absorb antialiasing noise; anything structural
+  exceeds it.
+- A visual change touching spacing, type wrapping, radii, line weight, or page
+  density (spec §26.3) must re-run this suite before merge.

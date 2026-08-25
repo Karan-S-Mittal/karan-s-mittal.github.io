@@ -16,7 +16,9 @@
     "render-exhibits": "node scripts/render-exhibits.js",
     "sync-tags": "node scripts/sync-tags.js",
     "studio:check": "node scripts/studio-check.js",
-    "new": "node scripts/new-post.js"
+    "new": "node scripts/new-post.js",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.3",
@@ -35,6 +37,7 @@
     "remark-math": "^6.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "rehype-slug": "^6.0.0",
     "sharp": "^0.34.5"
   }
