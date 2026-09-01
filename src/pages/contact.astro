@@ -57,8 +57,19 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&tra
           <p>Submitted briefs arrive directly in my private inbox. Please do not include credentials, production secrets, or confidential data.</p>
         </div>
 
-        <div class="iframe-container">
+        <div class="iframe-container" id="tally-container">
+          <div class="form-skeleton" id="form-skeleton" aria-hidden="true">
+            <div class="skeleton-header">
+              <span class="skeleton-pill"></span>
+              <span class="skeleton-status">INITIALIZING INTAKE FORM...</span>
+            </div>
+            <div class="skeleton-line full"></div>
+            <div class="skeleton-line half"></div>
+            <div class="skeleton-box"></div>
+            <div class="skeleton-button"></div>
+          </div>
           <iframe
+            id="tally-iframe"
             data-tally-src={tallyEmbedUrl}
             loading="lazy"
             width="100%"
@@ -67,6 +78,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&tra
             marginheight="0"
             marginwidth="0"
             title="Start an engineering conversation with Karan Mittal"
+            onload="document.getElementById('form-skeleton')?.classList.add('loaded')"
           ></iframe>
         </div>
       </section>
@@ -243,8 +255,85 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&tra
   }
 
   .iframe-container {
+    position: relative;
     width: 100%;
     min-height: 380px;
+  }
+
+  .form-skeleton {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius, 6px);
+    transition: opacity 280ms ease, visibility 280ms ease;
+  }
+
+  .form-skeleton.loaded {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .skeleton-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .skeleton-pill {
+    width: 60px;
+    height: 18px;
+    border-radius: var(--radius-pill, 999px);
+    background: var(--ie-blue-soft);
+    animation: shimmer 1.8s infinite ease-in-out;
+  }
+
+  .skeleton-status {
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+  }
+
+  .skeleton-line {
+    height: 12px;
+    border-radius: 4px;
+    background: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
+    animation: shimmer 1.8s infinite ease-in-out;
+  }
+
+  .skeleton-line.full { width: 100%; }
+  .skeleton-line.half { width: 60%; }
+
+  .skeleton-box {
+    height: 120px;
+    border-radius: var(--radius, 6px);
+    background: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
+    margin-top: 0.5rem;
+    animation: shimmer 1.8s infinite ease-in-out;
+  }
+
+  .skeleton-button {
+    width: 130px;
+    height: 36px;
+    border-radius: var(--radius, 6px);
+    background: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
+    animation: shimmer 1.8s infinite ease-in-out;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
   }
 
   .iframe-container iframe {

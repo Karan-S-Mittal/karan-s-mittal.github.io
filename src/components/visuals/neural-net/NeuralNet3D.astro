@@ -57,7 +57,11 @@ const layersJson = JSON.stringify(parsedLayers);
     data-speed={speed.toString()}
   >
     <!-- Canvas Surface -->
-    <div class="three-canvas-container"></div>
+    <div class="three-canvas-container" data-canvas-container>
+      <div class="touch-overlay" data-touch-overlay>
+        <span>Tap to orbit 3D ↺</span>
+      </div>
+    </div>
 
     <!-- Interactive 3B1B Control Deck -->
     <div class="nn3d-deck">
@@ -231,6 +235,46 @@ const layersJson = JSON.stringify(parsedLayers);
     color: var(--accent);
     min-width: 80px;
     text-align: right;
+  }
+
+  .touch-overlay {
+    display: none;
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    z-index: 10;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  .touch-overlay span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-pill, 999px);
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--ie-blue);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .three-canvas-container {
+      touch-action: pan-y;
+    }
+    .touch-overlay {
+      display: block;
+    }
+    .three-canvas-container.touch-active {
+      touch-action: none;
+    }
+    .three-canvas-container.touch-active .touch-overlay {
+      display: none;
+    }
   }
 
   @media (max-width: 640px) {
@@ -513,6 +557,33 @@ const layersJson = JSON.stringify(parsedLayers);
 
       scrubber?.addEventListener('change', () => {
         this.isScrubbing = false;
+      });
+
+      // 5. Touch guard activation
+      const canvasContainer = this.querySelector('[data-canvas-container]') as HTMLElement;
+      const touchOverlay = this.querySelector('[data-touch-overlay]') as HTMLElement;
+      let touchTimer: ReturnType<typeof setTimeout> | null = null;
+
+      const deactivateTouch = () => {
+        canvasContainer?.classList.remove('touch-active');
+      };
+
+      touchOverlay?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        canvasContainer?.classList.add('touch-active');
+        if (touchTimer) clearTimeout(touchTimer);
+        touchTimer = setTimeout(deactivateTouch, 6000);
+      });
+
+      canvasContainer?.addEventListener('pointerdown', () => {
+        if (touchTimer) clearTimeout(touchTimer);
+        touchTimer = setTimeout(deactivateTouch, 6000);
+      });
+
+      document.addEventListener('pointerdown', (e) => {
+        if (!canvasContainer?.contains(e.target as Node)) {
+          deactivateTouch();
+        }
       });
     }
 

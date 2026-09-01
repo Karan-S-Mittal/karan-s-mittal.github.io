@@ -258,9 +258,12 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
   :global(html.instrumented) .exhibit-frame {
     padding: clamp(1rem, 2.8vw, 1.75rem);
     border-color: var(--ie-rule);
-    border-radius: 6px;
+    border-radius: var(--radius-card, 8px);
     background: var(--ie-surface);
     box-shadow: none;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-inline: contain;
   }
 
   :global(html.instrumented) .exhibit-caption {
