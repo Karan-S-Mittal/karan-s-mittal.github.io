@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import InstrumentedSystemTrace from '../components/home/InstrumentedSystemTrace.astro';
+import NeuralNet3D from '../components/visuals/neural-net/NeuralNet3D.astro';
+import GPUMemorySimulator from '../components/home/GPUMemorySimulator.astro';
 import { getCollection } from 'astro:content';
 import { SITE } from '../config';
 
@@ -22,7 +23,7 @@ function formatDate(date: Date | string) {
   variant="instrumented"
 >
   <main class="ie-home">
-    <!-- HERO SECTION: Statement + Authentic Portrait Card + Indore Status -->
+    <!-- HERO SECTION: 3Blue1Brown/Linear Precision Manifold + Statement + Identity -->
     <section class="ie-hero" aria-labelledby="home-title">
       <div class="ie-shell hero-grid">
         <div class="hero-copy">
@@ -32,30 +33,38 @@ function formatDate(date: Date | string) {
             I design AI, data, and performance systems whose behaviour can be traced from input to decision—then publish the mechanisms, constraints, and evidence that make them dependable.
           </p>
           <div class="hero-actions">
-            <a class="ie-action primary" href="#system-trace">Inspect the system <span aria-hidden="true">&darr;</span></a>
+            <a class="ie-action primary" href="#memory-simulator">Inspect hardware machine <span aria-hidden="true">&darr;</span></a>
             <a class="ie-action secondary" href="/work">Review selected work <span aria-hidden="true">&nearr;</span></a>
           </div>
-        </div>
 
-        <div class="hero-portrait-card">
-          <div class="portrait-frame">
+          <!-- Integrated Identity & Location Card -->
+          <div class="hero-identity-card">
             <img
               src="/profile-400.jpg"
               alt="Karan Mittal speaking on deterministic AI systems"
-              class="portrait-img"
-              width="400"
-              height="400"
+              class="identity-avatar"
+              width="52"
+              height="52"
               loading="eager"
             />
-            <div class="availability-pill">
-              <span class="live-dot"></span>
-              <span>Indore &middot; Global Advisory</span>
+            <div class="identity-info">
+              <div class="identity-status">
+                <span class="live-dot"></span>
+                <strong>Indore &middot; Global Advisory</strong>
+              </div>
+              <p class="identity-principle">&ldquo;Reliability is designed into the system&mdash;never added as an afterthought.&rdquo;</p>
             </div>
           </div>
-          <div class="principle-box">
-            <p class="principle-label">OPERATING PRINCIPLE</p>
-            <p class="principle-quote">&ldquo;Reliability is designed into the system&mdash;never added as an afterthought.&rdquo;</p>
-          </div>
+        </div>
+
+        <!-- 3Blue1Brown / Linear 3D Neural Flow Engine -->
+        <div class="hero-canvas-frame">
+          <NeuralNet3D
+            exhibit="00"
+            title="3D Deep Neural Architecture & Signal Propagation Engine"
+            badge="Hero Precision Instrument"
+            caption="Interactive 3Blue1Brown-grade tensor manifold. Rotate in 3D orbit: inspect weight matrices and real-time activation pulse propagation across layers."
+          />
         </div>
       </div>
 
@@ -66,19 +75,10 @@ function formatDate(date: Date | string) {
       </div>
     </section>
 
-    <!-- SECTION 01: FLAGSHIP MECHANISM (INTERACTIVE TRACE INSTRUMENT) -->
-    <section class="ie-section flagship-section" id="system-trace" aria-labelledby="flagship-title">
+    <!-- SECTION 01: THE CIECHANOWSKI GPU MEMORY & PAGED ATTENTION SIMULATOR -->
+    <section class="ie-section flagship-section" id="memory-simulator" aria-labelledby="flagship-title">
       <div class="ie-shell">
-        <div class="section-heading split">
-          <div>
-            <p class="ie-register"><span>01 / Mechanism</span> Flagship system trace</p>
-            <h2 id="flagship-title">Reliability is a path, not a promise.</h2>
-          </div>
-          <p>
-            Select a system archetype below to trace its inputs, causal transformation, bottleneck boundary, and verifiable evidence.
-          </p>
-        </div>
-        <InstrumentedSystemTrace />
+        <GPUMemorySimulator />
       </div>
     </section>
 
@@ -155,14 +155,14 @@ function formatDate(date: Date | string) {
 
   .hero-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
-    gap: clamp(3rem, 8vw, 8rem);
-    align-items: end;
+    grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
+    gap: clamp(2.5rem, 6vw, 6rem);
+    align-items: center;
     min-height: min(720px, calc(100vh - 64px));
     padding-block: clamp(4.5rem, 10vh, 8rem) clamp(3.5rem, 8vh, 6rem);
   }
 
-  .hero-copy { max-width: 780px; }
+  .hero-copy { max-width: 720px; }
   .hero-copy h1 { max-width: 13ch; margin: 0 0 1.5rem; color: var(--ie-ink); font-size: clamp(3.35rem, 7.2vw, 6.5rem); font-weight: 500; line-height: 0.98; text-wrap: balance; }
   .hero-lead { max-width: 680px; margin: 0; color: var(--ie-ink-secondary); font-size: clamp(1.12rem, 1.7vw, 1.38rem); line-height: 1.58; }
 
@@ -188,16 +188,65 @@ function formatDate(date: Date | string) {
   .ie-action.secondary { background: transparent; color: var(--ie-ink); }
   .ie-action.secondary:hover { border-color: var(--ie-blue); color: var(--ie-blue); }
 
-  .hero-portrait-card { display: flex; flex-direction: column; gap: 1.25rem; width: 100%; max-width: 360px; justify-self: end; }
-  .portrait-frame { position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: var(--radius-card, 8px); border: 1px solid var(--ie-rule); background: var(--ie-surface); overflow: hidden; }
-  .portrait-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.05); transition: filter 300ms ease, transform 300ms ease; }
-  .portrait-frame:hover .portrait-img { filter: grayscale(0%) contrast(1); transform: scale(1.02); }
-  .availability-pill { position: absolute; bottom: 12px; left: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 0.35rem 0.75rem; border-radius: var(--radius-pill, 999px); background: rgba(23, 26, 31, 0.88); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.25); font-family: var(--font-mono); font-size: 0.68rem; color: #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); }
+  /* Hero Identity Card */
+  .hero-identity-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.15rem;
+    margin-top: 2.25rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    background: var(--ie-surface);
+    max-width: 540px;
+  }
+
+  .identity-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid var(--ie-rule-strong);
+    filter: grayscale(100%);
+    transition: filter 250ms ease;
+    flex-shrink: 0;
+  }
+
+  .hero-identity-card:hover .identity-avatar {
+    filter: grayscale(0%);
+  }
+
+  .identity-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .identity-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--ie-ink);
+  }
+
   .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.3); }
 
-  .principle-box { padding: 1.15rem 1.25rem; border: 1px solid var(--ie-rule); border-radius: var(--radius-card, 8px); background: var(--ie-surface); }
-  .principle-label { margin: 0 0 0.4rem; font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; color: var(--ie-blue); text-transform: uppercase; }
-  .principle-quote { margin: 0; font-family: var(--font-serif); font-size: 0.96rem; font-style: italic; line-height: 1.45; color: var(--ie-ink); }
+  .identity-principle {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 0.86rem;
+    font-style: italic;
+    color: var(--ie-ink-secondary);
+    line-height: 1.4;
+  }
+
+  .hero-canvas-frame {
+    width: 100%;
+    max-width: 540px;
+    justify-self: end;
+  }
 
   /* Hero Proof Strip */
   .hero-proof { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--ie-rule); }
@@ -250,7 +299,7 @@ function formatDate(date: Date | string) {
   @media (max-width: 980px) {
     .hero-grid, .section-heading.split, .notes-layout, .contact-grid { grid-template-columns: 1fr; }
     .hero-grid { min-height: auto; align-items: start; }
-    .hero-portrait-card { max-width: 400px; justify-self: start; }
+    .hero-canvas-frame { max-width: 100%; justify-self: start; }
     .section-heading h2, .contact-grid h2 { max-width: 20ch; }
   }
 
