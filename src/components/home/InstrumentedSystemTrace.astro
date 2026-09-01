@@ -51,77 +51,128 @@
     </div>
 
     <div class="trace-svg-wrap">
-      <svg class="trace-svg" viewBox="0 0 960 180" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive architecture signal trace">
+      <svg class="trace-svg" viewBox="0 0 1000 210" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive architecture signal trace">
         <defs>
-          <marker id="trace-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-            <path d="M1 1L6 4L1 7" stroke="var(--ie-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+          <!-- Gradients for subtle depth -->
+          <linearGradient id="trace-node-blue" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="var(--ie-blue)" stop-opacity="0.08" />
+            <stop offset="100%" stop-color="var(--ie-blue)" stop-opacity="0.02" />
+          </linearGradient>
+          <linearGradient id="trace-node-rust" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="var(--ie-rust)" stop-opacity="0.10" />
+            <stop offset="100%" stop-color="var(--ie-rust)" stop-opacity="0.02" />
+          </linearGradient>
+          <linearGradient id="trace-node-surface" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="var(--ie-surface-raised)" />
+            <stop offset="100%" stop-color="var(--ie-surface)" />
+          </linearGradient>
+
+          <!-- Arrow markers -->
+          <marker id="trace-arrow-blue" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M1 1L6 4L1 7" stroke="var(--ie-blue)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" />
           </marker>
           <marker id="trace-arrow-rust" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-            <path d="M1 1L6 4L1 7" stroke="var(--ie-rust)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <path d="M1 1L6 4L1 7" stroke="var(--ie-rust)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" />
           </marker>
         </defs>
 
-        <!-- Background grid guides -->
-        <line x1="0" y1="90" x2="960" y2="90" stroke="var(--ie-rule)" stroke-dasharray="4 4" stroke-width="1" />
-
-        <!-- Node 1: Input -->
-        <g class="svg-node input-node" transform="translate(20, 35)">
-          <rect width="180" height="110" rx="8" class="node-box" />
-          <rect x="12" y="14" width="46" height="18" rx="9" class="node-tag-bg" />
-          <text x="23" y="26" class="node-tag">INPUT</text>
-          <text x="14" y="54" class="node-title" data-svg-title="0">Bounded Question</text>
-          <text x="14" y="74" class="node-meta" data-svg-meta="0">Tokens: 512 · Provenance attached</text>
-          <text x="14" y="94" class="node-formula">S₀ &rarr; Contract</text>
+        <!-- Blueprint Coordinates & Grid Rulers -->
+        <g class="svg-grid" opacity="0.45">
+          <line x1="15" y1="20" x2="985" y2="20" stroke="var(--ie-rule)" stroke-width="0.75" />
+          <line x1="15" y1="190" x2="985" y2="190" stroke="var(--ie-rule)" stroke-width="0.75" />
+          <text x="20" y="14" class="svg-ruler-text">ADDR: 0x00</text>
+          <text x="270" y="14" class="svg-ruler-text">OFFSET: +0x40</text>
+          <text x="535" y="14" class="svg-ruler-text">GATE: 0x80</text>
+          <text x="795" y="14" class="svg-ruler-text">OUT: 0xC0</text>
+          <!-- Center axis alignment guide -->
+          <line x1="15" y1="105" x2="985" y2="105" stroke="var(--ie-rule)" stroke-dasharray="3 6" stroke-width="0.75" />
         </g>
 
-        <!-- Connecting Conduit 1 -->
-        <path class="conduit-base" d="M200 90 L270 90" />
-        <path class="conduit-pulse" d="M200 90 L270 90" marker-end="url(#trace-arrow)" />
-        <text x="235" y="80" text-anchor="middle" class="conduit-label" data-svg-edge="0">RETRIEVE</text>
+        <!-- Node 1: Input -->
+        <g class="svg-node input-node" transform="translate(20, 38)">
+          <rect width="195" height="134" rx="8" class="node-box" fill="url(#trace-node-surface)" />
+          <line x1="0" y1="36" x2="195" y2="36" stroke="var(--ie-rule)" stroke-width="1" />
+          <rect x="14" y="11" width="58" height="16" rx="8" class="node-tag-bg" />
+          <text x="23" y="22.5" class="node-tag">T₀ / INPUT</text>
+          <text x="178" y="23" text-anchor="end" class="node-code-id">0x01</text>
+          <text x="14" y="62" class="node-title" data-svg-title="0">Bounded Question</text>
+          <text x="14" y="86" class="node-meta" data-svg-meta="0">Tokens: 512 · Boundary set</text>
+          <rect x="14" y="102" width="167" height="20" rx="4" class="node-formula-bg" />
+          <text x="22" y="116" class="node-formula" data-svg-formula="0">S₀ &rarr; Contract Boundary</text>
+        </g>
+
+        <!-- Connecting Conduit 1 (Dual-rail with active flow) -->
+        <g class="conduit-group" transform="translate(0, 0)">
+          <path class="conduit-track" d="M215 105 L285 105" />
+          <path class="conduit-pulse" d="M215 105 L285 105" marker-end="url(#trace-arrow-blue)" />
+          <circle cx="215" cy="105" r="3.5" class="conduit-pin" />
+          <circle cx="285" cy="105" r="3.5" class="conduit-pin" />
+          <rect x="228" y="93" width="46" height="15" rx="3" class="conduit-pill-bg" />
+          <text x="251" y="103.5" text-anchor="middle" class="conduit-label" data-svg-edge="0">RETRIEVE</text>
+        </g>
 
         <!-- Node 2: Mechanism -->
-        <g class="svg-node mechanism-node active" transform="translate(270, 35)">
-          <rect width="185" height="110" rx="8" class="node-box" />
-          <rect x="12" y="14" width="76" height="18" rx="9" class="node-tag-bg blue" />
-          <text x="21" y="26" class="node-tag blue">MECHANISM</text>
-          <text x="14" y="54" class="node-title" data-svg-title="1">Evidence Retrieval</text>
-          <text x="14" y="74" class="node-meta" data-svg-meta="1">Hybrid BM25 + Vector Graph</text>
-          <text x="14" y="94" class="node-formula">Top-k Source Ranking</text>
+        <g class="svg-node mechanism-node active" transform="translate(285, 38)">
+          <rect width="210" height="134" rx="8" class="node-box blue" fill="url(#trace-node-blue)" />
+          <line x1="0" y1="36" x2="210" y2="36" stroke="var(--ie-blue)" stroke-opacity="0.3" stroke-width="1" />
+          <rect x="14" y="11" width="88" height="16" rx="8" class="node-tag-bg blue" />
+          <text x="23" y="22.5" class="node-tag blue">ƒ(x) / MECHANISM</text>
+          <text x="194" y="23" text-anchor="end" class="node-code-id blue">0x02</text>
+          <text x="14" y="62" class="node-title" data-svg-title="1">Evidence Retrieval</text>
+          <text x="14" y="86" class="node-meta" data-svg-meta="1">Hybrid BM25 + Vector Graph</text>
+          <rect x="14" y="102" width="182" height="20" rx="4" class="node-formula-bg blue" />
+          <text x="22" y="116" class="node-formula blue" data-svg-formula="1">Top-k Provenance Ranking</text>
         </g>
 
         <!-- Connecting Conduit 2 -->
-        <path class="conduit-base" d="M455 90 L525 90" />
-        <path class="conduit-pulse" d="M455 90 L525 90" marker-end="url(#trace-arrow)" />
-        <text x="490" y="80" text-anchor="middle" class="conduit-label" data-svg-edge="1">VALIDATE</text>
+        <g class="conduit-group">
+          <path class="conduit-track" d="M495 105 L565 105" />
+          <path class="conduit-pulse" d="M495 105 L565 105" marker-end="url(#trace-arrow-blue)" />
+          <circle cx="495" cy="105" r="3.5" class="conduit-pin" />
+          <circle cx="565" cy="105" r="3.5" class="conduit-pin" />
+          <rect x="506" y="93" width="48" height="15" rx="3" class="conduit-pill-bg" />
+          <text x="530" y="103.5" text-anchor="middle" class="conduit-label" data-svg-edge="1">VALIDATE</text>
+        </g>
 
-        <!-- Node 3: Constraint Gate (Bottleneck) -->
-        <g class="svg-node constraint-node" transform="translate(525, 35)">
-          <rect width="185" height="110" rx="8" class="node-box rust" />
-          <rect x="12" y="14" width="76" height="18" rx="9" class="node-tag-bg rust" />
-          <text x="21" y="26" class="node-tag rust">CONSTRAINT</text>
-          <text x="14" y="54" class="node-title" data-svg-title="2">Verification Gate</text>
-          <text x="14" y="74" class="node-meta" data-svg-meta="2">Hallucination check &ge; 0.95</text>
-          <text x="14" y="94" class="node-formula rust">Reject if unsupported</text>
+        <!-- Node 3: Constraint Gate (Bottleneck / Failure boundary) -->
+        <g class="svg-node constraint-node" transform="translate(565, 38)">
+          <rect width="210" height="134" rx="8" class="node-box rust" fill="url(#trace-node-rust)" />
+          <line x1="0" y1="36" x2="210" y2="36" stroke="var(--ie-rust)" stroke-opacity="0.35" stroke-width="1" />
+          <rect x="14" y="11" width="90" height="16" rx="8" class="node-tag-bg rust" />
+          <text x="23" y="22.5" class="node-tag rust">GATE / CONSTRAINT</text>
+          <text x="194" y="23" text-anchor="end" class="node-code-id rust">0x03</text>
+          <text x="14" y="62" class="node-title" data-svg-title="2">Verification Gate</text>
+          <text x="14" y="86" class="node-meta" data-svg-meta="2">Hallucination check &ge; 0.95</text>
+          <rect x="14" y="102" width="182" height="20" rx="4" class="node-formula-bg rust" />
+          <text x="22" y="116" class="node-formula rust" data-svg-formula="2">Reject on Citation Drift</text>
         </g>
 
         <!-- Connecting Conduit 3 -->
-        <path class="conduit-base" d="M710 90 L780 90" />
-        <path class="conduit-pulse" d="M710 90 L780 90" marker-end="url(#trace-arrow)" />
-        <text x="745" y="80" text-anchor="middle" class="conduit-label" data-svg-edge="2">DELIVER</text>
+        <g class="conduit-group">
+          <path class="conduit-track" d="M775 105 L845 105" />
+          <path class="conduit-pulse" d="M775 105 L845 105" marker-end="url(#trace-arrow-blue)" />
+          <circle cx="775" cy="105" r="3.5" class="conduit-pin" />
+          <circle cx="845" cy="105" r="3.5" class="conduit-pin" />
+          <rect x="788" y="93" width="44" height="15" rx="3" class="conduit-pill-bg" />
+          <text x="810" y="103.5" text-anchor="middle" class="conduit-label" data-svg-edge="2">DELIVER</text>
+        </g>
 
         <!-- Node 4: Output -->
-        <g class="svg-node output-node" transform="translate(780, 35)">
-          <rect width="160" height="110" rx="8" class="node-box verified" />
-          <rect x="12" y="14" width="56" height="18" rx="9" class="node-tag-bg green" />
-          <text x="21" y="26" class="node-tag green">VERIFIED</text>
-          <text x="14" y="54" class="node-title" data-svg-title="3">Audited Answer</text>
-          <text x="14" y="74" class="node-meta" data-svg-meta="3">Citations + DOI linked</text>
-          <text x="14" y="94" class="node-formula">Evidence &ge; Bound</text>
+        <g class="svg-node output-node" transform="translate(845, 38)">
+          <rect width="135" height="134" rx="8" class="node-box verified" fill="url(#trace-node-surface)" />
+          <line x1="0" y1="36" x2="135" y2="36" stroke="var(--ie-rule)" stroke-width="1" />
+          <rect x="14" y="11" width="58" height="16" rx="8" class="node-tag-bg" />
+          <text x="23" y="22.5" class="node-tag">VERIFIED</text>
+          <text x="120" y="23" text-anchor="end" class="node-code-id">Q.E.D</text>
+          <text x="14" y="62" class="node-title" data-svg-title="3">Audited Answer</text>
+          <text x="14" y="86" class="node-meta" data-svg-meta="3">DOI Provenance</text>
+          <rect x="14" y="102" width="107" height="20" rx="4" class="node-formula-bg" />
+          <text x="22" y="116" class="node-formula" data-svg-formula="3">Proof &ge; Bound</text>
         </g>
       </svg>
     </div>
 
-    <div class="trace-scroll-hint" aria-hidden="true">↔ Swipe to inspect complete execution path</div>
+    <div class="trace-scroll-hint" aria-hidden="true">&harr; Swipe to inspect complete execution path</div>
   </div>
 
   <!-- Detailed Step Cards -->
@@ -211,6 +262,7 @@
       const metricLabel = root.querySelector<HTMLElement>('[data-trace-metric]');
       const svgTitles = root.querySelectorAll<SVGTextElement>('[data-svg-title]');
       const svgMetas = root.querySelectorAll<SVGTextElement>('[data-svg-meta]');
+      const svgFormulas = root.querySelectorAll<SVGTextElement>('[data-svg-formula]');
       const svgEdges = root.querySelectorAll<SVGTextElement>('[data-svg-edge]');
       const cardTitles = root.querySelectorAll<HTMLElement>('[data-card-title]');
       const cardBodies = root.querySelectorAll<HTMLElement>('[data-card-body]');
@@ -233,6 +285,7 @@
         arch.nodes.forEach((node, nIdx) => {
           if (svgTitles[nIdx]) svgTitles[nIdx].textContent = node.title;
           if (svgMetas[nIdx]) svgMetas[nIdx].textContent = node.meta;
+          if (svgFormulas[nIdx]) svgFormulas[nIdx].textContent = node.formula;
           if (cardTitles[nIdx]) cardTitles[nIdx].textContent = node.title;
           if (cardBodies[nIdx]) cardBodies[nIdx].textContent = node.desc;
         });
@@ -433,38 +486,61 @@
   .trace-svg {
     display: block;
     width: 100%;
-    min-width: 880px;
+    min-width: 960px;
     height: auto;
   }
 
-  /* SVG Typography & Classes */
+  /* SVG Precision Typography & Grid */
+  .svg-ruler-text {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    fill: var(--ie-muted);
+  }
+
   .node-box {
-    fill: var(--ie-surface);
     stroke: var(--ie-rule-strong);
     stroke-width: 1.5;
     transition: stroke 150ms ease;
   }
 
+  .node-box.blue {
+    stroke: var(--ie-blue);
+    stroke-width: 1.5;
+  }
+
   .node-box.rust {
     stroke: var(--ie-rust);
-    fill: var(--ie-rust-soft);
+    stroke-width: 1.5;
   }
 
   .node-box.verified {
     stroke: var(--ie-ink);
+    stroke-width: 1.5;
   }
 
   .node-tag-bg {
     fill: var(--ie-surface-raised);
+    stroke: var(--ie-rule);
+    stroke-width: 0.75;
   }
 
-  .node-tag-bg.blue { fill: var(--ie-blue-soft); }
-  .node-tag-bg.rust { fill: var(--ie-rust-soft); }
-  .node-tag-bg.green { fill: var(--ie-surface-raised); }
+  .node-tag-bg.blue {
+    fill: var(--ie-blue-soft);
+    stroke: var(--ie-blue);
+    stroke-opacity: 0.4;
+  }
+
+  .node-tag-bg.rust {
+    fill: var(--ie-rust-soft);
+    stroke: var(--ie-rust);
+    stroke-opacity: 0.4;
+  }
 
   .node-tag {
     font-family: var(--font-mono);
-    font-size: 8.5px;
+    font-size: 8px;
     font-weight: 700;
     letter-spacing: 0.06em;
     fill: var(--ie-muted);
@@ -472,10 +548,19 @@
 
   .node-tag.blue { fill: var(--ie-blue); }
   .node-tag.rust { fill: var(--ie-rust); }
-  .node-tag.green { fill: var(--ie-ink); }
+
+  .node-code-id {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    font-weight: 600;
+    fill: var(--ie-muted);
+  }
+
+  .node-code-id.blue { fill: var(--ie-blue); }
+  .node-code-id.rust { fill: var(--ie-rust); }
 
   .node-title {
-    font-family: var(--font-sans);
+    font-family: var(--font-serif);
     font-size: 13.5px;
     font-weight: 600;
     fill: var(--ie-ink);
@@ -487,17 +572,36 @@
     fill: var(--ie-muted);
   }
 
-  .node-formula {
-    font-family: var(--font-mono);
-    font-size: 9.5px;
-    font-weight: 500;
-    fill: var(--ie-blue);
+  .node-formula-bg {
+    fill: var(--ie-surface-raised);
+    stroke: var(--ie-rule);
+    stroke-width: 0.75;
   }
 
-  .node-formula.rust { fill: var(--ie-rust); }
+  .node-formula-bg.blue {
+    fill: var(--ie-blue-soft);
+    stroke: var(--ie-blue);
+    stroke-opacity: 0.3;
+  }
 
-  /* Animated Conduit Lines */
-  .conduit-base {
+  .node-formula-bg.rust {
+    fill: var(--ie-rust-soft);
+    stroke: var(--ie-rust);
+    stroke-opacity: 0.3;
+  }
+
+  .node-formula {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 500;
+    fill: var(--ie-ink);
+  }
+
+  .node-formula.blue { fill: var(--ie-blue); font-weight: 600; }
+  .node-formula.rust { fill: var(--ie-rust); font-weight: 600; }
+
+  /* Conduits & Flow */
+  .conduit-track {
     stroke: var(--ie-rule-strong);
     stroke-width: 1.5;
   }
@@ -509,6 +613,18 @@
     animation: flow-dash 1.2s infinite linear;
   }
 
+  .conduit-pin {
+    fill: var(--ie-surface);
+    stroke: var(--ie-blue);
+    stroke-width: 1.5;
+  }
+
+  .conduit-pill-bg {
+    fill: var(--ie-surface-raised);
+    stroke: var(--ie-rule);
+    stroke-width: 0.75;
+  }
+
   @keyframes flow-dash {
     from { stroke-dashoffset: 12; }
     to { stroke-dashoffset: 0; }
@@ -516,7 +632,7 @@
 
   .conduit-label {
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 700;
     letter-spacing: 0.06em;
     fill: var(--ie-blue);

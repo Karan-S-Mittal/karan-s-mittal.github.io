@@ -1,10 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import InstrumentedSystemTrace from '../components/home/InstrumentedSystemTrace.astro';
-import LinearTransform2D from '../components/visuals/neural-net/LinearTransform2D.astro';
 import { getCollection } from 'astro:content';
-import workData from '../data/work.json';
-import talksData from '../data/talks.json';
 import { SITE } from '../config';
 
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
@@ -12,9 +9,6 @@ const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
 
 const pagedPost = publishedPosts.find((post) => post.id === 'paged-attention-kv-cache') || publishedPosts[0];
 const recentNotes = publishedPosts.filter((post) => post.id !== pagedPost?.id).slice(0, 3);
-const featuredWork = workData.work.slice(0, 3);
-const recentTalks = talksData.talks.slice(0, 3);
-const talkCount = talksData.talks.length;
 
 function formatDate(date: Date | string) {
   const value = typeof date === 'string' ? new Date(date) : date;
@@ -28,7 +22,7 @@ function formatDate(date: Date | string) {
   variant="instrumented"
 >
   <main class="ie-home">
-    <!-- HERO SECTION: Editorial Statement + Authentic Portrait Card -->
+    <!-- HERO SECTION: Statement + Authentic Portrait Card + Indore Status -->
     <section class="ie-hero" aria-labelledby="home-title">
       <div class="ie-shell hero-grid">
         <div class="hero-copy">
@@ -55,7 +49,7 @@ function formatDate(date: Date | string) {
             />
             <div class="availability-pill">
               <span class="live-dot"></span>
-              <span>Bengaluru &middot; Global Advisory</span>
+              <span>Indore &middot; Global Advisory</span>
             </div>
           </div>
           <div class="principle-box">
@@ -66,9 +60,9 @@ function formatDate(date: Date | string) {
       </div>
 
       <div class="ie-shell hero-proof" aria-label="Published studio evidence">
-        <span><strong>{String(publishedPosts.length).padStart(2, '0')}</strong> published field notes</span>
-        <span><strong>{String(talkCount).padStart(2, '0')}</strong> talks and workshops</span>
-        <span><strong>01</strong> interactive visual laboratory</span>
+        <a href="/blog" class="proof-pill-link"><strong>{String(publishedPosts.length).padStart(2, '0')}</strong> published field notes &nearr;</a>
+        <a href="/work" class="proof-pill-link"><strong>03</strong> systems practice areas &nearr;</a>
+        <a href="/studio/visuals" class="proof-pill-link"><strong>01</strong> interactive visual laboratory &nearr;</a>
       </div>
     </section>
 
@@ -88,7 +82,7 @@ function formatDate(date: Date | string) {
       </div>
     </section>
 
-    <!-- SECTION 02: FIELD NOTES (WRITING) -->
+    <!-- SECTION 02: FIELD NOTES (TECHNICAL ESSAYS & DEEP DIVES) -->
     <section class="ie-section notes-section" aria-labelledby="notes-title">
       <div class="ie-shell">
         <div class="section-heading split">
@@ -96,7 +90,7 @@ function formatDate(date: Date | string) {
             <p class="ie-register"><span>02 / Field notes</span> Published mechanisms</p>
             <h2 id="notes-title">Ideas become useful when they can be challenged.</h2>
           </div>
-          <a class="section-link" href="/blog">All field notes <span aria-hidden="true">&nearr;</span></a>
+          <a class="section-link" href="/blog">All field notes ({publishedPosts.length}) <span aria-hidden="true">&nearr;</span></a>
         </div>
 
         <div class="notes-layout">
@@ -104,7 +98,7 @@ function formatDate(date: Date | string) {
             <article class="featured-note">
               <a href={`/blog/${pagedPost.id}/`} class="featured-note-visual" aria-label={`Read ${pagedPost.data.title}`}>
                 <img src={pagedPost.data.image} alt="" loading="lazy" decoding="async" />
-                <span class="visual-label">Featured system / GPU memory</span>
+                <span class="visual-label">Featured deep dive / GPU memory</span>
               </a>
               <div class="featured-note-copy">
                 <p class="note-meta"><time datetime={pagedPost.data.pubDate.toISOString()}>{formatDate(pagedPost.data.pubDate)}</time> &middot; LLM inference</p>
@@ -116,7 +110,7 @@ function formatDate(date: Date | string) {
           )}
 
           <div class="notes-ledger" aria-label="Recent field notes">
-            <div class="ledger-head"><span>Recent artifacts</span><code>{String(recentNotes.length).padStart(2, '0')} entries</code></div>
+            <div class="ledger-head"><span>Recent technical notes</span><code>{String(recentNotes.length).padStart(2, '0')} entries</code></div>
             {recentNotes.map((post, index) => (
               <a href={`/blog/${post.id}/`} class="ledger-row">
                 <span class="ledger-index">{String(index + 1).padStart(2, '0')}</span>
@@ -133,110 +127,15 @@ function formatDate(date: Date | string) {
       </div>
     </section>
 
-    <!-- SECTION 03: PRACTICE (SELECTED WORK) -->
-    <section class="ie-section practice-section" aria-labelledby="practice-title">
-      <div class="ie-shell">
-        <div class="section-heading split">
-          <div>
-            <p class="ie-register"><span>03 / Practice</span> Systems work</p>
-            <h2 id="practice-title">The system is the product.</h2>
-          </div>
-          <p>Representative engineering problems, described through boundaries, operating constraints, and the path a team must be able to own.</p>
-        </div>
-
-        <div class="practice-ledger">
-          {featuredWork.map((item, index) => (
-            <article class="practice-row">
-              <div class="practice-index">{String(index + 1).padStart(2, '0')}</div>
-              <div class="practice-main">
-                <p>{item.eyebrow}</p>
-                <h3>{item.title}</h3>
-                <span>{item.summary}</span>
-              </div>
-              <ol class="practice-flow" aria-label={`${item.title} system path`}>
-                {item.flow.map((step) => <li>{step}</li>)}
-              </ol>
-            </article>
-          ))}
-        </div>
-        <a class="text-link practice-more" href="/work">Review the complete practice <span aria-hidden="true">&rarr;</span></a>
-      </div>
-    </section>
-
-    <!-- SECTION 04: EVIDENCE (TALKS & WORKSHOPS) -->
-    <section class="ie-section proof-section" aria-labelledby="proof-title">
-      <div class="ie-shell proof-grid">
-        <div>
-          <p class="ie-register"><span>04 / Evidence</span> Work in public</p>
-          <h2 id="proof-title">Engineering is tested in the open.</h2>
-          <p class="proof-intro">Talks, workshops, primary citations, and working prototypes expose ideas to questions before they become doctrine.</p>
-
-          <div class="proof-measures" aria-label="Public evidence measures">
-            <div><strong>{String(talkCount).padStart(2, '0')}</strong><span>talks and workshops</span></div>
-            <div><strong>{String(publishedPosts.length).padStart(2, '0')}</strong><span>published field notes</span></div>
-            <div><strong>01</strong><span>public visual laboratory</span></div>
-          </div>
-        </div>
-
-        <div class="talk-ledger">
-          <div class="ledger-head"><span>Speaking ledger</span><a href="/talks">All talks &nearr;</a></div>
-          {recentTalks.map((talk) => (
-            <a class="talk-row" href={talk.links[0]?.url ?? '/talks'} target={talk.links[0] ? '_blank' : undefined} rel={talk.links[0] ? 'noopener' : undefined}>
-              <time datetime={talk.date}>{formatDate(talk.date)}</time>
-              <strong>{talk.title}</strong>
-              <span>{talk.event} &middot; {talk.venue}</span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 05: LABORATORY & LIVE INTERACTIVE ENGINE -->
-    <section class="ie-section studio-section" aria-labelledby="studio-title">
-      <div class="ie-shell">
-        <div class="section-heading split">
-          <div>
-            <p class="ie-register"><span>05 / Laboratory</span> Explanatory Systems Studio</p>
-            <h2 id="studio-title">Tools for seeing what a system is doing.</h2>
-          </div>
-          <p>Interactive geometry, continuous coordinate transformations, and verification instruments used to construct first-principles explanations.</p>
-        </div>
-
-        <!-- Embedded Interactive Visual Engine Preview -->
-        <div class="studio-embed-container">
-          <LinearTransform2D
-            exhibit="01"
-            title="2D Matrix Linear Transformation & Area Scaling Engine"
-            caption="Directly on this page: select matrix presets (Shear, Rotate, Squeeze, Singular) to bend the coordinate plane T(v) = Av and track the live determinant area in real time."
-          />
-        </div>
-
-        <div class="studio-ledger">
-          <a href="/studio/visuals">
-            <span class="studio-code">LAB / 01</span>
-            <strong>Interactive Visuals Lab</strong>
-            <p>3D neural signal pulses, continuous coordinate bending, weight spreadsheets, and gradient backpropagation.</p>
-            <span class="studio-arrow" aria-hidden="true">&nearr;</span>
-          </a>
-          <a href="/studio/components">
-            <span class="studio-code">LAB / 02</span>
-            <strong>Editorial Instruments</strong>
-            <p>Architecture exhibits, evidence rails, algorithm walkthroughs, benchmark plots, and primary verification.</p>
-            <span class="studio-arrow" aria-hidden="true">&nearr;</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 06: CONTACT BRIEF INTAKE -->
+    <!-- SECTION 03: DECISION & CONSULTATION INTAKE -->
     <section class="contact-section" id="contact" aria-labelledby="contact-title">
       <div class="ie-shell contact-grid">
         <div>
-          <p class="ie-register"><span>06 / Decision</span> Work together</p>
+          <p class="ie-register"><span>03 / Decision</span> Work together</p>
           <h2 id="contact-title">Have a system that needs to be understood before it can be trusted?</h2>
         </div>
         <div class="contact-copy">
-          <p>Bring the architecture, workload, or unresolved constraint. Submit a project brief through our secure intake form or reach out directly.</p>
+          <p>Bring the architecture, workload, or unresolved constraint. Submit a short project brief through our intake form or reach out directly.</p>
           <div class="hero-actions">
             <a class="ie-action primary" href="/contact">Open project brief &amp; consultation <span aria-hidden="true">&rarr;</span></a>
             <a class="ie-action secondary" href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>Send direct email</a>
@@ -248,753 +147,121 @@ function formatDate(date: Date | string) {
 </Layout>
 
 <style>
-  .ie-home {
-    overflow: clip;
-  }
-
-  .ie-shell {
-    width: min(100% - 3rem, 1280px);
-    margin-inline: auto;
-  }
-
-  .ie-register {
-    margin: 0 0 1rem;
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: 0.67rem;
-    font-weight: 500;
-    letter-spacing: 0.075em;
-    text-transform: uppercase;
-  }
-
-  .ie-register span {
-    margin-right: 0.6rem;
-    color: var(--ie-blue);
-    font-weight: 600;
-  }
-
-  .ie-hero {
-    border-bottom: 1px solid var(--ie-rule);
-  }
+  .ie-home { overflow: clip; }
+  .ie-shell { width: min(100% - 3rem, 1280px); margin-inline: auto; }
+  .ie-register { margin: 0 0 1rem; color: var(--ie-muted); font-family: var(--font-mono); font-size: 0.67rem; font-weight: 500; letter-spacing: 0.075em; text-transform: uppercase; }
+  .ie-register span { margin-right: 0.6rem; color: var(--ie-blue); font-weight: 600; }
+  .ie-hero { border-bottom: 1px solid var(--ie-rule); }
 
   .hero-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
     gap: clamp(3rem, 8vw, 8rem);
     align-items: end;
-    min-height: min(760px, calc(100vh - 64px));
-    padding-block: clamp(5rem, 12vh, 9rem) clamp(4rem, 9vh, 7rem);
+    min-height: min(720px, calc(100vh - 64px));
+    padding-block: clamp(4.5rem, 10vh, 8rem) clamp(3.5rem, 8vh, 6rem);
   }
 
-  .hero-copy {
-    max-width: 780px;
-  }
+  .hero-copy { max-width: 780px; }
+  .hero-copy h1 { max-width: 13ch; margin: 0 0 1.5rem; color: var(--ie-ink); font-size: clamp(3.35rem, 7.2vw, 6.5rem); font-weight: 500; line-height: 0.98; text-wrap: balance; }
+  .hero-lead { max-width: 680px; margin: 0; color: var(--ie-ink-secondary); font-size: clamp(1.12rem, 1.7vw, 1.38rem); line-height: 1.58; }
 
-  .hero-copy h1 {
-    max-width: 13ch;
-    margin: 0 0 1.5rem;
-    color: var(--ie-ink);
-    font-size: clamp(3.35rem, 7.2vw, 6.5rem);
-    font-weight: 500;
-    line-height: 0.98;
-    text-wrap: balance;
-  }
-
-  .hero-lead {
-    max-width: 680px;
-    margin: 0;
-    color: var(--ie-ink-secondary);
-    font-size: clamp(1.12rem, 1.7vw, 1.38rem);
-    line-height: 1.58;
-  }
-
-  .hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 2rem;
-  }
-
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
   .ie-action {
     display: inline-flex;
     min-height: 42px;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.68rem 1rem;
+    padding: 0.68rem 1.15rem;
     border: 1px solid var(--ie-ink);
-    border-radius: 5px;
+    border-radius: var(--radius, 6px);
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.02em;
     text-decoration: none;
+    transition: all 120ms ease;
   }
+  .ie-action.primary { background: var(--ie-ink); color: var(--ie-canvas); }
+  .ie-action.primary:hover { border-color: var(--ie-blue); background: var(--ie-blue); color: #fff; }
+  .ie-action.secondary { background: transparent; color: var(--ie-ink); }
+  .ie-action.secondary:hover { border-color: var(--ie-blue); color: var(--ie-blue); }
 
-  .ie-action.primary {
-    background: var(--ie-ink);
-    color: var(--ie-canvas);
-  }
+  .hero-portrait-card { display: flex; flex-direction: column; gap: 1.25rem; width: 100%; max-width: 360px; justify-self: end; }
+  .portrait-frame { position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: var(--radius-card, 8px); border: 1px solid var(--ie-rule); background: var(--ie-surface); overflow: hidden; }
+  .portrait-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.05); transition: filter 300ms ease, transform 300ms ease; }
+  .portrait-frame:hover .portrait-img { filter: grayscale(0%) contrast(1); transform: scale(1.02); }
+  .availability-pill { position: absolute; bottom: 12px; left: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 0.35rem 0.75rem; border-radius: var(--radius-pill, 999px); background: rgba(23, 26, 31, 0.88); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.25); font-family: var(--font-mono); font-size: 0.68rem; color: #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.3); }
 
-  .ie-action.primary:hover {
-    border-color: var(--ie-blue);
-    background: var(--ie-blue);
-    color: #fff;
-  }
+  .principle-box { padding: 1.15rem 1.25rem; border: 1px solid var(--ie-rule); border-radius: var(--radius-card, 8px); background: var(--ie-surface); }
+  .principle-label { margin: 0 0 0.4rem; font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; color: var(--ie-blue); text-transform: uppercase; }
+  .principle-quote { margin: 0; font-family: var(--font-serif); font-size: 0.96rem; font-style: italic; line-height: 1.45; color: var(--ie-ink); }
 
-  .ie-action.secondary {
-    background: transparent;
-    color: var(--ie-ink);
-  }
+  /* Hero Proof Strip */
+  .hero-proof { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--ie-rule); }
+  .proof-pill-link { display: block; padding: 1rem 1.25rem; border-right: 1px solid var(--ie-rule); color: var(--ie-muted); font-family: var(--font-mono); font-size: 0.68rem; text-align: center; text-decoration: none; transition: background-color 120ms ease, color 120ms ease; }
+  .proof-pill-link:last-child { border-right: 0; }
+  .proof-pill-link:hover { background: var(--ie-surface-raised); color: var(--ie-blue); }
+  .proof-pill-link strong { margin-right: 0.3rem; color: var(--ie-blue); font-size: 0.95rem; font-weight: 600; }
 
-  .ie-action.secondary:hover {
-    border-color: var(--ie-blue);
-    color: var(--ie-blue);
-  }
+  /* Section Layouts */
+  .ie-section { padding-block: clamp(4.5rem, 9vw, 8rem); border-bottom: 1px solid var(--ie-rule); }
+  .flagship-section { background: var(--ie-surface-raised); }
+  .section-heading { margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+  .section-heading.split { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr); gap: clamp(2rem, 8vw, 7rem); align-items: end; }
+  .section-heading h2, .contact-grid h2 { max-width: 18ch; margin: 0; color: var(--ie-ink); font-family: var(--font-serif); font-size: clamp(2.3rem, 4.4vw, 3.8rem); font-weight: 500; line-height: 1.05; text-wrap: balance; }
+  .section-heading > p, .contact-copy > p { max-width: 48ch; margin: 0; color: var(--ie-ink-secondary); font-size: 1rem; line-height: 1.6; }
+  .section-link { display: inline-flex; align-items: center; gap: 0.35rem; justify-self: start; color: var(--ie-blue); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; text-decoration: none; }
+  .section-link:hover { text-decoration: underline; }
 
-  /* Hero Portrait & Operating Principle Card */
-  .hero-portrait-card {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    width: 100%;
-    max-width: 360px;
-    justify-self: end;
-  }
-
-  .portrait-frame {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border-radius: var(--radius-card, 8px);
-    border: 1px solid var(--ie-rule);
-    background: var(--ie-surface);
-    overflow: hidden;
-  }
-
-  .portrait-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: grayscale(100%) contrast(1.05);
-    transition: filter 300ms ease, transform 300ms ease;
-  }
-
-  .portrait-frame:hover .portrait-img {
-    filter: grayscale(0%) contrast(1);
-    transform: scale(1.02);
-  }
-
-  .availability-pill {
-    position: absolute;
-    bottom: 12px;
-    left: 12px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0.35rem 0.75rem;
-    border-radius: var(--radius-pill, 999px);
-    background: rgba(23, 26, 31, 0.88);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 500;
-    color: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  .live-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #34d399;
-    box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.3);
-  }
-
-  .principle-box {
-    padding: 1.15rem 1.25rem;
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-card, 8px);
-    background: var(--ie-surface);
-  }
-
-  .principle-label {
-    margin: 0 0 0.4rem;
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: var(--ie-blue);
-    text-transform: uppercase;
-  }
-
-  .principle-quote {
-    margin: 0;
-    font-family: var(--font-serif);
-    font-size: 0.96rem;
-    font-style: italic;
-    line-height: 1.45;
-    color: var(--ie-ink);
-  }
-
-  /* Studio Laboratory Embed Container */
-  .studio-embed-container {
-    margin: 2rem 0 2.5rem;
-  }
-
-  .hero-proof {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border-top: 1px solid var(--ie-rule);
-  }
-
-  .hero-proof span {
-    padding: 1rem 1.25rem;
-    border-right: 1px solid var(--ie-rule);
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: 0.67rem;
-    text-align: center;
-  }
-
-  .hero-proof span:last-child { border-right: 0; }
-  .hero-proof strong {
-    margin-right: 0.3rem;
-    color: var(--ie-blue);
-    font-size: 0.95rem;
-    font-weight: 600;
-  }
-
-  .ie-section {
-    padding-block: clamp(5rem, 10vw, 9rem);
-    border-bottom: 1px solid var(--ie-rule);
-  }
-
-  .flagship-section {
-    background: var(--ie-surface-raised);
-  }
-
-  .section-heading {
-    margin-bottom: clamp(2rem, 5vw, 3.5rem);
-  }
-
-  .section-heading.split {
-    display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
-    gap: clamp(2rem, 8vw, 7rem);
-    align-items: end;
-  }
-
-  .section-heading h2,
-  .contact-grid h2,
-  .proof-grid h2 {
-    max-width: 18ch;
-    margin: 0;
-    color: var(--ie-ink);
-    font-size: clamp(2.25rem, 4.7vw, 4.2rem);
-    font-weight: 500;
-    line-height: 1.05;
-  }
-
-  .section-heading > p,
-  .section-heading.split > p,
-  .proof-intro,
-  .contact-copy > p {
-    max-width: 560px;
-    margin: 0;
-    color: var(--ie-ink-secondary);
-    font-size: 1rem;
-    line-height: 1.65;
-  }
-
-  .section-link,
-  .text-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    width: fit-content;
-    color: var(--ie-blue);
-    font-family: var(--font-mono);
-    font-size: 0.69rem;
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  .section-link:hover,
+  /* Notes Layout */
+  .notes-layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.95fr); gap: clamp(2.5rem, 6vw, 5rem); align-items: start; }
+  .featured-note { display: flex; flex-direction: column; gap: 1.25rem; }
+  .featured-note-visual { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid var(--ie-rule); border-radius: var(--radius-card, 8px); background: var(--ie-surface); }
+  .featured-note-visual img { width: 100%; height: 100%; object-fit: cover; transition: transform 300ms ease; }
+  .featured-note:hover .featured-note-visual img { transform: scale(1.02); }
+  .visual-label { position: absolute; top: 12px; left: 12px; padding: 0.3rem 0.6rem; border-radius: var(--radius-pill, 999px); background: rgba(23, 26, 31, 0.85); backdrop-filter: blur(6px); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; font-family: var(--font-mono); font-size: 0.65rem; }
+  .featured-note-copy { display: flex; flex-direction: column; gap: 0.5rem; }
+  .note-meta { margin: 0; color: var(--ie-muted); font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; }
+  .featured-note-copy h3 { margin: 0; font-family: var(--font-serif); font-size: clamp(1.4rem, 2.2vw, 1.9rem); font-weight: 600; line-height: 1.2; }
+  .featured-note-copy h3 a { color: var(--ie-ink); text-decoration: none; transition: color 120ms ease; }
+  .featured-note-copy h3 a:hover { color: var(--ie-blue); }
+  .featured-note-copy p { margin: 0; color: var(--ie-ink-secondary); font-size: 0.94rem; line-height: 1.58; }
+  .text-link { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.5rem; color: var(--ie-blue); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; text-decoration: none; }
   .text-link:hover { text-decoration: underline; }
 
-  .notes-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
-    gap: clamp(2.5rem, 7vw, 6rem);
-  }
-
-  .featured-note {
-    border-top: 2px solid var(--ie-ink);
-  }
-
-  .featured-note-visual {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    aspect-ratio: 16 / 8.5;
-    border-bottom: 1px solid var(--ie-rule);
-    background: var(--ie-code);
-  }
-
-  .featured-note-visual img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.92;
-    transition: opacity 160ms ease;
-  }
-
-  .featured-note-visual:hover img { opacity: 1; }
-
-  .visual-label {
-    position: absolute;
-    bottom: 0.75rem;
-    left: 0.75rem;
-    padding: 0.3rem 0.45rem;
-    border: 1px solid rgba(255,255,255,.35);
-    border-radius: 3px;
-    background: rgba(10,12,16,.78);
-    color: #fff;
-    font-family: var(--font-mono);
-    font-size: 0.58rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
-  .featured-note-copy {
-    padding-top: 1.35rem;
-  }
-
-  .note-meta,
-  .ledger-copy time,
-  .ledger-copy small {
-    margin: 0;
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.035em;
-    text-transform: uppercase;
-  }
-
-  .featured-note-copy h3 {
-    max-width: 25ch;
-    margin: 0.5rem 0 0.7rem;
-    font-family: var(--font-serif);
-    font-size: clamp(1.55rem, 2.8vw, 2.35rem);
-    font-weight: 600;
-    line-height: 1.15;
-  }
-
-  .featured-note-copy h3 a {
-    color: var(--ie-ink);
-    text-decoration: none;
-  }
-
-  .featured-note-copy h3 a:hover { color: var(--ie-blue); }
-
-  .featured-note-copy > p:not(.note-meta) {
-    max-width: 62ch;
-    margin: 0 0 1rem;
-    color: var(--ie-ink-secondary);
-    font-size: 1rem;
-  }
-
-  .notes-ledger,
-  .talk-ledger {
-    border-top: 2px solid var(--ie-ink);
-  }
-
-  .ledger-head {
-    border-bottom: 1px solid var(--ie-rule);
-  }
-
-  .ledger-head a {
-    color: var(--ie-blue);
-    text-decoration: none;
-  }
-
-  .ledger-row {
-    display: grid;
-    grid-template-columns: 2rem minmax(0, 1fr) auto;
-    gap: 0.75rem;
-    align-items: start;
-    padding: 1.15rem 0;
-    border-bottom: 1px solid var(--ie-rule);
-    color: var(--ie-ink);
-    text-decoration: none;
-  }
-
-  .ledger-index,
-  .ledger-arrow {
-    color: var(--ie-blue);
-    font-family: var(--font-mono);
-    font-size: 0.64rem;
-  }
-
-  .ledger-copy {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
-  .ledger-copy strong {
-    font-size: 0.88rem;
-    line-height: 1.35;
-  }
-
+  /* Notes Ledger */
+  .notes-ledger { border-top: 2px solid var(--ie-ink); }
+  .ledger-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--ie-rule); color: var(--ie-muted); font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .ledger-row { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto; gap: 0.75rem; align-items: start; padding: 1.15rem 0; border-bottom: 1px solid var(--ie-rule); color: var(--ie-ink); text-decoration: none; transition: background-color 100ms ease; }
+  .ledger-index, .ledger-arrow { color: var(--ie-blue); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; }
+  .ledger-copy { display: flex; flex-direction: column; gap: 0.3rem; }
+  .ledger-copy time { color: var(--ie-muted); font-family: var(--font-mono); font-size: 0.65rem; }
+  .ledger-copy strong { font-family: var(--font-sans); font-size: 0.95rem; font-weight: 600; line-height: 1.35; color: var(--ie-ink); transition: color 120ms ease; }
+  .ledger-copy small { color: var(--ie-muted); font-family: var(--font-mono); font-size: 0.68rem; }
   .ledger-row:hover .ledger-copy strong { color: var(--ie-blue); }
 
-  .practice-section {
-    background: var(--ie-surface);
-  }
-
-  .practice-ledger {
-    border-top: 2px solid var(--ie-ink);
-  }
-
-  .practice-row {
-    display: grid;
-    grid-template-columns: 3rem minmax(260px, 0.8fr) minmax(420px, 1.2fr);
-    gap: 2rem;
-    align-items: start;
-    padding: 2rem 0;
-    border-bottom: 1px solid var(--ie-rule);
-  }
-
-  .practice-index {
-    color: var(--ie-blue);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-  }
-
-  .practice-main p {
-    margin: 0 0 0.45rem;
-    color: var(--ie-rust);
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .practice-main h3 {
-    margin: 0 0 0.7rem;
-    color: var(--ie-ink);
-    font-size: 1.16rem;
-    line-height: 1.28;
-  }
-
-  .practice-main > span {
-    display: block;
-    color: var(--ie-muted);
-    font-size: var(--ie-type-small);
-    line-height: 1.55;
-  }
-
-  .practice-flow {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .practice-flow li {
-    position: relative;
-    padding: 0.65rem 0.75rem;
-    border: 1px solid var(--ie-rule);
-    border-right: 0;
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: 0.57rem;
-    line-height: 1.35;
-    text-align: center;
-  }
-
-  .practice-flow li:last-child {
-    border-right: 1px solid var(--ie-blue);
-    border-color: var(--ie-blue);
-    background: var(--ie-blue-soft);
-    color: var(--ie-blue);
-  }
-
-  .practice-more { margin-top: 1.5rem; }
-
-  .proof-section {
-    background: var(--ie-surface-raised);
-  }
-
-  .proof-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
-    gap: clamp(3rem, 9vw, 8rem);
-  }
-
-  .proof-intro { margin-top: 1.5rem; }
-
-  .proof-measures {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    margin-top: 3rem;
-    border-top: 1px solid var(--ie-rule-strong);
-    border-bottom: 1px solid var(--ie-rule-strong);
-  }
-
-  .proof-measures div {
-    display: flex;
-    min-height: 118px;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 1rem;
-    border-right: 1px solid var(--ie-rule);
-  }
-
-  .proof-measures div:last-child { border-right: 0; }
-
-  .proof-measures strong {
-    color: var(--ie-blue);
-    font-family: var(--font-mono);
-    font-size: 1.7rem;
-    font-weight: 500;
-  }
-
-  .proof-measures span {
-    color: var(--ie-muted);
-    font-size: 0.68rem;
-    line-height: 1.35;
-  }
-
-  .talk-row {
-    display: grid;
-    grid-template-columns: 7rem minmax(0, 1fr);
-    gap: 0.3rem 1.25rem;
-    padding: 1.2rem 0;
-    border-bottom: 1px solid var(--ie-rule);
-    color: var(--ie-ink);
-    text-decoration: none;
-  }
-
-  .talk-row time {
-    grid-row: 1 / 3;
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-  }
-
-  .talk-row strong {
-    font-size: var(--ie-type-small);
-    line-height: 1.35;
-  }
-
-  .talk-row span {
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: 0.57rem;
-  }
-
-  .talk-row:hover strong { color: var(--ie-blue); }
-
-  .studio-ledger {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    border-top: 2px solid var(--ie-ink);
-    border-bottom: 1px solid var(--ie-rule);
-  }
-
-  .studio-ledger a {
-    position: relative;
-    display: grid;
-    gap: 0.8rem;
-    min-height: 260px;
-    padding: 1.5rem;
-    border-right: 1px solid var(--ie-rule);
-    color: var(--ie-ink);
-    text-decoration: none;
-  }
-
-  .studio-ledger a:last-child { border-right: 0; }
-
-  .studio-code {
-    color: var(--ie-blue);
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.06em;
-  }
-
-  .studio-ledger strong {
-    align-self: end;
-    max-width: 22ch;
-    font-family: var(--font-serif);
-    font-size: clamp(1.5rem, 3vw, 2.3rem);
-    line-height: 1.1;
-  }
-
-  .studio-ledger p {
-    max-width: 58ch;
-    margin: 0;
-    color: var(--ie-muted);
-    font-size: var(--ie-type-small);
-  }
-
-  .studio-arrow {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    color: var(--ie-blue);
-    font-family: var(--font-mono);
-  }
-
-  .studio-ledger a:hover { background: var(--ie-blue-soft); }
-
-  .contact-section {
-    padding-block: clamp(5rem, 10vw, 9rem);
-    border-bottom: 1px solid var(--ie-rule);
-    background: var(--ie-surface);
-  }
-
-  .contact-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
-    gap: clamp(3rem, 9vw, 8rem);
-    padding-top: 1.5rem;
-    border-top: 2px solid var(--ie-rust);
-  }
-
-  :is(
-    .ie-register,
-    .ie-action,
-    .register-head,
-    .ledger-head,
-    .hero-proof span,
-    .section-link,
-    .text-link,
-    .visual-label,
-    .note-meta,
-    .ledger-copy time,
-    .ledger-copy small,
-    .ledger-index,
-    .ledger-arrow,
-    .practice-index,
-    .practice-main p,
-    .practice-flow li,
-    .proof-measures span,
-    .talk-row time,
-    .talk-row span,
-    .studio-code
-  ) {
-    font-size: var(--ie-type-label);
-  }
+  /* Contact Section */
+  .contact-section { padding-block: clamp(4.5rem, 9vw, 8rem); border-bottom: 1px solid var(--ie-rule); background: var(--ie-surface); }
+  .contact-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr); gap: clamp(3rem, 9vw, 8rem); padding-top: 1.5rem; border-top: 2px solid var(--ie-rust); }
 
   @media (max-width: 980px) {
-    .hero-grid,
-    .section-heading.split,
-    .notes-layout,
-    .proof-grid,
-    .contact-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .hero-grid {
-      min-height: auto;
-      align-items: start;
-    }
-
-    .hero-portrait-card {
-      max-width: 420px;
-      justify-self: start;
-    }
-
-    .section-heading h2,
-    .contact-grid h2,
-    .proof-grid h2 { max-width: 20ch; }
-
-    .practice-row {
-      grid-template-columns: 2.5rem minmax(0, 1fr);
-    }
-
-    .practice-flow {
-      grid-column: 2;
-    }
+    .hero-grid, .section-heading.split, .notes-layout, .contact-grid { grid-template-columns: 1fr; }
+    .hero-grid { min-height: auto; align-items: start; }
+    .hero-portrait-card { max-width: 400px; justify-self: start; }
+    .section-heading h2, .contact-grid h2 { max-width: 20ch; }
   }
 
   @media (max-width: 680px) {
-    .ie-shell {
-      width: min(100% - 2rem, 1280px);
-    }
-
-    .hero-grid {
-      gap: 3rem;
-      padding-block: 4rem;
-    }
-
-    .hero-copy h1 {
-      font-size: clamp(3rem, 16vw, 4.6rem);
-    }
-
-    .hero-proof {
-      grid-template-columns: 1fr;
-    }
-
-    .hero-proof span {
-      border-right: 0;
-      border-bottom: 1px solid var(--ie-rule);
-      text-align: left;
-    }
-
-    .hero-proof span:last-child { border-bottom: 0; }
-
-    .ie-section,
-    .contact-section { padding-block: 4.5rem; }
-
-    .section-heading h2,
-    .contact-grid h2,
-    .proof-grid h2 { font-size: clamp(2.2rem, 12vw, 3.4rem); }
-
-    .practice-row {
-      grid-template-columns: 2rem minmax(0, 1fr);
-      gap: 1rem;
-    }
-
-    .practice-flow {
-      grid-column: 1 / -1;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .practice-flow li:nth-child(2) { border-right: 1px solid var(--ie-rule); }
-    .practice-flow li:nth-child(-n + 2) { border-bottom: 0; }
-
-    .proof-measures,
-    .studio-ledger {
-      grid-template-columns: 1fr;
-    }
-
-    .proof-measures div {
-      min-height: 92px;
-      border-right: 0;
-      border-bottom: 1px solid var(--ie-rule);
-    }
-
-    .proof-measures div:last-child { border-bottom: 0; }
-
-    .talk-row {
-      grid-template-columns: 1fr;
-    }
-
-    .talk-row time { grid-row: auto; }
-
-    .studio-ledger a {
-      min-height: 220px;
-      border-right: 0;
-      border-bottom: 1px solid var(--ie-rule);
-    }
-
-    .studio-ledger a:last-child { border-bottom: 0; }
+    .ie-shell { width: min(100% - 2rem, 1280px); }
+    .hero-grid { gap: 2.5rem; padding-block: 3.5rem; }
+    .hero-copy h1 { font-size: clamp(3rem, 16vw, 4.6rem); }
+    .hero-proof { grid-template-columns: 1fr; }
+    .proof-pill-link { border-right: 0; border-bottom: 1px solid var(--ie-rule); text-align: left; }
+    .proof-pill-link:last-child { border-bottom: 0; }
+    .ie-section, .contact-section { padding-block: 3.5rem; }
+    .section-heading h2, .contact-grid h2 { font-size: clamp(2.2rem, 12vw, 3.4rem); }
   }
 </style>
