@@ -62,14 +62,14 @@ const walkthroughStages = [
 ];
 
 const palette = [
-  { name: 'Anchor', token: '--blue-500', value: '#2676AA' },
-  { name: 'Surface blue', token: '--blue-400', value: '#A2D2FF' },
-  { name: 'Canvas blue', token: '--blue-300', value: '#BDE0FE' },
-  { name: 'Signal warm', token: '--pink-400', value: '#FFAFCC' },
-  { name: 'Emphasis', token: '--pink-300', value: '#FFC8DD' },
-  { name: 'Lavender', token: '--lavender-400', value: '#CDB4DB' },
-  { name: 'Ink', token: '--ink-900', value: '#1A1A2E' },
-  { name: 'Page', token: '--neutral-050', value: '#F8F9FC' },
+  { name: 'Canvas', token: '--ie-canvas', value: '#F7F5EF' },
+  { name: 'Surface', token: '--ie-surface', value: '#FFFFFF' },
+  { name: 'Ink', token: '--ie-ink', value: '#171A1F' },
+  { name: 'Ink Secondary', token: '--ie-ink-secondary', value: '#3F4752' },
+  { name: 'Active Blue', token: '--ie-blue', value: '#2857D9' },
+  { name: 'Active Blue Soft', token: '--ie-blue-soft', value: '#E8EEFF' },
+  { name: 'Constraint Rust', token: '--ie-rust', value: '#A63D17' },
+  { name: 'Rule / Border', token: '--ie-rule', value: '#D8D6CF' },
 ];
 ---
 
@@ -139,7 +139,7 @@ const palette = [
             id="foundations"
             index="01"
             title="Foundations"
-            description="Soft Architecture palette (spec §3), typography hierarchy, spacing rhythm, and the semantic meaning carried by colour."
+            description="Instrumented Editorial palette, typography hierarchy, spacing rhythm, and the semantic meaning carried by colour."
             source="src/styles/global.css"
           >
             <div class="type-band">
@@ -232,6 +232,7 @@ const palette = [
                 description="Notes on systems, retrieval, and the decisions beneath dependable software."
                 count={12}
                 countLabel="essays"
+                headingLevel="h2"
               />
             </div>
           </ComponentSpecimen>

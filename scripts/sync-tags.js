@@ -11,6 +11,7 @@ const { glob } = fg;
 import matter from 'gray-matter';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { normalizeTag, tagSlug } from '../src/utils/tags.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -23,14 +24,6 @@ async function fileExists(path) {
   } catch {
     return false;
   }
-}
-
-function slugify(tag) {
-  return tag
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9\-]/g, '');
 }
 
 function escapeRegex(str) {
@@ -47,7 +40,7 @@ async function main() {
 
   const aliasMap = new Map();
   for (const entry of existing) {
-    aliasMap.set(entry.name.toLowerCase(), entry.aliases || []);
+    aliasMap.set(normalizeTag(entry.name), entry.aliases || []);
   }
 
   // 2. Scan all content files for tags
@@ -56,23 +49,26 @@ async function main() {
     absolute: true,
     ignore: ['src/content/**/_*.{md,mdx}'],
   });
-  const tagSet = new Set();
+  const tagMap = new Map();
 
   for (const file of files) {
     const content = await readFile(file, 'utf-8');
     const { data } = matter(content);
     if (data.draft === true) continue;
     if (Array.isArray(data.tags)) {
-      data.tags.forEach((t) => tagSet.add(t.trim()));
+      data.tags.forEach((tag) => {
+        const key = normalizeTag(tag);
+        if (!tagMap.has(key)) tagMap.set(key, tag.trim());
+      });
     }
   }
 
   // 3. Build new dictionary
-  const tags = Array.from(tagSet).sort((a, b) => a.localeCompare(b));
-  const dictionary = tags.map((name) => ({
+  const tags = Array.from(tagMap.entries()).sort(([a], [b]) => a.localeCompare(b));
+  const dictionary = tags.map(([key, name]) => ({
     name,
-    slug: slugify(name),
-    aliases: aliasMap.get(name.toLowerCase()) || [],
+    slug: tagSlug(name),
+    aliases: aliasMap.get(key) || [],
   }));
 
   // 4. Write output

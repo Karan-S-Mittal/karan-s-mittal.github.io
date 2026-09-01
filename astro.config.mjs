@@ -8,6 +8,26 @@ import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { remarkAutoTag } from './src/plugins/remarkAutoTag.js';
+import fs from 'node:fs';
+import fg from 'fast-glob';
+import matter from 'gray-matter';
+import { normalizeTag, tagSlug } from './src/utils/tags.js';
+
+const tagCounts = new Map();
+for (const file of fg.sync('src/content/blog/*.mdx', { ignore: ['src/content/blog/_*.mdx'] })) {
+  const { data } = matter(fs.readFileSync(file, 'utf8'));
+  if (data.draft === true) continue;
+  for (const tag of data.tags || []) {
+    const key = normalizeTag(tag);
+    tagCounts.set(key, (tagCounts.get(key) || 0) + 1);
+  }
+}
+
+const indexableTagPaths = new Set(
+  [...tagCounts]
+    .filter(([, count]) => count >= 2)
+    .map(([tag]) => `/tags/${tagSlug(tag)}/`),
+);
 
 // GitHub Pages user site config
 // If using a custom domain later, update 'site' to 'https://yourdomain.com'
@@ -26,7 +46,13 @@ export default defineConfig({
   },
   integrations: [
     // Keep redirect stubs and internal studio tooling out of the public sitemap.
-    sitemap({ filter: (page) => !/karan-s-mittal\.github\.io\/(?:contact|now|studio(?:\/.*)?)\/?$/.test(page) }),
+    sitemap({
+      filter: (page) => {
+        const pathname = new URL(page).pathname;
+        if (/^\/tags\/[^/]+\/$/.test(pathname)) return indexableTagPaths.has(pathname);
+        return !/^\/(?:contact|now|studio(?:\/.*)?|case-studies\/soft-architecture)\/?$/.test(pathname);
+      },
+    }),
     mdx(),
     react(),
   ],

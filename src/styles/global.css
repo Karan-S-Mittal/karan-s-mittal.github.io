@@ -637,7 +637,7 @@ h3:focus-within .heading-anchor,
 }
 
 @media (max-width: 640px) {
-  body { font-size: var(--text-base); }
+  body { font-size: 17px; }
   h1 { font-size: var(--text-3xl); }
   h2 { font-size: var(--text-xl); }
   .container { padding: var(--space-6) var(--space-4) var(--space-5); }

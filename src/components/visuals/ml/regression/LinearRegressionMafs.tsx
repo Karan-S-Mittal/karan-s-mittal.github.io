@@ -270,6 +270,7 @@ export const LinearRegressionMafs: React.FC = () => {
           <input
             type="range"
             className="slider-input"
+            aria-label="Regression line slope"
             min="-2.0"
             max="3.0"
             step="0.02"
@@ -289,6 +290,7 @@ export const LinearRegressionMafs: React.FC = () => {
           <input
             type="range"
             className="slider-input"
+            aria-label="Regression line intercept"
             min="-4.0"
             max="8.0"
             step="0.1"

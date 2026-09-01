@@ -33,10 +33,10 @@ const {
         <div class="matrix-box">
           <span class="m-bracket left">[</span>
           <div class="m-grid">
-            <input type="number" class="m-cell" id="m-a" value="1" step="0.1" />
-            <input type="number" class="m-cell" id="m-b" value="1" step="0.1" />
-            <input type="number" class="m-cell" id="m-c" value="0" step="0.1" />
-            <input type="number" class="m-cell" id="m-d" value="1" step="0.1" />
+            <input type="number" class="m-cell" id="m-a" value="1" step="0.1" aria-label="Matrix row 1 column 1" />
+            <input type="number" class="m-cell" id="m-b" value="1" step="0.1" aria-label="Matrix row 1 column 2" />
+            <input type="number" class="m-cell" id="m-c" value="0" step="0.1" aria-label="Matrix row 2 column 1" />
+            <input type="number" class="m-cell" id="m-d" value="1" step="0.1" aria-label="Matrix row 2 column 2" />
           </div>
           <span class="m-bracket right">]</span>
         </div>
@@ -64,7 +64,7 @@ const {
 
         <div class="interp-slider-group">
           <span class="ctrl-label">TRANSFORM PROGRESS:</span>
-          <input type="range" class="t-slider" min="0" max="1" step="0.005" value="1" />
+          <input type="range" class="t-slider" min="0" max="1" step="0.005" value="1" aria-label="Transformation progress" />
           <span class="t-val">t = 1.00</span>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { defineConfig } from '@playwright/test';
 
-// Visual regression per Soft Architecture spec §26.
+// Visual regression for the Instrumented Editorial system.
 // Baselines are committed; run `npm run test:visual` against a production build.
 export default defineConfig({
   testDir: './tests/visual',

@@ -71,7 +71,7 @@ const {
         <!-- Activation Selector -->
         <div class="activation-control">
           <span class="ctrl-label">ACTIVATION &sigma;(z):</span>
-          <select class="act-select">
+          <select class="act-select" aria-label="Activation function">
             <option value="relu" selected>ReLU : max(0, z)</option>
             <option value="sigmoid">Sigmoid : 1 / (1 + e^-z)</option>
             <option value="tanh">Tanh : (e^z - e^-z)/(e^z + e^-z)</option>
@@ -121,17 +121,17 @@ const {
             <tr data-row="0">
               <td class="row-label">y₁</td>
               <!-- Inputs (Shared) -->
-              <td class="cell-wrap"><input type="number" class="tcell x-cell" data-idx="0" value="1.0" step="0.1" /></td>
-              <td class="cell-wrap"><input type="number" class="tcell x-cell" data-idx="1" value="0.5" step="0.1" /></td>
-              <td class="cell-wrap"><input type="number" class="tcell x-cell" data-idx="2" value="-1.0" step="0.1" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell x-cell" data-idx="0" value="1.0" step="0.1" aria-label="Input x1" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell x-cell" data-idx="1" value="0.5" step="0.1" aria-label="Input x2" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell x-cell" data-idx="2" value="-1.0" step="0.1" aria-label="Input x3" /></td>
               <td class="col-sep"></td>
               <!-- Weights for Node 1 -->
-              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="0" data-c="0" value="1.2" step="0.1" /></td>
-              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="0" data-c="1" value="-0.8" step="0.1" /></td>
-              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="0" data-c="2" value="0.5" step="0.1" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="0" data-c="0" value="1.2" step="0.1" aria-label="Output y1 weight w11" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="0" data-c="1" value="-0.8" step="0.1" aria-label="Output y1 weight w12" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="0" data-c="2" value="0.5" step="0.1" aria-label="Output y1 weight w13" /></td>
               <td class="col-sep"></td>
               <!-- Bias 1 -->
-              <td class="cell-wrap"><input type="number" class="tcell b-cell" data-r="0" value="0.1" step="0.1" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell b-cell" data-r="0" value="0.1" step="0.1" aria-label="Output y1 bias" /></td>
               <td class="col-sep"></td>
               <!-- Output 1 -->
               <td class="res-cell z-cell" data-r="0">0.00</td>
@@ -147,12 +147,12 @@ const {
               <td class="cell-wrap"><span class="input-mirror" data-idx="2">-1.0</span></td>
               <td class="col-sep"></td>
               <!-- Weights for Node 2 -->
-              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="1" data-c="0" value="-0.5" step="0.1" /></td>
-              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="1" data-c="1" value="1.5" step="0.1" /></td>
-              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="1" data-c="2" value="0.2" step="0.1" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="1" data-c="0" value="-0.5" step="0.1" aria-label="Output y2 weight w21" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="1" data-c="1" value="1.5" step="0.1" aria-label="Output y2 weight w22" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="1" data-c="2" value="0.2" step="0.1" aria-label="Output y2 weight w23" /></td>
               <td class="col-sep"></td>
               <!-- Bias 2 -->
-              <td class="cell-wrap"><input type="number" class="tcell b-cell" data-r="1" value="-0.2" step="0.1" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell b-cell" data-r="1" value="-0.2" step="0.1" aria-label="Output y2 bias" /></td>
               <td class="col-sep"></td>
               <!-- Output 2 -->
               <td class="res-cell z-cell" data-r="1">0.00</td>
@@ -167,12 +167,12 @@ const {
               <td class="cell-wrap"><span class="input-mirror" data-idx="2">-1.0</span></td>
               <td class="col-sep"></td>
               <!-- Weights for Node 3 -->
-              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="2" data-c="0" value="0.7" step="0.1" /></td>
-              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="2" data-c="1" value="0.3" step="0.1" /></td>
-              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="2" data-c="2" value="-1.1" step="0.1" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="2" data-c="0" value="0.7" step="0.1" aria-label="Output y3 weight w31" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="2" data-c="1" value="0.3" step="0.1" aria-label="Output y3 weight w32" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell w-cell" data-r="2" data-c="2" value="-1.1" step="0.1" aria-label="Output y3 weight w33" /></td>
               <td class="col-sep"></td>
               <!-- Bias 3 -->
-              <td class="cell-wrap"><input type="number" class="tcell b-cell" data-r="2" value="0.0" step="0.1" /></td>
+              <td class="cell-wrap"><input type="number" class="tcell b-cell" data-r="2" value="0.0" step="0.1" aria-label="Output y3 bias" /></td>
               <td class="col-sep"></td>
               <!-- Output 3 -->
               <td class="res-cell z-cell" data-r="2">0.00</td>
@@ -401,6 +401,8 @@ const {
   }
 
   .table-scroll-wrapper {
+    min-width: 0;
+    max-width: 100%;
     overflow-x: auto;
     width: 100%;
   }

@@ -5,14 +5,16 @@ interface Props {
   description?: string;
   count?: number;
   countLabel?: string;
+  headingLevel?: 'h1' | 'h2';
 }
 
-const { label, title, description, count, countLabel = 'on record' } = Astro.props;
+const { label, title, description, count, countLabel = 'on record', headingLevel = 'h1' } = Astro.props;
+const Heading = headingLevel;
 ---
 
 <header class="page-header">
   <p class="label-tag">{label}</p>
-  <h1>{title}</h1>
+  <Heading>{title}</Heading>
   {description && (
     <p class="lead">
       {description}
@@ -26,7 +28,8 @@ const { label, title, description, count, countLabel = 'on record' } = Astro.pro
 <style>
   .page-header {
     margin-bottom: var(--space-8);
-    padding: var(--space-4) 0 0;
+    padding: var(--space-5) 0 0;
+    border-top: 1px solid var(--ie-rule-strong, var(--border));
   }
   .label-tag {
     display: inline-flex;
@@ -34,27 +37,28 @@ const { label, title, description, count, countLabel = 'on record' } = Astro.pro
     gap: var(--space-2);
     margin-bottom: var(--space-2);
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--ie-type-label, var(--text-xs));
     font-weight: 600;
     letter-spacing: 0.08em;
     color: var(--accent);
     text-transform: uppercase;
   }
-  .page-header h1 {
+  .page-header :is(h1, h2) {
     font-family: var(--font-serif);
-    font-size: clamp(2.25rem, 3.8vw, 3.25rem);
-    font-weight: 500;
+    max-width: 18ch;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 600;
     letter-spacing: -0.02em;
-    line-height: 1.15;
+    line-height: 1.03;
     color: var(--text);
     margin-bottom: var(--space-4);
   }
   .lead {
     color: var(--text-secondary);
-    max-width: 640px;
+    max-width: 680px;
     margin: 0;
     line-height: 1.68;
-    font-size: 1.125rem;
+    font-size: var(--ie-type-body, 1.125rem);
   }
   .count-badge {
     display: inline-block;
@@ -63,10 +67,10 @@ const { label, title, description, count, countLabel = 'on record' } = Astro.pro
     font-weight: 600;
     font-family: var(--font-mono);
     color: var(--accent);
-    background: var(--neutral-100);
+    background: var(--ie-blue-soft, var(--neutral-100));
     border: 1px solid var(--border-default);
     padding: 0.15rem 0.5rem;
-    border-radius: var(--radius-pill);
+    border-radius: 3px;
     white-space: nowrap;
   }
 
@@ -75,7 +79,7 @@ const { label, title, description, count, countLabel = 'on record' } = Astro.pro
       margin-bottom: var(--space-6);
     }
     .lead {
-      font-size: 1rem;
+      font-size: 1.0625rem;
     }
   }
 </style>

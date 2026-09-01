@@ -1,13 +1,262 @@
 ---
-// Contact page removed — the homepage dark plane (spec §23.7) is canonical.
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/portfolio/PageHeader.astro';
+import { SITE } from '../config';
+
+const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1';
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="0;url=/#contact" />
-    <link rel="canonical" href="/#contact" />
-    <title>Redirecting…</title>
-  </head>
-  <body><p>This page moved to <a href="/#contact">the homepage contact plane</a>.</p></body>
-</html>
+
+<Layout
+  title="Start a Conversation | Karan Mittal"
+  description="Start a consulting, collaboration, or technical conversation with Karan Mittal."
+>
+  <main class="container contact-page">
+    <PageHeader
+      label="Contact"
+      title="Bring the difficult system question."
+      description="Tell me what needs to be dependable, where the uncertainty is, and what constraints matter."
+    />
+
+    <div class="contact-layout">
+      <aside class="contact-aside" aria-label="Consulting guidance">
+        <div class="aside-block">
+          <p class="aside-label">A useful first note</p>
+          <p>There is no need for a formal brief. A few honest sentences about the system, the friction, and the stakes are enough to start.</p>
+        </div>
+
+        <div class="aside-block">
+          <p class="aside-label">What this is for</p>
+          <ul class="aside-list">
+            <li><span>→</span> Consulting on complex data and AI systems</li>
+            <li><span>→</span> Architecture, reliability, and latency/memory bottlenecks</li>
+            <li><span>→</span> Technical collaboration and advisory opportunities</li>
+          </ul>
+        </div>
+
+        <div class="aside-block quiet-route">
+          <p class="aside-label">Direct alternative routes</p>
+          <div class="route-links">
+            <a href="https://www.linkedin.com/in/karansmittal/" target="_blank" rel="noopener" class="route-link">
+              <span>LinkedIn connection</span>
+              <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+            <a href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`} class="route-link">
+              <span>Direct email ({SITE.email})</span>
+              <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </aside>
+
+      <section class="form-panel" aria-label="Engineering conversation form">
+        <div class="form-panel-head">
+          <div class="form-badge-row">
+            <span class="pill-badge">Project Brief</span>
+            <span class="security-note">Encrypted transmission</span>
+          </div>
+          <p>Submitted briefs arrive directly in my private inbox. Please do not include credentials, production secrets, or confidential data.</p>
+        </div>
+
+        <div class="iframe-container">
+          <iframe
+            data-tally-src={tallyEmbedUrl}
+            loading="lazy"
+            width="100%"
+            height="320"
+            frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+            title="Start an engineering conversation with Karan Mittal"
+          ></iframe>
+        </div>
+      </section>
+    </div>
+
+    <script is:inline>
+      var documentRef = document;
+      var tallyScript = 'https://tally.so/widgets/embed.js';
+      var loadTallyEmbeds = function () {
+        if (typeof Tally !== 'undefined') {
+          Tally.loadEmbeds();
+          return;
+        }
+        documentRef.querySelectorAll('iframe[data-tally-src]:not([src])').forEach(function (iframe) {
+          iframe.src = iframe.dataset.tallySrc;
+        });
+      };
+
+      if (typeof Tally !== 'undefined') {
+        loadTallyEmbeds();
+      } else if (documentRef.querySelector('script[src="' + tallyScript + '"]') === null) {
+        var script = documentRef.createElement('script');
+        script.src = tallyScript;
+        script.onload = loadTallyEmbeds;
+        script.onerror = loadTallyEmbeds;
+        documentRef.body.appendChild(script);
+      }
+    </script>
+  </main>
+</Layout>
+
+<style>
+  .contact-page {
+    padding-bottom: clamp(3rem, 6vw, 6rem);
+  }
+
+  .contact-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: start;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .contact-aside {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .aside-block {
+    padding: 1.25rem 1.4rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    background: var(--ie-surface);
+  }
+
+  .aside-label {
+    margin: 0 0 0.65rem;
+    color: var(--ie-blue);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .aside-block p:not(.aside-label) {
+    margin: 0;
+    color: var(--ie-ink-secondary);
+    font-size: 0.94rem;
+    line-height: 1.6;
+  }
+
+  .aside-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .aside-list li {
+    display: flex;
+    gap: 0.5rem;
+    color: var(--ie-ink-secondary);
+    font-size: 0.94rem;
+    line-height: 1.5;
+  }
+
+  .aside-list li span {
+    color: var(--ie-blue);
+    font-weight: 600;
+  }
+
+  .route-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .route-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius, 6px);
+    background: var(--ie-surface-raised);
+    color: var(--ie-ink);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-decoration: none;
+    transition: border-color 120ms ease, color 120ms ease, background-color 120ms ease;
+  }
+
+  .route-link:hover {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue-soft);
+    color: var(--ie-blue);
+  }
+
+  .route-link .arrow {
+    color: var(--ie-muted);
+  }
+
+  .form-panel {
+    min-height: 540px;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    background: var(--ie-surface);
+  }
+
+  .form-panel-head {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .form-badge-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .pill-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.65rem;
+    border-radius: var(--radius-pill, 999px);
+    background: var(--ie-blue-soft);
+    color: var(--ie-blue);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .security-note {
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+  }
+
+  .form-panel-head p {
+    margin: 0;
+    color: var(--ie-ink-secondary);
+    font-size: 0.94rem;
+    line-height: 1.55;
+  }
+
+  .iframe-container {
+    width: 100%;
+    min-height: 380px;
+  }
+
+  .iframe-container iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-radius: var(--radius, 6px);
+  }
+
+  @media (max-width: 840px) {
+    .contact-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

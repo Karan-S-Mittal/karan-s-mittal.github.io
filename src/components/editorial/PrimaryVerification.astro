@@ -148,6 +148,7 @@ const citations = rawCitations.map((c) => ({
 
 <style>
   .verification-wrapper {
+    min-width: 0;
     margin: var(--space-8) 0 var(--space-6);
     padding: var(--space-6);
     background: var(--surface-card);
@@ -206,6 +207,7 @@ const citations = rawCitations.map((c) => ({
   }
 
   .citation-card {
+    min-width: 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -265,7 +267,9 @@ const citations = rawCitations.map((c) => ({
   }
 
   .citation-author-row {
+    min-width: 0;
     margin-bottom: 4px;
+    overflow-wrap: anywhere;
   }
 
   .citation-author {
@@ -284,6 +288,7 @@ const citations = rawCitations.map((c) => ({
 
   .citation-anchor-row {
     display: flex;
+    min-width: 0;
     align-items: center;
     gap: 6px;
     margin-top: 4px;
@@ -298,12 +303,15 @@ const citations = rawCitations.map((c) => ({
   }
 
   .citation-anchor-code {
+    min-width: 0;
     font-family: var(--font-mono);
     font-size: 11px;
     padding: 1px 5px;
     background: color-mix(in srgb, var(--text) 6%, transparent);
     border-radius: 3px;
     color: var(--text);
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .citation-action {

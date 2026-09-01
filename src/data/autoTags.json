@@ -70,18 +70,13 @@
     "aliases": []
   },
   {
-    "name": "Machine Learning",
+    "name": "machine-learning",
     "slug": "machine-learning",
     "aliases": []
   },
   {
     "name": "Machine Learning Systems",
     "slug": "machine-learning-systems",
-    "aliases": []
-  },
-  {
-    "name": "machine-learning",
-    "slug": "machine-learning",
     "aliases": []
   },
   {
@@ -111,11 +106,6 @@
   },
   {
     "name": "optimization",
-    "slug": "optimization",
-    "aliases": []
-  },
-  {
-    "name": "Optimization",
     "slug": "optimization",
     "aliases": []
   },

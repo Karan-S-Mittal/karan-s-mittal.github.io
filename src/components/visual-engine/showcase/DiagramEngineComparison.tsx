@@ -295,6 +295,7 @@ export const DiagramEngineComparison: React.FC = () => {
             <span className="toolbar-label">ROUGHNESS:</span>
             <input
               type="range"
+              aria-label="Rough diagram line roughness"
               min="0.4"
               max="2.2"
               step="0.2"
@@ -306,6 +307,7 @@ export const DiagramEngineComparison: React.FC = () => {
 
             <span className="toolbar-label ml-3">FILL:</span>
             <select
+              aria-label="Rough diagram fill style"
               value={fillStyle}
               onChange={(e: any) => setFillStyle(e.target.value)}
               className="select-input"
@@ -375,7 +377,7 @@ export const DiagramEngineComparison: React.FC = () => {
           <div className="panel-card panel-d3">
             <div className="panel-badge-bar">
               <span className="engine-pill pill-d3">ENGINE B: D3 G2 BEZIER (BYTEBYTEGO STYLE)</span>
-              <span className="tech-meta">Cubic Spline Cables • Soft Architecture Geometry</span>
+              <span className="tech-meta">Cubic Spline Cables • Instrumented Editorial Geometry</span>
             </div>
 
             <div className="svg-stage">
@@ -392,47 +394,47 @@ export const DiagramEngineComparison: React.FC = () => {
                   </marker>
 
                   <linearGradient id="d3-cable-stall" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#FB7185" />
-                    <stop offset="100%" stop-color="#E11D48" />
+                    <stop offset="0%" stopColor="#FB7185" />
+                    <stop offset="100%" stopColor="#E11D48" />
                   </linearGradient>
 
                   <linearGradient id="d3-cable-stream" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#34D399" />
-                    <stop offset="100%" stop-color="#059669" />
+                    <stop offset="0%" stopColor="#34D399" />
+                    <stop offset="100%" stopColor="#059669" />
                   </linearGradient>
                 </defs>
 
                 {/* SCENARIO 1: NAIVE DRAM */}
                 <g transform="translate(10, 10)">
-                  <rect x="0" y="0" width="480" height="155" rx="8" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1.2" />
+                  <rect x="0" y="0" width="480" height="155" rx="8" fill="#FFF1F2" stroke="#FDA4AF" strokeWidth="1.2" />
                   
                   {/* Step Header */}
                   <rect x="10" y="8" width="18" height="16" rx="3" fill="#E11D48" />
-                  <text x="19" y="20" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="800" fill="#FFFFFF">1</text>
-                  <text x="34" y="20" font-family="var(--font-sans, sans-serif)" font-size="11" font-weight="700" fill="#9F1239">
+                  <text x="19" y="20" textAnchor="middle" fontFamily="var(--font-mono, monospace)" fontSize="10" fontWeight="800" fill="#FFFFFF">1</text>
+                  <text x="34" y="20" fontFamily="var(--font-sans, sans-serif)" fontSize="11" fontWeight="700" fill="#9F1239">
                     Naive DRAM Pointer Chase
                   </text>
-                  <rect x="350" y="8" width="120" height="16" rx="3" fill="#FFE4E6" stroke="#F43F5E" stroke-width="1" />
-                  <text x="410" y="19" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="700" fill="#BE123C">
+                  <rect x="350" y="8" width="120" height="16" rx="3" fill="#FFE4E6" stroke="#F43F5E" strokeWidth="1" />
+                  <text x="410" y="19" textAnchor="middle" fontFamily="var(--font-mono, monospace)" fontSize="8.5" fontWeight="700" fill="#BE123C">
                     ⚠ ~200 CYCLES STALL
                   </text>
 
                   {/* CPU Package */}
                   <g transform="translate(12, 34)">
-                    <rect x="0" y="0" width="145" height="108" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" />
+                    <rect x="0" y="0" width="145" height="108" rx="6" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1.2" />
                     <rect x="0" y="0" width="145" height="20" rx="6 6 0 0" fill="#F1F5F9" />
-                    <text x="8" y="14" font-family="var(--font-mono, monospace)" font-size="9" font-weight="700" fill="#334155">CPU DIE: SOCKET 0</text>
+                    <text x="8" y="14" fontFamily="var(--font-mono, monospace)" fontSize="9" fontWeight="700" fill="#334155">CPU DIE: SOCKET 0</text>
                     
                     {/* ALU Frozen */}
-                    <rect x="6" y="26" width="133" height="22" rx="3" fill="#FEE2E2" stroke="#FCA5A5" stroke-width="1" />
-                    <text x="12" y="40" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="700" fill="#991B1B">ALU ENGINE</text>
-                    <text x="132" y="40" text-anchor="end" font-family="var(--font-mono, monospace)" font-size="8" font-weight="800" fill="#DC2626">⛔ FROZEN</text>
+                    <rect x="6" y="26" width="133" height="22" rx="3" fill="#FEE2E2" stroke="#FCA5A5" strokeWidth="1" />
+                    <text x="12" y="40" fontFamily="var(--font-mono, monospace)" fontSize="8.5" fontWeight="700" fill="#991B1B">ALU ENGINE</text>
+                    <text x="132" y="40" textAnchor="end" fontFamily="var(--font-mono, monospace)" fontSize="8" fontWeight="800" fill="#DC2626">⛔ FROZEN</text>
 
                     {/* Cache Misses */}
-                    <rect x="6" y="52" width="133" height="46" rx="3" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1" />
-                    <text x="10" y="66" font-family="var(--font-mono, monospace)" font-size="8" font-weight="600" fill="#64748B">L1 D-Cache: <tspan fill="#E11D48" font-weight="700">MISS ✕ (4c)</tspan></text>
-                    <text x="10" y="80" font-family="var(--font-mono, monospace)" font-size="8" font-weight="600" fill="#64748B">L2 Cache:   <tspan fill="#E11D48" font-weight="700">MISS ✕ (12c)</tspan></text>
-                    <text x="10" y="94" font-family="var(--font-mono, monospace)" font-size="8" font-weight="600" fill="#64748B">L3 Cache:   <tspan fill="#E11D48" font-weight="700">MISS ✕ (40c)</tspan></text>
+                    <rect x="6" y="52" width="133" height="46" rx="3" fill="#F8FAFC" stroke="#E2E8F0" strokeWidth="1" />
+                    <text x="10" y="66" fontFamily="var(--font-mono, monospace)" fontSize="8" fontWeight="600" fill="#64748B">L1 D-Cache: <tspan fill="#E11D48" fontWeight="700">MISS ✕ (4c)</tspan></text>
+                    <text x="10" y="80" fontFamily="var(--font-mono, monospace)" fontSize="8" fontWeight="600" fill="#64748B">L2 Cache:   <tspan fill="#E11D48" fontWeight="700">MISS ✕ (12c)</tspan></text>
+                    <text x="10" y="94" fontFamily="var(--font-mono, monospace)" fontSize="8" fontWeight="600" fill="#64748B">L3 Cache:   <tspan fill="#E11D48" fontWeight="700">MISS ✕ (40c)</tspan></text>
 
                     {/* Connection Terminal Pin */}
                     <circle cx="145" cy="46" r="3.5" fill="#E11D48" />
@@ -440,105 +442,105 @@ export const DiagramEngineComparison: React.FC = () => {
                   </g>
 
                   {/* D3 Smooth Curved Bezier Conduits */}
-                  <path d={naiveStallCable || ''} fill="none" stroke="url(#d3-cable-stall)" stroke-width="2" marker-end="url(#d3-arr-rose)" />
-                  <path d={naiveReturnCable || ''} fill="none" stroke="#BE123C" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#d3-arr-rose)" />
+                  <path d={naiveStallCable || ''} fill="none" stroke="url(#d3-cable-stall)" strokeWidth="2" markerEnd="url(#d3-arr-rose)" />
+                  <path d={naiveReturnCable || ''} fill="none" stroke="#BE123C" strokeWidth="1.8" strokeDasharray="4 3" markerEnd="url(#d3-arr-rose)" />
 
-                  <rect x="180" y="44" width="76" height="14" rx="2" fill="#FFE4E6" stroke="#FDA4AF" stroke-width="0.8" />
-                  <text x="218" y="54" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="700" fill="#BE123C">1. Mem Req ──►</text>
+                  <rect x="180" y="44" width="76" height="14" rx="2" fill="#FFE4E6" stroke="#FDA4AF" strokeWidth="0.8" />
+                  <text x="218" y="54" textAnchor="middle" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="700" fill="#BE123C">1. Mem Req ──►</text>
 
-                  <rect x="180" y="124" width="80" height="14" rx="2" fill="#FFE4E6" stroke="#FDA4AF" stroke-width="0.8" />
-                  <text x="220" y="134" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="700" fill="#BE123C">◄── 2. Stall +100ns</text>
+                  <rect x="180" y="124" width="80" height="14" rx="2" fill="#FFE4E6" stroke="#FDA4AF" strokeWidth="0.8" />
+                  <text x="220" y="134" textAnchor="middle" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="700" fill="#BE123C">◄── 2. Stall +100ns</text>
 
                   {/* DDR5 Memory Bank */}
                   <g transform="translate(290, 34)">
-                    <rect x="0" y="0" width="180" height="108" rx="6" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="1.2" />
+                    <rect x="0" y="0" width="180" height="108" rx="6" fill="#FFFFFF" stroke="#FDA4AF" strokeWidth="1.2" />
                     <rect x="0" y="0" width="180" height="20" rx="6 6 0 0" fill="#FFE4E6" />
-                    <text x="8" y="14" font-family="var(--font-mono, monospace)" font-size="9" font-weight="700" fill="#9F1239">DDR5 DRAM MEMORY</text>
+                    <text x="8" y="14" fontFamily="var(--font-mono, monospace)" fontSize="9" fontWeight="700" fill="#9F1239">DDR5 DRAM MEMORY</text>
 
                     {/* Receiver Pin */}
                     <circle cx="0" cy="46" r="3.5" fill="#E11D48" />
                     <circle cx="0" cy="86" r="3.5" fill="#BE123C" />
 
                     {/* Out of order chips */}
-                    <rect x="8" y="26" width="78" height="42" rx="3" fill="#FFF1F2" stroke="#F43F5E" stroke-width="1" />
-                    <text x="12" y="38" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="700" fill="#9F1239">0x8F0020 (Row 4082)</text>
-                    <text x="12" y="50" font-family="var(--font-mono, monospace)" font-size="8" font-weight="600" fill="#1E293B">val: 0.34</text>
-                    <text x="12" y="62" font-family="var(--font-mono, monospace)" font-size="7.5" fill="#E11D48">g:+1.42, h:2.1</text>
+                    <rect x="8" y="26" width="78" height="42" rx="3" fill="#FFF1F2" stroke="#F43F5E" strokeWidth="1" />
+                    <text x="12" y="38" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="700" fill="#9F1239">0x8F0020 (Row 4082)</text>
+                    <text x="12" y="50" fontFamily="var(--font-mono, monospace)" fontSize="8" fontWeight="600" fill="#1E293B">val: 0.34</text>
+                    <text x="12" y="62" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fill="#E11D48">g:+1.42, h:2.1</text>
 
-                    <rect x="92" y="26" width="80" height="42" rx="3" fill="#FFF1F2" stroke="#F43F5E" stroke-width="1" />
-                    <text x="96" y="38" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="700" fill="#9F1239">0x0114C0 (Row 12)</text>
-                    <text x="96" y="50" font-family="var(--font-mono, monospace)" font-size="8" font-weight="600" fill="#1E293B">val: 4.50</text>
-                    <text x="96" y="62" font-family="var(--font-mono, monospace)" font-size="7.5" fill="#E11D48">g:-0.85, h:1.0</text>
+                    <rect x="92" y="26" width="80" height="42" rx="3" fill="#FFF1F2" stroke="#F43F5E" strokeWidth="1" />
+                    <text x="96" y="38" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="700" fill="#9F1239">0x0114C0 (Row 12)</text>
+                    <text x="96" y="50" fontFamily="var(--font-mono, monospace)" fontSize="8" fontWeight="600" fill="#1E293B">val: 4.50</text>
+                    <text x="96" y="62" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fill="#E11D48">g:-0.85, h:1.0</text>
 
                     {/* Gold Pins */}
-                    <line x1="8" y1="102" x2="172" y2="102" stroke="#D97706" stroke-width="2.5" stroke-dasharray="3 2" />
-                    <text x="90" y="94" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="600" fill="#BE123C">⚠️ 64B lines thrash (90% wasted)</text>
+                    <line x1="8" y1="102" x2="172" y2="102" stroke="#D97706" strokeWidth="2.5" strokeDasharray="3 2" />
+                    <text x="90" y="94" textAnchor="middle" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="600" fill="#BE123C">⚠️ 64B lines thrash (90% wasted)</text>
                   </g>
                 </g>
 
                 {/* SCENARIO 2: CONTIGUOUS PREFETCH */}
                 <g transform="translate(10, 180)">
-                  <rect x="0" y="0" width="480" height="160" rx="8" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.2" />
+                  <rect x="0" y="0" width="480" height="160" rx="8" fill="#F0FDF4" stroke="#86EFAC" strokeWidth="1.2" />
 
                   {/* Step Header */}
                   <rect x="10" y="8" width="18" height="16" rx="3" fill="#059669" />
-                  <text x="19" y="20" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="800" fill="#FFFFFF">2</text>
-                  <text x="34" y="20" font-family="var(--font-sans, sans-serif)" font-size="11" font-weight="700" fill="#065F46">
+                  <text x="19" y="20" textAnchor="middle" fontFamily="var(--font-mono, monospace)" fontSize="10" fontWeight="800" fill="#FFFFFF">2</text>
+                  <text x="34" y="20" fontFamily="var(--font-sans, sans-serif)" fontSize="11" fontWeight="700" fill="#065F46">
                     XGBoost Cache-Conscious Stream
                   </text>
-                  <rect x="350" y="8" width="120" height="16" rx="3" fill="#DCFCE7" stroke="#10B981" stroke-width="1" />
-                  <text x="410" y="19" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="700" fill="#047857">
+                  <rect x="350" y="8" width="120" height="16" rx="3" fill="#DCFCE7" stroke="#10B981" strokeWidth="1" />
+                  <text x="410" y="19" textAnchor="middle" fontFamily="var(--font-mono, monospace)" fontSize="8.5" fontWeight="700" fill="#047857">
                     ✓ ~4 CYCLES (100% HIT)
                   </text>
 
                   {/* Pre-sorted CSC block */}
                   <g transform="translate(12, 34)">
-                    <rect x="0" y="0" width="145" height="114" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" />
+                    <rect x="0" y="0" width="145" height="114" rx="6" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1.2" />
                     <rect x="0" y="0" width="145" height="20" rx="6 6 0 0" fill="#F1F5F9" />
-                    <text x="8" y="14" font-family="var(--font-mono, monospace)" font-size="9" font-weight="700" fill="#334155">CSC COLUMN CHUNK</text>
+                    <text x="8" y="14" fontFamily="var(--font-mono, monospace)" fontSize="9" fontWeight="700" fill="#334155">CSC COLUMN CHUNK</text>
 
-                    <rect x="6" y="26" width="133" height="22" rx="3" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1" />
-                    <text x="10" y="40" font-family="var(--font-mono, monospace)" font-size="8" font-weight="700" fill="#1D4ED8">VALS: [1.2, 1.8, 2.5, 3.1]</text>
+                    <rect x="6" y="26" width="133" height="22" rx="3" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1" />
+                    <text x="10" y="40" fontFamily="var(--font-mono, monospace)" fontSize="8" fontWeight="700" fill="#1D4ED8">VALS: [1.2, 1.8, 2.5, 3.1]</text>
 
-                    <rect x="6" y="52" width="133" height="34" rx="3" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1" />
-                    <text x="10" y="65" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="700" fill="#065F46">THREAD-LOCAL BUFFER:</text>
-                    <text x="10" y="78" font-family="var(--font-mono, monospace)" font-size="7.5" fill="#047857">gBuf[]: [+1.42, -0.85, ...]</text>
+                    <rect x="6" y="52" width="133" height="34" rx="3" fill="#ECFDF5" stroke="#A7F3D0" strokeWidth="1" />
+                    <text x="10" y="65" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="700" fill="#065F46">THREAD-LOCAL BUFFER:</text>
+                    <text x="10" y="78" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fill="#047857">gBuf[]: [+1.42, -0.85, ...]</text>
 
-                    <text x="72" y="102" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="700" fill="#059669">✓ 64B Contiguous Aligned</text>
+                    <text x="72" y="102" textAnchor="middle" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="700" fill="#059669">✓ 64B Contiguous Aligned</text>
                     <circle cx="145" cy="56" r="3.5" fill="#059669" />
                   </g>
 
                   {/* D3 Smooth Prefetch Streaming Conduit */}
-                  <path d={optimalStreamCable || ''} fill="none" stroke="url(#d3-cable-stream)" stroke-width="3" marker-end="url(#d3-arr-green)" />
-                  <rect x="180" y="80" width="76" height="16" rx="3" fill="#DCFCE7" stroke="#86EFAC" stroke-width="1" />
-                  <text x="218" y="91" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8" font-weight="800" fill="#065F46">⚡ 64B BURST</text>
+                  <path d={optimalStreamCable || ''} fill="none" stroke="url(#d3-cable-stream)" strokeWidth="3" markerEnd="url(#d3-arr-green)" />
+                  <rect x="180" y="80" width="76" height="16" rx="3" fill="#DCFCE7" stroke="#86EFAC" strokeWidth="1" />
+                  <text x="218" y="91" textAnchor="middle" fontFamily="var(--font-mono, monospace)" fontSize="8" fontWeight="800" fill="#065F46">⚡ 64B BURST</text>
 
                   {/* CPU Core: L1 Hit & AVX2 SIMD */}
                   <g transform="translate(265, 34)">
-                    <rect x="0" y="0" width="205" height="114" rx="6" fill="#FFFFFF" stroke="#86EFAC" stroke-width="1.2" />
+                    <rect x="0" y="0" width="205" height="114" rx="6" fill="#FFFFFF" stroke="#86EFAC" strokeWidth="1.2" />
                     <rect x="0" y="0" width="205" height="20" rx="6 6 0 0" fill="#DCFCE7" />
-                    <text x="8" y="14" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="700" fill="#065F46">CPU CORE: L1 HIT & AVX2 DIE</text>
+                    <text x="8" y="14" fontFamily="var(--font-mono, monospace)" fontSize="8.5" fontWeight="700" fill="#065F46">CPU CORE: L1 HIT & AVX2 DIE</text>
                     <circle cx="0" cy="56" r="3.5" fill="#059669" />
 
                     {/* L1 Cache */}
-                    <rect x="6" y="26" width="85" height="56" rx="3" fill="#F0FDF4" stroke="#10B981" stroke-width="1" />
-                    <text x="10" y="38" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="700" fill="#065F46">L1 D-CACHE</text>
-                    <text x="10" y="50" font-family="var(--font-mono, monospace)" font-size="7.5" fill="#047857">✓ 100% Hit</text>
-                    <text x="10" y="62" font-family="var(--font-mono, monospace)" font-size="7.5" fill="#047857">✓ HW Prefetch</text>
-                    <text x="10" y="74" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="700" fill="#059669">~4 cyc (1ns)</text>
+                    <rect x="6" y="26" width="85" height="56" rx="3" fill="#F0FDF4" stroke="#10B981" strokeWidth="1" />
+                    <text x="10" y="38" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="700" fill="#065F46">L1 D-CACHE</text>
+                    <text x="10" y="50" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fill="#047857">✓ 100% Hit</text>
+                    <text x="10" y="62" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fill="#047857">✓ HW Prefetch</text>
+                    <text x="10" y="74" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="700" fill="#059669">~4 cyc (1ns)</text>
 
                     {/* SIMD Pipe */}
-                    <path d={simdPipe || ''} fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#d3-arr-blue)" />
+                    <path d={simdPipe || ''} fill="none" stroke="#2563EB" strokeWidth="2" markerEnd="url(#d3-arr-blue)" />
 
                     {/* AVX2 Registers */}
-                    <rect x="100" y="26" width="98" height="56" rx="3" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1" />
-                    <text x="104" y="38" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="700" fill="#1E40AF">AVX2 SIMD</text>
-                    <text x="104" y="50" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="600" fill="#1D4ED8">_mm256_add_ps(G,g)</text>
-                    <text x="104" y="62" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="600" fill="#1D4ED8">_mm256_add_ps(H,h)</text>
-                    <text x="104" y="74" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="700" fill="#2563EB">8 floats/cyc</text>
+                    <rect x="100" y="26" width="98" height="56" rx="3" fill="#EFF6FF" stroke="#3B82F6" strokeWidth="1" />
+                    <text x="104" y="38" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="700" fill="#1E40AF">AVX2 SIMD</text>
+                    <text x="104" y="50" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="600" fill="#1D4ED8">_mm256_add_ps(G,g)</text>
+                    <text x="104" y="62" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="600" fill="#1D4ED8">_mm256_add_ps(H,h)</text>
+                    <text x="104" y="74" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="700" fill="#2563EB">8 floats/cyc</text>
 
                     <rect x="6" y="88" width="193" height="18" rx="3" fill="#065F46" />
-                    <text x="102" y="100" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="7.5" font-weight="800" fill="#A7F3D0">
+                    <text x="102" y="100" textAnchor="middle" fontFamily="var(--font-mono, monospace)" fontSize="7.5" fontWeight="800" fill="#A7F3D0">
                       ✓ 0 BUBBLES • 17× SPEEDUP
                     </text>
                   </g>
@@ -555,6 +557,8 @@ export const DiagramEngineComparison: React.FC = () => {
 
       <style>{`
         .diagram-comparison-container {
+          min-width: 0;
+          max-width: 100%;
           background: #FFFFFF;
           border: 1px solid #E2E8F0;
           border-radius: 12px;
@@ -577,6 +581,9 @@ export const DiagramEngineComparison: React.FC = () => {
 
         .toolbar-group {
           display: flex;
+          min-width: 0;
+          max-width: 100%;
+          flex-wrap: wrap;
           align-items: center;
           gap: 8px;
         }
@@ -629,6 +636,7 @@ export const DiagramEngineComparison: React.FC = () => {
         }
 
         .select-input {
+          max-width: 100%;
           font-size: 11px;
           font-family: var(--font-mono, monospace);
           background: #F8FAFC;
@@ -919,6 +927,25 @@ export const DiagramEngineComparison: React.FC = () => {
         @media (max-width: 900px) {
           .showcase-panels.split {
             grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .comparison-toolbar,
+          .toolbar-group {
+            align-items: stretch;
+          }
+
+          .comparison-toolbar {
+            flex-direction: column;
+          }
+
+          .range-input {
+            flex: 1 1 90px;
+          }
+
+          .select-input {
+            flex: 1 1 160px;
           }
         }
       `}</style>

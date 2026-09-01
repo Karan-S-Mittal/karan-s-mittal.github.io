@@ -82,7 +82,7 @@ const layersJson = JSON.stringify(parsedLayers);
         <!-- Weight Threshold Filter -->
         <div class="control-group slider-group">
           <span class="ctrl-label">WEIGHT PRUNING:</span>
-          <input type="range" class="weight-slider" min="0" max="0.8" step="0.05" value={pruning} />
+          <input type="range" class="weight-slider" min="0" max="0.8" step="0.05" value={pruning} aria-label="Weight pruning threshold" />
           <span class="weight-val">&gt; {pruning.toFixed(2)}</span>
         </div>
       </div>
@@ -90,7 +90,7 @@ const layersJson = JSON.stringify(parsedLayers);
       <!-- Scrubber Timeline -->
       <div class="timeline-row">
         <span class="ctrl-label">STEP SCRUBBER:</span>
-        <input type="range" class="step-scrubber" min="0" max="3" step="0.01" value="0" />
+        <input type="range" class="step-scrubber" min="0" max="3" step="0.01" value="0" aria-label="Network propagation step" />
         <span class="step-val">Layer 0 &rarr; 1</span>
       </div>
     </div>

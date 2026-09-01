@@ -2,16 +2,15 @@
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/portfolio/PageHeader.astro';
 import Icon from '../components/chrome/Icon.astro';
-import StudioPanel from '../components/chrome/StudioPanel.astro';
 import communitiesData from '../data/communities.json';
 
 const { communities } = communitiesData;
 ---
 
 <Layout title="About | Karan Mittal">
-  <main class="container">
+  <main class="container about-page">
     <PageHeader
-      label="§04 About"
+      label="About"
       title="Karan Mittal"
       description="AI systems architect, founder, and community builder working on dependable knowledge and inference systems."
     />
@@ -20,96 +19,62 @@ const { communities } = communitiesData;
       <div class="about-portrait-frame">
         <img class="about-portrait" src="/profile-400.jpg" alt="Karan Mittal speaking at a technical event" width="400" height="400" />
       </div>
-      <div>
+      <div class="about-lead">
         <blockquote class="hero-quote">
           “The difficult part of an engineering problem is rarely the tool. It is designing a system people can rely on.”
         </blockquote>
 
         <p class="bio">
-          I am an AI Systems Architect and co-founder of <a href="https://dextar.co">Dextar</a>. I work with teams
+          I am an AI Systems Architect and co-founder of <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a>. I work with teams
           turning uncertain data and AI work into systems with clear boundaries, inspectable evidence, explicit
           constraints, and a path to production. My experience spans life sciences, semiconductor supply chains,
-          and finance; my current focus includes knowledge systems, AI reliability, and performance engineering.
+          and finance; my current focus includes deterministic knowledge systems, AI reliability, and microarchitectural performance engineering.
         </p>
 
-        <nav class="local-nav">
-          <a href="#now">Now</a>
-          <span class="nav-sep">·</span>
-          <a href="#capabilities">Practice</a>
-          <span class="nav-sep">·</span>
-          <a href="#community">Community</a>
+        <nav class="local-nav" aria-label="Section shortcuts">
+          <a href="/now" class="pill-shortcut"><span>Now</span> <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="#capabilities" class="pill-shortcut"><span>Practice</span> <span class="arrow" aria-hidden="true">↓</span></a>
+          <a href="#community" class="pill-shortcut"><span>Community</span> <span class="arrow" aria-hidden="true">↓</span></a>
+          <a href="/contact" class="pill-shortcut accent"><span>Project brief</span> <span class="arrow" aria-hidden="true">↗</span></a>
         </nav>
       </div>
     </div>
 
-    <section id="now">
-      <h2>Now</h2>
-      <p class="section-desc">A living snapshot of current focus, updated periodically.</p>
-      <div class="now-grid">
-        <StudioPanel title="Work" index="01" state="signal">
-          <Icon slot="icon" name="briefcase" size={15} />
-          <ul>
-            <li>Co-founding and leading engineering at <a href="https://dextar.co">Dextar.co</a></li>
-            <li>Architecting production GraphRAG systems for enterprise clients</li>
-            <li>Consulting on MLOps infrastructure and GPU cluster optimisation</li>
-          </ul>
-        </StudioPanel>
-
-        <StudioPanel title="Building" index="02" state="model">
-          <Icon slot="icon" name="wrench" size={15} />
-          <ul>
-            <li>An open-source deterministic RAG evaluation harness</li>
-            <li>A CUDA optimisation pattern cookbook for ML inference</li>
-            <li>This blog and my GitHub presence</li>
-          </ul>
-        </StudioPanel>
-
-        <StudioPanel title="Learning" index="03" state="verified">
-          <Icon slot="icon" name="book-open" size={15} />
-          <ul>
-            <li>Advanced Rust for systems programming</li>
-            <li>CPU/GPU co-design patterns for edge LLM inference</li>
-          </ul>
-        </StudioPanel>
-
-        <StudioPanel title="Speaking" index="04" state="signal">
-          <Icon slot="icon" name="mic" size={15} />
-          <ul>
-            <li>Preparing talks on GraphRAG and deterministic retrieval for 2026</li>
-            <li><a href="/talks" class="arrow-link">View all talks and events<span class="arrow" aria-hidden="true">→</span></a></li>
-          </ul>
-        </StudioPanel>
+    <section id="capabilities" class="about-section">
+      <div class="section-head">
+        <span class="section-register">01 / Practice</span>
+        <h2>Engineering practice</h2>
       </div>
-      <p class="now-footer">
-        Last updated: August 2026 · <a href="https://nownownow.com/about">What is a /now page?</a>
-      </p>
-    </section>
-
-    <section id="capabilities">
-      <h2>Engineering practice</h2>
-      <div class="capabilities-list">
-        <div class="capability">
-          <h3>AI Architecture</h3>
-          <p>Knowledge systems, retrieval contracts, graph-aware discovery, LLM orchestration</p>
+      <div class="capabilities-grid">
+        <div class="capability-card">
+          <span class="cap-num">01</span>
+          <h3>AI Architecture &amp; RAG</h3>
+          <p>Deterministic knowledge systems, retrieval contracts, graph-aware discovery, and LLM orchestration.</p>
         </div>
-        <div class="capability">
-          <h3>Performance</h3>
-          <p>Inference paths, model and hardware trade-offs, observability, low-latency delivery</p>
+        <div class="capability-card">
+          <span class="cap-num">02</span>
+          <h3>Performance &amp; Inference</h3>
+          <p>KV-cache layout optimization, CUDA kernels, memory fragmentation bounds, and low-latency delivery.</p>
         </div>
-        <div class="capability">
-          <h3>Infrastructure</h3>
-          <p>Production MLOps, Kubernetes, cloud-native systems, evaluation and operational guardrails</p>
+        <div class="capability-card">
+          <span class="cap-num">03</span>
+          <h3>Infrastructure &amp; MLOps</h3>
+          <p>Production evaluation harnesses, distributed data pipelines, Kubernetes, and operational guardrails.</p>
         </div>
-        <div class="capability">
-          <h3>Leadership</h3>
-          <p>Technical strategy, engineering team building, stakeholder alignment, durable handover</p>
+        <div class="capability-card">
+          <span class="cap-num">04</span>
+          <h3>Technical Strategy</h3>
+          <p>Architecture review, engineering team mentoring, stakeholder alignment, and durable technical handover.</p>
         </div>
       </div>
     </section>
 
-    <section id="community">
-      <h2>Community</h2>
-      <p class="section-desc">I organise and mentor across several technical communities in Central India.</p>
+    <section id="community" class="about-section">
+      <div class="section-head">
+        <span class="section-register">02 / Ecosystem</span>
+        <h2>Community &amp; Mentorship</h2>
+        <p class="section-desc">Organising, mentoring, and teaching across technical communities in Central India.</p>
+      </div>
       <div class="community-list">
         {communities.map((c) => (
           <div class="community-row">
@@ -121,8 +86,8 @@ const { communities } = communitiesData;
             {c.links && c.links.length > 0 && (
               <div class="community-links">
                 {c.links.map((link: { label: string; url: string }) => (
-                  <a href={link.url} target="_blank" rel="noopener">
-                    {link.label}
+                  <a href={link.url} target="_blank" rel="noopener" class="comm-btn">
+                    <span>{link.label}</span>
                     <Icon name="arrow-up-right" size={12} />
                   </a>
                 ))}
@@ -134,39 +99,43 @@ const { communities } = communitiesData;
     </section>
 
     <section class="cta-section">
-      <h2>Let's build</h2>
-      <p>For consulting engagements involving complex data, AI reliability, system performance, or technical strategy.</p>
-      <div class="cta-actions">
-        <a href="/#contact" class="cta-link arrow-link">Discuss an engagement<span class="arrow" aria-hidden="true">→</span></a>
-        <a href="https://www.linkedin.com/in/karansmittal/" class="cta-link arrow-link">LinkedIn<span class="arrow" aria-hidden="true">→</span></a>
+      <div class="cta-inner">
+        <span class="section-register">03 / Consultation</span>
+        <h2>Bring the difficult system question</h2>
+        <p>Available for consulting engagements involving complex data architectures, AI reliability, GPU performance optimization, or technical strategy.</p>
+        <div class="cta-actions">
+          <a href="/contact" class="ie-cta primary">Start a project brief <span aria-hidden="true">→</span></a>
+          <a href="https://www.linkedin.com/in/karansmittal/" target="_blank" rel="noopener" class="ie-cta secondary">Connect on LinkedIn <span aria-hidden="true">↗</span></a>
+        </div>
       </div>
     </section>
   </main>
 </Layout>
 
 <style>
-  main.container {
-    max-width: 1040px;
-    margin: 0 auto;
-    padding: 0 var(--space-5) var(--space-9);
+  .about-page {
+    padding-bottom: clamp(3rem, 6vw, 6rem);
   }
 
   .about-intro {
     display: grid;
-    grid-template-columns: 220px minmax(0, 1fr);
-    gap: var(--space-7);
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
     align-items: start;
-    margin-bottom: var(--space-8);
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+    padding-bottom: clamp(2rem, 4vw, 3rem);
+    border-bottom: 1px solid var(--ie-rule);
   }
+
   .about-portrait-frame {
-    width: 220px;
-    height: 260px;
-    border-radius: 110px 110px 14px 14px;
+    width: 200px;
+    height: 240px;
+    border-radius: var(--radius-card, 8px);
     overflow: hidden;
-    background: var(--surface-subtle);
-    border: 1px solid var(--border-default);
-    box-shadow: var(--shadow-card);
+    background: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
   }
+
   .about-portrait {
     display: block;
     width: 100%;
@@ -174,267 +143,318 @@ const { communities } = communitiesData;
     object-fit: cover;
     object-position: center top;
     filter: grayscale(100%) contrast(1.05);
-    transition: filter var(--transition-slow);
+    transition: filter 200ms ease;
   }
+
   .about-portrait-frame:hover .about-portrait {
     filter: grayscale(20%) contrast(1.02);
   }
 
+  .about-lead {
+    display: flex;
+    flex-direction: column;
+  }
+
   .hero-quote {
-    margin: 0 0 var(--space-5);
+    margin: 0 0 1.25rem;
     padding: 0;
     border: none;
     background: none;
     font-family: var(--font-serif);
-    font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+    font-size: clamp(1.3rem, 2.3vw, 1.7rem);
     font-weight: 500;
     font-style: italic;
-    color: var(--text);
-    line-height: 1.35;
+    color: var(--ie-ink);
+    line-height: 1.4;
     letter-spacing: -0.015em;
   }
+
   .bio {
+    margin: 0 0 1.5rem;
+    color: var(--ie-ink-secondary);
     font-size: 1.05rem;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    margin-bottom: var(--space-6);
+    line-height: 1.68;
     max-width: 680px;
   }
+
   .bio a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-  .bio a:hover {
+    color: var(--ie-blue);
     text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .local-nav {
     display: flex;
-    gap: var(--space-3);
+    flex-wrap: wrap;
+    gap: 0.5rem;
     align-items: center;
+  }
+
+  .pill-shortcut {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-pill, 999px);
+    background: var(--ie-surface);
+    color: var(--ie-ink);
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 120ms ease, background-color 120ms ease, color 120ms ease;
+  }
+
+  .pill-shortcut:hover {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue-soft);
+    color: var(--ie-blue);
+  }
+
+  .pill-shortcut.accent {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue-soft);
+    color: var(--ie-blue);
     font-weight: 600;
-    letter-spacing: 0.05em;
+  }
+
+  .pill-shortcut.accent:hover {
+    background: var(--ie-blue);
+    color: #fff;
+  }
+
+  .about-section {
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .section-head {
+    margin-bottom: 1.5rem;
+  }
+
+  .section-register {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--ie-blue);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.075em;
     text-transform: uppercase;
   }
-  .local-nav a {
-    color: var(--accent);
-    text-decoration: none;
-    transition: color var(--transition-fast);
-  }
-  .local-nav a:hover {
-    color: var(--accent-hover);
-  }
-  .nav-sep {
-    color: var(--border-default);
+
+  .section-head h2 {
+    margin: 0;
+    color: var(--ie-ink);
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 2.8vw, 2.1rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
   }
 
-  /* Section Headings */
-  section {
-    padding-top: var(--space-8);
-  }
-  section h2 {
-    font-family: var(--font-serif);
-    font-size: clamp(1.75rem, 3vw, 2.35rem);
-    font-weight: 500;
-    letter-spacing: -0.015em;
-    color: var(--text);
-    margin: 0 0 var(--space-2);
-  }
   .section-desc {
-    color: var(--text-secondary);
-    font-size: 1rem;
-    line-height: 1.6;
-    margin: 0 0 var(--space-6);
+    margin: 0.4rem 0 0;
+    color: var(--ie-muted);
+    font-size: 0.95rem;
   }
 
-  .now-grid {
+  .capabilities-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-5);
-    margin-bottom: var(--space-5);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
   }
-  .now-grid :global(.studio-panel) {
-    border-radius: var(--radius-card);
-    box-shadow: var(--shadow-card);
+
+  .capability-card {
+    padding: 1.3rem 1.4rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    background: var(--ie-surface);
+    transition: border-color 140ms ease;
   }
-  .now-grid ul {
-    margin: 0;
-    padding-left: var(--space-4);
-    color: var(--text-secondary);
-    font-size: var(--text-sm);
-    line-height: 1.65;
+
+  .capability-card:hover {
+    border-color: var(--ie-rule-strong);
   }
-  .now-grid li {
-    margin-bottom: var(--space-2);
-  }
-  .now-grid a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-  .now-grid a:hover {
-    text-decoration: underline;
-  }
-  .now-footer {
-    color: var(--muted);
+
+  .cap-num {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--ie-blue);
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    margin: var(--space-3) 0 0;
-  }
-  .now-footer a {
-    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 600;
   }
 
-  .capabilities-list {
-    border-top: 1px solid var(--border-default);
+  .capability-card h3 {
+    margin: 0 0 0.5rem;
+    color: var(--ie-ink);
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    font-weight: 600;
   }
-  .capability {
-    display: grid;
-    grid-template-columns: 14rem minmax(0, 1fr);
-    gap: var(--space-4);
-    align-items: baseline;
-    padding: var(--space-4) 0;
-    border-bottom: 1px solid var(--border-default);
-  }
-  .capability h3 {
+
+  .capability-card p {
     margin: 0;
-    font-family: var(--font-serif);
-    font-size: 1.15rem;
-    font-weight: 500;
-    color: var(--text);
-  }
-  .capability p {
-    margin: 0;
-    font-size: var(--text-sm);
-    color: var(--text-secondary);
-    line-height: 1.6;
+    color: var(--ie-ink-secondary);
+    font-size: 0.9rem;
+    line-height: 1.55;
   }
 
   .community-list {
-    border-top: 1px solid var(--border-default);
+    display: grid;
+    gap: 1rem;
   }
+
   .community-row {
     display: grid;
     grid-template-columns: 2.75rem minmax(0, 1fr) auto;
     align-items: center;
-    gap: var(--space-5);
-    padding: var(--space-5) 0;
-    border-bottom: 1px solid var(--border-default);
+    gap: 1.25rem;
+    padding: 1.25rem 1.4rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    background: var(--ie-surface);
   }
+
   .community-logo {
     display: block;
     width: 2.75rem;
     height: 2.75rem;
     object-fit: contain;
-    margin: 0;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius, 6px);
   }
-  .community-info {
-    min-width: 0;
-  }
+
   .community-name {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    color: var(--text);
-    margin: 0 0 var(--space-1);
-    font-size: 1.15rem;
+    margin: 0 0 0.25rem;
+    color: var(--ie-ink);
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    font-weight: 600;
   }
+
   .community-desc {
     margin: 0;
-    color: var(--text-secondary);
-    font-size: var(--text-sm);
+    color: var(--ie-ink-secondary);
+    font-size: 0.9rem;
     line-height: 1.5;
   }
+
   .community-links {
     display: flex;
-    gap: var(--space-4);
+    gap: 0.5rem;
     flex-wrap: wrap;
     justify-content: flex-end;
   }
-  .community-links a {
+
+  .comm-btn {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-1);
-    font-family: var(--font-sans);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--accent);
+    gap: 0.35rem;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-pill, 999px);
+    background: var(--ie-surface-raised);
+    color: var(--ie-ink);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
     text-decoration: none;
-    transition: color var(--transition-fast);
+    transition: border-color 120ms ease, background-color 120ms ease, color 120ms ease;
   }
-  .community-links a:hover {
-    color: var(--accent-hover);
-    text-decoration: none;
+
+  .comm-btn:hover {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue-soft);
+    color: var(--ie-blue);
   }
 
   .cta-section {
-    margin-top: var(--space-9);
-    padding: var(--space-8) var(--space-7);
-    background: var(--surface-card);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-card);
-    box-shadow: var(--shadow-card);
+    margin-top: clamp(3rem, 6vw, 5rem);
   }
-  .cta-section h2 {
+
+  .cta-inner {
+    padding: clamp(1.5rem, 3.5vw, 2.5rem);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    background: var(--ie-surface);
+  }
+
+  .cta-inner h2 {
+    margin: 0 0 0.75rem;
+    color: var(--ie-ink);
     font-family: var(--font-serif);
-    margin-top: 0;
-    font-size: clamp(1.75rem, 3vw, 2.35rem);
+    font-size: clamp(1.6rem, 2.8vw, 2.1rem);
     font-weight: 500;
-    margin-bottom: var(--space-2);
+    letter-spacing: -0.02em;
   }
-  .cta-section p {
-    color: var(--text-secondary);
-    font-size: 1.05rem;
+
+  .cta-inner p {
+    margin: 0 0 1.5rem;
+    max-width: 620px;
+    color: var(--ie-ink-secondary);
+    font-size: 1rem;
     line-height: 1.6;
-    margin-bottom: var(--space-5);
-    max-width: 540px;
   }
+
   .cta-actions {
     display: flex;
-    gap: var(--space-4);
+    gap: 0.75rem;
     flex-wrap: wrap;
-    align-items: center;
   }
-  .cta-link {
+
+  .ie-cta {
     display: inline-flex;
+    min-height: 40px;
     align-items: center;
-    gap: var(--space-2);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--accent);
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1rem;
+    border-radius: var(--radius, 6px);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
     text-decoration: none;
+    transition: border-color 120ms ease, background-color 120ms ease, color 120ms ease;
   }
-  .cta-link:hover {
-    color: var(--accent-hover);
-    text-decoration: none;
+
+  .ie-cta.primary {
+    border: 1px solid var(--ie-ink);
+    background: var(--ie-ink);
+    color: var(--ie-canvas);
+  }
+
+  .ie-cta.primary:hover {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue);
+    color: #fff;
+  }
+
+  .ie-cta.secondary {
+    border: 1px solid var(--ie-rule);
+    background: var(--ie-surface-raised);
+    color: var(--ie-ink);
+  }
+
+  .ie-cta.secondary:hover {
+    border-color: var(--ie-blue);
+    color: var(--ie-blue);
   }
 
   @media (max-width: 768px) {
-    main.container {
-      padding: 0 var(--space-4) var(--space-8);
-    }
     .about-intro {
       grid-template-columns: 1fr;
-      gap: var(--space-5);
     }
     .about-portrait-frame {
       width: 140px;
       height: 160px;
-      border-radius: 70px 70px 10px 10px;
-    }
-    .now-grid {
-      grid-template-columns: 1fr;
-    }
-    .capability {
-      grid-template-columns: 1fr;
-      gap: var(--space-1);
     }
     .community-row {
-      grid-template-columns: 2.5rem minmax(0, 1fr);
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    .community-logo {
+      display: none;
     }
     .community-links {
-      grid-column: 2;
       justify-content: flex-start;
     }
   }

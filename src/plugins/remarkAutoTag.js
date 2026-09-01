@@ -6,17 +6,10 @@
 
 import { findAndReplace } from 'mdast-util-find-and-replace';
 import autoTags from '../data/autoTags.json' assert { type: 'json' };
+import { tagSlug } from '../utils/tags.js';
 
 function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function slugify(tag) {
-  return tag
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9\-]/g, '');
 }
 
 /**
@@ -25,7 +18,7 @@ function slugify(tag) {
 function buildLookup(entries) {
   const map = new Map();
   for (const entry of entries) {
-    const slug = entry.slug || slugify(entry.name);
+    const slug = entry.slug || tagSlug(entry.name);
     map.set(entry.name.toLowerCase(), slug);
     for (const alias of entry.aliases || []) {
       map.set(alias.toLowerCase(), slug);

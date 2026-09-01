@@ -5,23 +5,28 @@ interface Props {
   variant?: 'default' | 'instrumented';
 }
 
-const { variant = 'default' } = Astro.props;
+const { variant = 'instrumented' } = Astro.props;
 const isInstrumented = variant === 'instrumented';
 
 const nav = [
+  { href: '/blog', label: 'Essays' },
   { href: '/work', label: 'Work' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/about#community', label: 'Community' },
-  { href: '/about', label: 'About' },
   { href: '/talks', label: 'Talks' },
+  { href: '/now', label: 'Now' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
+  { href: '/studio/visuals', label: 'Studio' },
 ];
 
 function isActive(href: string) {
   if (href.includes('#')) return false;
   if (href === '/blog') return currentPath.startsWith('/blog');
   if (href === '/work') return currentPath.startsWith('/work');
-  if (href === '/about') return currentPath === '/about';
   if (href === '/talks') return currentPath.startsWith('/talks');
+  if (href === '/now') return currentPath === '/now';
+  if (href === '/about') return currentPath === '/about';
+  if (href === '/contact') return currentPath === '/contact';
+  if (href.startsWith('/studio')) return currentPath.startsWith('/studio');
   return currentPath === href;
 }
 ---
@@ -38,7 +43,7 @@ function isActive(href: string) {
     <nav class="main-nav" aria-label="Primary">
       {nav.map(item => (
         <a href={item.href} class={isActive(item.href) ? 'active' : ''} aria-current={isActive(item.href) ? 'page' : undefined}>
-          {isInstrumented && item.href === '/blog' ? 'Field notes' : item.label}
+          {item.label}
         </a>
       ))}
     </nav>
@@ -50,12 +55,12 @@ function isActive(href: string) {
           <nav class="mobile-nav-panel" aria-label="Mobile primary navigation">
             {nav.map(item => (
               <a href={item.href} class={isActive(item.href) ? 'active' : ''} aria-current={isActive(item.href) ? 'page' : undefined}>
-                <span>{isInstrumented && item.href === '/blog' ? 'Field notes' : item.label}</span>
+                <span>{item.label}</span>
                 <span aria-hidden="true">↗</span>
               </a>
             ))}
-            <a href="/#contact" class="mobile-nav-contact">
-              <span>Work together</span>
+            <a href="/contact" class="mobile-nav-contact">
+              <span>Project brief / Contact</span>
               <span aria-hidden="true">→</span>
             </a>
           </nav>
@@ -79,8 +84,8 @@ function isActive(href: string) {
         </svg>
       </button>
 
-      <a href="/#contact" class="consult-cta">
-        <span>{isInstrumented ? 'Work together' : 'Contact'}</span>
+      <a href="/contact" class="consult-cta">
+        <span>Project brief</span>
       </a>
     </div>
   </div>
@@ -424,6 +429,10 @@ function isActive(href: string) {
       border-bottom: 1px solid var(--ie-rule-strong);
       background: var(--ie-canvas);
       box-shadow: 0 16px 32px color-mix(in srgb, var(--ie-ink) 8%, transparent);
+    }
+
+    header.instrumented .mobile-nav:not([open]) .mobile-nav-panel {
+      display: none;
     }
 
     header.instrumented .mobile-nav-panel a {

@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/portfolio/PageHeader.astro';
 import BlogPostCard from '../../components/portfolio/BlogPostCard.astro';
+import { normalizeTag, tagSlug } from '../../utils/tags.js';
 
 export async function getStaticPaths() {
   const allPosts = await getCollection('blog');
@@ -14,7 +15,7 @@ export async function getStaticPaths() {
     for (const tag of post.data.tags) {
       // Treat "machine learning", "machine-learning", and "machine_learning"
       // as one canonical route instead of emitting colliding static paths.
-      const key = tag.toLowerCase().replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim();
+      const key = normalizeTag(tag);
       if (!tagMap.has(key)) tagMap.set(key, []);
       if (!tagMap.get(key)!.some((existing) => existing.id === post.id)) {
         tagMap.get(key)!.push(post);
@@ -23,7 +24,7 @@ export async function getStaticPaths() {
   }
 
   return Array.from(tagMap.entries()).map(([tag, tagPosts]) => ({
-    params: { tag: tag.replace(/\s+/g, '-') },
+    params: { tag: tagSlug(tag) },
     props: { tag, posts: tagPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()) },
   }));
 }
@@ -31,14 +32,17 @@ export async function getStaticPaths() {
 const { tag, posts } = Astro.props;
 ---
 
-<Layout title={`${tag} | Tags | Karan Mittal`}>
-  <main class="container">
+<Layout
+  title={`${tag} | Topics | Karan Mittal`}
+  robots={posts.length < 2 ? 'noindex, follow' : undefined}
+>
+  <main class="container tag-page">
     <PageHeader
-      label="Tag"
+      label="Topic"
       title={tag}
-      description={`All posts tagged with "${tag}".`}
+      description={`Technical essays and system notes discussing ${tag}.`}
       count={posts.length}
-      countLabel="posts"
+      countLabel="essays"
     />
 
     <div class="posts-list">
@@ -47,23 +51,47 @@ const { tag, posts } = Astro.props;
       ))}
     </div>
 
-    <p class="back-link">
-      <a href="/tags">← All tags</a>
-    </p>
+    <div class="back-link">
+      <a href="/tags" class="ie-action secondary">← All topics index</a>
+    </div>
   </main>
 </Layout>
 
 <style>
+  .tag-page {
+    padding-bottom: clamp(3rem, 6vw, 6rem);
+  }
+
   .posts-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    margin-top: clamp(1rem, 2vw, 1.5rem);
   }
+
   .back-link {
-    margin-top: var(--space-6);
+    margin-top: clamp(2.5rem, 4vw, 3.5rem);
   }
-  .back-link a {
-    font-size: var(--text-sm);
-    font-weight: 600;
+
+  .ie-action {
+    display: inline-flex;
+    min-height: 38px;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius, 6px);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid var(--ie-rule);
+    background: var(--ie-surface);
+    color: var(--ie-ink);
+    transition: border-color 120ms ease, background-color 120ms ease, color 120ms ease;
+  }
+
+  .ie-action:hover {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue-soft);
+    color: var(--ie-blue);
   }
 </style>

@@ -8,10 +8,16 @@ import SectionBreak from '../../components/editorial/SectionBreak.astro';
 ---
 
 <Layout
-  title="Case study: rebuilding this site on Soft Architecture | Karan Mittal"
-  description="A complete walk through the redesign of this site using the case-study spine: ambiguity, constraint, model, system, decision, evidence, aftermath."
+  title="Archive: the Soft Architecture design system | Karan Mittal"
+  description="A historical record of the design system that preceded Instrumented Editorial."
+  robots="noindex, follow"
 >
   <main class="container case-layout">
+    <aside class="archive-notice" aria-label="Archived design-system notice">
+      <span>Archived system / superseded</span>
+      <p>This page documents the earlier Soft Architecture direction. The active site now uses Instrumented Editorial; this record remains only to preserve the design history.</p>
+      <a href="/studio/components/">Inspect the current component system →</a>
+    </aside>
     <PageHeader
       label="Case study"
       title="Rebuilding this site on a written design contract"
@@ -168,6 +174,29 @@ import SectionBreak from '../../components/editorial/SectionBreak.astro';
 <style>
   .case-layout {
     max-width: 720px;
+  }
+  .archive-notice {
+    margin: 2rem 0 3rem;
+    padding: 1rem 0 1.15rem;
+    border-top: 2px solid var(--ie-rust);
+    border-bottom: 1px solid var(--ie-rule-strong);
+  }
+  .archive-notice span {
+    color: var(--ie-rust);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  .archive-notice p {
+    margin: 0.7rem 0;
+    color: var(--ie-ink-secondary);
+  }
+  .archive-notice a {
+    color: var(--ie-blue);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
   }
   .case-body {
     margin-top: var(--space-6);

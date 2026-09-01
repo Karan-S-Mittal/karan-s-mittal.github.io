@@ -7,7 +7,7 @@ interface Props {
   variant?: 'default' | 'instrumented';
 }
 
-const { variant = 'default' } = Astro.props;
+const { variant = 'instrumented' } = Astro.props;
 const isInstrumented = variant === 'instrumented';
 ---
 
@@ -39,9 +39,10 @@ const isInstrumented = variant === 'instrumented';
 
       <!-- Column 3: About & Meta -->
       <div class="footer-col">
-        <h3 class="col-title">About &amp; Updates</h3>
+        <h3 class="col-title">About &amp; Contact</h3>
         <ul class="col-links">
           <li><a href="/about">About Karan</a></li>
+          <li><a href="/contact">Project Brief &amp; Contact</a></li>
           <li><a href="/now">Now (Current Focus)</a></li>
           <li><a href="/about#community">Community &amp; Mentorship</a></li>
           <li><a href="/rss.xml">RSS Atom Feed</a></li>

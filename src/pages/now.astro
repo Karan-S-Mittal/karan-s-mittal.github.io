@@ -1,13 +1,245 @@
 ---
-// /now merged into /about#now — static redirect for inbound links.
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/portfolio/PageHeader.astro';
+
+const focusAreas = [
+  {
+    index: '01',
+    category: 'Work & Advisory',
+    status: 'ACTIVE',
+    items: [
+      { text: 'Co-founding and leading systems engineering at ', link: { text: 'Dextar.co', url: 'https://dextar.co' } },
+      { text: 'Architecting deterministic retrieval and production GraphRAG systems for enterprise scale' },
+      { text: 'Advising on MLOps infrastructure, memory layout bottlenecks, and GPU cluster throughput' },
+    ],
+  },
+  {
+    index: '02',
+    category: 'Building & Open Source',
+    status: 'IN PROGRESS',
+    items: [
+      { text: 'An open-source deterministic RAG evaluation harness for precision retrieval' },
+      { text: 'A CUDA/PTX memory hierarchy and optimization pattern cookbook for inference' },
+      { text: 'Explanatory visual engines for mechanistically inspectable systems architecture' },
+    ],
+  },
+  {
+    index: '03',
+    category: 'Research & Systems',
+    status: 'EXPLORING',
+    items: [
+      { text: 'Kernel bypass and low-latency network I/O in Rust' },
+      { text: 'CPU/GPU co-design and cache-line alignment for high-throughput embedding search' },
+      { text: 'PagedAttention memory fragmentation bounds and speculative decoding runtimes' },
+    ],
+  },
+  {
+    index: '04',
+    category: 'Community & Mentorship',
+    status: 'ACTIVE',
+    items: [
+      { text: 'Organizing hands-on AI systems workshops at ', link: { text: 'MLIndore', url: 'https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/' } },
+      { text: 'Mentoring engineers in systems architecture at ', link: { text: 'CodeVipassana', url: 'https://www.codevipassana.dev/' } },
+      { text: 'Hosting distributed systems sessions with ', link: { text: 'GDG Cloud Indore', url: 'https://gdg.community.dev/gdg-cloud-indore/' } },
+    ],
+  },
+  {
+    index: '05',
+    category: 'Technical Speaking',
+    status: 'UPCOMING',
+    items: [
+      { text: 'Preparing deep dives on GraphRAG vs Vector RAG trade-offs for 2026 conferences' },
+      { text: 'Hands-on masterclasses on building deterministic inference engines' },
+      { text: 'View all past and upcoming presentations on the ', link: { text: 'Talks ledger →', url: '/talks' } },
+    ],
+  },
+];
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="0;url=/about#now" />
-    <link rel="canonical" href="/about#now" />
-    <title>Redirecting…</title>
-  </head>
-  <body><p>This page moved to <a href="/about#now">About · Now</a>.</p></body>
-</html>
+
+<Layout
+  title="Now | Karan Mittal"
+  description="A living snapshot of Karan Mittal's current systems engineering focus, research, and priorities."
+>
+  <main class="container now-page">
+    <PageHeader
+      label="Now"
+      title="Current Systems Focus & Priorities."
+      description="A living snapshot of active engineering projects, open-source developments, low-level systems research, and speaking."
+    />
+
+    <div class="now-grid">
+      {focusAreas.map((area) => (
+        <section class="now-card" aria-labelledby={`focus-${area.index}`}>
+          <div class="card-header">
+            <div class="header-left">
+              <span class="index-num">{area.index}</span>
+              <h2 id={`focus-${area.index}`}>{area.category}</h2>
+            </div>
+            <span class={`status-pill ${area.status.toLowerCase().replace(/\s+/g, '-')}`}>
+              {area.status}
+            </span>
+          </div>
+
+          <ul class="focus-list">
+            {area.items.map((item) => (
+              <li>
+                <span class="bullet" aria-hidden="true">→</span>
+                <span>
+                  {item.text}
+                  {item.link && (
+                    <a href={item.link.url} target={item.link.url.startsWith('http') ? '_blank' : undefined} rel={item.link.url.startsWith('http') ? 'noopener' : undefined}>
+                      {item.link.text}
+                    </a>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+
+    <footer class="now-meta-footer">
+      <p>
+        Updated periodically · Based on the <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now page movement</a> by Derek Sivers.
+      </p>
+    </footer>
+  </main>
+</Layout>
+
+<style>
+  .now-page {
+    padding-bottom: clamp(3rem, 6vw, 6rem);
+  }
+
+  .now-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .now-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.4rem 1.5rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    background: var(--ie-surface);
+    transition: border-color 140ms ease;
+  }
+
+  .now-card:hover {
+    border-color: var(--ie-rule-strong);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  .index-num {
+    color: var(--ie-blue);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .card-header h2 {
+    margin: 0;
+    color: var(--ie-ink);
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--radius-pill, 999px);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .status-pill.active {
+    background: var(--ie-blue-soft);
+    color: var(--ie-blue);
+  }
+
+  .status-pill.in-progress {
+    background: var(--ie-rust-soft);
+    color: var(--ie-rust);
+  }
+
+  .status-pill.exploring,
+  .status-pill.upcoming {
+    background: var(--ie-surface-raised);
+    color: var(--ie-muted);
+    border: 1px solid var(--ie-rule);
+  }
+
+  .focus-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .focus-list li {
+    display: flex;
+    gap: 0.55rem;
+    color: var(--ie-ink-secondary);
+    font-size: 0.94rem;
+    line-height: 1.55;
+  }
+
+  .bullet {
+    color: var(--ie-blue);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .focus-list a {
+    color: var(--ie-blue);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .now-meta-footer {
+    margin-top: clamp(2.5rem, 5vw, 4.5rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--ie-rule);
+    text-align: center;
+  }
+
+  .now-meta-footer p {
+    margin: 0;
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+  }
+
+  .now-meta-footer a {
+    color: var(--ie-ink-secondary);
+  }
+
+  .now-meta-footer a:hover {
+    color: var(--ie-blue);
+  }
+</style>
