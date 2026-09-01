@@ -4,6 +4,7 @@ type HeadingLevel = 'h2' | 'h3' | 'h4';
 
 interface Props {
   as?: 'article' | 'section' | 'div';
+  id?: string;
   title: string;
   index?: string;
   label?: string;
@@ -14,6 +15,7 @@ interface Props {
 
 const {
   as: element = 'article',
+  id,
   title,
   index,
   label,
@@ -29,7 +31,7 @@ const hasActions = await Astro.slots.has('actions');
 const hasFooter = await Astro.slots.has('footer');
 ---
 
-<Element class:list={['studio-panel', `state-${state}`, { spacious }]}>
+<Element id={id} class:list={['studio-panel', `state-${state}`, { spacious }]}>
   <header class="studio-panel-header">
     <div class="studio-panel-identity">
       {index && <span class="studio-panel-index">{index}</span>}
@@ -141,6 +143,23 @@ const hasFooter = await Astro.slots.has('footer');
     letter-spacing: 0;
     line-height: 1.3;
     text-overflow: ellipsis;
+  }
+
+  /* Portfolio panels use the same surface grammar, but their titles are
+     editorial content rather than compact instrument labels. */
+  .spacious .studio-panel-header {
+    min-height: auto;
+    align-items: flex-start;
+    padding-block: var(--space-4);
+  }
+
+  .spacious .studio-panel-heading :global(h2) {
+    overflow: visible;
+    font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    font-weight: 500;
+    line-height: 1.3;
+    text-overflow: clip;
   }
 
   .studio-panel-actions {

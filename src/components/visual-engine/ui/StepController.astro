@@ -1,0 +1,179 @@
+---
+/**
+ * StepController.astro
+ * Standardized, tactile algorithm playback controller for Explanatory Systems Studio.
+ * Used for Gradient Descent, K-Means, Decision Trees, Backpropagation, etc.
+ */
+interface Props {
+  id?: string;
+  maxSteps?: number;
+  initialStep?: number;
+  label?: string;
+}
+
+const {
+  id = 'step-controller',
+  maxSteps = 100,
+  initialStep = 0,
+  label = 'Iteration'
+} = Astro.props;
+---
+
+<div class="step-controller-root" id={id}>
+  <div class="step-playback-group">
+    <button type="button" class="ctrl-btn prev-btn" title="Step Back (←)" aria-label="Step Back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="19 20 9 12 19 4 19 20"></polygon>
+        <line x1="5" y1="19" x2="5" y2="5"></line>
+      </svg>
+    </button>
+
+    <button type="button" class="ctrl-btn play-btn" title="Play / Pause (Space)" aria-label="Play">
+      <svg class="play-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+      </svg>
+      <svg class="pause-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+        <rect x="6" y="4" width="4" height="16"></rect>
+        <rect x="14" y="4" width="4" height="16"></rect>
+      </svg>
+      <span class="play-text">Auto Run</span>
+    </button>
+
+    <button type="button" class="ctrl-btn next-btn" title="Step Forward (→)" aria-label="Step Forward">
+      <span>Step</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="5 4 15 12 5 20 5 4"></polygon>
+        <line x1="19" y1="5" x2="19" y2="19"></line>
+      </svg>
+    </button>
+
+    <button type="button" class="ctrl-btn reset-btn" title="Reset (R)" aria-label="Reset">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+        <path d="M3 3v5h5"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Scrubbing Slider -->
+  <div class="step-scrubber-group">
+    <input
+      type="range"
+      class="step-slider"
+      min="0"
+      max={maxSteps}
+      value={initialStep}
+      aria-label="Scrub Iterations"
+    />
+  </div>
+
+  <!-- Step Counter Badge -->
+  <div class="step-badge-group">
+    <span class="step-label">{label}</span>
+    <span class="step-current">0</span>
+    <span class="step-divider">/</span>
+    <span class="step-max">{maxSteps}</span>
+  </div>
+</div>
+
+<style>
+  .step-controller-root {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default);
+    user-select: none;
+  }
+
+  .step-playback-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ctrl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 28px;
+    padding: 0 10px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .ctrl-btn:hover {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+  }
+
+  .ctrl-btn:active {
+    transform: scale(0.97);
+  }
+
+  .play-btn {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+    min-width: 86px;
+  }
+
+  .play-btn:hover {
+    background: var(--accent-hover, #1b5e8a);
+  }
+
+  .step-scrubber-group {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-2);
+  }
+
+  .step-slider {
+    width: 100%;
+    height: 5px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .step-badge-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--surface-card);
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default);
+  }
+
+  .step-current {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .step-controller-root {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-2);
+    }
+    .step-playback-group {
+      justify-content: space-between;
+    }
+  }
+</style>

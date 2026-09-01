@@ -1,9 +1,8 @@
 ---
 /**
  * BenchmarkChart.astro
- * Publication-grade interactive SVG/D3 benchmark chart.
- * Renders multi-series trade-off and throughput curves with hover tooltips,
- * mono tick labels, and Explanatory Studio semantic palette styling.
+ * Publication-grade empirical throughput and scaling chart with direct curve labels,
+ * dynamic auto-scaled domain ticks, interactive hover crosshairs, and optional callouts.
  */
 import Exhibit from '../editorial/Exhibit.astro';
 
@@ -18,6 +17,7 @@ export interface Series {
   strokeWidth?: number;
   dashed?: boolean;
   data: DataPoint[];
+  labelSuffix?: string;
 }
 
 interface Props {
@@ -31,6 +31,9 @@ interface Props {
   yUnit?: string;
   series: Series[];
   annotation?: string;
+  bottleneckZone?: { startX: number; label: string };
+  xDomain?: [number, number];
+  yDomain?: [number, number];
   wide?: boolean;
 }
 
@@ -44,35 +47,42 @@ const {
   xUnit = '',
   yUnit = '',
   series = [],
-  annotation,
+  annotation = '',
+  bottleneckZone,
+  xDomain,
+  yDomain,
   wide = false,
 } = Astro.props;
 
-// Calculate chart mathematics statically
-const width = 760;
-const height = 360;
-const margin = { top: 40, right: 36, bottom: 56, left: 68 };
+// Fixed crisp chart geometry (matches 720px container)
+const width = 720;
+const height = 370;
+const margin = { top: 35, right: 180, bottom: 50, left: 65 };
 const innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
 
+// Compute data bounds dynamically if not provided
 const allPoints = series.flatMap((s) => s.data);
-const xValues = allPoints.map((p) => p.x);
-const yValues = allPoints.map((p) => p.y);
+const dataMinX = allPoints.length ? Math.min(...allPoints.map((p) => p.x)) : 0;
+const dataMaxX = allPoints.length ? Math.max(...allPoints.map((p) => p.x)) : 10;
+const dataMinY = allPoints.length ? Math.min(...allPoints.map((p) => p.y)) : 0;
+const dataMaxY = allPoints.length ? Math.max(...allPoints.map((p) => p.y)) : 100;
 
-const minX = Math.min(...xValues, 0);
-const maxX = Math.max(...xValues, 10);
-const minY = Math.min(...yValues, 0);
-const maxY = Math.max(...yValues, 10) * 1.15; // 15% headroom for annotations
+const minX = xDomain ? xDomain[0] : Math.min(0, dataMinX);
+const maxX = xDomain ? xDomain[1] : (dataMaxX === 0 ? 10 : dataMaxX * 1.05);
+const minY = yDomain ? yDomain[0] : Math.min(0, dataMinY);
+const maxY = yDomain ? yDomain[1] : (dataMaxY === 0 ? 100 : dataMaxY * 1.15);
 
 function scaleX(val: number) {
+  if (maxX === minX) return margin.left;
   return margin.left + ((val - minX) / (maxX - minX)) * innerWidth;
 }
 
 function scaleY(val: number) {
+  if (maxY === minY) return margin.top + innerHeight / 2;
   return margin.top + innerHeight - ((val - minY) / (maxY - minY)) * innerHeight;
 }
 
-// Generate smooth SVG paths
 function makePath(data: DataPoint[]) {
   if (data.length === 0) return '';
   return data.reduce((acc, point, i) => {
@@ -82,9 +92,27 @@ function makePath(data: DataPoint[]) {
   }, '');
 }
 
-// Generate 5 horizontal and 5 vertical grid ticks
-const yTicks = Array.from({ length: 5 }, (_, i) => minY + (i / 4) * (maxY - minY));
-const xTicks = Array.from({ length: 6 }, (_, i) => minX + (i / 5) * (maxX - minX));
+// Generate 5-6 clean ticks
+function generateTicks(min: number, max: number, count = 5): number[] {
+  const range = max - min;
+  if (range <= 0) return [min];
+  const roughStep = range / count;
+  const power = Math.pow(10, Math.floor(Math.log10(roughStep)));
+  const normalized = roughStep / power;
+  let step = power;
+  if (normalized >= 5) step = 5 * power;
+  else if (normalized >= 2) step = 2 * power;
+
+  const start = Math.floor(min / step) * step;
+  const ticks: number[] = [];
+  for (let t = start; t <= max + step * 0.001; t += step) {
+    if (t >= min) ticks.push(+t.toFixed(4));
+  }
+  return ticks.length > 1 ? ticks : [min, max];
+}
+
+const xTicks = generateTicks(minX, maxX, 6);
+const yTicks = generateTicks(minY, maxY, 5);
 ---
 
 <Exhibit exhibit={exhibit} title={title} badge={badge} caption={caption} wide={wide}>
@@ -107,20 +135,41 @@ const xTicks = Array.from({ length: 6 }, (_, i) => minX + (i / 5) * (maxX - minX
         aria-label={title || 'Empirical benchmark chart'}
       >
         <defs>
-          <linearGradient id="chart-signal-glow" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="var(--interactive-primary)" stop-opacity="0.18" />
-            <stop offset="100%" stop-color="var(--interactive-primary)" stop-opacity="0.0" />
+          <linearGradient id="chart-glow-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--accent, #2676AA)" stop-opacity="0.18" />
+            <stop offset="100%" stop-color="var(--accent, #2676AA)" stop-opacity="0.0" />
           </linearGradient>
         </defs>
+
+        <!-- Optional Bottleneck Callout Area -->
+        {bottleneckZone && (
+          <>
+            <rect
+              x={scaleX(bottleneckZone.startX)}
+              y={margin.top}
+              width={scaleX(maxX) - scaleX(bottleneckZone.startX)}
+              height={innerHeight}
+              fill="rgba(100, 116, 139, 0.08)"
+            />
+            <text
+              x={scaleX(bottleneckZone.startX) + 8}
+              y={margin.top + 16}
+              class="chart-callout-text"
+              dominant-baseline="central"
+            >
+              {bottleneckZone.label}
+            </text>
+          </>
+        )}
 
         <!-- Horizontal Gridlines & Y-Axis Labels -->
         {yTicks.map((tick) => {
           const y = scaleY(tick);
           return (
             <g class="grid-row">
-              <line x1={margin.left} y1={y} x2={width - margin.right} y2={y} class="grid-line" />
-              <text x={margin.left - 12} y={y + 4} class="axis-tick-text" text-anchor="end">
-                {Math.round(tick).toLocaleString()}
+              <line x1={margin.left} y1={y} x2={margin.left + innerWidth} y2={y} class="grid-line" />
+              <text x={margin.left - 10} y={y} class="axis-tick-text" text-anchor="end" dominant-baseline="central">
+                {tick >= 1000 ? tick.toLocaleString() : tick}
               </text>
             </g>
           );
@@ -131,40 +180,44 @@ const xTicks = Array.from({ length: 6 }, (_, i) => minX + (i / 5) * (maxX - minX
           const x = scaleX(tick);
           return (
             <g class="grid-col">
-              <line x1={x} y1={margin.top} x2={x} y2={height - margin.bottom} class="grid-line-vertical" />
-              <text x={x} y={height - margin.bottom + 20} class="axis-tick-text" text-anchor="middle">
-                {Number.isInteger(tick) ? tick : tick.toFixed(1)}
+              <line x1={x} y1={margin.top} x2={x} y2={margin.top + innerHeight} class="grid-line-vertical" />
+              <text x={x} y={margin.top + innerHeight + 16} class="axis-tick-text" text-anchor="middle" dominant-baseline="central">
+                {tick >= 1000 ? tick.toLocaleString() : tick}
               </text>
             </g>
           );
         })}
 
         <!-- Axis Titles -->
-        <text x={margin.left} y={margin.top - 16} class="axis-title-y">
+        <text x={margin.left} y={margin.top - 18} class="axis-title-y" dominant-baseline="central">
           ↑ {yLabel} {yUnit && `(${yUnit})`}
         </text>
-        <text x={width - margin.right} y={height - margin.bottom + 42} class="axis-title-x" text-anchor="end">
+        <text x={margin.left + innerWidth} y={margin.top + innerHeight + 36} class="axis-title-x" text-anchor="end" dominant-baseline="central">
           {xLabel} {xUnit && `(${xUnit})`} →
         </text>
 
-        <!-- Series Line Paths & Dots -->
+        <!-- Series Line Paths, Dots, and Direct Curve Labels -->
         {series.map((s, sIndex) => {
           const pathD = makePath(s.data);
           const isPrimary = sIndex === 0;
+          const lastPoint = s.data[s.data.length - 1];
+          const lastX = lastPoint ? scaleX(lastPoint.x) : 0;
+          const lastY = lastPoint ? scaleY(lastPoint.y) : 0;
+
           return (
             <g class="series-group" data-series-name={s.name}>
-              {isPrimary && (
+              {isPrimary && s.data.length > 0 && (
                 <path
-                  d={`${pathD} L ${scaleX(s.data[s.data.length - 1].x)} ${scaleY(minY)} L ${scaleX(s.data[0].x)} ${scaleY(minY)} Z`}
-                  fill="url(#chart-signal-glow)"
+                  d={`${pathD} L ${scaleX(lastPoint.x)} ${scaleY(minY)} L ${scaleX(s.data[0].x)} ${scaleY(minY)} Z`}
+                  fill="url(#chart-glow-gradient)"
                 />
               )}
               <path
                 d={pathD}
                 fill="none"
                 stroke={s.color}
-                stroke-width={s.strokeWidth || 2.4}
-                stroke-dasharray={s.dashed ? '5 5' : 'none'}
+                stroke-width={s.strokeWidth || (isPrimary ? 2.4 : 1.5)}
+                stroke-dasharray={s.dashed ? '4 3' : 'none'}
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 class="series-path"
@@ -173,9 +226,9 @@ const xTicks = Array.from({ length: 6 }, (_, i) => minX + (i / 5) * (maxX - minX
                 <circle
                   cx={scaleX(p.x)}
                   cy={scaleY(p.y)}
-                  r={isPrimary ? 4.5 : 3.5}
+                  r={isPrimary ? 4 : 3}
                   fill={s.color}
-                  stroke="var(--bg-elevated)"
+                  stroke="var(--surface-card, #ffffff)"
                   stroke-width="1.5"
                   class="series-point"
                   data-x={p.x}
@@ -183,17 +236,34 @@ const xTicks = Array.from({ length: 6 }, (_, i) => minX + (i / 5) * (maxX - minX
                   data-series={s.name}
                 />
               ))}
+
+              <!-- Direct End-of-Line Series Label -->
+              {lastPoint && (
+                <g transform={`translate(${lastX + 8}, ${lastY})`}>
+                  <circle cx="0" cy="0" r="3" fill={s.color} />
+                  <text
+                    x="8"
+                    y="0"
+                    class="direct-series-label"
+                    fill={s.color}
+                    font-weight={isPrimary ? '600' : '500'}
+                    dominant-baseline="central"
+                  >
+                    {s.name} {s.labelSuffix ? `(${s.labelSuffix})` : ''}
+                  </text>
+                </g>
+              )}
             </g>
           );
         })}
 
-        <!-- Interactive Hover Crosshair & Tooltip Overlay Elements -->
+        <!-- Interactive Hover Crosshair -->
         <line
           class="hover-crosshair"
           x1={margin.left}
           y1={margin.top}
           x2={margin.left}
-          y2={height - margin.bottom}
+          y2={margin.top + innerHeight}
         />
       </svg>
 
@@ -207,193 +277,209 @@ const xTicks = Array.from({ length: 6 }, (_, i) => minX + (i / 5) * (maxX - minX
 
 <script>
   function initBenchmarkCharts() {
-    const charts = document.querySelectorAll<HTMLElement>('[data-chart-root]');
+    const roots = document.querySelectorAll('[data-chart-root]');
+    roots.forEach((root) => {
+      const svg = root.querySelector('.benchmark-svg') as SVGSVGElement;
+      const crosshair = root.querySelector('.hover-crosshair') as SVGLineElement;
+      const tooltip = root.querySelector('[data-chart-tooltip]') as HTMLElement;
+      const tooltipHeader = root.querySelector('[data-tooltip-header]') as HTMLElement;
+      const tooltipBody = root.querySelector('[data-tooltip-body]') as HTMLElement;
+      const points = root.querySelectorAll('.series-point');
 
-    charts.forEach((container) => {
-      if (container.dataset.initialized === 'true') return;
-      container.dataset.initialized = 'true';
+      if (!svg || !crosshair || !tooltip) return;
 
-      const svg = container.querySelector<SVGSVGElement>('.benchmark-svg');
-      const tooltip = container.querySelector<HTMLElement>('[data-chart-tooltip]');
-      const tooltipHeader = container.querySelector<HTMLElement>('[data-tooltip-header]');
-      const tooltipBody = container.querySelector<HTMLElement>('[data-tooltip-body]');
-      const crosshair = container.querySelector<SVGLineElement>('.hover-crosshair');
-      const points = container.querySelectorAll<SVGCircleElement>('.series-point');
+      svg.addEventListener('mousemove', (e) => {
+        const rect = svg.getBoundingClientRect();
+        const mouseX = ((e.clientX - rect.left) / rect.width) * 720;
 
-      if (!svg || !tooltip || !tooltipHeader || !tooltipBody || !crosshair) return;
+        if (mouseX < 65 || mouseX > 720 - 180) {
+          crosshair.style.opacity = '0';
+          tooltip.style.opacity = '0';
+          return;
+        }
 
-      points.forEach((point) => {
-        point.addEventListener('mouseenter', (e) => {
-          const x = point.dataset.x;
-          const y = point.dataset.y;
-          const series = point.dataset.series;
-          if (!x || !y) return;
+        crosshair.setAttribute('x1', mouseX.toString());
+        crosshair.setAttribute('x2', mouseX.toString());
+        crosshair.style.opacity = '1';
 
-          tooltipHeader.textContent = `Point: ${x}`;
-          tooltipBody.innerHTML = `<strong>${series}:</strong> ${Number(y).toLocaleString()}`;
-          tooltip.classList.add('visible');
-
-          const rect = point.getBoundingClientRect();
-          const containerRect = container.getBoundingClientRect();
-
-          tooltip.style.left = `${rect.left - containerRect.left + 10}px`;
-          tooltip.style.top = `${rect.top - containerRect.top - 40}px`;
-
-          const cx = point.getAttribute('cx');
-          if (cx) {
-            crosshair.setAttribute('x1', cx);
-            crosshair.setAttribute('x2', cx);
-            crosshair.style.opacity = '1';
+        // Find nearest points
+        let closestX: number | null = null;
+        let minDiff = Infinity;
+        points.forEach((pt) => {
+          const cx = parseFloat(pt.getAttribute('cx') || '0');
+          const diff = Math.abs(cx - mouseX);
+          if (diff < minDiff) {
+            minDiff = diff;
+            closestX = parseFloat(pt.getAttribute('data-x') || '0');
           }
         });
 
-        point.addEventListener('mouseleave', () => {
-          tooltip.classList.remove('visible');
-          crosshair.style.opacity = '0';
-        });
+        if (closestX !== null && minDiff < 40) {
+          const matchingPoints: { series: string; y: string; color: string }[] = [];
+          points.forEach((pt) => {
+            if (parseFloat(pt.getAttribute('data-x') || '0') === closestX) {
+              matchingPoints.push({
+                series: pt.getAttribute('data-series') || '',
+                y: pt.getAttribute('data-y') || '',
+                color: pt.getAttribute('fill') || '',
+              });
+            }
+          });
+
+          tooltipHeader.textContent = `X = ${closestX}`;
+          tooltipBody.innerHTML = matchingPoints
+            .map(
+              (m) => `
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 3px;">
+                <span style="color: ${m.color}; font-weight: 600;">${m.series}</span>
+                <span style="font-weight: 700;">${m.y}</span>
+              </div>
+            `
+            )
+            .join('');
+
+          tooltip.style.opacity = '1';
+          const tooltipX = Math.min(rect.width - 150, Math.max(10, ((mouseX) / 720) * rect.width));
+          tooltip.style.left = `${tooltipX}px`;
+          tooltip.style.top = `20px`;
+        }
+      });
+
+      svg.addEventListener('mouseleave', () => {
+        crosshair.style.opacity = '0';
+        tooltip.style.opacity = '0';
       });
     });
   }
 
-  initBenchmarkCharts();
   document.addEventListener('astro:page-load', initBenchmarkCharts);
+  initBenchmarkCharts();
 </script>
 
 <style>
   .benchmark-chart-container {
     width: 100%;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
+    background: var(--surface-card, #ffffff);
+    border-radius: var(--radius-card, 10px);
+    border: 1px solid var(--border-default, #e2e8f0);
+    padding: var(--space-4, 16px);
+    overflow: hidden;
   }
 
   .chart-legend {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
     flex-wrap: wrap;
-    gap: var(--space-4);
-    padding: 0.25rem 0.5rem;
-    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono, monospace);
+    font-size: 11px;
   }
 
   .legend-item {
     display: flex;
     align-items: center;
-    gap: 0.45rem;
+    gap: 6px;
   }
 
   .legend-swatch {
-    width: 12px;
-    height: 12px;
-    border-radius: 2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
   }
 
   .legend-label {
-    font-family: 'JetBrains Mono', var(--font-mono, monospace);
-    font-size: 0.72rem;
-    font-weight: 500;
-    color: var(--text);
+    font-weight: 600;
+    color: var(--text, #1a1a2e);
   }
 
   .chart-annotation-badge {
     margin-left: auto;
-    font-family: 'JetBrains Mono', var(--font-mono, monospace);
-    font-size: 0.65rem;
-    font-weight: 600;
-    color: var(--interactive-primary);
-    background: var(--ex-blue-bg);
-    border: 1px solid var(--ex-blue-stroke);
-    padding: 0.15rem 0.45rem;
-    border-radius: var(--radius-sm);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted, #68768b);
+    padding: 2px 6px;
+    background: color-mix(in srgb, var(--surface-card, #ffffff) 70%, var(--bg, #f8f9fc));
+    border: 1px solid var(--border-default, #e2e8f0);
+    border-radius: 3px;
+    letter-spacing: 0.05em;
   }
 
   .chart-svg-wrapper {
     position: relative;
     width: 100%;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
   }
 
   .benchmark-svg {
-    display: block;
     width: 100%;
-    min-width: 600px;
     height: auto;
+    display: block;
+    user-select: none;
   }
 
-  .grid-line,
-  .grid-line-vertical {
-    stroke: var(--border-subtle);
+  .grid-line, .grid-line-vertical {
+    stroke: var(--border-default, #e2e8f0);
     stroke-width: 1;
-    stroke-dasharray: 4 4;
+    stroke-dasharray: 2 2;
+    opacity: 0.8;
   }
 
   .axis-tick-text {
-    fill: var(--muted);
-    font-family: 'JetBrains Mono', var(--font-mono, monospace);
-    font-size: 11px;
-    letter-spacing: 0.02em;
+    font-family: var(--font-mono, monospace);
+    font-size: 10px;
+    fill: var(--text-muted, #68768b);
   }
 
-  .axis-title-x,
-  .axis-title-y {
-    fill: var(--text);
-    font-family: 'JetBrains Mono', var(--font-mono, monospace);
-    font-size: 11px;
-    font-weight: 600;
+  .axis-title-x, .axis-title-y {
+    font-family: var(--font-mono, monospace);
+    font-size: 10.5px;
+    font-weight: 700;
+    fill: var(--text-muted, #68768b);
+    letter-spacing: 0.03em;
+  }
+
+  .direct-series-label {
+    font-family: var(--font-mono, monospace);
+    font-size: 10.5px;
+  }
+
+  .chart-callout-text {
+    font-family: var(--font-mono, monospace);
+    font-size: 9.5px;
+    font-weight: 700;
+    fill: var(--text-muted, #68768b);
     letter-spacing: 0.04em;
   }
 
-  .series-point {
-    cursor: pointer;
-    transition: r 150ms ease, stroke-width 150ms ease;
-  }
-
-  .series-point:hover {
-    r: 6.5;
-    stroke-width: 2.5;
-  }
-
   .hover-crosshair {
-    stroke: var(--border);
-    stroke-width: 1.5;
+    stroke: var(--accent, #2676aa);
+    stroke-width: 1.2;
     stroke-dasharray: 3 3;
     opacity: 0;
+    transition: opacity 0.15s ease;
     pointer-events: none;
-    transition: opacity 150ms ease;
   }
 
   .chart-tooltip {
     position: absolute;
     pointer-events: none;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 0.35rem 0.6rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: var(--ink-900, #1a1a2e);
+    color: #ffffff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-family: var(--font-mono, monospace);
+    font-size: 10.5px;
     opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 150ms ease, transform 150ms ease;
+    transition: opacity 0.15s ease, left 0.1s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 10;
-    font-size: 0.75rem;
-    font-family: 'Inter', var(--font-sans, sans-serif);
-  }
-
-  .chart-tooltip.visible {
-    opacity: 1;
-    transform: translateY(0);
   }
 
   .tooltip-header {
-    font-family: 'JetBrains Mono', var(--font-mono, monospace);
-    font-size: 0.68rem;
-    color: var(--muted);
-    margin-bottom: 0.15rem;
-  }
-
-  .tooltip-body {
-    color: var(--text);
+    font-weight: 700;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+    color: var(--accent, #38bdf8);
   }
 </style>

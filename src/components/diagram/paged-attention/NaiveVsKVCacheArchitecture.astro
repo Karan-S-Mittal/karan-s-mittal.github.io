@@ -1,0 +1,351 @@
+---
+/**
+ * NaiveVsKVCacheArchitecture.astro
+ * HTML/CSS-native comparison of Naive Autoregressive Recomputation vs KV Cache reuse.
+ */
+import Exhibit from '../../editorial/Exhibit.astro';
+
+interface Props {
+  caption?: string;
+  exhibit?: string;
+  title?: string;
+}
+
+const {
+  caption = 'At decoding step 3, naive decoding recomputes all past token projections ($O(N^2)$); KV caching reuses stored Key and Value tensors in GPU VRAM and projects only the single active token ($O(1)$).',
+  exhibit = '01',
+  title = 'Naive Recomputation vs KV Caching in Autoregressive Decoding',
+} = Astro.props;
+---
+
+<Exhibit exhibit={exhibit} title={title} badge="INFERENCE COMPLEXITY" caption={caption} wide>
+  <div class="kv-comp-root">
+    <div class="kv-comp-grid">
+      <!-- NAIVE RECOMPUTATION -->
+      <div class="comp-card card-naive">
+        <div class="comp-header">
+          <span class="comp-tag tag-warn">APPROACH A / NAIVE RECOMPUTATION</span>
+          <h4 class="comp-title">Quadratic Forward Pass</h4>
+          <span class="comp-cost">O(N²) Redundant Projections</span>
+        </div>
+
+        <div class="token-step-stack">
+          <div class="token-step">
+            <span class="step-lbl">Step 1:</span>
+            <div class="token-pills">
+              <span class="token-pill pill-proj">The</span>
+            </div>
+            <span class="step-ops">&rarr; 1 projection</span>
+          </div>
+
+          <div class="token-step">
+            <span class="step-lbl">Step 2:</span>
+            <div class="token-pills">
+              <span class="token-pill pill-reproj">The (Recomputed)</span>
+              <span class="token-pill pill-proj">quick</span>
+            </div>
+            <span class="step-ops">&rarr; 2 projections</span>
+          </div>
+
+          <div class="token-step step-highlight">
+            <span class="step-lbl">Step 3:</span>
+            <div class="token-pills">
+              <span class="token-pill pill-reproj">The</span>
+              <span class="token-pill pill-reproj">quick</span>
+              <span class="token-pill pill-proj">brown</span>
+            </div>
+            <span class="step-ops">&rarr; 3 projections (2 redundant!)</span>
+          </div>
+        </div>
+
+        <div class="comp-footer">
+          <span class="footer-warn">&bull; Redundant Compute:</span>
+          <span class="footer-desc">Re-evaluates attention across all past tokens on every new token.</span>
+        </div>
+      </div>
+
+      <!-- KV CACHING -->
+      <div class="comp-card card-kvc">
+        <div class="comp-header">
+          <span class="comp-tag tag-signal">APPROACH B / KV-CACHE REUSE</span>
+          <h4 class="comp-title">Linear Memory Caching</h4>
+          <span class="comp-cost">O(1) Projections per Step</span>
+        </div>
+
+        <div class="kv-memory-visual">
+          <div class="kv-store-box">
+            <span class="kv-store-title">GPU VRAM KV Cache Buffer</span>
+            <div class="kv-entries">
+              <div class="kv-entry">
+                <span class="kv-tok">"The"</span>
+                <span class="kv-tensors">[K₀, V₀] Cached</span>
+              </div>
+              <div class="kv-entry">
+                <span class="kv-tok">"quick"</span>
+                <span class="kv-tensors">[K₁, V₁] Cached</span>
+              </div>
+              <div class="kv-entry entry-new">
+                <span class="kv-tok">"brown"</span>
+                <span class="kv-tensors">[K₂, V₂] New Appended</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="query-action-box">
+            <span class="qa-tag">ACTIVE QUERY Q₂:</span>
+            <span class="qa-desc">Attends over cached K states &bull; Constant forward compute</span>
+          </div>
+        </div>
+
+        <div class="comp-footer">
+          <span class="footer-signal">&bull; Memory Trade-off:</span>
+          <span class="footer-desc">Zero recomputation; memory grows linearly with context length.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTICE LEADER -->
+    <div class="kv-notice">
+      <span class="notice-arrow">&larr;</span>
+      <span>Notice how KV caching converts $O(N^2)$ quadratic projection FLOPs into constant $O(1)$ token appends at the expense of GPU memory capacity.</span>
+    </div>
+  </div>
+</Exhibit>
+
+<style>
+  .kv-comp-root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--surface-card);
+    border-radius: var(--radius-card);
+  }
+
+  .kv-comp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .comp-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--bg);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+  }
+
+  .card-kvc {
+    background: color-mix(in srgb, var(--accent) 4%, var(--bg));
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border-default));
+  }
+
+  .comp-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .comp-tag {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .tag-warn { color: var(--text-muted); }
+  .tag-signal { color: var(--accent); }
+
+  .comp-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .comp-cost {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* TOKEN STEP STACK */
+  .token-step-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .token-step {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 6px 8px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+    font-size: 11px;
+  }
+
+  .step-highlight {
+    border-color: var(--text-muted);
+  }
+
+  .step-lbl {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 10px;
+  }
+
+  .token-pills {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .token-pill {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .pill-proj {
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  .pill-reproj {
+    background: color-mix(in srgb, var(--text) 6%, transparent);
+    color: var(--text-muted);
+    border: 1px dashed var(--border-default);
+  }
+
+  .step-ops {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    color: var(--text-muted);
+  }
+
+  /* KV MEMORY VISUAL */
+  .kv-memory-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .kv-store-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: var(--space-3);
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+  }
+
+  .kv-store-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .kv-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .kv-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    background: var(--bg);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+  }
+
+  .entry-new {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, var(--bg));
+  }
+
+  .kv-tok {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .kv-tensors {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .query-action-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    border-radius: 6px;
+  }
+
+  .qa-tag {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .qa-desc {
+    font-size: 11px;
+    color: var(--text);
+  }
+
+  .comp-footer {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 11.5px;
+    line-height: 1.4;
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+    margin-top: auto;
+  }
+
+  .footer-warn { font-weight: 700; color: var(--text-muted); }
+  .footer-signal { font-weight: 700; color: var(--accent); }
+  .footer-desc { color: var(--text-muted); }
+
+  .kv-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+  }
+
+  .notice-arrow {
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>

@@ -1,0 +1,363 @@
+---
+/**
+ * GoroutineStackArchitecture.astro
+ * HTML/CSS-native memory layout comparison: 2MB Linux OS Thread stacks vs Go 2KB Dynamic Contiguous Stacks.
+ */
+import Exhibit from '../../editorial/Exhibit.astro';
+
+interface Props {
+  caption?: string;
+  exhibit?: string;
+  title?: string;
+}
+
+const {
+  caption = 'OS threads pre-allocate 2MB–8MB guard-paged buffers, creating massive virtual memory waste. Go allocates an initial 2KB contiguous frame and doubles capacity (4KB, 8KB, 16KB) only when function calls exhaust the stack guard boundary.',
+  exhibit = '02',
+  title = 'Contiguous Dynamic Stacks vs OS Thread Virtual Reservations',
+} = Astro.props;
+---
+
+<Exhibit exhibit={exhibit} title={title} badge="MEMORY FOOTPRINT" caption={caption} wide>
+  <div class="stack-root">
+    <!-- SECTION 1: OS THREAD (STATIC 2MB) -->
+    <div class="stack-section section-os">
+      <div class="section-header">
+        <span class="section-tag tag-warn">APPROACH A / OS KERNEL THREAD (PTHREAD)</span>
+        <span class="section-sub">Static 2MB–8MB virtual stack reservation per thread + MMU guard pages. 100k threads consume &gt;200 GB RAM.</span>
+      </div>
+
+      <div class="os-memory-bar">
+        <div class="mem-block block-guard">
+          <span>GUARD</span>
+        </div>
+        <div class="mem-block block-used">
+          <span class="used-title">Used Frame</span>
+          <span class="used-size">~4 KB DATA</span>
+        </div>
+        <div class="mem-block block-waste">
+          <span class="waste-title">Unused Virtual Memory Reservation (Locked by Kernel MMU)</span>
+          <span class="waste-size">~2,093,056 BYTES UNUSED (99.8% ALLOCATION WASTE PER IDLE THREAD)</span>
+        </div>
+        <div class="mem-block block-guard">
+          <span>GUARD</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- SECTION 2: GO DYNAMIC CONTIGUOUS STACKS -->
+    <div class="stack-section section-go">
+      <div class="section-header">
+        <span class="section-tag tag-signal">APPROACH B / GO DYNAMIC CONTIGUOUS STACKS</span>
+        <span class="section-sub">Starts at only 2KB in heap arena. Grows via runtime.morestack copy when call frame exhausts limit.</span>
+      </div>
+
+      <div class="go-stack-steps">
+        <!-- Step 1 -->
+        <div class="step-card">
+          <div class="step-card-head">
+            <span class="step-num">01</span>
+            <span class="step-title">Initial Stack</span>
+          </div>
+          <span class="step-size">2,048 BYTES (0x1000)</span>
+          <div class="mini-frame-stack">
+            <div class="mini-frame">main() frame</div>
+            <div class="mini-frame frame-active">handleConn() frame</div>
+            <div class="mini-frame frame-free">SP &rarr; Top of Stack</div>
+          </div>
+          <span class="step-meta">100k Gs = ~200MB Total RAM</span>
+        </div>
+
+        <div class="step-arrow">&rarr;</div>
+
+        <!-- Step 2 -->
+        <div class="step-card">
+          <div class="step-card-head">
+            <span class="step-num">02</span>
+            <span class="step-title">Prologue Check</span>
+          </div>
+          <span class="step-size">INLINE ASSEMBLY</span>
+          <div class="mini-asm-box">
+            <code>CMPQ SP, 16(R14)</code>
+            <code>JLS  morestack</code>
+          </div>
+          <span class="step-meta">Detects SP &lt; stackguard0</span>
+        </div>
+
+        <div class="step-arrow">&rarr;</div>
+
+        <!-- Step 3 -->
+        <div class="step-card card-highlight">
+          <div class="step-card-head">
+            <span class="step-num">03</span>
+            <span class="step-title">Doubled Stack</span>
+          </div>
+          <span class="step-size">4,096 BYTES CONTIGUOUS</span>
+          <div class="mini-frame-stack">
+            <div class="mini-frame">Frames Copied &amp; Aligned</div>
+            <div class="mini-frame frame-active">Pointers Fixed via Stackmap</div>
+            <div class="mini-frame frame-free">Old 2KB Frame Freed</div>
+          </div>
+          <span class="step-meta">Contiguous: No Hot-Split</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTICE LEADER -->
+    <div class="stack-notice">
+      <span class="notice-arrow">&larr;</span>
+      <span>Notice how contiguous dynamic stack copying eliminates segmented stack hot-split penalties, allowing 100k idle Goroutines to cost only ~200MB RAM.</span>
+    </div>
+  </div>
+</Exhibit>
+
+<style>
+  .stack-root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background: var(--surface-card);
+    border-radius: var(--radius-card);
+  }
+
+  .stack-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .section-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .tag-warn {
+    color: var(--text-muted);
+  }
+
+  .tag-signal {
+    color: var(--accent);
+  }
+
+  .section-sub {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text-muted);
+  }
+
+  /* OS MEMORY BAR */
+  .os-memory-bar {
+    display: flex;
+    align-items: stretch;
+    height: 58px;
+    border-radius: 8px;
+    border: 1px solid var(--border-default);
+    overflow: hidden;
+  }
+
+  .mem-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6px 10px;
+    font-family: var(--font-mono);
+  }
+
+  .block-guard {
+    width: 44px;
+    background: color-mix(in srgb, var(--text) 10%, transparent);
+    color: var(--text-muted);
+    font-size: 9px;
+    font-weight: 700;
+    align-items: center;
+    border-right: 1px solid var(--border-default);
+  }
+
+  .block-guard:last-child {
+    border-right: none;
+    border-left: 1px solid var(--border-default);
+  }
+
+  .block-used {
+    width: 100px;
+    background: var(--surface-card);
+    border-right: 1px solid var(--border-default);
+  }
+
+  .used-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .used-size {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .block-waste {
+    flex: 1;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      color-mix(in srgb, var(--text) 4%, transparent) 8px,
+      color-mix(in srgb, var(--text) 4%, transparent) 16px
+    );
+    align-items: center;
+    text-align: center;
+    gap: 2px;
+  }
+
+  .waste-title {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .waste-size {
+    font-size: 9.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .section-divider {
+    height: 1px;
+    background: var(--border-default);
+  }
+
+  /* GO STACK STEPS */
+  .go-stack-steps {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .step-card {
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: var(--space-3) var(--space-4);
+    background: var(--bg);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+  }
+
+  .card-highlight {
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--border-default));
+    background: color-mix(in srgb, var(--accent) 4%, var(--bg));
+  }
+
+  .step-card-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .step-title {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .step-size {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .mini-frame-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: 4px 0;
+  }
+
+  .mini-frame {
+    font-size: 10px;
+    padding: 3px 6px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 3px;
+    color: var(--text);
+  }
+
+  .frame-active {
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .frame-free {
+    background: transparent;
+    border-style: dashed;
+    color: var(--text-muted);
+    font-size: 9px;
+  }
+
+  .mini-asm-box {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 6px 8px;
+    background: color-mix(in srgb, var(--text) 5%, transparent);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--accent);
+    margin: 4px 0;
+  }
+
+  .step-arrow {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .step-meta {
+    font-size: 10.5px;
+    color: var(--text-muted);
+  }
+
+  /* STACK NOTICE */
+  .stack-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+  }
+
+  .notice-arrow {
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>

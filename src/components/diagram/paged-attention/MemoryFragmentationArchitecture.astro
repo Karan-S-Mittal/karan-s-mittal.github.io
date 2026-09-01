@@ -1,0 +1,298 @@
+---
+/**
+ * MemoryFragmentationArchitecture.astro
+ * HTML/CSS-native visualization of 3 types of memory waste in contiguous KV allocation:
+ * 1. Reserved (Future Over-allocation)
+ * 2. Internal (Partial block waste)
+ * 3. External (Unallocatable memory holes)
+ */
+import Exhibit from '../../editorial/Exhibit.astro';
+
+interface Props {
+  caption?: string;
+  exhibit?: string;
+  title?: string;
+}
+
+const {
+  caption = 'Contiguous KV-cache allocation suffers from three distinct sources of memory waste: Reserved memory (60%–80% for ungenerated tokens), Internal fragmentation (unused tail slots), and External fragmentation (holes between varying sequence lengths). PagedAttention reduces total waste to under 4%.',
+  exhibit = '03',
+  title = 'The 3 Sources of KV-Cache Memory Fragmentation',
+} = Astro.props;
+---
+
+<Exhibit exhibit={exhibit} title={title} badge="MEMORY BOTTLENECK" caption={caption} wide>
+  <div class="frag-root">
+    <div class="frag-grid">
+      <!-- 1. RESERVED FRAGMENTATION -->
+      <div class="frag-card card-warn">
+        <div class="frag-head">
+          <span class="frag-tag">WASTE TYPE 01</span>
+          <h4 class="frag-title">Reservation Waste (60%–80%)</h4>
+          <span class="frag-sub">Pre-allocating for worst-case max_seq_len (e.g. 2048 tokens)</span>
+        </div>
+
+        <div class="frag-bar-visual">
+          <div class="bar-used" style="width: 25%;">
+            <span>Used (512 Tok)</span>
+          </div>
+          <div class="bar-waste" style="width: 75%;">
+            <span>Pre-Reserved Ghost Slots (1536 Tokens Unused)</span>
+          </div>
+        </div>
+
+        <div class="frag-footer">
+          <span class="f-desc">Memory locked up until request terminates, starving concurrent batch requests.</span>
+        </div>
+      </div>
+
+      <!-- 2. INTERNAL FRAGMENTATION -->
+      <div class="frag-card">
+        <div class="frag-head">
+          <span class="frag-tag">WASTE TYPE 02</span>
+          <h4 class="frag-title">Internal Fragmentation (&lt;3%)</h4>
+          <span class="frag-sub">Unused token slots in the final allocated page block ($B=16$)</span>
+        </div>
+
+        <div class="block-cells-visual">
+          <div class="b-cell cell-filled">t₀</div>
+          <div class="b-cell cell-filled">t₁</div>
+          <div class="b-cell cell-filled">t₂</div>
+          <div class="b-cell cell-filled">t₃</div>
+          <div class="b-cell cell-filled">t₄</div>
+          <div class="b-cell cell-empty">Free</div>
+          <div class="b-cell cell-empty">Free</div>
+          <div class="b-cell cell-empty">Free</div>
+        </div>
+
+        <div class="frag-footer">
+          <span class="f-desc">Bounded strictly by block size $B$: at most $(B-1)$ unused slots per sequence.</span>
+        </div>
+      </div>
+
+      <!-- 3. EXTERNAL FRAGMENTATION -->
+      <div class="frag-card">
+        <div class="frag-head">
+          <span class="frag-tag">WASTE TYPE 03</span>
+          <h4 class="frag-title">External Fragmentation (0% in Paged)</h4>
+          <span class="frag-sub">Scattered gaps between variable-length contiguous allocations</span>
+        </div>
+
+        <div class="heap-gaps-visual">
+          <div class="heap-chunk chunk-req">Req A</div>
+          <div class="heap-chunk chunk-hole">Hole (128KB)</div>
+          <div class="heap-chunk chunk-req">Req B</div>
+          <div class="heap-chunk chunk-hole">Hole (64KB)</div>
+        </div>
+
+        <div class="frag-footer">
+          <span class="f-desc">Eliminated entirely by PagedAttention: any free block can satisfy any request.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTICE LEADER -->
+    <div class="frag-notice">
+      <span class="notice-arrow">&larr;</span>
+      <span>Notice how PagedAttention collapses 60%–80% pre-allocation waste and eliminates external fragmentation, allowing serving engines to increase batch sizes by 2×–4×.</span>
+    </div>
+  </div>
+</Exhibit>
+
+<style>
+  .frag-root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--surface-card);
+    border-radius: var(--radius-card);
+  }
+
+  .frag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .frag-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--bg);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+  }
+
+  .card-warn {
+    background: color-mix(in srgb, var(--signal-warm, #FFAFCC) 4%, var(--bg));
+    border-color: color-mix(in srgb, var(--signal-warm, #FFAFCC) 30%, var(--border-default));
+  }
+
+  .frag-head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .frag-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  .frag-title {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .frag-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.35;
+  }
+
+  /* BAR VISUAL */
+  .frag-bar-visual {
+    display: flex;
+    height: 44px;
+    border-radius: 6px;
+    border: 1px solid var(--border-default);
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+  }
+
+  .bar-used {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    color: var(--accent);
+    font-weight: 700;
+    border-right: 1px solid var(--border-default);
+    padding: 0 4px;
+    text-align: center;
+  }
+
+  .bar-waste {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 6px,
+      color-mix(in srgb, var(--text) 4%, transparent) 6px,
+      color-mix(in srgb, var(--text) 4%, transparent) 12px
+    );
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0 6px;
+    text-align: center;
+  }
+
+  /* BLOCK CELLS */
+  .block-cells-visual {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 3px;
+  }
+
+  .b-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+  }
+
+  .cell-filled {
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .cell-empty {
+    background: transparent;
+    border: 1px dashed var(--border-default);
+    color: var(--text-muted);
+  }
+
+  /* HEAP GAPS */
+  .heap-gaps-visual {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .heap-chunk {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 8px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+  }
+
+  .chunk-req {
+    flex: 1;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .chunk-hole {
+    flex: 0.8;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 4px,
+      color-mix(in srgb, var(--text) 5%, transparent) 4px,
+      color-mix(in srgb, var(--text) 5%, transparent) 8px
+    );
+    border: 1px dashed var(--border-default);
+    color: var(--text-muted);
+    font-size: 9px;
+  }
+
+  .frag-footer {
+    display: flex;
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+    margin-top: auto;
+  }
+
+  .f-desc {
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--text-muted);
+  }
+
+  .frag-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+  }
+
+  .notice-arrow {
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>

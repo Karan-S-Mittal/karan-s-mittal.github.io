@@ -3,8 +3,53 @@ title: "Deterministic RAG: Beyond Probabilistic Retrieval"
 description: "A retrieval replay contract for enterprise knowledge systems: what can be made deterministic, what cannot, and where graphs help."
 pubDate: 2026-05-25
 updatedDate: 2026-08-24
+image: "/images/blog/deterministic-rag-hero.webp"
+heroCaption: "Deterministic RAG systems architecture: content-addressed artifact registry, HNSW graph clusters, and replay verification."
 tags: ["RAG", "GraphRAG", "AI Architecture", "MLOps"]
+draft: false
 ---
+
+import DeterministicRAGArchitecture from '../../components/diagram/rag/DeterministicRAGArchitecture.astro';
+import PrimaryVerification from '../../components/editorial/PrimaryVerification.astro';
+
+export const ragCitations = [
+  {
+    id: "01",
+    badge: "ARXIV PREPRINT",
+    claim: "HNSW multi-layer proximity graphs provide logarithmic-complexity approximate nearest neighbor search with tunable accuracy/latency trade-offs.",
+    authors: "Yu. A. Malkov, D. A. Yashunin",
+    sourceTitle: "Efficient and Robust Approximate Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs",
+    sourceAnchor: "Section 3: Algorithm Description",
+    permalink: "https://arxiv.org/abs/1603.09320"
+  },
+  {
+    id: "02",
+    badge: "OPEN SOURCE REPO",
+    claim: "Inverted file with product quantization (IVFPQ) clusters and compresses high-dimensional vector representations into compact byte codes.",
+    authors: "Facebook AI Research (FAISS)",
+    sourceTitle: "Faiss: A library for efficient similarity search and clustering of dense vectors",
+    sourceAnchor: "faiss/IndexIVFPQ.cpp:search_preassigned()",
+    permalink: "https://github.com/facebookresearch/faiss/blob/main/faiss/IndexIVFPQ.cpp#L39-L65"
+  },
+  {
+    id: "03",
+    badge: "OPEN SOURCE / DOCS",
+    claim: "GraphRAG builds hierarchical community clusters and extraction pipelines to synthesize global relational questions across document collections.",
+    authors: "Microsoft Research",
+    sourceTitle: "GraphRAG: A Modular Graph-Based Retrieval-Augmented Generation Pipeline",
+    sourceAnchor: "graphrag/index/pipeline.py",
+    permalink: "https://github.com/microsoft/graphrag"
+  },
+  {
+    id: "04",
+    badge: "NEURIPS 2020",
+    claim: "Retrieval-Augmented Generation (RAG) integrates pre-trained parametric language models with non-parametric dense vector memory retrieval.",
+    authors: "Patrick Lewis, Ethan Perez, Aleksandara Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich Küttler, Mike Lewis, Wen-tau Yih, Tim Rocktäschel, Sebastian Riedel, Douwe Kiela",
+    sourceTitle: "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+    sourceAnchor: "Section 2: Methods",
+    permalink: "https://arxiv.org/abs/2005.11401"
+  }
+];
 
 Most RAG systems are built as a chain of useful approximations: chunk a corpus, embed it, retrieve a small candidate set, then ask a model to synthesize an answer. That can be an excellent product architecture. It is not, by itself, a replayable one. [4]
 
@@ -17,6 +62,12 @@ Generation, retrieval, and the corpus evolve independently. A temperature settin
 > Given a query, a named corpus snapshot, an embedding-model artifact, an index artifact, retrieval parameters, and a stable tie-break rule, return the same ordered context bundle and a trace explaining why each item is present.
 
 That scope is deliberately smaller than “the model always says the same thing.” It is also far more useful operationally. The answer generator can then be evaluated against a fixed evidence bundle; if the bundle changes, the system can show exactly which input changed.
+
+<DeterministicRAGArchitecture
+  exhibit="01"
+  title="The 3-Plane Deterministic RAG Replay Architecture"
+  caption="An auditable RAG system compiles an immutable replay contract across three execution planes: (1) versioned corpus and index artifacts, (2) deterministic hybrid retrieval with strict tie-breaking rules, and (3) an immutable evidence bundle trace with regression diffing."
+/>
 
 ## Where Retrieval Variance Enters
 
@@ -80,13 +131,8 @@ same query + same artifacts + same parameters
 
 If any element changes, report the delta: which artifact changed, which candidates moved, and whether the answer-quality evaluation changed with them. That is a standard an engineering team can maintain—not just a promise in a sales deck.
 
-## Primary Citations & Verifications
+## Primary Citations & Ground Truth
 
-| ID | Claim / component | Primary source |
-|---|---|---|
-| `[1]` | HNSW's graph-based approximate nearest-neighbour search | [Malkov & Yashunin, *Efficient and Robust Approximate Nearest Neighbor Search Using HNSW Graphs*](https://arxiv.org/abs/1603.09320) |
-| `[2]` | IVF/PQ implementation and its encoded index construction | [Faiss `IndexIVFPQ` implementation](https://github.com/facebookresearch/faiss/blob/main/faiss/IndexIVFPQ.cpp#L39-L65) |
-| `[3]` | GraphRAG indexing pipeline and graph/context construction | [Microsoft GraphRAG source and documentation](https://github.com/microsoft/graphrag) |
-| `[4]` | Retrieval-augmented generation as a model architecture | [Lewis et al., *Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks*](https://arxiv.org/abs/2005.11401) |
+<PrimaryVerification items={ragCitations} />
 
-If this interests you, reach out on [LinkedIn](https://www.linkedin.com/in/karansmittal/).
+*Are you building auditable AI retrieval architectures or evaluating deterministic search systems? Reach out via [Contact](/contact) or connect on [LinkedIn](https://www.linkedin.com/in/karansmittal/).*

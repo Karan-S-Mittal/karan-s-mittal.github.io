@@ -130,15 +130,15 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
   }
 
   .exhibit-frame {
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border-subtle);
-    background: var(--bg-elevated);
-    padding: var(--exhibit-pad-block) var(--exhibit-pad-inline);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-card, 16px);
+    background: var(--ex-bg);
+    padding: var(--space-5) var(--space-4);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .exhibit.minimal .exhibit-frame {
@@ -212,16 +212,15 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
   .exhibit-caption {
     margin: var(--space-3) 0 0;
     padding-left: var(--space-3);
-    border-left: 2px solid var(--border-muted); /* lavender: caption is metadata */
+    border-left: 2px solid var(--border-muted);
     font-size: var(--text-sm);
     color: var(--muted);
     line-height: 1.55;
   }
 
-  @media (min-width: 960px) {
-    .exhibit.wide {
-      width: 112%;
-      margin-left: -6%;
-    }
+  .exhibit.wide {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
   }
 </style>

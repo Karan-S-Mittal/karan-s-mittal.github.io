@@ -1,0 +1,197 @@
+---
+/**
+ * InlineScrubber.astro
+ * Bret Victor-inspired "Explorable Explanation" inline number scrubber.
+ * Embeds directly inside prose, formulas, or captions.
+ * Dragging horizontally smoothly adjusts the value and broadcasts custom events.
+ */
+interface Props {
+  id: string;
+  value: number;
+  min?: number;
+  max?: number;
+  step?: number;
+  unit?: string;
+  decimals?: number;
+  color?: string;
+}
+
+const {
+  id,
+  value,
+  min = -100,
+  max = 100,
+  step = 0.01,
+  unit = '',
+  decimals = 2,
+  color = 'var(--accent)'
+} = Astro.props;
+---
+
+<inline-scrubber
+  id={id}
+  data-value={value}
+  data-min={min}
+  data-max={max}
+  data-step={step}
+  data-unit={unit}
+  data-decimals={decimals}
+  style={`--scrub-color: ${color};`}
+>
+  <span class="scrub-pill" title="Click and drag horizontally to adjust">
+    <span class="scrub-indicator">↔</span>
+    <span class="scrub-text">{value.toFixed(decimals)}{unit}</span>
+  </span>
+</inline-scrubber>
+
+<style>
+  inline-scrubber {
+    display: inline-block;
+    vertical-align: middle;
+    user-select: none;
+    cursor: ew-resize;
+  }
+
+  .scrub-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 1px 6px;
+    margin: 0 2px;
+    background: rgba(38, 118, 170, 0.08);
+    border: 1px dashed var(--scrub-color, var(--accent));
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--scrub-color, var(--accent));
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+
+  .scrub-pill:hover {
+    background: rgba(38, 118, 170, 0.16);
+    border-style: solid;
+  }
+
+  .scrub-pill:active {
+    transform: scale(0.98);
+    background: var(--scrub-color, var(--accent));
+    color: #ffffff;
+  }
+
+  .scrub-indicator {
+    font-size: 0.75em;
+    opacity: 0.7;
+  }
+</style>
+
+<script>
+  import { AudioChime } from '../core/AudioChime';
+
+  class InlineScrubberElement extends HTMLElement {
+    private value: number = 0;
+    private min: number = -100;
+    private max: number = 100;
+    private step: number = 0.01;
+    private unit: string = '';
+    private decimals: number = 2;
+
+    private isDragging: boolean = false;
+    private startX: number = 0;
+    private startVal: number = 0;
+
+    connectedCallback() {
+      this.value = parseFloat(this.dataset.value || '0');
+      this.min = parseFloat(this.dataset.min || '-100');
+      this.max = parseFloat(this.dataset.max || '100');
+      this.step = parseFloat(this.dataset.step || '0.01');
+      this.unit = this.dataset.unit || '';
+      this.decimals = parseInt(this.dataset.decimals || '2', 10);
+
+      this.addEventListener('mousedown', this.onMouseDown.bind(this));
+      this.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: false });
+    }
+
+    private onMouseDown(e: MouseEvent) {
+      e.preventDefault();
+      this.isDragging = true;
+      this.startX = e.clientX;
+      this.startVal = this.value;
+
+      const onMouseMove = (ev: MouseEvent) => {
+        if (!this.isDragging) return;
+        const dx = ev.clientX - this.startX;
+        this.updateDelta(dx);
+      };
+
+      const onMouseUp = () => {
+        this.isDragging = false;
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('mouseup', onMouseUp);
+      };
+
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+    }
+
+    private onTouchStart(e: TouchEvent) {
+      if (e.touches.length !== 1) return;
+      e.preventDefault();
+      this.isDragging = true;
+      this.startX = e.touches[0].clientX;
+      this.startVal = this.value;
+
+      const onTouchMove = (ev: TouchEvent) => {
+        if (!this.isDragging || ev.touches.length !== 1) return;
+        const dx = ev.touches[0].clientX - this.startX;
+        this.updateDelta(dx);
+      };
+
+      const onTouchEnd = () => {
+        this.isDragging = false;
+        window.removeEventListener('touchmove', onTouchMove);
+        window.removeEventListener('touchend', onTouchEnd);
+      };
+
+      window.addEventListener('touchmove', onTouchMove);
+      window.addEventListener('touchend', onTouchEnd);
+    }
+
+    private updateDelta(dx: number) {
+      const speed = this.step;
+      const newVal = Math.max(this.min, Math.min(this.max, this.startVal + dx * speed));
+      if (newVal !== this.value) {
+        const oldStepInt = Math.floor(this.value / this.step);
+        const newStepInt = Math.floor(newVal / this.step);
+        if (oldStepInt !== newStepInt) {
+          AudioChime.tick(1200);
+        }
+        this.setValue(newVal);
+      }
+    }
+
+    public setValue(val: number) {
+      this.value = val;
+      const textSpan = this.querySelector('.scrub-text');
+      if (textSpan) {
+        textSpan.textContent = `${this.value.toFixed(this.decimals)}${this.unit}`;
+      }
+
+      this.dispatchEvent(
+        new CustomEvent('scrub-change', {
+          bubbles: true,
+          composed: true,
+          detail: { id: this.id, value: this.value }
+        })
+      );
+    }
+
+    public getValue(): number {
+      return this.value;
+    }
+  }
+
+  if (!customElements.get('inline-scrubber')) {
+    customElements.define('inline-scrubber', InlineScrubberElement);
+  }
+</script>

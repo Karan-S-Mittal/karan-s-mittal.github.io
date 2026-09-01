@@ -1,0 +1,28 @@
+---
+/**
+ * LinearRegressionOLS.astro
+ * 3Blue1Brown (Mafs) + Univer Spreadsheet + Observable Plot Explanatory Engine.
+ * Combines:
+ * - 3B1B Mafs vector coordinate plane with smooth movable points & least squares geometry
+ * - Authentic Univer spreadsheet with color-coded ML parameter linking and live formula bar
+ * - Closed-form OLS solving engine ("BAM!")
+ */
+import Exhibit from '../../../editorial/Exhibit.astro';
+import { LinearRegressionMafs } from './LinearRegressionMafs';
+
+interface Props {
+  caption?: string;
+  exhibit?: string;
+  title?: string;
+}
+
+const {
+  caption = 'Interactive 3Blue1Brown (Mafs) vector plane and Univer spreadsheet. Drag coordinate points or edit numbers directly in the spreadsheet to observe how residual drop-lines and squared-error areas physically shape the optimal line of best fit.',
+  exhibit = '01',
+  title = 'Linear Regression: 3B1B Vector Plane, Univer Spreadsheet, & Convex Loss',
+} = Astro.props;
+---
+
+<Exhibit exhibit={exhibit} title={title} badge="3B1B + UNIVER EXPLORER" caption={caption} wide>
+  <LinearRegressionMafs client:load />
+</Exhibit>

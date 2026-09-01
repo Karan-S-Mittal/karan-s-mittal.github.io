@@ -1,0 +1,87 @@
+---
+import ExcalidrawContainer from '../paged-attention/ExcalidrawContainer.astro';
+
+interface Props {
+  caption?: string;
+  exhibit?: string;
+  title?: string;
+}
+
+const { caption, exhibit, title } = Astro.props;
+---
+
+<ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="MEMORY ARCHITECTURE">
+  <svg class="ex-svg-canvas sys-diagram" viewBox="0 0 720 430" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hierarchical TCMalloc-derived Go memory allocator showing mcache, mcentral size classes, and mheap page arenas.">
+    <defs>
+      <marker id="alloc-arr" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0, 7 3, 0 6" fill="#1A1A2E" /></marker>
+      <marker id="alloc-arr-blue" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0, 7 3, 0 6" fill="#2676AA" /></marker>
+    </defs>
+
+    <!-- LAYER 1: MCACHE (PER-P LOCAL THREAD-CACHE) -->
+    <g transform="translate(20, 16)">
+      <rect x="0" y="0" width="680" height="106" rx="10" class="node-signal" stroke-width="1.5" />
+      <text x="16" y="22" class="title" font-size="14" font-weight="600" dominant-baseline="central">Level 1: Per-Processor Local Cache (P.mcache)</text>
+      <text x="16" y="40" class="label-signal" font-size="8.5" font-weight="700" letter-spacing="0.05em" dominant-baseline="central">FAST PATH: ZERO MUTEX LOCKS · 67 SIZE CLASSES (8 BYTES TO 32 KB) · &lt;8 NANOSECONDS</text>
+
+      <g transform="translate(16, 56)">
+        <rect x="0" y="0" width="118" height="34" rx="4" class="node" stroke-width="1.5" />
+        <text x="59" y="17" class="label-signal" font-size="8.5" font-weight="700" text-anchor="middle" dominant-baseline="central">Class 1 (8 Bytes)</text>
+
+        <rect x="128" y="0" width="118" height="34" rx="4" class="node" stroke-width="1.5" />
+        <text x="187" y="17" class="label-signal" font-size="8.5" font-weight="700" text-anchor="middle" dominant-baseline="central">Class 2 (16 Bytes)</text>
+
+        <rect x="256" y="0" width="118" height="34" rx="4" class="node" stroke-width="1.5" />
+        <text x="315" y="17" class="label-signal" font-size="8.5" font-weight="700" text-anchor="middle" dominant-baseline="central">Class 3 (24 Bytes)</text>
+
+        <rect x="384" y="0" width="118" height="34" rx="4" class="node-muted" stroke-width="1.5" />
+        <text x="443" y="17" class="label" font-size="8.5" font-weight="600" text-anchor="middle" dominant-baseline="central">... (67 Classes)</text>
+
+        <rect x="512" y="0" width="136" height="34" rx="4" class="node" stroke-width="1.5" />
+        <text x="580" y="17" class="label-signal" font-size="8.5" font-weight="700" text-anchor="middle" dominant-baseline="central">Class 67 (32 KB)</text>
+      </g>
+    </g>
+
+    <!-- Connector L1 -> L2 -->
+    <path d="M 360 122 V 154" class="flow-signal" stroke="#2676AA" stroke-width="2" marker-end="url(#alloc-arr-blue)" />
+    <text x="460" y="138" class="label-signal" font-size="8.5" font-weight="700" dominant-baseline="central">SPAN REFILL (FINE-GRAINED LOCK)</text>
+
+    <!-- LAYER 2: MCENTRAL (GLOBAL CENTRAL SIZE-CLASS POOLS) -->
+    <g transform="translate(20, 160)">
+      <rect x="0" y="0" width="680" height="106" rx="10" class="node" stroke-width="1.5" />
+      <text x="16" y="22" class="title" font-size="14" font-weight="600" dominant-baseline="central">Level 2: Central Spans (mcentral)</text>
+      <text x="16" y="40" class="label" font-size="8.5" font-weight="700" letter-spacing="0.05em" dominant-baseline="central">ISOLATED PER-SIZE-CLASS MUTEXES · SERVES ALL RUNNING PROCESSORS</text>
+
+      <g transform="translate(16, 56)">
+        <rect x="0" y="0" width="206" height="34" rx="4" class="node-signal" stroke-width="1.5" />
+        <text x="103" y="17" class="label-signal" font-size="8.5" font-weight="600" text-anchor="middle" dominant-baseline="central">mcentral[1] (Non-empty Spans)</text>
+
+        <rect x="218" y="0" width="206" height="34" rx="4" class="node-signal" stroke-width="1.5" />
+        <text x="321" y="17" class="label-signal" font-size="8.5" font-weight="600" text-anchor="middle" dominant-baseline="central">mcentral[2] (Non-empty Spans)</text>
+
+        <rect x="436" y="0" width="212" height="34" rx="4" class="node-muted" stroke-width="1.5" />
+        <text x="542" y="17" class="label" font-size="8.5" font-weight="600" text-anchor="middle" dominant-baseline="central">mcentral[3..67] Span Lists</text>
+      </g>
+    </g>
+
+    <!-- Connector L2 -> L3 -->
+    <path d="M 360 266 V 298" class="flow-signal" stroke="#2676AA" stroke-width="2" marker-end="url(#alloc-arr-blue)" />
+    <text x="460" y="282" class="label-signal" font-size="8.5" font-weight="700" dominant-baseline="central">PAGE BITMAP ALLOCATION (&gt;32KB OR NEW SPAN)</text>
+
+    <!-- LAYER 3: MHEAP (GLOBAL ARENAS & RADIX TREE) -->
+    <g transform="translate(20, 304)">
+      <rect x="0" y="0" width="680" height="80" rx="10" class="node-muted" stroke-width="1.5" />
+      <text x="16" y="20" class="title" font-size="13.5" font-weight="600" dominant-baseline="central">Level 3: Global Page Heap (mheap)</text>
+      <text x="16" y="38" class="label" font-size="8.5" font-weight="600" dominant-baseline="central">64MB ARENAS · RADIX TREE PAGE BITMAP (8KB CHUNKS)</text>
+
+      <g transform="translate(16, 48)">
+        <rect x="0" y="0" width="144" height="22" rx="3" class="node" stroke-width="1.5" /><text x="72" y="11" class="label" font-size="8" font-weight="600" text-anchor="middle" dominant-baseline="central">Arena 0 (64MB)</text>
+        <rect x="154" y="0" width="144" height="22" rx="3" class="node" stroke-width="1.5" /><text x="226" y="11" class="label" font-size="8" font-weight="600" text-anchor="middle" dominant-baseline="central">Arena 1 (64MB)</text>
+        <rect x="308" y="0" width="144" height="22" rx="3" class="node" stroke-width="1.5" /><text x="380" y="11" class="label" font-size="8" font-weight="600" text-anchor="middle" dominant-baseline="central">Arena 2 (64MB)</text>
+        <rect x="462" y="0" width="186" height="22" rx="3" class="node-signal" stroke-width="1.5" /><text x="555" y="11" class="label-signal" font-size="8" font-weight="700" text-anchor="middle" dominant-baseline="central">Radix Free Map (8KB Pages)</text>
+      </g>
+    </g>
+
+    <!-- Editorial Leader Line -->
+    <text x="20" y="408" class="body-muted" font-size="11" dominant-baseline="central">&larr; notice small objects (&lt;32KB) are allocated locally in &lt;8ns without taking a global heap mutex</text>
+  </svg>
+</ExcalidrawContainer>

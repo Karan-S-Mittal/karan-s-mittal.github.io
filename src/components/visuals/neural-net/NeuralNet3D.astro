@@ -1,0 +1,581 @@
+---
+/**
+ * NeuralNet3D.astro
+ * 3Blue1Brown-inspired 3D Interactive Neural Network & Signal Flow Visualizer.
+ * Built on BaseThreeElement with forward activation pulses and backprop gradient waves.
+ */
+import Exhibit from '../../editorial/Exhibit.astro';
+
+interface Props {
+  caption?: string;
+  exhibit?: string;
+  layers?: number[] | string | number;
+  mode?: 'forward' | 'backward';
+  pruning?: number;
+  speed?: number;
+  title?: string;
+}
+
+const {
+  caption = '3D interactive neural network visualization with dynamic activation signal flow, positive/negative synaptic weight polarity, and reversible backward propagation gradient waves.',
+  exhibit = '01',
+  layers = [4, 7, 7, 3],
+  mode = 'forward',
+  pruning = 0.15,
+  speed = 1.0,
+  title = '3D Neural Network Signal & Gradient Propagation Engine',
+} = Astro.props;
+
+let parsedLayers: number[] = [4, 7, 7, 3];
+if (Array.isArray(layers)) {
+  parsedLayers = layers;
+} else if (typeof layers === 'string') {
+  const clean = (layers as string).replace(/[\[\]]/g, '').trim();
+  if (clean.includes(',')) {
+    parsedLayers = clean.split(',').map((n) => parseInt(n.trim(), 10)).filter((n) => !isNaN(n));
+  } else if (clean.includes('-')) {
+    parsedLayers = clean.split('-').map((n) => parseInt(n.trim(), 10)).filter((n) => !isNaN(n));
+  } else if (clean.includes(' ')) {
+    parsedLayers = clean.split(/\s+/).map((n) => parseInt(n.trim(), 10)).filter((n) => !isNaN(n));
+  } else if (/^\d+$/.test(clean)) {
+    parsedLayers = clean.split('').map((n) => parseInt(n, 10));
+  }
+} else if (typeof layers === 'number') {
+  parsedLayers = String(layers).split('').map((n) => parseInt(n, 10));
+}
+if (!parsedLayers.length) parsedLayers = [4, 7, 7, 3];
+
+const layersJson = JSON.stringify(parsedLayers);
+---
+
+<Exhibit exhibit={exhibit} title={title} badge="3D NEURAL VISUAL ENGINE" caption={caption} wide>
+  <neural-net-3d
+    class="nn3d-root"
+    data-layers={layersJson}
+    data-mode={mode}
+    data-pruning={pruning.toString()}
+    data-speed={speed.toString()}
+  >
+    <!-- Canvas Surface -->
+    <div class="three-canvas-container"></div>
+
+    <!-- Interactive 3B1B Control Deck -->
+    <div class="nn3d-deck">
+      <div class="deck-row">
+        <!-- Propagation Mode Toggle -->
+        <div class="control-group">
+          <span class="ctrl-label">MODE:</span>
+          <div class="btn-group">
+            <button type="button" class={`mode-btn ${mode === 'forward' ? 'active' : ''}`} data-mode="forward">Forward (Activations)</button>
+            <button type="button" class={`mode-btn ${mode === 'backward' ? 'active' : ''}`} data-mode="backward">Backward (Gradients)</button>
+          </div>
+        </div>
+
+        <!-- Animation Play / Pause -->
+        <div class="control-group">
+          <button type="button" class="play-btn" aria-label="Toggle Animation">
+            <span class="play-icon">&rtrif;</span>
+            <span class="play-text">Pulse Stream</span>
+          </button>
+        </div>
+
+        <!-- Weight Threshold Filter -->
+        <div class="control-group slider-group">
+          <span class="ctrl-label">WEIGHT PRUNING:</span>
+          <input type="range" class="weight-slider" min="0" max="0.8" step="0.05" value={pruning} />
+          <span class="weight-val">&gt; {pruning.toFixed(2)}</span>
+        </div>
+      </div>
+
+      <!-- Scrubber Timeline -->
+      <div class="timeline-row">
+        <span class="ctrl-label">STEP SCRUBBER:</span>
+        <input type="range" class="step-scrubber" min="0" max="3" step="0.01" value="0" />
+        <span class="step-val">Layer 0 &rarr; 1</span>
+      </div>
+    </div>
+  </neural-net-3d>
+</Exhibit>
+
+<style>
+  .nn3d-root {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: var(--surface-card);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .three-canvas-container {
+    width: 100%;
+    height: 420px;
+    position: relative;
+    cursor: grab;
+  }
+
+  .three-canvas-container:active {
+    cursor: grabbing;
+  }
+
+  .nn3d-deck {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: color-mix(in srgb, var(--surface-card) 85%, var(--bg));
+    border-top: 1px solid var(--border-default);
+  }
+
+  .deck-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .timeline-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+  }
+
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ctrl-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .btn-group {
+    display: inline-flex;
+    background: var(--surface);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+    padding: 2px;
+  }
+
+  .mode-btn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .mode-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  .play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .play-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .play-btn.playing {
+    background: color-mix(in srgb, var(--accent) 15%, var(--surface));
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .slider-group {
+    flex: 1;
+    min-width: 180px;
+    max-width: 280px;
+  }
+
+  .weight-slider, .step-scrubber {
+    flex: 1;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .weight-val, .step-val {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    min-width: 80px;
+    text-align: right;
+  }
+
+  @media (max-width: 640px) {
+    .three-canvas-container {
+      height: 320px;
+    }
+  }
+</style>
+
+<script>
+  import * as THREE from 'three';
+  import { BaseThreeElement } from '../../visual-engine/core/BaseThreeElement';
+  import { smoothstep, clamp, lerp } from '../../visual-engine/math/interpolations';
+  import type { ThemeColors } from '../../visual-engine/core/ThemeBridge';
+
+  interface Synapse {
+    source: THREE.Vector3;
+    target: THREE.Vector3;
+    sourceNodeIndex: number;
+    targetNodeIndex: number;
+    layerIndex: number;
+    weight: number; // -1 to 1
+    lineMesh: THREE.Line;
+  }
+
+  interface PulseParticle {
+    synapseIndex: number;
+    progress: number; // 0 to 1
+    speed: number;
+  }
+
+  class NeuralNet3DElement extends BaseThreeElement {
+    private layers: number[] = [4, 7, 7, 3];
+    private nodeMeshes: THREE.Mesh[][] = [];
+    private nodePositions: THREE.Vector3[][] = [];
+    private synapses: Synapse[] = [];
+    private pulses: PulseParticle[] = [];
+    private pulsePoints!: THREE.Points;
+    private pulsePositions!: Float32Array;
+    private pulseColors!: Float32Array;
+
+    private mode: 'forward' | 'backward' = 'forward';
+    private isStreaming: boolean = true;
+    private weightThreshold: number = 0.15;
+    private scrubberStep: number = 0;
+    private isScrubbing: boolean = false;
+
+    private nodeGeometry = new THREE.SphereGeometry(0.35, 24, 24);
+    private positiveLineMaterial!: THREE.LineBasicMaterial;
+    private negativeLineMaterial!: THREE.LineBasicMaterial;
+    private nodeMaterial!: THREE.MeshStandardMaterial;
+
+    protected initScene(): void {
+      const rawLayers = this.getAttribute('data-layers');
+      if (rawLayers) {
+        try {
+          this.layers = JSON.parse(rawLayers);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      const rawMode = this.getAttribute('data-mode') as 'forward' | 'backward';
+      if (rawMode === 'forward' || rawMode === 'backward') {
+        this.mode = rawMode;
+      }
+
+      const rawPruning = parseFloat(this.getAttribute('data-pruning') || '');
+      if (!isNaN(rawPruning)) {
+        this.weightThreshold = rawPruning;
+      }
+
+      this.camera.position.set(0, 1.5, 14);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+      this.scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+      dirLight.position.set(10, 20, 15);
+      this.scene.add(dirLight);
+
+      const pointLight = new THREE.PointLight(0x2676aa, 2, 50);
+      pointLight.position.set(0, 0, 8);
+      this.scene.add(pointLight);
+
+      this.buildMaterials();
+      this.buildNetwork();
+      this.buildPulseParticles();
+      this.initControls();
+
+      this.startAnimation();
+    }
+
+    private buildMaterials(): void {
+      const isDark = this.themeColors.isDark;
+
+      this.nodeMaterial = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(this.themeColors.surfaceCard),
+        roughness: 0.2,
+        metalness: 0.1,
+        emissive: new THREE.Color(this.themeColors.accent),
+        emissiveIntensity: isDark ? 0.35 : 0.15,
+      });
+
+      this.positiveLineMaterial = new THREE.LineBasicMaterial({
+        color: new THREE.Color(this.themeColors.accent),
+        transparent: true,
+        opacity: 0.35,
+      });
+
+      this.negativeLineMaterial = new THREE.LineBasicMaterial({
+        color: new THREE.Color(this.themeColors.signalWarm),
+        transparent: true,
+        opacity: 0.35,
+      });
+    }
+
+    private buildNetwork(): void {
+      const layerSpacing = 4.2;
+      const totalWidth = (this.layers.length - 1) * layerSpacing;
+      const startX = -totalWidth / 2;
+
+      this.nodeMeshes = [];
+      this.nodePositions = [];
+      this.synapses = [];
+
+      // 1. Build Nodes
+      this.layers.forEach((nodeCount, lIdx) => {
+        const x = startX + lIdx * layerSpacing;
+        const nodeSpacing = 1.4;
+        const totalHeight = (nodeCount - 1) * nodeSpacing;
+        const startY = totalHeight / 2;
+
+        const layerMeshes: THREE.Mesh[] = [];
+        const layerPositions: THREE.Vector3[] = [];
+
+        for (let i = 0; i < nodeCount; i++) {
+          const y = startY - i * nodeSpacing;
+          // Slight 3D depth curvature
+          const z = Math.sin((i / (nodeCount - 1 || 1)) * Math.PI) * 0.8 - 0.4;
+          const pos = new THREE.Vector3(x, y, z);
+          layerPositions.push(pos);
+
+          const mesh = new THREE.Mesh(this.nodeGeometry, this.nodeMaterial.clone());
+          mesh.position.copy(pos);
+          this.scene.add(mesh);
+          layerMeshes.push(mesh);
+        }
+
+        this.nodeMeshes.push(layerMeshes);
+        this.nodePositions.push(layerPositions);
+      });
+
+      // 2. Build Synapses (Connections)
+      for (let l = 0; l < this.layers.length - 1; l++) {
+        const fromNodes = this.nodePositions[l];
+        const toNodes = this.nodePositions[l + 1];
+
+        fromNodes.forEach((fromPos, srcIdx) => {
+          toNodes.forEach((toPos, tgtIdx) => {
+            // Pseudo-random deterministic weight between -1 and 1
+            const seed = srcIdx * 17 + tgtIdx * 31 + l * 101;
+            const weight = Math.sin(seed);
+
+            const points = [fromPos, toPos];
+            const geom = new THREE.BufferGeometry().setFromPoints(points);
+            const isPos = weight >= 0;
+            const mat = (isPos ? this.positiveLineMaterial : this.negativeLineMaterial).clone();
+            mat.opacity = Math.max(0.05, Math.abs(weight) * 0.45);
+
+            const lineMesh = new THREE.Line(geom, mat);
+            this.scene.add(lineMesh);
+
+            this.synapses.push({
+              source: fromPos,
+              target: toPos,
+              sourceNodeIndex: srcIdx,
+              targetNodeIndex: tgtIdx,
+              layerIndex: l,
+              weight,
+              lineMesh,
+            });
+          });
+        });
+      }
+
+      this.updateWeightVisibility();
+    }
+
+    private buildPulseParticles(): void {
+      const maxParticles = 300;
+      this.pulses = [];
+      this.pulsePositions = new Float32Array(maxParticles * 3);
+      this.pulseColors = new Float32Array(maxParticles * 3);
+
+      for (let i = 0; i < maxParticles; i++) {
+        const synIdx = Math.floor(Math.random() * this.synapses.length);
+        this.pulses.push({
+          synapseIndex: synIdx,
+          progress: Math.random(),
+          speed: 0.008 + Math.random() * 0.008,
+        });
+      }
+
+      const geom = new THREE.BufferGeometry();
+      geom.setAttribute('position', new THREE.BufferAttribute(this.pulsePositions, 3));
+      geom.setAttribute('color', new THREE.BufferAttribute(this.pulseColors, 3));
+
+      const mat = new THREE.PointsMaterial({
+        size: 0.22,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.9,
+        blending: THREE.AdditiveBlending,
+      });
+
+      this.pulsePoints = new THREE.Points(geom, mat);
+      this.scene.add(this.pulsePoints);
+    }
+
+    private updateWeightVisibility(): void {
+      this.synapses.forEach((syn) => {
+        const visible = Math.abs(syn.weight) >= this.weightThreshold;
+        syn.lineMesh.visible = visible;
+      });
+    }
+
+    private initControls(): void {
+      // 1. Mode buttons
+      const modeBtns = this.querySelectorAll('.mode-btn');
+      modeBtns.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          modeBtns.forEach((b) => b.classList.remove('active'));
+          const target = e.currentTarget as HTMLElement;
+          target.classList.add('active');
+          this.mode = target.dataset.mode as 'forward' | 'backward';
+        });
+      });
+
+      // 2. Play / Pause
+      const playBtn = this.querySelector('.play-btn') as HTMLElement;
+      playBtn?.addEventListener('click', () => {
+        this.isStreaming = !this.isStreaming;
+        playBtn.classList.toggle('playing', this.isStreaming);
+        const icon = playBtn.querySelector('.play-icon') as HTMLElement;
+        const text = playBtn.querySelector('.play-text') as HTMLElement;
+        if (icon && text) {
+          icon.innerHTML = this.isStreaming ? '&rtrif;' : '&block;';
+          text.textContent = this.isStreaming ? 'Pulse Stream' : 'Paused';
+        }
+      });
+      playBtn?.classList.add('playing');
+
+      // 3. Weight slider
+      const weightSlider = this.querySelector('.weight-slider') as HTMLInputElement;
+      const weightVal = this.querySelector('.weight-val') as HTMLElement;
+      weightSlider?.addEventListener('input', (e) => {
+        const val = parseFloat((e.target as HTMLInputElement).value);
+        this.weightThreshold = val;
+        if (weightVal) weightVal.textContent = `> ${val.toFixed(2)}`;
+        this.updateWeightVisibility();
+        this.renderFrame(performance.now());
+      });
+
+      // 4. Scrubber
+      const scrubber = this.querySelector('.step-scrubber') as HTMLInputElement;
+      const stepVal = this.querySelector('.step-val') as HTMLElement;
+      scrubber?.setAttribute('max', String(this.layers.length - 1));
+
+      scrubber?.addEventListener('input', (e) => {
+        this.isScrubbing = true;
+        this.scrubberStep = parseFloat((e.target as HTMLInputElement).value);
+        const lIdx = Math.floor(this.scrubberStep);
+        if (stepVal) {
+          stepVal.textContent = lIdx >= this.layers.length - 1 ? `Output Layer` : `Layer ${lIdx} → ${lIdx + 1}`;
+        }
+        this.renderFrame(performance.now());
+      });
+
+      scrubber?.addEventListener('change', () => {
+        this.isScrubbing = false;
+      });
+    }
+
+    protected render(time: number): void {
+      const isForward = this.mode === 'forward';
+      const posAttr = this.pulsePoints.geometry.getAttribute('position') as THREE.BufferAttribute;
+      const colAttr = this.pulsePoints.geometry.getAttribute('color') as THREE.BufferAttribute;
+
+      const accentColor = new THREE.Color(this.themeColors.accent);
+      const signalColor = new THREE.Color(this.themeColors.signalWarm);
+
+      // Animate Pulses along visible synapses
+      this.pulses.forEach((pulse, i) => {
+        const syn = this.synapses[pulse.synapseIndex];
+        if (!syn || !syn.lineMesh.visible) {
+          pulse.synapseIndex = Math.floor(Math.random() * this.synapses.length);
+          return;
+        }
+
+        if (this.isStreaming) {
+          pulse.progress += pulse.speed;
+          if (pulse.progress > 1) {
+            pulse.progress = 0;
+            pulse.synapseIndex = Math.floor(Math.random() * this.synapses.length);
+          }
+        }
+
+        const t = isForward ? pulse.progress : 1 - pulse.progress;
+        const x = lerp(syn.source.x, syn.target.x, t);
+        const y = lerp(syn.source.y, syn.target.y, t);
+        const z = lerp(syn.source.z, syn.target.z, t);
+
+        posAttr.setXYZ(i, x, y, z);
+
+        const particleColor = isForward ? (syn.weight >= 0 ? accentColor : signalColor) : signalColor;
+        colAttr.setXYZ(i, particleColor.r, particleColor.g, particleColor.b);
+      });
+
+      posAttr.needsUpdate = true;
+      colAttr.needsUpdate = true;
+
+      // Animate node pulse intensities
+      this.nodeMeshes.forEach((layerMeshes, lIdx) => {
+        layerMeshes.forEach((mesh, nIdx) => {
+          const wavePhase = (time * 0.003) - lIdx * 1.2;
+          const pulse = (Math.sin(wavePhase) + 1) * 0.5;
+          const scale = 1 + pulse * 0.15;
+          mesh.scale.set(scale, scale, scale);
+
+          const mat = mesh.material as THREE.MeshStandardMaterial;
+          mat.emissiveIntensity = 0.2 + pulse * 0.5;
+        });
+      });
+    }
+
+    protected onResize(): void {}
+
+    protected onThemeChange(): void {
+      this.buildMaterials();
+    }
+  }
+
+  if (!customElements.get('neural-net-3d')) {
+    customElements.define('neural-net-3d', NeuralNet3DElement);
+  }
+</script>

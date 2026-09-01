@@ -1,0 +1,250 @@
+---
+/**
+ * CopyOnWriteArchitecture.astro
+ * HTML/CSS-native diagram of Parallel Sampling with Copy-On-Write (CoW) block sharing.
+ */
+import Exhibit from '../../editorial/Exhibit.astro';
+
+interface Props {
+  caption?: string;
+  exhibit?: string;
+  title?: string;
+}
+
+const {
+  caption = 'In parallel sampling, beam search, or shared system prompts, multiple output sequences share physical GPU prompt blocks with an incremented reference count (ref_count = 2). When a candidate branches, only its newly generated diverging token block is allocated separately (Copy-on-Write).',
+  exhibit = '05',
+  title = 'Parallel Sampling and Copy-on-Write (CoW) Block Sharing',
+} = Astro.props;
+---
+
+<Exhibit exhibit={exhibit} title={title} badge="PREFIX SHARING &amp; COW" caption={caption} wide>
+  <div class="cow-root">
+    <div class="cow-grid">
+      <!-- SHARED PROMPT BLOCKS -->
+      <div class="cow-card card-shared">
+        <div class="cow-head">
+          <span class="cow-tag tag-signal">SHARED PROMPT PREFIX</span>
+          <h4 class="cow-title">Physical Frame #10</h4>
+          <span class="cow-ref">Reference Count: ref_count = 2</span>
+        </div>
+
+        <div class="cow-content-box">
+          <span class="box-lbl">Shared Prompt Tokens:</span>
+          <div class="token-list">
+            <span class="tok-pill">"San"</span>
+            <span class="tok-pill">"Francisco"</span>
+            <span class="tok-pill">"is"</span>
+            <span class="tok-pill">"a"</span>
+          </div>
+        </div>
+
+        <div class="cow-foot">
+          <span class="foot-bold">Zero Duplicate Memory</span>
+          <span class="foot-sub">Sample A and Sample B alias the same physical VRAM</span>
+        </div>
+      </div>
+
+      <div class="cow-branch-indicator">
+        <span class="branch-label">COW DIVERGENCE &rarr;</span>
+      </div>
+
+      <!-- DIVERGED CANDIDATES -->
+      <div class="diverge-col">
+        <!-- Candidate A -->
+        <div class="cow-card">
+          <div class="cow-head">
+            <span class="cow-tag">SAMPLE A (DIVERGED)</span>
+            <h4 class="cow-title">Physical Frame #14</h4>
+            <span class="cow-ref">ref_count = 1</span>
+          </div>
+          <div class="cow-content-box">
+            <span class="box-lbl">Appended Tokens:</span>
+            <div class="token-list">
+              <span class="tok-pill pill-cand">"historic"</span>
+              <span class="tok-pill pill-cand">"city"</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Candidate B -->
+        <div class="cow-card">
+          <div class="cow-head">
+            <span class="cow-tag">SAMPLE B (DIVERGED)</span>
+            <h4 class="cow-title">Physical Frame #19</h4>
+            <span class="cow-ref">ref_count = 1</span>
+          </div>
+          <div class="cow-content-box">
+            <span class="box-lbl">Appended Tokens:</span>
+            <div class="token-list">
+              <span class="tok-pill pill-cand">"vibrant"</span>
+              <span class="tok-pill pill-cand">"hub"</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTICE LEADER -->
+    <div class="cow-notice">
+      <span class="notice-arrow">&larr;</span>
+      <span>Notice how Copy-on-Write sharing reduces memory usage by up to 55% during parallel sampling and multi-candidate generation.</span>
+    </div>
+  </div>
+</Exhibit>
+
+<style>
+  .cow-root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--surface-card);
+    border-radius: var(--radius-card);
+  }
+
+  .cow-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-3);
+    align-items: center;
+  }
+
+  .cow-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: var(--bg);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+  }
+
+  .card-shared {
+    background: color-mix(in srgb, var(--accent) 5%, var(--bg));
+    border-color: var(--accent);
+  }
+
+  .cow-head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .cow-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .tag-signal { color: var(--accent); }
+
+  .cow-title {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .cow-ref {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .cow-content-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: var(--space-2) var(--space-3);
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+  }
+
+  .box-lbl {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .token-list {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .tok-pill {
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  .pill-cand {
+    background: color-mix(in srgb, var(--text) 6%, transparent);
+    color: var(--text);
+    border-color: var(--border-default);
+  }
+
+  .cow-foot {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+    margin-top: auto;
+  }
+
+  .foot-bold {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .foot-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .cow-branch-indicator {
+    display: flex;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  .diverge-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .cow-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+  }
+
+  .notice-arrow {
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>

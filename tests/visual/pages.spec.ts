@@ -30,6 +30,28 @@ for (const vp of VIEWPORTS) {
         await new Promise((r) => setTimeout(r, 300));
         window.scrollTo(0, 0);
       });
+
+      const layoutContract = await p.evaluate(() => ({
+        overflowX: Math.max(0, document.documentElement.scrollWidth - window.innerWidth),
+        h1Right: document.querySelector('h1')?.getBoundingClientRect().right ?? 0,
+        viewportWidth: window.innerWidth,
+        tocHashes: [...document.querySelectorAll('.toc-link')]
+          .filter((link) => link.textContent?.trim().endsWith('#')).length,
+        mobileTocOpen: document.querySelector<HTMLDetailsElement>('.post-mobile-toc')?.open ?? false,
+      }));
+
+      expect(layoutContract.overflowX, 'page must not overflow horizontally').toBe(0);
+      expect(layoutContract.tocHashes, 'TOC labels must not inherit heading anchor glyphs').toBe(0);
+
+      if (page.name === 'home' && vp.name === 'mobile') {
+        expect(layoutContract.h1Right, 'mobile homepage title must fit the viewport')
+          .toBeLessThanOrEqual(layoutContract.viewportWidth);
+      }
+
+      if (page.name === 'essay' && vp.name === 'mobile') {
+        expect(layoutContract.mobileTocOpen, 'mobile essay contents start collapsed').toBe(false);
+      }
+
       expect(await p.screenshot({ fullPage: true, animations: 'disabled' })).toMatchSnapshot(
         `${page.name}-${vp.name}.png`,
         { maxDiffPixelRatio: 0.02 },

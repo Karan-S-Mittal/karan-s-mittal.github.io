@@ -15,38 +15,20 @@ interface Props {
 const { caption, badge, exhibit, title } = Astro.props;
 ---
 
-<Exhibit exhibit={exhibit} title={title} caption={caption} wide>
+<Exhibit exhibit={exhibit} title={title} badge={badge} caption={caption} wide>
   <div class="ex-canvas-frame">
-    {badge && <p class="ex-badge">{badge}</p>}
     <slot />
     <p class="ex-canvas-hint">On small screens, the figure scales to the reading column.</p>
   </div>
 </Exhibit>
 
 <style is:global>
-  /* Diagram palette lives in src/styles/global.css — this file holds structure only */
   .ex-canvas-frame {
     position: relative;
-    background: var(--ex-bg);
-    padding: var(--exhibit-pad-block) var(--exhibit-pad-inline) 0;
+    width: 100%;
     overflow-x: auto;
     overscroll-behavior-inline: contain;
-    scrollbar-color: var(--ex-border) transparent;
-  }
-
-  .ex-badge {
-    position: static;
-    margin: 0 0 1rem;
-    font-family: 'JetBrains Mono', var(--font-mono, monospace);
-    font-size: 0.65rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 0;
-    color: var(--ex-text-muted);
-    border: 0;
-    border-radius: 0;
-    background: transparent;
+    scrollbar-color: var(--border-default) transparent;
   }
 
   .ex-canvas-hint {
@@ -56,38 +38,127 @@ const { caption, badge, exhibit, title } = Astro.props;
   .ex-svg-canvas {
     display: block;
     width: 100%;
-    min-width: 760px;
+    max-width: 720px;
     height: auto;
-    max-width: none;
+    font-family: var(--font-sans);
+    margin: 0 auto;
   }
 
+  /* Node styling in Light Mode */
   .sys-diagram .node {
-    fill: var(--ex-card-bg);
-    stroke: var(--ex-text-main);
-    stroke-width: 1.8;
+    fill: #ffffff;
+    stroke: var(--ink-900);
+    stroke-width: 1.5;
   }
 
   .sys-diagram .node-muted {
     fill: var(--ex-gray-bg);
     stroke: var(--ex-border);
-    stroke-width: 1.6;
+    stroke-width: 1.2;
   }
 
   .sys-diagram .node-signal {
     fill: var(--ex-blue-bg);
     stroke: var(--ex-blue-stroke);
-    stroke-width: 1.8;
+    stroke-width: 1.5;
   }
 
-  .sys-diagram .rule { stroke: var(--ex-border); stroke-width: 1.2; }
-  .sys-diagram .flow { fill: none; stroke: var(--ex-text-main); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .sys-diagram .flow-signal { fill: none; stroke: var(--ex-blue-stroke); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-  .sys-diagram .flow-dashed { fill: none; stroke: var(--diagram-edge-secondary); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 4 4; }
-  .sys-diagram .label { fill: var(--ex-text-muted); font-family: 'JetBrains Mono', var(--font-mono); font-size: 13px; letter-spacing: 0.06em; }
-  .sys-diagram .label-signal { fill: var(--ex-blue-text); font-family: 'JetBrains Mono', var(--font-mono); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; }
-  .sys-diagram .title { fill: var(--ex-text-main); font-family: 'Inter', var(--font-sans); font-size: 18px; font-weight: 600; }
-  .sys-diagram .body { fill: var(--ex-text-main); font-family: 'Inter', var(--font-sans); font-size: 14px; }
-  .sys-diagram .body-muted { fill: var(--ex-text-muted); font-family: 'Inter', var(--font-sans); font-size: 14px; }
+  /* Node styling in Dark Mode */
+  :global(html.dark) .sys-diagram .node {
+    fill: #1e1e23;
+    stroke: rgba(255, 255, 255, 0.22);
+    stroke-width: 1.5;
+  }
+
+  :global(html.dark) .sys-diagram .node-muted {
+    fill: #151518;
+    stroke: rgba(255, 255, 255, 0.12);
+    stroke-width: 1.2;
+  }
+
+  :global(html.dark) .sys-diagram .node-signal {
+    fill: rgba(41, 151, 255, 0.14);
+    stroke: var(--blue-400);
+    stroke-width: 1.5;
+  }
+
+  .sys-diagram .rule {
+    stroke: var(--border-default);
+    stroke-width: 1;
+  }
+
+  .sys-diagram .flow {
+    fill: none;
+    stroke: var(--ink-700);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  :global(html.dark) .sys-diagram .flow {
+    stroke: rgba(255, 255, 255, 0.6);
+  }
+
+  .sys-diagram .flow-signal {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .sys-diagram .flow-dashed {
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 4 4;
+  }
+
+  /* Typography inside SVG diagrams */
+  .sys-diagram text {
+    user-select: none;
+  }
+
+  .sys-diagram .title {
+    fill: var(--text);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .sys-diagram .body {
+    fill: var(--text);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .sys-diagram .body-muted {
+    fill: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    font-weight: 400;
+  }
+
+  .sys-diagram .label {
+    fill: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .sys-diagram .label-signal {
+    fill: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
 
   @media (max-width: 759px) {
     .ex-svg-canvas {
@@ -97,10 +168,11 @@ const { caption, badge, exhibit, title } = Astro.props;
     .ex-canvas-hint {
       display: block;
       margin: 0.75rem 0 0;
-      color: var(--ex-text-muted);
-      font-family: 'JetBrains Mono', var(--font-mono, monospace);
+      color: var(--muted);
+      font-family: var(--font-mono);
       font-size: 0.68rem;
       line-height: 1.45;
     }
   }
 </style>
+

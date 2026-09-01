@@ -1,0 +1,344 @@
+---
+/**
+ * GoAllocatorArchitecture.astro
+ * HTML/CSS-native 3-tier TCMalloc memory allocation hierarchy.
+ */
+import Exhibit from '../../editorial/Exhibit.astro';
+
+interface Props {
+  caption?: string;
+  exhibit?: string;
+  title?: string;
+}
+
+const {
+  caption = 'Per-P mcache provides lock-free allocation across 67 discrete size classes. When local spans run out, mcache refills from size-segregated mcentral pools, which in turn draw 64MB arenas from the global mheap page bitmap.',
+  exhibit = '03',
+  title = 'The Hierarchical Go Memory Allocator',
+} = Astro.props;
+---
+
+<Exhibit exhibit={exhibit} title={title} badge="MEMORY ARCHITECTURE" caption={caption} wide>
+  <div class="alloc-root">
+    <!-- LEVEL 1: MCACHE -->
+    <div class="alloc-level level-mcache">
+      <div class="level-header">
+        <div class="level-title-group">
+          <span class="level-tag tag-signal">LEVEL 1 / P.MCACHE (THREAD-LOCAL CACHE)</span>
+          <span class="level-sub">Fast Path &bull; Zero Mutex Locks &bull; 67 Size Classes (8B to 32KB)</span>
+        </div>
+        <span class="level-badge badge-fast">&lt;8 Nanoseconds</span>
+      </div>
+
+      <div class="size-class-grid">
+        <div class="class-card card-active">
+          <span class="class-name">Class 1</span>
+          <span class="class-bytes">8 Bytes</span>
+        </div>
+        <div class="class-card card-active">
+          <span class="class-name">Class 2</span>
+          <span class="class-bytes">16 Bytes</span>
+        </div>
+        <div class="class-card card-active">
+          <span class="class-name">Class 3</span>
+          <span class="class-bytes">24 Bytes</span>
+        </div>
+        <div class="class-card card-active">
+          <span class="class-name">Class 4</span>
+          <span class="class-bytes">32 Bytes</span>
+        </div>
+        <div class="class-card card-muted">
+          <span class="class-name">...</span>
+          <span class="class-bytes">67 Classes</span>
+        </div>
+        <div class="class-card card-active">
+          <span class="class-name">Class 67</span>
+          <span class="class-bytes">32 KB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONNECTOR: MCACHE -> MCENTRAL -->
+    <div class="alloc-connector">
+      <span class="conn-line"></span>
+      <span class="conn-pill">SPAN EXHAUSTION &rarr; REFILL FROM MCENTRAL (FINE-GRAINED LOCK)</span>
+      <span class="conn-line"></span>
+    </div>
+
+    <!-- LEVEL 2: MCENTRAL -->
+    <div class="alloc-level level-mcentral">
+      <div class="level-header">
+        <div class="level-title-group">
+          <span class="level-tag">LEVEL 2 / MCENTRAL (CENTRAL SPAN POOLS)</span>
+          <span class="level-sub">Size-Segregated Mutexes &bull; Serves All Processors</span>
+        </div>
+        <span class="level-badge">Per-Class Lock</span>
+      </div>
+
+      <div class="central-span-grid">
+        <div class="central-card">
+          <span class="central-title">mcentral[class 1]</span>
+          <span class="central-desc">Non-empty mspan linked list</span>
+        </div>
+        <div class="central-card">
+          <span class="central-title">mcentral[class 2]</span>
+          <span class="central-desc">Non-empty mspan linked list</span>
+        </div>
+        <div class="central-card card-muted">
+          <span class="central-title">mcentral[class 3..67]</span>
+          <span class="central-desc">Span pools for sizes up to 32KB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONNECTOR: MCENTRAL -> MHEAP -->
+    <div class="alloc-connector">
+      <span class="conn-line"></span>
+      <span class="conn-pill">RADIX TREE PAGE ALLOCATION (&gt;32KB OR NEW SPAN ARENA)</span>
+      <span class="conn-line"></span>
+    </div>
+
+    <!-- LEVEL 3: MHEAP -->
+    <div class="alloc-level level-mheap">
+      <div class="level-header">
+        <div class="level-title-group">
+          <span class="level-tag">LEVEL 3 / MHEAP (GLOBAL ARENAS &amp; RADIX PAGE MAP)</span>
+          <span class="level-sub">64MB Memory Arenas &bull; 8KB Chunk Radix Tree Page Allocator</span>
+        </div>
+        <span class="level-badge">Global Heap</span>
+      </div>
+
+      <div class="heap-arena-grid">
+        <div class="arena-card">Arena 0 (64MB)</div>
+        <div class="arena-card">Arena 1 (64MB)</div>
+        <div class="arena-card">Arena 2 (64MB)</div>
+        <div class="arena-card arena-radix">Radix Free Map (8KB Pages)</div>
+      </div>
+    </div>
+
+    <!-- NOTICE LEADER -->
+    <div class="alloc-notice">
+      <span class="notice-arrow">&larr;</span>
+      <span>Notice small objects (&lt;32KB) allocate in &lt;8 nanoseconds via local pointer arithmetic without contending on a global heap mutex.</span>
+    </div>
+  </div>
+</Exhibit>
+
+<style>
+  .alloc-root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--surface-card);
+    border-radius: var(--radius-card);
+  }
+
+  .alloc-level {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: calc(var(--radius-card) - 4px);
+    border: 1px solid var(--border-default);
+  }
+
+  .level-mcache {
+    background: color-mix(in srgb, var(--accent) 5%, var(--bg));
+    border-color: color-mix(in srgb, var(--accent) 25%, var(--border-default));
+  }
+
+  .level-mcentral {
+    background: var(--bg);
+  }
+
+  .level-mheap {
+    background: color-mix(in srgb, var(--text) 3%, var(--bg));
+  }
+
+  .level-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .level-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .level-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .tag-signal {
+    color: var(--accent);
+  }
+
+  .level-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .level-badge {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    background: color-mix(in srgb, var(--text) 6%, transparent);
+    border-radius: 4px;
+    color: var(--text-muted);
+  }
+
+  .badge-fast {
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  /* SIZE CLASSES GRID */
+  .size-class-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 6px;
+  }
+
+  .class-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 4px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .card-active {
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border-default));
+  }
+
+  .class-name {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .class-bytes {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* CONNECTORS */
+  .alloc-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    padding: 2px 0;
+  }
+
+  .conn-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border-default);
+  }
+
+  .conn-pill {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 3px 10px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    color: var(--accent);
+  }
+
+  /* CENTRAL SPAN GRID */
+  .central-span-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .central-card {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--space-3);
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+  }
+
+  .central-title {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .central-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* HEAP ARENAS */
+  .heap-arena-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 6px;
+  }
+
+  .arena-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 6px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .arena-radix {
+    background: color-mix(in srgb, var(--accent) 10%, var(--surface-card));
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border-default));
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* NOTICE */
+  .alloc-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+  }
+
+  .notice-arrow {
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>

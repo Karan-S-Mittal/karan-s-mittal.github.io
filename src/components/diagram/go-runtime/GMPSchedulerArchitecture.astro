@@ -1,0 +1,553 @@
+---
+/**
+ * GMPSchedulerArchitecture.astro
+ * HTML/CSS-native 3-Plane Systems Architecture Diagram for the Go GMP Scheduler.
+ * Combines semantic HTML/CSS auto-wrapping flex/grid containers with Soft Architecture styling.
+ */
+import Exhibit from '../../editorial/Exhibit.astro';
+
+interface Props {
+  caption?: string;
+  exhibit?: string;
+  title?: string;
+}
+
+const {
+  caption = 'Processors (P) run lock-free local queues of Goroutines. When P0 exhausts its local queue, it steals half the runqueue of a victim processor (P1). Asynchronous network I/O is parked in the kernel Network Poller and re-injected without blocking OS threads.',
+  exhibit = '01',
+  title = 'The Go GMP Work-Stealing Scheduler Architecture',
+} = Astro.props;
+---
+
+<Exhibit exhibit={exhibit} title={title} badge="RUNTIME CONCURRENCY" caption={caption} wide>
+  <div class="arch-root">
+    <!-- PLANE 1: KERNEL SPACE -->
+    <div class="system-plane plane-kernel">
+      <div class="plane-header">
+        <span class="plane-tag">01 / KERNEL SPACE</span>
+        <span class="plane-desc">Asynchronous I/O Event Subsystem &amp; Signal Interrupts</span>
+      </div>
+
+      <div class="plane-grid cols-2">
+        <div class="arch-card card-signal">
+          <div class="card-top">
+            <span class="card-badge">EPOLL / KQUEUE</span>
+            <span class="card-status-pill status-ready">fd:42 (TCP Ready)</span>
+          </div>
+          <h4 class="card-title">Network Poller Loop</h4>
+          <p class="card-text">Parks I/O-waiting Goroutines in kernel event loops without sleeping OS threads.</p>
+        </div>
+
+        <div class="arch-card">
+          <div class="card-top">
+            <span class="card-badge">MONITOR</span>
+            <span class="card-status-pill">SIGURG &gt;10ms</span>
+          </div>
+          <h4 class="card-title">Sysmon Background Thread</h4>
+          <p class="card-text">Emits non-cooperative POSIX signals to preempt tight non-inlined numerical loops.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONNECTOR: KERNEL -> RUNTIME -->
+    <div class="plane-connector">
+      <span class="connector-line"></span>
+      <span class="connector-badge">I/O READY &rarr; WAKES G INTO P₀ LOCAL QUEUE</span>
+      <span class="connector-line"></span>
+    </div>
+
+    <!-- PLANE 2: GO RUNTIME USER SPACE -->
+    <div class="system-plane plane-runtime">
+      <div class="plane-header">
+        <div class="plane-title-group">
+          <span class="plane-tag tag-blue">02 / GO RUNTIME USER SPACE</span>
+          <span class="plane-desc">M:N Work-Stealing Scheduler (GOMAXPROCS = 2)</span>
+        </div>
+        <div class="global-queue-badge">
+          <span class="gq-dot"></span>
+          <span>Global Run Queue (GRQ): [G₇, G₈] (1/61 check)</span>
+        </div>
+      </div>
+
+      <div class="plane-grid cols-2">
+        <!-- P0 (ACTIVE CONTEXT) -->
+        <div class="processor-card">
+          <div class="p-header">
+            <div>
+              <h4 class="p-title">Logical Processor P₀</h4>
+              <span class="p-sub">Lock-free 256-slot ring buffer · Head=2, Tail=4</span>
+            </div>
+            <span class="p-status-pill status-active">Active Context</span>
+          </div>
+
+          <div class="ring-buffer-grid">
+            <div class="slot slot-filled">
+              <span class="slot-idx">[0]</span>
+              <span class="slot-val">G₁</span>
+            </div>
+            <div class="slot slot-filled">
+              <span class="slot-idx">[1]</span>
+              <span class="slot-val">G₂</span>
+            </div>
+            <div class="slot slot-empty">
+              <span class="slot-idx">[2]</span>
+              <span class="slot-val">Empty</span>
+            </div>
+            <div class="slot slot-empty">
+              <span class="slot-idx">[3..255]</span>
+              <span class="slot-val">Free</span>
+            </div>
+          </div>
+
+          <div class="p-footer">
+            <span class="p-metric-label">&bull; Fast Path:</span>
+            <span class="p-metric-val">G₁ pops in &lt;10ns without mutex contention</span>
+          </div>
+        </div>
+
+        <!-- P1 (VICTIM CONTEXT) -->
+        <div class="processor-card">
+          <div class="p-header">
+            <div>
+              <h4 class="p-title">Logical Processor P₁</h4>
+              <span class="p-sub">Loaded runqueue (6 Goroutines in buffer)</span>
+            </div>
+            <span class="p-status-pill status-loaded">Victim Target</span>
+          </div>
+
+          <div class="ring-buffer-grid">
+            <div class="slot slot-filled">
+              <span class="slot-idx">[0]</span>
+              <span class="slot-val">G₃</span>
+            </div>
+            <div class="slot slot-filled">
+              <span class="slot-idx">[1]</span>
+              <span class="slot-val">G₄</span>
+            </div>
+            <div class="slot slot-filled">
+              <span class="slot-idx">[2]</span>
+              <span class="slot-val">G₅</span>
+            </div>
+            <div class="slot slot-steal">
+              <span class="slot-idx">[3..5]</span>
+              <span class="slot-val">G₆,G₇,G₈ (Steal)</span>
+            </div>
+          </div>
+
+          <div class="p-footer">
+            <span class="p-metric-label">&bull; Steal Action:</span>
+            <span class="p-metric-val">P₀ atomically steals half (N/2 = 3 Gs) via CAS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONNECTOR: RUNTIME -> HARDWARE -->
+    <div class="plane-connector">
+      <span class="connector-line"></span>
+      <span class="connector-badge">1:1 THREAD BINDING &rarr; PHYSICAL EXECUTION</span>
+      <span class="connector-line"></span>
+    </div>
+
+    <!-- PLANE 3: HARDWARE MULTI-CORE LAYER -->
+    <div class="system-plane plane-hardware">
+      <div class="plane-header">
+        <span class="plane-tag">03 / HARDWARE MULTI-CORE LAYER</span>
+        <span class="plane-desc">Operating System Threads &amp; CPU Cores</span>
+      </div>
+
+      <div class="plane-grid cols-2">
+        <div class="thread-card">
+          <div class="thread-meta">
+            <h4 class="thread-name">OS Thread M₀</h4>
+            <span class="thread-core">Bound to CPU Core 0</span>
+          </div>
+          <div class="thread-running-pill">
+            <span class="running-dot"></span>
+            <span>Running G₀</span>
+          </div>
+        </div>
+
+        <div class="thread-card">
+          <div class="thread-meta">
+            <h4 class="thread-name">OS Thread M₁</h4>
+            <span class="thread-core">Bound to CPU Core 1</span>
+          </div>
+          <div class="thread-running-pill">
+            <span class="running-dot"></span>
+            <span>Running G₃</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTICE LEADER -->
+    <div class="arch-notice">
+      <span class="notice-arrow">&larr;</span>
+      <span>Notice the 3-tier boundary: Network Poller parks socket waits in kernel space while the M:N scheduler balances cores via lock-free atomic work stealing.</span>
+    </div>
+  </div>
+</Exhibit>
+
+<style>
+  .arch-root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--surface-card);
+    border-radius: var(--radius-card);
+  }
+
+  .system-plane {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: calc(var(--radius-card) - 4px);
+    border: 1px solid var(--border-default);
+  }
+
+  .plane-kernel {
+    background: color-mix(in srgb, var(--accent) 3%, var(--bg));
+    border-color: color-mix(in srgb, var(--accent) 18%, var(--border-default));
+  }
+
+  .plane-runtime {
+    background: color-mix(in srgb, var(--accent) 6%, var(--bg));
+    border-color: color-mix(in srgb, var(--accent) 24%, var(--border-default));
+  }
+
+  .plane-hardware {
+    background: color-mix(in srgb, var(--text) 3%, var(--bg));
+    border-color: var(--border-default);
+  }
+
+  .plane-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .plane-title-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .plane-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .tag-blue {
+    color: var(--accent);
+  }
+
+  .plane-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .global-queue-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+    color: var(--text);
+  }
+
+  .gq-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .plane-grid {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 600px) {
+    .plane-grid.cols-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .arch-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: var(--space-3) var(--space-4);
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+  }
+
+  .card-signal {
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border-default));
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .card-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  .card-status-pill {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--text) 6%, transparent);
+    color: var(--text);
+  }
+
+  .status-ready {
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  .card-title {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .card-text {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text-muted);
+  }
+
+  /* PROCESSOR CARDS */
+  .processor-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+  }
+
+  .p-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .p-title {
+    margin: 0 0 2px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .p-sub {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--text-muted);
+  }
+
+  .p-status-pill {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .status-active {
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+
+  .status-loaded {
+    background: color-mix(in srgb, var(--signal-warm, #FFAFCC) 20%, transparent);
+    color: var(--text);
+    border: 1px solid color-mix(in srgb, var(--signal-warm, #FFAFCC) 40%, transparent);
+  }
+
+  .ring-buffer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 4px;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .slot-idx {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-muted);
+  }
+
+  .slot-val {
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .slot-filled {
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    color: var(--accent);
+  }
+
+  .slot-empty {
+    background: transparent;
+    border: 1px dashed var(--border-default);
+    color: var(--text-muted);
+  }
+
+  .slot-steal {
+    background: color-mix(in srgb, var(--signal-warm, #FFAFCC) 25%, transparent);
+    border: 1px solid var(--accent);
+    color: var(--text);
+  }
+
+  .p-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    line-height: 1.4;
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+  }
+
+  .p-metric-label {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .p-metric-val {
+    color: var(--text-muted);
+  }
+
+  /* CONNECTORS */
+  .plane-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    padding: 2px 0;
+  }
+
+  .connector-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border-default);
+  }
+
+  .connector-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    color: var(--accent);
+  }
+
+  /* THREAD CARDS */
+  .thread-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--space-4);
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+  }
+
+  .thread-name {
+    margin: 0 0 2px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .thread-core {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .thread-running-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    color: var(--accent);
+    border-radius: 6px;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  .running-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* ARCH NOTICE */
+  .arch-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: var(--space-2);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  .notice-arrow {
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>

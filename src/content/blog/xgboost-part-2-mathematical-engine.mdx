@@ -2,6 +2,8 @@
 title: "The Mathematical Engine of XGBoost: 2nd-Order Taylor Expansion & Regularized Tree Optimization"
 description: "A first-principles derivation of XGBoost's regularized objective, second-order Taylor expansion, closed-form optimal leaf weights, and candidate split-gain mechanics."
 pubDate: 2026-08-24
+image: "/images/blog/xgboost-part-2-hero.webp"
+heroCaption: "Second-order Taylor expansion loss surface curvature, optimal leaf weights, and split gain scoring."
 tags: ["Machine Learning", "XGBoost", "Gradient Boosting", "Optimization", "Algorithms", "Mathematics"]
 draft: false
 ---
@@ -9,6 +11,46 @@ draft: false
 import Exhibit from '../../components/editorial/Exhibit.astro';
 import BenchmarkChart from '../../components/diagram/BenchmarkChart.astro';
 import AlgorithmFlow from '../../components/diagram/AlgorithmFlow.astro';
+import PrimaryVerification from '../../components/editorial/PrimaryVerification.astro';
+
+export const xgb2Citations = [
+  {
+    id: "01",
+    badge: "ACM SIGKDD 2016",
+    claim: "Second-order Taylor expansion objective, exact regularized leaf weight formula, and closed-form split Gain metric.",
+    authors: "Tianqi Chen, Carlos Guestrin (University of Washington)",
+    sourceTitle: "XGBoost: A Scalable Tree Boosting System (ACM SIGKDD 2016)",
+    sourceAnchor: "Section 2.1-2.2: Eqs. 2-7",
+    permalink: "https://arxiv.org/abs/1603.02754"
+  },
+  {
+    id: "02",
+    badge: "ANNALS OF STATISTICS",
+    claim: "Gradient boosting machine optimization in function space and line-search tree leaf updates.",
+    authors: "Jerome H. Friedman (Stanford University)",
+    sourceTitle: "Greedy Function Approximation: A Gradient Boosting Machine (2001)",
+    sourceAnchor: "Section 3: Gradient Tree Boosting",
+    permalink: "https://www.jstor.org/stable/2699986"
+  },
+  {
+    id: "03",
+    badge: "NEURIPS 1999",
+    claim: "Functional gradient descent framework for additive models and weak hypothesis classes.",
+    authors: "L. Mason, J. Baxter, P. Bartlett, M. Frean",
+    sourceTitle: "Boosting Algorithms as Gradient Descent (NeurIPS 12)",
+    sourceAnchor: "Section 2: AnyBoost",
+    permalink: "https://papers.neurips.cc/paper_files/paper/1999/file/96a93ba89a5b5c6c226e49b88973f46e-Paper.pdf"
+  },
+  {
+    id: "04",
+    badge: "SPRINGER MONOGRAPH",
+    claim: "Second-order Newton-Raphson quadratic surrogate approximation and line-search convergence guarantees.",
+    authors: "Jorge Nocedal, Stephen J. Wright",
+    sourceTitle: "Numerical Optimization (2nd Edition, Springer 2006)",
+    sourceAnchor: "Chapters 3-4: Line Search Methods",
+    permalink: "https://doi.org/10.1007/978-0-387-40065-5"
+  }
+];
 
 When machine learning practitioners discuss Gradient Boosted Decision Trees (GBDT), the conversation often defaults to tree depth, subsampling rates, or raw hyperparameter tuning.
 
@@ -322,7 +364,7 @@ The following chart is a schematic comparison of optimization behavior, not a me
   series={[
     {
       name: "XGBoost (2nd-Order Newton + λ Regularization)",
-      color: "#2676aa",
+      color: "#2676AA",
       data: [
         { x: 0, y: 0.693 },
         { x: 10, y: 0.442 },
@@ -337,7 +379,7 @@ The following chart is a schematic comparison of optimization behavior, not a me
     },
     {
       name: "Classical GBDT (1st-Order Pseudo-Residuals + Line Search)",
-      color: "#ffafcc",
+      color: "#D97706",
       dashed: true,
       data: [
         { x: 0, y: 0.693 },
@@ -353,7 +395,7 @@ The following chart is a schematic comparison of optimization behavior, not a me
     },
     {
       name: "Fixed-Step Gradient Descent (No Line Search)",
-      color: "#68768b",
+      color: "#68768B",
       dashed: true,
       data: [
         { x: 0, y: 0.693 },
@@ -385,11 +427,6 @@ The following chart is a schematic comparison of optimization behavior, not a me
 
 ---
 
-## Primary Citations & Verifications
+## Primary Citations & Ground Truth
 
-| ID | Concept / Equation | Primary Source | Formal Reference / Section |
-|---|---|---|---|
-| `[1]` | 2nd-Order Objective, Leaf Weights, Split Gain Metric | Chen & Guestrin (2016) | *XGBoost: A Scalable Tree Boosting System*, Section 2.1–2.2, Eqs. 2–7. [arXiv:1603.02754](https://arxiv.org/abs/1603.02754) |
-| `[2]` | Greedy Function Approximation & Gradient Descent in Function Space | Friedman, J. H. (2001) | *Greedy Function Approximation: A Gradient Boosting Machine*, Annals of Statistics, 29(5), pp. 1189–1232. [JSTOR:2699986](https://www.jstor.org/stable/2699986) |
-| `[3]` | Functional Gradient Descent Framework | Mason, Baxter, Bartlett, & Frean (1999) | *Boosting Algorithms as Gradient Descent*, NeurIPS 12. [NeurIPS paper](https://papers.neurips.cc/paper_files/paper/1999/file/96a93ba89a5b5c6c226e49b88973f46e-Paper.pdf) |
-| `[4]` | Second-Order Newton-Raphson Optimization | Nocedal & Wright (2006) | *Numerical Optimization*, 2nd Edition, Springer, Chapters 3–4. [DOI:10.1007/978-0-387-40065-5](https://doi.org/10.1007/978-0-387-40065-5) |
+<PrimaryVerification items={xgb2Citations} />

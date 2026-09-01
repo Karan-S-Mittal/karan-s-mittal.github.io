@@ -1,0 +1,290 @@
+---
+/**
+ * InteractiveGoroutineStackWalkthrough.astro
+ * HTML/CSS-native interactive 4-stage walkthrough of Go contiguous dynamic stacks.
+ */
+import InteractiveWalkthrough from '../InteractiveWalkthrough.astro';
+
+interface Props {
+  caption?: string;
+  exhibit?: string;
+  title?: string;
+}
+
+const { caption, exhibit, title } = Astro.props;
+
+const stages = [
+  {
+    id: 'step-stack-s1',
+    index: '01',
+    name: 'Initial 2KB',
+    desc: '<strong>Step 1 (Compact 2KB Start):</strong> Every new Goroutine allocates exactly 2,048 contiguous bytes in the runtime heap arena. Zero virtual memory reservation or MMU guard pages are needed.',
+    targetGroup: 'step-group-stack-s1',
+  },
+  {
+    id: 'step-stack-s2',
+    index: '02',
+    name: 'Prologue Check',
+    desc: '<strong>Step 2 (Compiler Boundary Check):</strong> At function entry, inline assembly compares the stack pointer <code>CMPQ SP, 16(R14)</code> against <code>g.stackguard0</code>. If overflow is imminent, it branches to <code>runtime.morestack</code>.',
+    targetGroup: 'step-group-stack-s2',
+  },
+  {
+    id: 'step-stack-s3',
+    index: '03',
+    name: '2x Copy & Fixup',
+    desc: '<strong>Step 3 (Contiguous Reallocation):</strong> <code>runtime.copystack</code> allocates an 8KB/4KB block twice the size, copies all call frames contiguously, updates internal stack pointers via compiler stackmaps, and frees the old block.',
+    targetGroup: 'step-group-stack-s3',
+  },
+  {
+    id: 'step-stack-s4',
+    index: '04',
+    name: 'GC Shrink',
+    desc: '<strong>Step 4 (Automatic Shrinking):</strong> During concurrent garbage collection cycles, if a Goroutine uses less than 25% of its allocated stack capacity, the runtime automatically shrinks it back down to release memory.',
+    targetGroup: 'step-group-stack-s4',
+  },
+];
+---
+
+<InteractiveWalkthrough
+  exhibit={exhibit}
+  title={title}
+  badge="INTERACTIVE STACK LIFECYCLE"
+  caption={caption}
+  allStageName="Complete Lifecycle"
+  allStageDesc="<strong>End-to-End Stack Mechanics:</strong> From initial 2KB allocation to compiler boundary checks, contiguous frame copying, and automatic GC shrinking."
+  stages={stages}
+  wide={true}
+>
+  <div class="istack-root">
+    <div class="istack-grid">
+      <!-- STEP 1: INITIAL 2KB FRAME -->
+      <div id="step-group-stack-s1" data-step-group="step-group-stack-s1" class="step-group istack-card">
+        <div class="icard-header">
+          <span class="icard-tag">01 / INITIAL ALLOCATION</span>
+          <h4 class="icard-title">Initial 2KB Frame</h4>
+          <span class="icard-size">2,048 Bytes (0x1000)</span>
+        </div>
+
+        <div class="iframe-box">
+          <div class="frame-item">main() frame</div>
+          <div class="frame-item item-active">handleConn() frame</div>
+          <div class="frame-item item-free">Free Headroom (Guard: 0x1000)</div>
+        </div>
+
+        <div class="icard-footer">
+          <span class="ifooter-highlight">100k Gs = ~200MB RAM</span>
+          <span class="ifooter-sub">Zero MMU virtual reservations</span>
+        </div>
+      </div>
+
+      <!-- STEP 2: PROLOGUE CHECK -->
+      <div id="step-group-stack-s2" data-step-group="step-group-stack-s2" class="step-group istack-card">
+        <div class="icard-header">
+          <span class="icard-tag">02 / BOUNDARY CHECK</span>
+          <h4 class="icard-title">Compiler Prologue</h4>
+          <span class="icard-size">Inline Assembly</span>
+        </div>
+
+        <div class="iasm-box">
+          <code>CMPQ SP, 16(R14)</code>
+          <code>JLS  morestack</code>
+        </div>
+
+        <div class="icard-footer">
+          <span class="ifooter-highlight">Overhead: ~2 CPU cycles</span>
+          <span class="ifooter-sub">Pure register check &bull; Zero traps</span>
+        </div>
+      </div>
+
+      <!-- STEP 3: 2X CONTIGUOUS EXPANSION -->
+      <div id="step-group-stack-s3" data-step-group="step-group-stack-s3" class="step-group istack-card card-accent">
+        <div class="icard-header">
+          <span class="icard-tag tag-signal">03 / CONTIGUOUS EXPANSION</span>
+          <h4 class="icard-title">4KB / 8KB Frame</h4>
+          <span class="icard-size">Doubled Capacity</span>
+        </div>
+
+        <div class="iframe-box">
+          <div class="frame-item">main() frames copied</div>
+          <div class="frame-item item-active">Pointers adjusted via stackmap</div>
+          <div class="frame-item item-free">Old 2KB heap frame freed</div>
+        </div>
+
+        <div class="icard-footer">
+          <span class="ifooter-highlight">Contiguous: No Hot-Split</span>
+          <span class="ifooter-sub">Memory relocated seamlessly</span>
+        </div>
+      </div>
+
+      <!-- STEP 4: GC SHRINK -->
+      <div id="step-group-stack-s4" data-step-group="step-group-stack-s4" class="step-group istack-card">
+        <div class="icard-header">
+          <span class="icard-tag">04 / GC SHRINKING</span>
+          <h4 class="icard-title">Stack Halving</h4>
+          <span class="icard-size">Utilization &lt; 25%</span>
+        </div>
+
+        <div class="iframe-box">
+          <div class="frame-item">Reallocated to 2KB</div>
+          <div class="frame-item item-free">Excess memory freed to mheap</div>
+        </div>
+
+        <div class="icard-footer">
+          <span class="ifooter-highlight">Zero Memory Leaks</span>
+          <span class="ifooter-sub">Background concurrent GC</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTICE LEADER -->
+    <div class="istack-notice">
+      <span class="notice-arrow">&larr;</span>
+      <span>Notice how the 4-step dynamic stack lifecycle enables 100k Goroutines to scale elastically with zero kernel memory pre-allocations.</span>
+    </div>
+  </div>
+</InteractiveWalkthrough>
+
+<style>
+  .istack-root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--surface-card);
+    border-radius: var(--radius-card);
+  }
+
+  .istack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .istack-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: var(--bg);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+    transition: opacity var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .card-accent {
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--border-default));
+    background: color-mix(in srgb, var(--accent) 4%, var(--bg));
+  }
+
+  .icard-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .icard-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .tag-signal {
+    color: var(--accent);
+  }
+
+  .icard-title {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .icard-size {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .iframe-box {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: 4px 0;
+  }
+
+  .frame-item {
+    font-size: 10.5px;
+    padding: 4px 8px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+    color: var(--text);
+  }
+
+  .item-active {
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .item-free {
+    background: transparent;
+    border-style: dashed;
+    color: var(--text-muted);
+    font-size: 9.5px;
+  }
+
+  .iasm-box {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 8px 10px;
+    background: color-mix(in srgb, var(--text) 5%, transparent);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 4px 0;
+  }
+
+  .icard-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+    margin-top: auto;
+  }
+
+  .ifooter-highlight {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .ifooter-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .istack-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+  }
+
+  .notice-arrow {
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>

@@ -50,6 +50,7 @@ const flowSteps = [
 <Layout
   title="Studio Engine | Karan Mittal"
   description="A working control room for the Explanatory Systems Studio visual system and publishing workflow."
+  robots="noindex, nofollow"
 >
   <main class="studio-page">
     <section class="studio-hero">
@@ -68,12 +69,14 @@ const flowSteps = [
     </section>
 
     <nav class="studio-index" aria-label="Studio sections">
+      <a href="/studio/visuals" class="studio-index-highlight">Interactive Visuals Lab &rarr;</a>
+      <a href="/studio/components">Components Gallery</a>
+      <a href="/case-studies/soft-architecture">Design Spec</a>
       <a href="#contract">00 · Contract</a>
       <a href="#preview">01 · Preview lab</a>
       <a href="#workflow">02 · Repair loop</a>
       <a href="#brief">03 · Issue brief</a>
       <a href="#automation">04 · Automation</a>
-      <a href="/studio/components/">05 · Components</a>
     </nav>
 
     <section id="contract" class="studio-section">
@@ -334,7 +337,7 @@ const flowSteps = [
 
   .studio-index {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     margin: var(--space-8) 0 var(--space-9);
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
@@ -346,10 +349,15 @@ const flowSteps = [
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     border-right: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 
   .studio-index a:last-child { border-right: 0; }
   .studio-index a:hover { color: var(--accent); text-decoration: none; }
+  .studio-index-highlight { color: var(--accent) !important; font-weight: 700 !important; background: color-mix(in srgb, var(--accent) 5%, transparent); }
 
   .studio-section {
     padding: var(--space-8) 0;

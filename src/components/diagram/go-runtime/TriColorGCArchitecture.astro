@@ -1,0 +1,366 @@
+---
+/**
+ * TriColorGCArchitecture.astro
+ * HTML/CSS-native Concurrent Tri-Color GC & Hybrid Write Barrier diagram.
+ */
+import Exhibit from '../../editorial/Exhibit.astro';
+
+interface Props {
+  caption?: string;
+  exhibit?: string;
+  title?: string;
+}
+
+const {
+  caption = 'Objects transition from White (unvisited/collectable) to Grey (in-progress queue) to Black (live). The Hybrid Write Barrier intercepts concurrent mutator pointer updates, shading both overwritten and newly assigned pointers to Grey to eliminate STW stack re-scans.',
+  exhibit = '04',
+  title = 'Concurrent Tri-Color Mark and the Hybrid Write Barrier',
+} = Astro.props;
+---
+
+<Exhibit exhibit={exhibit} title={title} badge="GARBAGE COLLECTION" caption={caption} wide>
+  <div class="gc-root">
+    <!-- SECTION 1: TRI-COLOR MARK STATES -->
+    <div class="gc-section">
+      <div class="section-header">
+        <span class="section-tag tag-signal">01 / CONCURRENT TRI-COLOR MARK CLASSIFICATION</span>
+        <span class="section-sub">Background mark workers color the live object graph concurrently alongside running mutator Goroutines.</span>
+      </div>
+
+      <div class="tri-color-grid">
+        <!-- BLACK SET -->
+        <div class="color-card card-black">
+          <div class="card-head">
+            <span class="color-dot dot-black"></span>
+            <h4 class="color-title">Black Set (Retained)</h4>
+          </div>
+          <span class="color-badge">PROVEN LIVE OBJECTS</span>
+          <div class="color-content">
+            <span class="content-bold">Scanned Objects</span>
+            <span class="content-sub">All outgoing field pointers traversed and marked</span>
+          </div>
+        </div>
+
+        <div class="grid-arrow">&rarr;</div>
+
+        <!-- GREY SET -->
+        <div class="color-card card-grey">
+          <div class="card-head">
+            <span class="color-dot dot-grey"></span>
+            <h4 class="color-title">Grey Set (Work Queue)</h4>
+          </div>
+          <span class="color-badge badge-signal">MARKING FRONTIER</span>
+          <div class="color-content">
+            <span class="content-bold">Discovered Objects</span>
+            <span class="content-sub">Buffered in per-P gcWork queues pending scan</span>
+          </div>
+        </div>
+
+        <div class="grid-arrow">&rarr;</div>
+
+        <!-- WHITE SET -->
+        <div class="color-card card-white">
+          <div class="card-head">
+            <span class="color-dot dot-white"></span>
+            <h4 class="color-title">White Set (Sweep)</h4>
+          </div>
+          <span class="color-badge">UNREACHABLE OBJECTS</span>
+          <div class="color-content content-dead">
+            <span class="content-bold">Dead Memory</span>
+            <span class="content-sub">Reclaimed back to mcentral spans at sweep phase</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- SECTION 2: HYBRID WRITE BARRIER -->
+    <div class="gc-section">
+      <div class="section-header">
+        <span class="section-tag tag-signal">02 / HYBRID WRITE BARRIER (GO 1.8+ INVARIANT PROTECTION)</span>
+        <span class="section-sub">Intercepts pointer mutations without stopping user Goroutines or requiring Stop-The-World stack rescans.</span>
+      </div>
+
+      <div class="barrier-card">
+        <div class="barrier-left">
+          <span class="barrier-tag">MUTATOR ACTION</span>
+          <code class="barrier-code">*slot = ptr</code>
+          <span class="barrier-desc">Compiled as inline barrier instructions during mark phase</span>
+        </div>
+
+        <div class="barrier-right">
+          <div class="rule-box">
+            <span class="rule-num">1.</span>
+            <div class="rule-body">
+              <code>shade(*slot)</code>
+              <span>Overwritten old pointer shaded Grey (Yuasa deletion barrier)</span>
+            </div>
+          </div>
+          <div class="rule-box box-signal">
+            <span class="rule-num">2.</span>
+            <div class="rule-body">
+              <code>shade(ptr)</code>
+              <span>Newly assigned pointer shaded Grey (Dijkstra insertion barrier)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTICE LEADER -->
+    <div class="gc-notice">
+      <span class="notice-arrow">&larr;</span>
+      <span>Notice how the Hybrid Write Barrier eliminates STW stack rescans, keeping Stop-The-World pause durations to &lt;100 microseconds.</span>
+    </div>
+  </div>
+</Exhibit>
+
+<style>
+  .gc-root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background: var(--surface-card);
+    border-radius: var(--radius-card);
+  }
+
+  .gc-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .section-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .tag-signal {
+    color: var(--accent);
+  }
+
+  .section-sub {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text-muted);
+  }
+
+  /* TRI COLOR GRID */
+  .tri-color-grid {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .color-card {
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: var(--space-3) var(--space-4);
+    background: var(--bg);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+  }
+
+  .card-black {
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border-default));
+  }
+
+  .card-grey {
+    background: color-mix(in srgb, var(--accent) 5%, var(--bg));
+    border-color: var(--accent);
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .color-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .dot-black { background: var(--text); }
+  .dot-grey { background: var(--accent); }
+  .dot-white { background: var(--text-muted); border: 1px solid var(--border-default); }
+
+  .color-title {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .color-badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+  }
+
+  .badge-signal {
+    color: var(--accent);
+  }
+
+  .color-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--space-2) var(--space-3);
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+  }
+
+  .content-dead {
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 6px,
+      color-mix(in srgb, var(--text) 3%, transparent) 6px,
+      color-mix(in srgb, var(--text) 3%, transparent) 12px
+    );
+  }
+
+  .content-bold {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .content-sub {
+    font-size: 10.5px;
+    color: var(--text-muted);
+    line-height: 1.35;
+  }
+
+  .grid-arrow {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .section-divider {
+    height: 1px;
+    background: var(--border-default);
+  }
+
+  /* BARRIER CARD */
+  .barrier-card {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background: var(--bg);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+    flex-wrap: wrap;
+  }
+
+  .barrier-left {
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .barrier-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .barrier-code {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .barrier-desc {
+    font-size: 11.5px;
+    color: var(--text-muted);
+  }
+
+  .barrier-right {
+    flex: 1.5;
+    min-width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .rule-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: var(--space-2) var(--space-3);
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+  }
+
+  .box-signal {
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border-default));
+  }
+
+  .rule-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .rule-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .rule-body code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* NOTICE */
+  .gc-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+  }
+
+  .notice-arrow {
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>

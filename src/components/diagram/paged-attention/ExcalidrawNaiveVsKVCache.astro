@@ -11,54 +11,111 @@ const { caption, exhibit, title } = Astro.props;
 ---
 
 <ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="COMPUTE MODEL">
-  <svg class="ex-svg-canvas sys-diagram" viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="At decoding step three, naive decoding recomputes three token projections while KV caching projects only the active token and reuses stored keys and values.">
+  <svg class="ex-svg-canvas sys-diagram" viewBox="0 0 720 350" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparison between naive recomputation and KV-cached decoding at step 3.">
     <defs>
-      <marker id="naive-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="var(--ex-text-main)" /></marker>
-      <marker id="naive-arrow-signal" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="var(--ex-text-main)" /></marker>
-      <pattern id="naive-hatch" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="8" stroke="var(--ex-text-muted)" stroke-opacity=".22" stroke-width="2" /></pattern>
+      <marker id="naive-arr-1" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0, 7 3, 0 6" fill="var(--text)" /></marker>
+      <marker id="naive-arr-blue-1" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0, 7 3, 0 6" fill="var(--accent)" /></marker>
+      <pattern id="waste-hatch-v3" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+        <line x1="0" y1="0" x2="0" y2="6" stroke="var(--muted)" stroke-opacity="0.35" stroke-width="1.5" />
+      </pattern>
     </defs>
 
-    <text x="32" y="32" class="label">DECODE STEP 03</text>
-    <text x="768" y="32" class="label" text-anchor="end">SAME NEXT TOKEN</text>
-    <line x1="32" y1="48" x2="768" y2="48" class="rule" />
+    <!-- SECTION 1: NAIVE PATH -->
+    <g transform="translate(20, 16)">
+      <text x="0" y="12" class="label-signal" dominant-baseline="central">PATH A / NAIVE DECODING (NO CACHE)</text>
+      <text x="0" y="28" class="body-muted" dominant-baseline="central">Recomputes projections for all past tokens on every forward step (O(N²) cumulative work).</text>
 
-    <text x="32" y="88" class="title">Naive decoding</text>
-    <text x="32" y="108" class="body-muted">Run the entire sequence through the transformer again.</text>
+      <g transform="translate(0, 44)">
+        <!-- Token 0: The -->
+        <rect x="0" y="0" width="64" height="48" rx="6" class="node-muted" />
+        <rect x="0" y="0" width="64" height="48" rx="6" fill="url(#waste-hatch-v3)" />
+        <text x="32" y="18" class="body" text-anchor="middle" font-weight="600" dominant-baseline="central">"The"</text>
+        <text x="32" y="34" class="label" text-anchor="middle" font-size="9" dominant-baseline="central">RE-PROJ</text>
 
-    <g transform="translate(32 136)">
-      <rect x="0" y="0" width="80" height="48" rx="4" class="node-muted" />
-      <rect x="0" y="0" width="80" height="48" rx="4" fill="url(#naive-hatch)" />
-      <text x="40" y="20" class="body" text-anchor="middle">The</text><text x="40" y="36" class="label" text-anchor="middle">REPEAT</text>
-      <rect x="96" y="0" width="80" height="48" rx="4" class="node-muted" />
-      <rect x="96" y="0" width="80" height="48" rx="4" fill="url(#naive-hatch)" />
-      <text x="136" y="20" class="body" text-anchor="middle">quick</text><text x="136" y="36" class="label" text-anchor="middle">REPEAT</text>
-      <rect x="192" y="0" width="80" height="48" rx="4" class="node-muted" />
-      <text x="232" y="20" class="body" text-anchor="middle">brown</text><text x="232" y="36" class="label" text-anchor="middle">ACTIVE</text>
-      <path d="M 272 24 H 376" class="flow" marker-end="url(#naive-arrow)" />
-      <rect x="376" y="0" width="160" height="48" rx="4" class="node" />
-      <text x="456" y="21" class="title" text-anchor="middle">Transformer</text><text x="456" y="37" class="label" text-anchor="middle">3 PROJECTIONS</text>
-      <path d="M 536 24 H 640" class="flow" marker-end="url(#naive-arrow)" />
-      <rect x="640" y="0" width="96" height="48" rx="4" class="node-muted" />
-      <text x="688" y="21" class="body" text-anchor="middle">fox</text><text x="688" y="37" class="label" text-anchor="middle">OUTPUT</text>
+        <!-- Token 1: quick -->
+        <rect x="74" y="0" width="64" height="48" rx="6" class="node-muted" />
+        <rect x="74" y="0" width="64" height="48" rx="6" fill="url(#waste-hatch-v3)" />
+        <text x="106" y="18" class="body" text-anchor="middle" font-weight="600" dominant-baseline="central">"quick"</text>
+        <text x="106" y="34" class="label" text-anchor="middle" font-size="9" dominant-baseline="central">RE-PROJ</text>
+
+        <!-- Token 2: brown -->
+        <rect x="148" y="0" width="64" height="48" rx="6" class="node" />
+        <text x="180" y="18" class="body" text-anchor="middle" font-weight="600" dominant-baseline="central">"brown"</text>
+        <text x="180" y="34" class="label-signal" text-anchor="middle" font-size="9" dominant-baseline="central">ACTIVE</text>
+
+        <!-- Flow Arrow -->
+        <path d="M 218 24 H 262" class="flow" marker-end="url(#naive-arr-1)" />
+
+        <!-- Transformer Block -->
+        <rect x="270" y="0" width="220" height="48" rx="6" class="node" />
+        <text x="380" y="18" class="title" text-anchor="middle" font-size="14" dominant-baseline="central">Transformer Layers</text>
+        <text x="380" y="34" class="label" text-anchor="middle" font-size="9.5" dominant-baseline="central">3 FULL FORWARD PROJECTIONS</text>
+
+        <!-- Flow Arrow -->
+        <path d="M 496 24 H 540" class="flow" marker-end="url(#naive-arr-1)" />
+
+        <!-- Output Token -->
+        <rect x="548" y="0" width="132" height="48" rx="6" class="node-muted" />
+        <text x="614" y="18" class="body" text-anchor="middle" font-weight="600" dominant-baseline="central">"fox"</text>
+        <text x="614" y="34" class="label" text-anchor="middle" font-size="9.5" dominant-baseline="central">STEP 3 OUTPUT</text>
+      </g>
     </g>
 
-    <line x1="32" y1="224" x2="768" y2="224" class="rule" />
+    <!-- DIVIDER -->
+    <line x1="20" y1="164" x2="700" y2="164" class="rule" />
 
-    <text x="32" y="264" class="title">KV-cached decoding</text>
-    <text x="32" y="284" class="body-muted">Reuse prior keys and values; project only the token that just arrived.</text>
+    <!-- SECTION 2: KV-CACHED PATH -->
+    <g transform="translate(20, 180)">
+      <text x="0" y="12" class="label-signal" dominant-baseline="central">PATH B / KV-CACHED DECODING</text>
+      <text x="0" y="28" class="body-muted" dominant-baseline="central">Past Key/Value states remain static in GPU VRAM; projects only the single active token.</text>
 
-    <g transform="translate(32 312)">
-      <rect x="0" y="0" width="176" height="56" rx="4" class="node-muted" />
-      <text x="16" y="20" class="title">Stored KV cache</text>
-      <text x="16" y="40" class="label">THE · QUICK</text>
-      <rect x="224" y="0" width="80" height="56" rx="4" class="node-signal" />
-      <text x="264" y="22" class="body" text-anchor="middle">brown</text><text x="264" y="42" class="label-signal" text-anchor="middle">NEW QKV</text>
-      <path d="M 304 28 H 408" class="flow-signal" marker-end="url(#naive-arrow-signal)" />
-      <rect x="408" y="0" width="160" height="56" rx="4" class="node" />
-      <text x="488" y="22" class="title" text-anchor="middle">Attention</text><text x="488" y="42" class="label" text-anchor="middle">REUSE + 1 PROJ.</text>
-      <path d="M 568 28 H 672" class="flow-signal" marker-end="url(#naive-arrow-signal)" />
-      <rect x="672" y="0" width="64" height="56" rx="4" class="node-signal" />
-      <text x="704" y="22" class="body" text-anchor="middle">fox</text><text x="704" y="42" class="label-signal" text-anchor="middle">OUTPUT</text>
+      <g transform="translate(0, 44)">
+        <!-- Stored KV Cache Bank -->
+        <rect x="0" y="0" width="212" height="66" rx="6" class="node-muted" />
+        <text x="12" y="16" class="label-signal" font-size="9.5" dominant-baseline="central">GPU VRAM KV CACHE</text>
+        <rect x="12" y="26" width="88" height="28" rx="4" class="node" />
+        <text x="56" y="40" class="label" text-anchor="middle" font-size="9.5" dominant-baseline="central">K₀, V₀ ("The")</text>
+        <rect x="108" y="26" width="92" height="28" rx="4" class="node" />
+        <text x="154" y="40" class="label" text-anchor="middle" font-size="9.5" dominant-baseline="central">K₁, V₁ ("quick")</text>
+
+        <!-- Read Flow into Self Attention -->
+        <path d="M 212 38 C 240 38, 250 32, 270 32" class="flow-dashed" marker-end="url(#naive-arr-1)" />
+
+        <!-- New Token -->
+        <rect x="0" y="78" width="104" height="34" rx="6" class="node-signal" />
+        <text x="52" y="90" class="body" text-anchor="middle" font-weight="600" dominant-baseline="central">"brown"</text>
+        <text x="52" y="103" class="label-signal" text-anchor="middle" font-size="8.5" dominant-baseline="central">ACTIVE (t₂)</text>
+
+        <!-- Arrow to Proj -->
+        <path d="M 108 95 H 138" class="flow-signal" marker-end="url(#naive-arr-blue-1)" />
+
+        <!-- 1 Token Project -->
+        <rect x="144" y="78" width="68" height="34" rx="6" class="node-signal" />
+        <text x="178" y="90" class="label-signal" text-anchor="middle" font-size="9" dominant-baseline="central">PROJ</text>
+        <text x="178" y="103" class="label-signal" text-anchor="middle" font-size="8" dominant-baseline="central">Q₂, K₂, V₂</text>
+
+        <!-- Arrow to Attention -->
+        <path d="M 212 95 C 240 95, 250 56, 270 56" class="flow-signal" marker-end="url(#naive-arr-blue-1)" />
+
+        <!-- Self Attention Engine -->
+        <rect x="270" y="10" width="220" height="92" rx="6" class="node-signal" />
+        <text x="380" y="30" class="title" text-anchor="middle" font-size="14" dominant-baseline="central">Self-Attention</text>
+        <text x="380" y="48" class="label-signal" text-anchor="middle" font-size="9.5" dominant-baseline="central">Q₂ ATTENDS TO [K₀, K₁, K₂]</text>
+        <text x="380" y="64" class="body-muted" text-anchor="middle" font-size="11" dominant-baseline="central">Mixes contextual values [V₀, V₁, V₂]</text>
+        <rect x="286" y="76" width="188" height="16" rx="3" class="node" />
+        <text x="380" y="84" class="label-signal" text-anchor="middle" font-size="8.5" dominant-baseline="central">1 PROJECTION + O(N) READ</text>
+
+        <!-- Connector to Output -->
+        <path d="M 496 56 H 540" class="flow-signal" marker-end="url(#naive-arr-blue-1)" />
+
+        <!-- Output Token -->
+        <rect x="548" y="32" width="132" height="48" rx="6" class="node-signal" />
+        <text x="614" y="50" class="body" text-anchor="middle" font-weight="600" dominant-baseline="central">"fox"</text>
+        <text x="614" y="66" class="label-signal" text-anchor="middle" font-size="9.5" dominant-baseline="central">STEP 3 OUTPUT</text>
+      </g>
     </g>
   </svg>
 </ExcalidrawContainer>
+
+
+

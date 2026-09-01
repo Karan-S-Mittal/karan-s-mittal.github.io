@@ -21,6 +21,7 @@ const { item, detailed = false, index } = Astro.props;
 ---
 
 <StudioPanel
+  id={`work-${item.id}`}
   title={item.title}
   label={item.eyebrow}
   index={index}

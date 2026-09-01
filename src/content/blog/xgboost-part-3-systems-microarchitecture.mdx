@@ -2,6 +2,8 @@
 title: "How XGBoost Runs on Bare Metal: Quantile Sketches, Sparsity, and Cache-Aware Blocks"
 description: "A hardware-level breakdown of XGBoost's systems design: weighted quantile sketches, sparsity-aware routing, cache-conscious column blocks, and out-of-core data movement."
 pubDate: 2026-08-24
+image: "/images/blog/xgboost-part-3-hero.webp"
+heroCaption: "Physical multicore CPU microarchitecture: CSC block layout, contiguous cacheline prefetch, and thread-local accumulation."
 tags: ["Machine Learning Systems", "XGBoost", "Hardware Microarchitecture", "Quantile Sketch", "Memory Hierarchy", "Parallel Systems"]
 draft: false
 ---
@@ -9,6 +11,50 @@ draft: false
 import Exhibit from '../../components/editorial/Exhibit.astro';
 import BenchmarkChart from '../../components/diagram/BenchmarkChart.astro';
 import AlgorithmFlow from '../../components/diagram/AlgorithmFlow.astro';
+import PrimaryVerification from '../../components/editorial/PrimaryVerification.astro';
+import QuantileSketchArchitecture from '../../components/diagram/xgboost/QuantileSketchArchitecture.astro';
+import SparsitySplitArchitecture from '../../components/diagram/xgboost/SparsitySplitArchitecture.astro';
+import CSCBlockMemoryArchitecture from '../../components/diagram/xgboost/CSCBlockMemoryArchitecture.astro';
+import CacheAwareBufferArchitecture from '../../components/diagram/xgboost/CacheAwareBufferArchitecture.astro';
+
+export const xgb3Citations = [
+  {
+    id: "01",
+    badge: "ACM SIGKDD 2016",
+    claim: "XGBoost system architecture, column-block memory structures, cache-aware prefetching, and out-of-core block compression.",
+    authors: "Tianqi Chen, Carlos Guestrin (University of Washington)",
+    sourceTitle: "XGBoost: A Scalable Tree Boosting System (ACM SIGKDD 2016)",
+    sourceAnchor: "Section 3-4: Split Finding & System Design",
+    permalink: "https://arxiv.org/abs/1603.02754"
+  },
+  {
+    id: "02",
+    badge: "ACM SIGMOD 2001",
+    claim: "Space-efficient deterministic streaming algorithms for rank and quantile summaries with epsilon approximation guarantees.",
+    authors: "Michael Greenwald, Sanjeev Khanna",
+    sourceTitle: "Space-Efficient Online Computation of Quantile Summaries (SIGMOD 2001)",
+    sourceAnchor: "Section 2: The GK Algorithm",
+    permalink: "https://doi.org/10.1145/375663.375670"
+  },
+  {
+    id: "03",
+    badge: "NEURIPS 2017",
+    claim: "LightGBM histogram binning and Gradient-based One-Side Sampling (GOSS) cache optimization comparison.",
+    authors: "Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma, Qiwei Ye, Tie-Yan Liu",
+    sourceTitle: "LightGBM: A Highly Efficient Gradient Boosting Decision Tree (NeurIPS 2017)",
+    sourceAnchor: "Section 3: GOSS Algorithm",
+    permalink: "https://proceedings.neurips.cc/paper_files/paper/2017/file/6449f44a102fde848669bdd9eb6b76fa-Paper.pdf"
+  },
+  {
+    id: "04",
+    badge: "OPEN SOURCE REPO",
+    claim: "In-memory column block representation, quantile binning structures, and block iteration loops in XGBoost C++ core.",
+    authors: "DMLC / XGBoost Core Team",
+    sourceTitle: "XGBoost C++ Implementation",
+    sourceAnchor: "src/data/quantile_dmatrix.h & src/tree/updater_colmaker.cc",
+    permalink: "https://github.com/dmlc/xgboost"
+  }
+];
 
 When machine learning literature discusses Gradient Boosted Decision Trees (GBDTs), the focus almost universally settles on the mathematics: sequentially fitting shallow trees to the negative gradients of an arbitrary differentiable loss function.
 
@@ -89,26 +135,7 @@ $$
 
 Because instances contribute non-uniformly according to Hessian $h_i$, candidate splits must partition the **cumulative Hessian distribution** into equal-weight buckets.
 
-<Exhibit 
-  exhibit="01" 
-  title="Exact Sorting vs. Weighted Quantile Sketch Partitioning" 
-  badge="ALGORITHMIC MECHANISM" 
-  caption="Exact greedy splitting requires testing every unique value boundary. The weighted quantile sketch maps continuous feature values onto discrete buckets containing equal cumulative Hessian mass hᵢ, guaranteeing bounded rank error ε.">
-
-```
-Exact Greedy Splitting (Exhaustive scan across all n instances):
-Feature Values:   [ 0.12 | 0.15 | 0.19 | 0.28 | 0.31 | ... | 0.89 | 0.94 ]
-Evaluations:        ^      ^      ^      ^      ^              ^      ^
-Overhead:         O(n) split evaluations per feature per tree level.
-
-Weighted Quantile Sketch (Partitioning by cumulative Hessian mass):
-Instances (x, h): (0.12, 1.2)  (0.19, 0.2)  (0.31, 4.8)  (0.55, 0.1)  (0.89, 3.2)
-Cumulative H:     |--- 1.2 ---|--- 1.4 ---|--- 6.2 ---|--- 6.3 ---|--- 9.5 ---|
-                                          ▲                       ▲
-Candidate Splits:                   Bucket Split s₁         Bucket Split s₂
-Sketch Property:  Rank distance |r_k(s_j) - r_k(s_{j+1})| < ε
-```
-</Exhibit>
+<QuantileSketchArchitecture exhibit="01" />
 
 ---
 
@@ -195,83 +222,15 @@ def find_optimal_sparse_split(node_instances, feature_k, G_total, H_total):
     return best_split, best_default_dir, best_gain
 ```
 
-<Exhibit 
-  exhibit="03" 
-  title="Sparsity-Aware Dual-Direction Split Scanning" 
-  badge="ALGORITHM MECHANIC" 
-  caption="By computing total node gradient and Hessian sums (G, H) upfront, the algorithm scans only present feature values. The missing entries are implicitly accounted for by subtraction, testing both Left and Right default assignments in linear time.">
-
-```
-Total Node Aggregates: G = ∑ gᵢ = 14.2,  H = ∑ hᵢ = 28.0 (over ALL n=1000 instances)
-Present Non-Missing Instances: |I_k| = 4 instances (99.6% sparse)
-
-Pass 1: Missing Assigned to RIGHT (I_R = Total - I_L)
-Threshold   G_L    H_L   |   G_R (G - G_L)   H_R (H - H_L)   |   Gain
-x < 1.2     2.1    4.0   |   12.1            24.0            |   3.42
-x < 3.5     5.4   10.0   |    8.8            18.0            |   5.12  <-- Best Pass 1
-x < 7.8     8.0   16.0   |    6.2            12.0            |   4.89
-
-Pass 2: Missing Assigned to LEFT (I_L = Total - I_R)
-Threshold   G_R    H_R   |   G_L (G - G_R)   H_L (H - H_R)   |   Gain
-x > 7.8     6.2   12.0   |    8.0            16.0            |   4.89
-x > 3.5     8.8   18.0   |    5.4            10.0            |   6.84  <-- OPTIMAL SPLIT (Default: LEFT)
-x > 1.2    12.1   24.0   |    2.1             4.0            |   3.42
-```
-</Exhibit>
+<SparsitySplitArchitecture exhibit="03" />
 
 ---
 
 ## 6. Cache-Aware Block Architecture & Out-of-Core Storage
 
-<Exhibit 
-  exhibit="04" 
-  title="Compressed Sparse Column (CSC) Block Memory Layout" 
-  badge="MEMORY LAYOUT" 
-  caption="Data is stored in column-major blocks. A single initialization pass sorts feature values and retains their 32-bit row indices. Pointer offsets (col_ptr) index each feature column directly into contiguous value and row index arrays.">
+<CSCBlockMemoryArchitecture exhibit="04" />
 
-```
-Logical Feature Table (Sparse Matrix):
-           Col 0    Col 1    Col 2
-Row 0:   [  0.0   |  1.42  |  0.0   ]
-Row 1:   [  4.85  |  0.0   |  0.19  ]
-Row 2:   [  1.12  |  0.0   |  0.0   ]
-Row 3:   [  0.0   |  9.21  |  0.88  ]
-
-In-Memory CSC Block Representation:
-col_ptr Array:  [  0,        2,        4,        6  ]
-                   │         │         │         │
-                   └────┬────┴────┬────┴────┬────┘
-                        │         │         │
-data Array:       [ 1.12, 4.85 | 1.42, 9.21 | 0.19, 0.88 ] (Feature Values)
-row_idx Array:    [   2 ,   1  |   0 ,   3  |   1 ,   3  ] (Original Row IDs)
-                        ▲                   ▲
-                 Col 0 Values        Col 2 Values
-                 (Pre-sorted)        (Pre-sorted)
-```
-</Exhibit>
-
-<Exhibit 
-  exhibit="05" 
-  title="Random DRAM Thrashing vs. Cache-Aware Thread-Local Buffers" 
-  badge="HARDWARE MICROARCHITECTURE" 
-  caption="Naive split finding generates continuous L1/L2 cache misses by reading non-contiguous gradients from DRAM. The cache-aware block engine prefetches gradient and Hessian tuples into a contiguous thread-local cache buffer of size B, executing local accumulations entirely within high-speed CPU L1/L2 caches.">
-
-```
-NAIVE GRADIENT ACCESS (Continuous Cache Thrashing):
-CSC row_idx:     [ 10423,   12,  98234,   501,  88312 ]
-                      │      │       │      │       │
-                      ▼      ▼       ▼      ▼       ▼
-DRAM Memory:     [ ... g10423 ... g12 ... g98234 ... g501 ... g88312 ... ]
-Cache State:     [ MISS ][ MISS ][ MISS ][ MISS ][ MISS ] -> Pipeline Stalls (200 cycles)
-
-CACHE-AWARE BLOCK BUFFERING (Pre-fetched Accumulation):
-CSC row_idx:     [ Block 0 (IDs: 0 ... B-1) ]  [ Block 1 (IDs: B ... 2B-1) ]
-                              │
-                              ▼ Prefetch Batch into L1/L2 Cache
-Local Buffer:    [ (g₀, h₀), (g₁, h₁), (g₂, h₂), ..., (g_B, h_B) ]
-Accumulation:    [ Contiguous In-Cache Histogram Aggregation ] -> 1-2 cycle latency
-```
-</Exhibit>
+<CacheAwareBufferArchitecture exhibit="05" />
 
 ---
 
@@ -292,7 +251,7 @@ The following chart is a schematic systems model, not a recorded AMD EPYC benchm
   series={[
     {
       name: "XGBoost (Cache-Aware + Approx Sketch)",
-      color: "#2676aa",
+      color: "#2676AA",
       data: [
         { x: 1, y: 48 },
         { x: 2, y: 94 },
@@ -306,7 +265,7 @@ The following chart is a schematic systems model, not a recorded AMD EPYC benchm
     },
     {
       name: "XGBoost (Without Cache-Aware Buffering)",
-      color: "#ffafcc",
+      color: "#D97706",
       dashed: true,
       data: [
         { x: 1, y: 36 },
@@ -321,7 +280,7 @@ The following chart is a schematic systems model, not a recorded AMD EPYC benchm
     },
     {
       name: "Exact Greedy Baseline (Continuous Sort)",
-      color: "#cdb4db",
+      color: "#68768B",
       dashed: true,
       data: [
         { x: 1, y: 12 },
@@ -372,14 +331,6 @@ The effects below are hypotheses for a benchmark harness, not recorded measureme
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
----
+## Primary Citations & Ground Truth
 
-## Primary Citations & Verifications
-
-| ID | Claim / Component | Primary Source | Reference / Commit |
-|---|---|---|---|
-| `[1]` | XGBoost Architecture, Quantile Sketch, Sparsity, Cache Blocks | Tianqi Chen & Carlos Guestrin, KDD 2016 | [*XGBoost: A Scalable Tree Boosting System*](https://arxiv.org/abs/1603.02754) |
-| `[2]` | Streaming Quantile Computation & Error Bounds | Michael Greenwald & Sanjeev Khanna, SIGMOD 2001 | [*Space-Efficient Online Computation of Quantile Summaries*](https://doi.org/10.1145/375663.375670) |
-| `[3]` | Gradient Boosting Machines & Greedy Tree Induction | Jerome H. Friedman, Annals of Statistics 2001 | [*Greedy Function Approximation: A Gradient Boosting Machine*](https://doi.org/10.1214/aos/1013203451) |
-| `[4]` | LightGBM Histogram Binning & GOSS (Comparative Architecture) | Guolin Ke et al., NeurIPS 2017 | [*LightGBM: A Highly Efficient Gradient Boosting Decision Tree*](https://proceedings.neurips.cc/paper_files/paper/2017/file/6449f44a102fde848669bdd9eb6b76fa-Paper.pdf) |
-| `[5]` | XGBoost quantile-data implementation | DMLC / XGBoost Repository | [`src/data/quantile_dmatrix.h`](https://github.com/dmlc/xgboost/blob/master/src/data/quantile_dmatrix.h) |
+<PrimaryVerification items={xgb3Citations} />

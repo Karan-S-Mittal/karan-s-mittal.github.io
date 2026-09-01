@@ -2,20 +2,31 @@
 const currentPath = Astro.url.pathname;
 
 const nav = [
-  { href: '/blog', label: 'Essays' },
   { href: '/work', label: 'Work' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/about#community', label: 'Community' },
   { href: '/about', label: 'About' },
   { href: '/talks', label: 'Talks' },
 ];
 
 function isActive(href: string) {
-  return currentPath.startsWith(href);
+  if (href.includes('#')) return false;
+  if (href === '/blog') return currentPath.startsWith('/blog');
+  if (href === '/work') return currentPath.startsWith('/work');
+  if (href === '/about') return currentPath === '/about';
+  if (href === '/talks') return currentPath.startsWith('/talks');
+  return currentPath === href;
 }
 ---
 
-<header>
+<header id="site-header">
   <div class="header-inner">
-    <a href="/" class="brand">Karan Mittal</a>
+    <div class="header-left">
+      <a href="/" class="brand" aria-label="Karan Mittal Home">
+        <span class="brand-name">Karan Mittal</span>
+      </a>
+    </div>
+
     <nav class="main-nav" aria-label="Primary">
       {nav.map(item => (
         <a href={item.href} class={isActive(item.href) ? 'active' : ''} aria-current={isActive(item.href) ? 'page' : undefined}>
@@ -23,66 +34,113 @@ function isActive(href: string) {
         </a>
       ))}
     </nav>
+
+    <div class="header-right">
+      <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode" title="Toggle theme">
+        <svg class="sun-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+
+      <a href="/#contact" class="consult-cta">
+        <span>Contact</span>
+      </a>
+    </div>
   </div>
 </header>
+
+<script is:inline>
+  function setupThemeToggle() {
+    const btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+  }
+
+  setupThemeToggle();
+  document.addEventListener('astro:page-load', setupThemeToggle);
+</script>
 
 <style>
   header {
     position: sticky;
     top: 0;
-    z-index: 100;
-    background: color-mix(in srgb, var(--bg) 82%, transparent);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.3s ease, background-color var(--transition-fast);
-  }
-
-  header.scrolled {
-    border-bottom-color: var(--border);
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border);
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
   }
 
   .header-inner {
     max-width: var(--page-max-width);
     margin: 0 auto;
-    padding: var(--space-3) var(--space-5);
+    padding: 0.75rem var(--space-5);
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: var(--space-4);
   }
 
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
+
   .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+  .brand-name {
     font-family: var(--font-sans);
     font-weight: 600;
-    font-size: 1.05rem;
+    font-size: 0.9375rem;
     color: var(--text);
     letter-spacing: -0.015em;
-    text-decoration: none;
     white-space: nowrap;
-    transition: opacity var(--transition-fast);
   }
-  .brand:hover {
-    opacity: 0.65;
-    text-decoration: none;
+  .brand-role {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   .main-nav {
     display: flex;
-    gap: var(--space-5);
+    gap: 1.75rem;
     align-items: center;
   }
   .main-nav a {
     font-family: var(--font-sans);
     font-size: 0.8125rem;
     font-weight: 500;
-    color: var(--muted);
+    color: var(--text-secondary);
     text-decoration: none;
-    padding: var(--space-1) 0;
+    padding: 0.25rem 0;
     transition: color var(--transition-fast);
   }
   .main-nav a:hover {
-    color: var(--text);
+    color: var(--accent);
     text-decoration: none;
   }
   .main-nav a.active {
@@ -90,27 +148,91 @@ function isActive(href: string) {
     font-weight: 600;
   }
 
-  @media (max-width: 640px) {
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .theme-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  }
+  .theme-toggle-btn:hover {
+    background: var(--border-default);
+    color: var(--text);
+  }
+
+  .sun-icon { display: none; }
+  .moon-icon { display: block; }
+
+  :global(html.dark) .sun-icon { display: block; }
+  :global(html.dark) .moon-icon { display: none; }
+  :global(html.dark) header#site-header {
+    background: rgba(12, 12, 14, 0.82);
+  }
+
+  .consult-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    background: var(--accent);
+    color: #ffffff;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    box-shadow: 0 1px 3px rgba(0, 113, 227, 0.2);
+    transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .consult-cta:hover {
+    background: var(--accent-hover);
+    color: #ffffff;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 113, 227, 0.3);
+  }
+  .consult-cta svg {
+    transition: transform var(--transition-fast);
+  }
+  .consult-cta:hover svg {
+    transform: translateX(2px);
+  }
+
+  @media (max-width: 720px) {
     .header-inner {
-      padding: var(--space-3);
-      gap: var(--space-2);
+      padding: 0.65rem var(--space-4);
     }
-    .brand {
-      font-size: 0.95rem;
+    .brand-role {
+      display: none;
     }
     .main-nav {
-      gap: var(--space-3);
+      gap: 1rem;
       overflow-x: auto;
       scrollbar-width: none;
-      padding: var(--space-1) 0;
     }
     .main-nav::-webkit-scrollbar {
       display: none;
     }
     .main-nav a {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       white-space: nowrap;
+    }
+    .consult-cta {
+      padding: 0.3rem 0.65rem;
+      font-size: 0.7rem;
     }
   }
 </style>
-

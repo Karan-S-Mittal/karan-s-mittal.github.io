@@ -1,0 +1,373 @@
+---
+/**
+ * PagedAttentionStepsArchitecture.astro
+ * HTML/CSS-native interactive 4-stage walkthrough of PagedAttention virtual memory translation.
+ */
+import InteractiveWalkthrough from '../InteractiveWalkthrough.astro';
+
+interface Props {
+  caption?: string;
+  exhibit?: string;
+  title?: string;
+}
+
+const { caption, exhibit = '04', title = 'The 4-Step PagedAttention Virtual Paging Architecture' } = Astro.props;
+
+const stages = [
+  {
+    id: 'paged-s1',
+    index: '01',
+    name: 'Logical Blocks',
+    desc: '<strong>Step 1 (Logical Slicing):</strong> The sequence is divided into fixed-size logical blocks ($B=4$). Slots fill token-by-token without pre-allocating unused future slots.',
+    targetGroup: 'step-group-paged-s1',
+  },
+  {
+    id: 'paged-s2',
+    index: '02',
+    name: 'Block Table',
+    desc: '<strong>Step 2 (Page Translation):</strong> A lightweight block table maps each logical block index ($O(1)$ lookup) to its assigned physical GPU frame number.',
+    targetGroup: 'step-group-paged-s2',
+  },
+  {
+    id: 'paged-s3',
+    index: '03',
+    name: 'GPU Frames',
+    desc: '<strong>Step 3 (Scattered Allocation):</strong> Physical frames are allocated non-contiguously across GPU VRAM. Only the final block has partial-fill overhead.',
+    targetGroup: 'step-group-paged-s3',
+  },
+  {
+    id: 'paged-s4',
+    index: '04',
+    name: 'Kernel Gather',
+    desc: '<strong>Step 4 (In-Kernel Gather):</strong> The custom CUDA attention kernel reads the block table directly to fetch scattered blocks into <code>__shared__</code> memory without materializing contiguous copies.',
+    targetGroup: 'step-group-paged-s4',
+  },
+];
+---
+
+<InteractiveWalkthrough
+  exhibit={exhibit}
+  title={title}
+  badge="PAGEDATTENTION ARCHITECTURE"
+  caption={caption}
+  allStageName="Full Architecture"
+  allStageDesc="<strong>End-to-End PagedAttention:</strong> Logical token streams map through a lightweight Block Table into scattered GPU VRAM physical frames, which the custom CUDA kernel gathers directly during self-attention."
+  stages={stages}
+  wide={true}
+>
+  <div class="paged-root">
+    <div class="paged-grid">
+      <!-- STEP 1: LOGICAL BLOCKS -->
+      <div id="step-group-paged-s1" data-step-group="step-group-paged-s1" class="step-group paged-card">
+        <div class="p-card-head">
+          <span class="p-card-tag">01 / LOGICAL BLOCKS</span>
+          <h4 class="p-card-title">Token Stream</h4>
+          <span class="p-card-sub">Block Size B = 4 Tokens</span>
+        </div>
+
+        <div class="block-stack">
+          <div class="l-block">
+            <span class="lb-title">Block #0 (Full)</span>
+            <span class="lb-tokens">["The", "quick", "brown", "fox"]</span>
+          </div>
+          <div class="l-block block-active">
+            <span class="lb-title">Block #1 (Active)</span>
+            <span class="lb-tokens">["jumps", "over", "lazy", ...]</span>
+          </div>
+        </div>
+
+        <div class="p-card-foot">
+          <span class="foot-highlight">O(1) append per token</span>
+          <span class="foot-sub">No contiguous reservation</span>
+        </div>
+      </div>
+
+      <!-- STEP 2: BLOCK TABLE -->
+      <div id="step-group-paged-s2" data-step-group="step-group-paged-s2" class="step-group paged-card">
+        <div class="p-card-head">
+          <span class="p-card-tag">02 / BLOCK TABLE</span>
+          <h4 class="p-card-title">Page Table</h4>
+          <span class="p-card-sub">Logical &rarr; Physical Translation</span>
+        </div>
+
+        <div class="map-table">
+          <div class="map-row">
+            <span class="m-log">Block #0</span>
+            <span class="m-arrow">&rarr;</span>
+            <span class="m-phys">Frame #12</span>
+            <span class="m-status status-full">FULL</span>
+          </div>
+          <div class="map-row">
+            <span class="m-log">Block #1</span>
+            <span class="m-arrow">&rarr;</span>
+            <span class="m-phys">Frame #07</span>
+            <span class="m-status status-partial">PARTIAL</span>
+          </div>
+        </div>
+
+        <div class="p-card-foot">
+          <span class="foot-highlight">Lightweight Metadata</span>
+          <span class="foot-sub">Integer indices only</span>
+        </div>
+      </div>
+
+      <!-- STEP 3: PHYSICAL GPU FRAMES -->
+      <div id="step-group-paged-s3" data-step-group="step-group-paged-s3" class="step-group paged-card card-signal">
+        <div class="p-card-head">
+          <span class="p-card-tag tag-signal">03 / GPU VRAM FRAMES</span>
+          <h4 class="p-card-title">Physical VRAM</h4>
+          <span class="p-card-sub">Scattered Non-Contiguous Pool</span>
+        </div>
+
+        <div class="vram-slots">
+          <div class="vram-slot slot-alloc">
+            <span class="vs-num">Frame #07</span>
+            <span class="vs-owner">Req 1 (Blk #1)</span>
+          </div>
+          <div class="vram-slot slot-other">
+            <span class="vs-num">Frame #08</span>
+            <span class="vs-owner">Req 2 (Blk #0)</span>
+          </div>
+          <div class="vram-slot slot-alloc">
+            <span class="vs-num">Frame #12</span>
+            <span class="vs-owner">Req 1 (Blk #0)</span>
+          </div>
+        </div>
+
+        <div class="p-card-foot">
+          <span class="foot-highlight">Zero External Waste</span>
+          <span class="foot-sub">Allocates anywhere in VRAM</span>
+        </div>
+      </div>
+
+      <!-- STEP 4: IN-KERNEL GATHER -->
+      <div id="step-group-paged-s4" data-step-group="step-group-paged-s4" class="step-group paged-card">
+        <div class="p-card-head">
+          <span class="p-card-tag">04 / KERNEL GATHER</span>
+          <h4 class="p-card-title">CUDA Kernel</h4>
+          <span class="p-card-sub">Direct Block Gather</span>
+        </div>
+
+        <div class="cuda-box">
+          <code>__shared__ K_tile[B];</code>
+          <code>fetch_block(table[i]);</code>
+        </div>
+
+        <div class="p-card-foot">
+          <span class="foot-highlight">Zero Copy Overhead</span>
+          <span class="foot-sub">Fused attention kernel</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTICE LEADER -->
+    <div class="paged-notice">
+      <span class="notice-arrow">&larr;</span>
+      <span>Notice how the custom CUDA attention kernel reads the block table directly to gather non-contiguous VRAM blocks into on-chip shared memory without materializing contiguous copies.</span>
+    </div>
+  </div>
+</InteractiveWalkthrough>
+
+<style>
+  .paged-root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--surface-card);
+    border-radius: var(--radius-card);
+  }
+
+  .paged-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .paged-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: var(--bg);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+  }
+
+  .card-signal {
+    background: color-mix(in srgb, var(--accent) 5%, var(--bg));
+    border-color: var(--accent);
+  }
+
+  .p-card-head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .p-card-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .tag-signal { color: var(--accent); }
+
+  .p-card-title {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .p-card-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* BLOCK STACK */
+  .block-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 4px 0;
+  }
+
+  .l-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px 8px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+  }
+
+  .block-active {
+    border-color: var(--accent);
+  }
+
+  .lb-title {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .lb-tokens {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+  }
+
+  /* MAP TABLE */
+  .map-table {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 4px 0;
+  }
+
+  .map-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+  }
+
+  .m-log { font-weight: 600; color: var(--text); }
+  .m-arrow { color: var(--accent); }
+  .m-phys { font-weight: 700; color: var(--accent); }
+  .m-status { font-size: 8.5px; padding: 2px 4px; border-radius: 3px; font-weight: 700; }
+  .status-full { background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); }
+  .status-partial { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text-muted); }
+
+  /* VRAM SLOTS */
+  .vram-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 4px 0;
+  }
+
+  .vram-slot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+  }
+
+  .slot-alloc {
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .slot-other {
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    color: var(--text-muted);
+  }
+
+  /* CUDA BOX */
+  .cuda-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 10px;
+    background: color-mix(in srgb, var(--text) 5%, transparent);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    margin: 4px 0;
+  }
+
+  .p-card-foot {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+    margin-top: auto;
+  }
+
+  .foot-highlight {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .foot-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .paged-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--border-default);
+  }
+
+  .notice-arrow {
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>

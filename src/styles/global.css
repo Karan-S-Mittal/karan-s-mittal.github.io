@@ -1,56 +1,67 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-500.css';
+@import '@fontsource/inter/latin-600.css';
+@import '@fontsource/inter/latin-700.css';
+@import '@fontsource/jetbrains-mono/latin-400.css';
+@import '@fontsource/jetbrains-mono/latin-500.css';
+@import '@fontsource/jetbrains-mono/latin-600.css';
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&display=swap');
 
 /* ================================================================
-   Design Tokens — Soft Architecture (v1)
-   Blue carries structure, lavender carries the secondary/meta layer,
-   pink marks attention/constraint (sparingly), ink carries text.
-   Type: Inter + JetBrains Mono
-   Deviation from spec §4.1: Google Sans Flex is not available on
-   Google Fonts, so Inter remains the primary sans.
-   Dark mode has been removed (Phase 1 of the migration).
+   Design Tokens — Explanatory Systems Studio (v2)
+   Calm editorial blueprint canvas with a single sharp Dodger Blue accent.
+   Type: Fraunces (Editorial Display) + Inter + JetBrains Mono
    ================================================================ */
 
 :root {
   color-scheme: light;
 
-  /* Primitives — spec §3.2 */
-  --blue-100: #dceeff;
-  --blue-300: #bde0fe;
-  --blue-400: #a2d2ff;
-  --blue-500: #2676aa;
-  --blue-600: #246fa0;
+  /* Typography families */
+  --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
-  --pink-300: #ffc8dd;
-  --pink-400: #ffafcc;
-  --lavender-400: #cdb4db;
+  /* Dodger Blue Primitives (Apple / UniFi Electric Blue) */
+  --blue-100: rgba(0, 113, 227, 0.06);
+  --blue-200: rgba(0, 113, 227, 0.12);
+  --blue-300: rgba(0, 113, 227, 0.25);
+  --blue-400: #2997ff;
+  --blue-500: #0071e3;
+  --blue-600: #0077ed;
+  --blue-700: #0058b0;
 
-  --ink-900: #1a1a2e;
-  --ink-600: #4a4a6a;
+  /* Ink & Neutrals — Apple System Palette */
+  --ink-900: #1d1d1f;
+  --ink-700: #424245;
+  --ink-600: #6e6e73;
+  --ink-500: #86868b;
 
   --neutral-000: #ffffff;
-  --neutral-050: #f8f9fc;
-  --neutral-150: #e8ecf4;
+  --neutral-050: #f5f5f7;
+  --neutral-100: #ebebed;
+  --neutral-150: #e5e5ea;
+  --neutral-200: #d2d2d7;
 
-  /* Surfaces — aliases over primitives */
+  /* Surfaces */
   --bg: var(--neutral-050);
   --bg-elevated: var(--neutral-000);
-  --bg-inset: #eef3fa;
+  --bg-inset: var(--neutral-100);
 
   --surface-page: var(--neutral-050);
   --surface-card: var(--neutral-000);
-  --surface-subtle: var(--blue-100);
-  --surface-ambient: var(--blue-300);
+  --surface-subtle: var(--neutral-100);
+  --surface-ambient: rgba(0, 113, 227, 0.04);
   --surface-inverse: var(--ink-900);
 
-  /* Text — ink family */
+  /* Text */
   --text: var(--ink-900);
   --text-secondary: var(--ink-600);
-  --muted: #68768b;
+  --muted: var(--ink-500);
 
-  /* Accent — structural blue */
+  /* Single Sharp Accent — Dodger Blue */
   --accent: var(--blue-500);
   --accent-hover: var(--blue-600);
-  --accent-subtle: rgba(38, 118, 170, 0.09);
+  --accent-subtle: var(--blue-100);
 
   /* Links */
   --link: var(--blue-500);
@@ -61,48 +72,48 @@
   --interactive-primary-hover: var(--blue-600);
   --interactive-focus: var(--blue-500);
 
-  /* Editorial signals — warm accents, used sparingly */
-  --signal-warm: var(--pink-400);
-  --signal-emphasis: var(--pink-300);
-  --signal-secondary: var(--lavender-400);
+  /* Editorial signals — clean precision */
+  --signal-warm: var(--blue-500);
+  --signal-emphasis: var(--blue-100);
+  --signal-secondary: var(--ink-500);
 
-  /* Diagram grammar — spec §3.2 / §10 */
+  /* Diagram grammar */
   --diagram-node-primary: var(--blue-500);
-  --diagram-node-attention: var(--pink-400);
-  --diagram-edge-primary: var(--blue-500);
-  --diagram-edge-secondary: var(--lavender-400);
-  --diagram-plane: var(--blue-100);
+  --diagram-node-attention: var(--blue-500);
+  --diagram-edge-primary: var(--ink-900);
+  --diagram-edge-secondary: var(--neutral-200);
+  --diagram-plane: var(--neutral-050);
 
-  /* Borders & dividers — hairlines */
-  --border: var(--neutral-150);
-  --border-subtle: rgba(232, 236, 244, 0.75);
+  /* Borders & dividers */
+  --border: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.04);
   --border-default: var(--neutral-150);
   --border-accent: var(--blue-500);
-  --border-muted: var(--lavender-400);
+  --border-muted: var(--neutral-200);
 
-  /* Instrument surfaces — UniFi/macOS-inspired, studio-specific */
-  --panel-bg: color-mix(in srgb, var(--bg-elevated) 96%, var(--bg-inset));
-  --panel-header-bg: color-mix(in srgb, var(--bg-elevated) 88%, var(--bg-inset));
-  --panel-property-bg: color-mix(in srgb, var(--bg-inset) 66%, var(--bg-elevated));
-  --panel-border: var(--neutral-150);
+  /* Instrument surfaces — UniFi/macOS-inspired */
+  --panel-bg: var(--neutral-000);
+  --panel-header-bg: var(--neutral-050);
+  --panel-property-bg: var(--neutral-100);
+  --panel-border: var(--border-default);
   --panel-border-strong: var(--blue-300);
-  --panel-selected-bg: rgba(38, 118, 170, 0.04);
-  --panel-selected-border: var(--interactive-primary);
-  --panel-radius: 11px;
+  --panel-selected-bg: var(--blue-100);
+  --panel-selected-border: var(--blue-500);
+  --panel-radius: 12px;
   --panel-header-height: 2.75rem;
-  --panel-shadow: var(--shadow-card);
-  --panel-selected-shadow: 0 0 0 1px var(--panel-selected-border), 0 12px 30px rgba(38, 118, 170, 0.1);
+  --panel-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  --panel-selected-shadow: 0 0 0 1px var(--blue-500), 0 8px 24px rgba(0, 113, 227, 0.12);
 
-  /* Code — dark ink inset (spec §15.3) */
-  --code-bg: var(--ink-900);
-  --code-text: #f8f9fc;
+  /* Code */
+  --code-bg: #161618;
+  --code-text: #f5f5f7;
 
   /* Talk type hues */
   --type-workshop: var(--blue-500);
-  --type-panel: var(--lavender-400);
-  --type-keynote: var(--ink-900);
+  --type-panel: var(--ink-700);
+  --type-keynote: var(--blue-500);
 
-  /* Spacing scale — 4px base */
+  /* Spacing scale */
   --space-1: 0.25rem;   /* 4px */
   --space-2: 0.5rem;    /* 8px */
   --space-3: 0.75rem;   /* 12px */
@@ -114,7 +125,7 @@
   --space-9: 6rem;      /* 96px */
   --space-10: 8rem;     /* 128px */
 
-  /* Typography scale — Minor Third (1.2) */
+  /* Typography scale */
   --text-xs: 0.75rem;    /* 12px */
   --text-sm: 0.875rem;   /* 14px */
   --text-base: 1rem;     /* 16px */
@@ -123,43 +134,181 @@
   --text-2xl: 1.5rem;    /* 24px */
   --text-3xl: 1.875rem;  /* 30px */
   --text-4xl: 2.25rem;   /* 36px */
-  --text-5xl: 3rem;      /* 48px */
+  --text-5xl: 3.25rem;   /* 52px */
 
-  /* Radius — 8px default, 16px cards (spec §8.1/§8.3) */
-  --radius-sm: 4px;
-  --radius: 8px;
-  --radius-card: 16px;
-  --radius-lg: 8px;
-  --radius-panel: 10px;
+  /* Radius — Apple-grade 12px-18px curves */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-card: 18px;
+  --radius-lg: 14px;
+  --radius-panel: 12px;
   --radius-pill: 999px;
 
-  /* Shadows — soft blue-tinted with a tactile inner highlight (spec §8.1) */
-  --shadow-card: 0 4px 24px rgba(162, 210, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  --shadow-card-hover: 0 8px 32px rgba(162, 210, 255, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  /* Shadows — Apple-style ultra-clean diffused ambient */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-card-hover: 0 8px 30px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
 
   /* Typography families */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Helvetica, Arial, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
-  /* Layout — canonical widths (spec §6.1) */
-  --width-reading: 680px;
-  --width-content: 960px;
+  /* Layout — canonical widths */
+  --width-reading: 740px;
+  --width-content: 1040px;
   --width-architecture: 1200px;
   --width-wide: 1440px;
-  --page-max-width: 1120px;
+  --page-max-width: 1140px;
   --prose-max-width: var(--width-reading);
   --max-width: var(--prose-max-width);
 
   /* Shared content geometry */
-  --exhibit-pad-block: 1rem;
-  --exhibit-pad-inline: 1rem;
+  --exhibit-pad-block: 1.25rem;
+  --exhibit-pad-inline: 1.25rem;
   --table-cell-pad-block: 0.75rem;
   --table-cell-pad-inline: 1rem;
+
+  /* Exhibit & Diagram Tokens (Light Mode) */
+  --ex-bg: #f7f8fb;
+  --ex-card-bg: #ffffff;
+  --ex-card-border: rgba(0, 0, 0, 0.12);
+  --ex-text-main: var(--ink-900);
+  --ex-text-muted: var(--ink-600);
+  --ex-border: #e2e4ea;
+  --ex-blue-bg: rgba(0, 113, 227, 0.08);
+  --ex-blue-stroke: var(--blue-500);
+  --ex-blue-text: var(--blue-500);
+  --ex-gray-bg: #eceff4;
+  --ex-gray-stroke: var(--neutral-200);
+  --ex-gray-text: var(--ink-500);
 
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.25, 0.1, 0.25, 1);
   --transition: 250ms cubic-bezier(0.25, 0.1, 0.25, 1);
   --transition-slow: 350ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* ================================================================
+   Dark Mode Tokens (Obsidian Slate + Dodger Blue)
+   ================================================================ */
+:root.dark,
+html.dark {
+  color-scheme: dark;
+
+  /* Dodger Blue for Dark Mode (Apple / UniFi Electric Blue) */
+  --blue-100: rgba(41, 151, 255, 0.12);
+  --blue-200: rgba(41, 151, 255, 0.2);
+  --blue-300: rgba(41, 151, 255, 0.35);
+  --blue-400: #2997ff;
+  --blue-500: #2997ff;
+  --blue-600: #52aaff;
+  --blue-700: #0071e3;
+
+  /* Ink & Neutrals */
+  --ink-900: #f5f5f7;
+  --ink-700: #d2d2d7;
+  --ink-600: #a1a1a6;
+  --ink-500: #86868b;
+
+  --neutral-000: #18181b;
+  --neutral-050: #0c0c0e;
+  --neutral-100: #202024;
+  --neutral-150: rgba(255, 255, 255, 0.1);
+  --neutral-200: rgba(255, 255, 255, 0.18);
+
+  /* Surfaces */
+  --bg: #0c0c0e;
+  --bg-elevated: #161618;
+  --bg-inset: #202024;
+
+  --surface-page: #0c0c0e;
+  --surface-card: #161618;
+  --surface-subtle: #202024;
+  --surface-ambient: rgba(41, 151, 255, 0.06);
+  --surface-inverse: #f5f5f7;
+
+  /* Text */
+  --text: #f5f5f7;
+  --text-secondary: #a1a1a6;
+  --muted: #86868b;
+
+  /* Accent */
+  --accent: #2997ff;
+  --accent-hover: #52aaff;
+  --accent-subtle: rgba(41, 151, 255, 0.14);
+
+  /* Links */
+  --link: #2997ff;
+  --link-hover: #52aaff;
+
+  /* Interaction */
+  --interactive-primary: #2997ff;
+  --interactive-primary-hover: #52aaff;
+  --interactive-focus: #2997ff;
+
+  /* Diagram grammar */
+  --diagram-node-primary: #2997ff;
+  --diagram-node-attention: #2997ff;
+  --diagram-edge-primary: #f5f5f7;
+  --diagram-edge-secondary: #52525b;
+  --diagram-plane: #18181b;
+
+  /* Borders & dividers */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-accent: #2997ff;
+  --border-muted: #3f3f46;
+
+  /* Instrument surfaces */
+  --panel-bg: #161618;
+  --panel-header-bg: #1c1c1f;
+  --panel-property-bg: #202024;
+  --panel-border: rgba(255, 255, 255, 0.1);
+  --panel-border-strong: rgba(41, 151, 255, 0.4);
+  --panel-selected-bg: rgba(41, 151, 255, 0.12);
+  --panel-selected-border: #2997ff;
+  --panel-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --panel-selected-shadow: 0 0 0 1px #2997ff, 0 8px 24px rgba(41, 151, 255, 0.2);
+
+  /* Code */
+  --code-bg: #09090b;
+  --code-text: #f5f5f7;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover: 0 8px 32px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.3);
+
+  /* Exhibits / Diagrams in Dark Mode */
+  --ex-bg: #141417;
+  --ex-card-bg: #1e1e23;
+  --ex-card-border: rgba(255, 255, 255, 0.14);
+  --ex-gray-bg: #18181c;
+  --ex-text-main: #f5f5f7;
+  --ex-text-muted: #a1a1a6;
+  --ex-border: rgba(255, 255, 255, 0.12);
+  --ex-blue-bg: rgba(41, 151, 255, 0.14);
+  --ex-blue-stroke: #2997ff;
+  --ex-blue-text: #2997ff;
+  --ex-indigo-bg: #1c1c1f;
+  --ex-indigo-stroke: #f5f5f7;
+  --ex-indigo-text: #f5f5f7;
+  --ex-purple-bg: #1c1c1f;
+  --ex-purple-stroke: #71717a;
+  --ex-purple-text: #a1a1a6;
+  --ex-green-bg: rgba(41, 151, 255, 0.1);
+  --ex-green-stroke: #2997ff;
+  --ex-green-text: #2997ff;
+  --ex-amber-bg: #1c1c1f;
+  --ex-amber-stroke: #71717a;
+  --ex-amber-text: #a1a1a6;
+  --ex-rose-bg: rgba(41, 151, 255, 0.18);
+  --ex-rose-stroke: #2997ff;
+  --ex-rose-text: #2997ff;
+  --ex-gray-bg: #1c1c1f;
+  --ex-gray-stroke: #3f3f46;
+  --ex-gray-text: #a1a1a6;
 }
 
 /* ================================================================
@@ -181,13 +330,25 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background: var(--bg);
+  background-color: var(--surface-page);
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
   color: var(--text);
   line-height: 1.7;
   font-size: 1.125rem;
   font-weight: 400;
   text-rendering: optimizeLegibility;
   transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+html.dark body {
+  background-color: var(--surface-page);
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 /* Reduced motion — spec §18.5: global kill-switch, not per-element */
@@ -200,10 +361,10 @@ body {
   }
 }
 
-/* Selection — soft warm emphasis plane (spec §3.1 signal.emphasis) */
+/* Selection — soft Dodger Blue emphasis */
 ::selection {
-  background: var(--pink-300);
-  color: var(--ink-900);
+  background: var(--blue-200);
+  color: var(--text);
 }
 
 /* Focus */
@@ -235,29 +396,33 @@ body {
 /* Static — no page-load animations */
 
 /* ================================================================
-   Typography
+   Typography — Fraunces Editorial Display + Inter + JetBrains Mono
    ================================================================ */
 
 h1 {
-  font-family: var(--font-sans);
-  font-size: clamp(2.625rem, 5vw, 3.5rem); /* 42–56px, spec §4.2 */
-  font-weight: 600;
-  letter-spacing: -0.022em;
-  line-height: 1.15;
+  font-family: var(--font-serif);
+  font-size: clamp(2.625rem, 5vw, 3.75rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
   color: var(--text);
   margin-bottom: var(--space-4);
   text-wrap: balance;
 }
 
 h2 {
-  font-family: var(--font-sans);
-  font-size: clamp(1.875rem, 3vw, 2.5rem); /* 30–40px, spec §4.2 */
-  font-weight: 600;
+  font-family: var(--font-serif);
+  font-size: clamp(1.875rem, 3.5vw, 2.625rem);
+  font-weight: 500;
   letter-spacing: -0.015em;
-  line-height: 1.2;
+  line-height: 1.18;
   color: var(--text);
   margin: var(--space-7) 0 var(--space-3);
   text-wrap: balance;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
 }
 
 h3 {
@@ -618,31 +783,28 @@ a.auto-tag:hover {
   --ex-card-bg: var(--bg-elevated);
   --ex-card-border: var(--border);
 
-  /* Soft Architecture exhibit palette — token names kept for
-     back-compat with existing diagrams; values remapped to the
-     blue / lavender / pink / ink grammar (spec §3, §10).
-     blue = structure, lavender = secondary/inferred, pink = attention */
-  --ex-blue-bg: #dceeff;
-  --ex-blue-stroke: #2676aa;
-  --ex-blue-text: #246fa0;
-  --ex-indigo-bg: #f1eaf6;
-  --ex-indigo-stroke: #cdb4db;
-  --ex-indigo-text: #7a6392;
-  --ex-purple-bg: #f1eaf6;
-  --ex-purple-stroke: #cdb4db;
-  --ex-purple-text: #7a6392;
-  --ex-green-bg: #bde0fe;
-  --ex-green-stroke: #2676aa;
-  --ex-green-text: #246fa0;
-  --ex-amber-bg: #f1eaf6;
-  --ex-amber-stroke: #cdb4db;
-  --ex-amber-text: #7a6392;
-  --ex-rose-bg: #ffc8dd;
-  --ex-rose-stroke: #ffafcc;
-  --ex-rose-text: #a04e70;
-  --ex-gray-bg: #eef1f6;
-  --ex-gray-stroke: #aab4c4;
-  --ex-gray-text: #68768b;
+  /* Exhibit palette — Dodger Blue & clean neutral precision */
+  --ex-blue-bg: rgba(0, 113, 227, 0.08);
+  --ex-blue-stroke: #0071e3;
+  --ex-blue-text: #0071e3;
+  --ex-indigo-bg: #f5f5f7;
+  --ex-indigo-stroke: #1d1d1f;
+  --ex-indigo-text: #1d1d1f;
+  --ex-purple-bg: #f5f5f7;
+  --ex-purple-stroke: #86868b;
+  --ex-purple-text: #6e6e73;
+  --ex-green-bg: rgba(0, 113, 227, 0.06);
+  --ex-green-stroke: #0071e3;
+  --ex-green-text: #0071e3;
+  --ex-amber-bg: #f5f5f7;
+  --ex-amber-stroke: #86868b;
+  --ex-amber-text: #6e6e73;
+  --ex-rose-bg: rgba(0, 113, 227, 0.12);
+  --ex-rose-stroke: #0071e3;
+  --ex-rose-text: #0071e3;
+  --ex-gray-bg: #f5f5f7;
+  --ex-gray-stroke: #d2d2d7;
+  --ex-gray-text: #86868b;
 }
 
 /* ================================================================
@@ -719,21 +881,48 @@ a.auto-tag:hover {
   letter-spacing: 0.06em;
 }
 
-.sys-diagram .title {
-  fill: var(--ex-text-main);
-  font-family: 'Inter', var(--font-sans, sans-serif);
-  font-size: 18px;
+.sys-diagram .plane > rect {
+  fill: var(--ex-gray-bg);
+  stroke: var(--ex-border);
+  stroke-width: 1;
+}
+
+.sys-diagram text {
+  dominant-baseline: central;
+}
+
+/* D3 Discrete Memory Slot Primitive */
+.d3-slot-grid {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+}
+.d3-slot {
+  flex: 1;
+  height: 32px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
   font-weight: 600;
+  color: var(--text);
+  transition: all var(--transition-fast);
 }
-
-.sys-diagram .body {
-  fill: var(--ex-text-main);
-  font-family: 'Inter', var(--font-sans, sans-serif);
-  font-size: 14px;
+.d3-slot.active {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
 }
-
-.sys-diagram .body-muted {
-  fill: var(--ex-text-muted);
-  font-family: 'Inter', var(--font-sans, sans-serif);
-  font-size: 14px;
+.d3-slot.wasted {
+  background: rgba(220, 38, 38, 0.12);
+  color: #ef4444;
+  border: 1px dashed rgba(220, 38, 38, 0.35);
+}
+.d3-slot.free {
+  background: var(--bg-inset);
+  color: var(--muted);
 }

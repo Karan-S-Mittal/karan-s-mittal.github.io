@@ -94,17 +94,17 @@ const typeLabel: Record<Talk['type'], string> = {
 
   .talk-title {
     margin: 0 0 var(--space-2);
-    font-family: var(--font-sans);
-    font-size: var(--text-lg);
-    font-weight: 600;
+    font-family: var(--font-serif);
+    font-size: clamp(1.15rem, 2vw, 1.35rem);
+    font-weight: 500;
     line-height: 1.35;
     color: var(--text);
   }
 
   .talk-description {
     margin: 0 0 var(--space-3);
-    color: var(--muted);
-    font-size: var(--text-base);
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
     line-height: 1.6;
   }
 

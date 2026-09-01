@@ -13,57 +13,114 @@ This skill guides AI agents in researching, verifying, illustrating, and writing
 
 - **Voice**: Engineer-Scientist, innovator, and systems optimizer.
 - **Mental Model**: Explain *mechanisms*, *bottlenecks*, *memory layouts*, and *state transitions* directly rather than talking about abstract concepts.
-- **Style**: Precise, grounded, and pedagogical (like Bartosz Ciechanowski, 3Blue1Brown, and StatQuest).
+- **Reference Models**: Bartosz Ciechanowski (mechanistic rigor), 3Blue1Brown (visual intuition), GitHub Next (disciplined presentation).
+- **Style**: Precise, grounded, authoritative, and pedagogical. Avoid generic AI marketing fluff, hype words, and superficial summaries.
 
 ---
 
-## 2. The Primary Citation & Fact-Checking Protocol
+## 2. The Verification Standard: Primary Citations Only
 
-Before writing or proposing any architectural claim or performance number:
-1. **Locate Ground Truth**:
-   - Query arXiv, IEEE, or official whitepapers for algorithm specs.
-   - Inspect open-source source code (e.g. CUDA kernels, C++ engines, Rust drivers) for exact implementation lines.
-   - Check official vendor architecture whitepapers (NVIDIA, AMD, Intel, ARM).
-2. **Format Citation Table**:
-   Every technical post must conclude with a `Primary Citations & Verifications` table linking directly to these primary URLs.
+Every architectural claim, performance metric, or algorithm breakdown must be verified against **Primary Sources**:
+- **Academic Whitepapers / DOIs**: Direct links to arXiv, IEEE, ACM (e.g. `arXiv:2309.06180`).
+- **Source Code & Commits**: Direct permalinks to specific lines or commit SHAs in open-source repositories (e.g. `src/runtime/proc.go#L3400`).
+- **Official Specifications & RFCs**: IETF RFCs, W3C standards, CUDA/PTX programming guides, ISO docs.
+- **Hardware Architecture Whitepapers**: Official vendor technical documentation (NVIDIA, AMD, Intel, Apple Silicon).
 
----
-
-## 3. Visual Exhibit Construction
-
-Every major visual must use the `<Exhibit />` component from `src/components/Exhibit.astro`:
+### Structured Verification Layout: `<PrimaryVerification />`
+Never dump raw unstyled markdown tables for citations. Use the `<PrimaryVerification />` component to present verification evidence as structured cards with badges, claims, authors, and direct permalink buttons:
 
 ```mdx
-import Exhibit from '../../components/Exhibit.astro';
+import PrimaryVerification from '../../components/editorial/PrimaryVerification.astro';
 
-<Exhibit 
-  exhibit="01" 
-  title="KV Cache Fragmentation under Naive Attention"
-  badge="BASELINE SYSTEM"
-  caption="Notice how contiguous reservation for max sequence length creates 60-80% internal fragmentation.">
-
-  ![Diagram Name](./diagrams/my-diagram.svg)
-
-</Exhibit>
+<PrimaryVerification
+  citations={[
+    {
+      id: "01",
+      badge: "RUNTIME SPECIFICATION",
+      claim: "Scalable Go scheduler M:N work-stealing algorithm with 256-slot lock-free local runqueues.",
+      source: "Dmitry Vyukov",
+      title: "Scalable Go Scheduler Design Document",
+      url: "https://go.dev/s/go11sched",
+      anchor: "src/runtime/proc.go:findrunnable()"
+    },
+    ...
+  ]}
+/>
 ```
-
-### Studio Color Tokens:
-- **Canvas / Surface**: `#F4F7FB` (Light) / `#111820` (Dark)
-- **Ink / Structure**: `#13213A` (Primary lines & labels)
-- **Signal (`#1F66E5`)**: Active step, highlighted flow, current buffer, key insight.
-- **Model (`#7C3AED`)**: Neural weights, model layers, learned embeddings.
-- **Verified (`#168663`)**: Deterministic outputs, cache hits, validated bounds.
-- **Constraint (`#D97706`)**: Headroom limits, memory pressure, lock contention.
-- **Failure (`#D64545`)**: OOM threshold, cache miss, packet drop.
-- **Muted (`#68768B`)**: Dimensions, byte offsets, secondary annotations.
-
-Theme contrast rule: light diagrams may use a pale canvas, but nodes, rules, and flow lines must remain visibly inked. Dark diagrams use neutral charcoal surfaces and grey structure; blue is reserved for the active signal path rather than tinting the whole canvas.
 
 ---
 
-## 4. Multi-Platform Syndication Workflow
+## 3. Visual Exhibit Construction: Soft Architecture Grammar
 
-When completing a post, generate the syndication outline:
+All diagrams must adhere to the **Soft Architecture** visual grammar (`docs/design-language.md`):
+
+### Semantic Palette:
+- **Canvas / Page**: `#F8F9FC` (Light) / `#141417` (Dark)
+- **Ink / Structure**: `#1A1A2E` (`--ink-900`; lines, text, code surfaces)
+- **Anchor Blue (`#2676AA`, `--blue-500`)**: Primary nodes, flows, active structures, key headings.
+- **Subtle Plane (`#DCEEFF` / `#1E293B`)**: Subsystem, boundary, memory arena, or ownership plane.
+- **Signal Warm (`#FFAFCC`, `--pink-400`)**: Attention, bottleneck/decision/constraint nodes, editorial marks (sparse by rule; max 1 per diagram).
+- **Lavender (`#CDB4DB`, `--lavender-400`)**: Async/inferred edges, secondary metadata, background queues.
+- **Muted (`#68768B`)**: Dimensions, byte offsets, secondary annotations, empty slots.
+
+### Diagram Layout & Geometry Rules:
+1. **ViewBox Width**: Fixed at `720px` (`viewBox="0 0 720 [height]"`), aligning 1:1 with the reading column.
+2. **Internal Inset & Padding**: Minimum 16 units of inner padding inside nodes. Text tokens must never touch or crowd rectangle borders.
+3. **Typography**:
+   - `Inter` for node titles and descriptions.
+   - `JetBrains Mono` for memory addresses, byte offsets, formulas, and code symbols.
+   - Explicit `dominant-baseline="central"` on all `<text>` elements.
+4. **Authentic Mechanistic Metaphors**:
+   - Draw actual ring buffers with slot indices (`[0]`, `[1]`, `...`), SIMD 128-bit vector registers, memory arena bitmaps, and pointer state sets rather than generic placeholder boxes.
+5. **Leader Lines**:
+   - Use editorial leader callouts to highlight surprising hardware/runtime behaviors:
+     `← notice zero allocation on fast path`
+     `← 16 slots probed in 1 CPU cycle via SIMD`
+6. **Non-Colliding Connector Routing**:
+   - Connectors must start and end at block edge midpoints with rounded orthogonal turns. Never pass lines through nodes or labels.
+
+---
+
+---
+
+## 4. Interactive Visual Engine (3Blue1Brown & Ciechanowski Standard)
+
+For deep-tech essays requiring dynamic, continuous mathematical intuition or 3D systems models, use the **Explanatory Visual Engine** (`src/components/visual-engine/`):
+
+### Reusable Core Bases:
+1. **`BaseThreeElement.ts`** (3D WebGL / GPU instancing):
+   - Automatic `OrbitControls`, high-DPI DPR clamping, dynamic CSS token synchronization (`ThemeBridge`), and automatic `IntersectionObserver` pause when off-screen.
+   - Comprehensive WebGL memory disposal on unmount.
+2. **`BaseCanvasElement.ts`** (2D Canvas high-performance particle & matrix transformation):
+   - Zero-allocation object pooling, sub-pixel high-DPI scaling, and `ResizeObserver` responsiveness.
+3. **`interpolations.ts`** (Mathematical easing):
+   - `smoothstep`, `smootherstep`, `sigmoid`, `easeInOutCubic`, `cubicBezier2D/3D`.
+
+### Flagship Ready-to-Embed Visuals:
+- **`<NeuralNet3D layers={[4, 8, 8, 3]} />`**: 3D interactive layered network with forward inference activation pulses, backprop gradient waves, and dynamic weight pruning.
+- **`<LinearTransform2D />`**: Interactive 2D matrix transformation with draggable basis vectors $\hat{i}$ and $\hat{j}$, shear, rotation, and live determinant area calculation.
+- **`<MatrixComputeSpreadsheet />`**: Tabular Excel/Univer-style weight matrix calculator linked to real-time neural dot product $\mathbf{z} = \mathbf{W}\mathbf{x} + \mathbf{b}$.
+- **`<LinearRegressionMafs />`**: Bidirectional 3-way synchronization between Mafs 3B1B coordinate plane, Observable Plot convex loss bowl $J(m, b)$, and Univer spreadsheet.
+- **`<DiagramEngineComparison />`**: Side-by-side evaluator comparing **Rough.js (Excalidraw sketch)** and **D3 G2 Bezier Splines (ByteByteGo publication blueprint)**.
+
+### Diagram Archetypes & Guidelines:
+1. **ByteByteGo / Alex Xu Style (D3 Bezier & SVG)**:
+   - Use `d3.linkHorizontal()` or cubic Bezier paths (`M x1,y1 C cx1,y1 cx2,y2 x2,y2`).
+   - Terminate lines on connection pins (`<circle r="3.5">`).
+   - Color code state paths: Red `#FDA4AF` (stall/chase) vs Green `#86EFAC` (prefetch/SIMD).
+   - Use numbered sequence pills ($①, ②, ③$) and bold performance badges.
+2. **Rough.js / Excalidraw Style**:
+   - Render on high-DPI scaled `<canvas>` or `<svg>`.
+   - Control jitter via `roughness` ($0.4 \to 2.2$) and `fillStyle` (`hachure`, `solid`, `zigzag`).
+3. **Mafs & Observable Plot**:
+   - Use Mafs for continuous vector fields and draggable geometric control points.
+   - Use Observable Plot for statistical loss surfaces, convex paraboloids, and residual histograms.
+
+---
+
+## 5. Multi-Platform Syndication Workflow
+
+When completing a canonical deep-dive, prepare the syndication outline:
 - **LinkedIn Visual Carousel (4:5 Ratio / 1080x1350)**:
   - Slide 1: Hook & Core Problem Statement.
   - Slide 2: Exhibit 01 (The Failure Mode).
@@ -74,29 +131,21 @@ When completing a post, generate the syndication outline:
 - **Medium / Substack**:
   - Full Markdown text with embedded SVGs and canonical link header.
 
-## 5. Layout, spacing, and text-fit contract
+---
 
-Every exhibit must be laid out from explicit geometry rather than adjusted by eye after export.
+## 6. Preflight Checklist
 
-- Use a consistent internal canvas inset: 32 SVG units for the outer drawing area and 16 units for node content. Keep the same inset on sibling nodes.
-- Use a repeatable gap scale: 16 units between adjacent nodes, 24 units between explanatory zones, and 32 units between major rows. Do not let labels or arrows define accidental spacing.
-- Treat text as a first-class layout object. A label must fit inside its block with at least 16 units of horizontal breathing room on each side and 12 units of vertical room above and below. If it does not fit, shorten it, split it into `<tspan>` lines, or enlarge the block before export.
-- Diagram nodes are text containers, not paragraph boxes: use Inter for short titles, Geist Mono for formulas/identifiers, and keep each node to a title plus one or two supporting lines. Move explanations into captions instead of shrinking or overflowing node text.
-- Reserve at least 16 SVG units between sibling nodes for connectors. Connector labels get their own line above or below the path and must not share a baseline with node content.
-- Never place a connector through a node, label, or explanatory sentence. Route it through reserved whitespace and terminate it at the node boundary.
-- Connectors must start at the midpoint of the source block edge and terminate at the midpoint of the destination block edge. Use `src/lib/diagram-routing.js` when a diagram has multiple routed flows: its deterministic clearance rule keeps lanes away from node rectangles and rounds each turn. Preserve the orthogonal reading direction underneath the curves; never use diagonal shortcuts, corner anchors, or floating arrows.
-- Arrowheads are directional evidence: use a single filled ink marker across the system. Active paths may use the signal stroke, but their arrowhead remains ink so direction stays legible in both themes.
-- Keep titles, badges, and captions in their own zones. Exhibit headers must wrap cleanly on narrow screens; badges must never squeeze a title into an overlap.
-- Use the shared table padding tokens for every prose table: `--table-cell-pad-block` and `--table-cell-pad-inline`. Tables may scroll horizontally on small screens, but text must never be clipped or forced into unreadable cells.
-- Use `$...$` or `$$...$$` for mathematical expressions. Do not put equations, asymptotic notation, or variable relationships in backticks; reserve backticks for literal identifiers and code.
-- Verify every exhibit at the default desktop width and at a narrow reading width. Check the rendered SVG/WebP, not only the source coordinates.
+Before publishing any essay:
+1. Every architectural claim has a verified primary source citation.
+2. All exhibits have accessible captions and proper Soft Architecture palette tokens.
+3. Interactive canvases pause when off-screen (`IntersectionObserver`).
+4. `npm run build` compiles with 0 errors and 0 warnings.
 
-### Preflight checklist
 
-Before calling an exhibit complete:
-
-1. Measure the longest label against its node width and inner padding.
-2. Check that no path crosses a node or text region.
-3. Confirm a uniform inset and gap rhythm across sibling panels.
-4. Inspect the exported asset at desktop and mobile widths.
-5. Confirm tables wrap or scroll intentionally, with identical cell padding across header and body cells.
+Before calling an essay or diagram complete:
+1. Measure the longest label against its node width and inner padding (ensure ≥16px breathing room).
+2. Check that no connector path intersects a node or text block.
+3. Confirm single ink arrowheads (`#1A1A2E`) across all flows.
+4. Ensure all mathematical notations use `$ ... $` or `$$ ... $$` instead of code backticks.
+5. Run `npm run prebuild` (`sync-tags`, `studio:check`, `render-exhibits`) and confirm 0 warnings.
+6. Verify rendering in desktop light mode, desktop dark mode, and mobile viewport via screenshots.

@@ -7,6 +7,10 @@ draft: __DRAFT__
 ---
 
 import Exhibit from '../../components/editorial/Exhibit.astro';
+import ArchitectureDiagram from '../../components/diagram/ArchitectureDiagram.astro';
+import AlgorithmFlow from '../../components/diagram/AlgorithmFlow.astro';
+import BenchmarkChart from '../../components/diagram/BenchmarkChart.astro';
+import InteractiveWalkthrough from '../../components/diagram/InteractiveWalkthrough.astro';
 
 When building high-throughput or mission-critical systems, conventional intuitions often break down under real hardware and distributed constraints.
 
@@ -30,8 +34,29 @@ Frame the core engineering bottleneck here with precise technical terminology. D
   badge="BASELINE SYSTEM" 
   caption="Notice how contiguous pre-allocation under variable load creates significant headroom loss and memory fragmentation.">
 
-  <!-- Place your auto-exported Excalidraw SVG or image here -->
-  <!-- Example: ![Naive Bottleneck](./diagrams/naive-bottleneck.svg) -->
+  <ArchitectureDiagram
+    id="arch-exhibit-01"
+    label="Baseline System Map"
+    description="Logical components mapping to physical execution frames."
+    planes={[
+      { id: 'logical', label: 'LOGICAL DOMAIN', x: 20, y: 20, w: 320, h: 180 },
+      { id: 'physical', label: 'PHYSICAL HARDWARE', x: 380, y: 20, w: 320, h: 180 },
+    ]}
+    nodes={[
+      { id: 'n1', label: 'Input Stream', x: 40, y: 60, w: 130, h: 44, kind: 'signal' },
+      { id: 'n2', label: 'Buffer Pool', x: 190, y: 60, w: 130, h: 44 },
+      { id: 'n3', label: 'Execution Core', x: 400, y: 60, w: 140, h: 44, kind: 'attention' },
+      { id: 'n4', label: 'Memory Bank', x: 560, y: 60, w: 120, h: 44, muted: true },
+    ]}
+    edges={[
+      { from: 'n1', to: 'n2', kind: 'direct' },
+      { from: 'n2', to: 'n3', kind: 'direct', d: 'M320 82 H400' },
+      { from: 'n3', to: 'n4', kind: 'async', d: 'M540 82 H560' },
+    ]}
+    notes={[
+      { text: 'Contiguous pre-allocation creates lock contention', x: 40, y: 170 },
+    ]}
+  />
 
 </Exhibit>
 
@@ -41,26 +66,95 @@ Key observations from the trace:
 
 ---
 
-## 2. The Architectural Mechanism
+## 2. The 4-Step Mechanistic Flow
 
-Explain the shift in abstraction (e.g., indirection tables, virtual memory paging, zero-copy ring buffers).
-
-<Exhibit 
-  exhibit="02" 
-  title="Decoupled State & Dynamic Page Allocation" 
-  badge="CORE MECHANISM" 
-  wide={true} 
-  caption="Logical blocks map dynamically to physical frames via an O(1) translation table, eliminating external fragmentation.">
-
-  <!-- Example: ![Decoupled Architecture](./diagrams/decoupled-architecture.svg) -->
-
-</Exhibit>
+<AlgorithmFlow
+  exhibit="02"
+  title="Dynamic Memory Paging & Execution"
+  badge="ALGORITHM PIPELINE"
+  columns={2}
+  steps={[
+    {
+      step: "01",
+      title: "Input Ingestion",
+      tag: "O(1) Step",
+      state: "signal",
+      description: "Incoming requests arrive with variable context lengths without pre-allocating contiguous buffers.",
+      formula: "Req_t = {T_0, T_1, ..., T_k}",
+      note: "Zero memory reservation upfront"
+    },
+    {
+      step: "02",
+      title: "Block Table Lookup",
+      tag: "MMU Indirection",
+      state: "model",
+      description: "Logical block IDs translate into non-contiguous physical page frame addresses.",
+      formula: "Physical_Addr = BlockTable[Logical_ID]",
+      note: "Eliminates external fragmentation"
+    },
+    {
+      step: "03",
+      title: "Fused Gather Kernel",
+      tag: "Compute Core",
+      state: "verified",
+      description: "GPU kernel reads scattered memory frames in parallel, feeding SRAM directly without intermediate host copies.",
+      formula: "Output = softmax((Q K^T) / √d) V",
+      note: "Bandwidth saturation bounded by HBM speed"
+    },
+    {
+      step: "04",
+      title: "Output Delivery",
+      tag: "Low Latency",
+      state: "signal",
+      description: "Decoded tokens return to the client stream while physical memory returns to the free pool on release.",
+      formula: "T_{next} = argmax(P(w | Context))",
+      note: "Memory reclaimed immediately upon stream termination"
+    }
+  ]}
+/>
 
 ---
 
 ## 3. Performance & Empirical Trade-Offs
 
-Systems engineering is always an exercise in trade-offs. Compare the architectures across latency, throughput, memory overhead, and implementation complexity.
+<BenchmarkChart
+  exhibit="03"
+  title="Serving Throughput vs Request Concurrency"
+  badge="EMPIRICAL BENCHMARK"
+  xLabel="Concurrent Request Streams"
+  yLabel="Output Token Throughput"
+  xUnit="streams"
+  yUnit="tok/s"
+  annotation="A100-80GB · FP16"
+  caption="Comparison across allocation architectures. Paged memory maintains linear scaling up to saturation, whereas contiguous reservation hits memory exhaustion early."
+  series={[
+    {
+      name: "Optimized Architecture",
+      color: "#0071e3",
+      data: [
+        { x: 1, y: 240 },
+        { x: 2, y: 480 },
+        { x: 4, y: 960 },
+        { x: 8, y: 1820 },
+        { x: 12, y: 2450 },
+        { x: 16, y: 2800 }
+      ]
+    },
+    {
+      name: "Naive Baseline",
+      color: "#6e6e73",
+      dashed: true,
+      data: [
+        { x: 1, y: 220 },
+        { x: 2, y: 410 },
+        { x: 4, y: 720 },
+        { x: 8, y: 880 },
+        { x: 12, y: 890 },
+        { x: 16, y: 890 }
+      ]
+    }
+  ]}
+/>
 
 | Dimension | Naive Baseline | Optimized Architecture | Delta / Impact |
 |---|---|---|---|

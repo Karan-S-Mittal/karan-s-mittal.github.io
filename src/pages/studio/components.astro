@@ -20,6 +20,9 @@ import ArchitectureAnnotation from '../../components/editorial/ArchitectureAnnot
 import SectionBreak from '../../components/editorial/SectionBreak.astro';
 import DarkPlane from '../../components/editorial/DarkPlane.astro';
 import TintedPlane from '../../components/editorial/TintedPlane.astro';
+import PrimaryVerification from '../../components/editorial/PrimaryVerification.astro';
+import { UniverSpreadsheet } from '../../components/visual-engine/ui/UniverSpreadsheet';
+import LinearRegressionOLS from '../../components/visuals/ml/regression/LinearRegressionOLS.astro';
 import talksData from '../../data/talks.json';
 import workData from '../../data/work.json';
 import type { Talk } from '../../types/talks';
@@ -73,6 +76,7 @@ const palette = [
 <Layout
   title="Component Showroom | Explanatory Systems Studio"
   description="A live catalogue of the Explanatory Systems Studio visual primitives and production components."
+  robots="noindex, nofollow"
 >
   <main class="catalog-shell" id="showroom-page">
     <aside class="catalog-sidebar" aria-label="Component showroom navigation">
@@ -98,6 +102,9 @@ const palette = [
         <a href="#section-break"><span>15</span> Section break</a>
         <a href="#dark-plane"><span>16</span> Dark plane</a>
         <a href="#tinted-plane"><span>17</span> Tinted plane</a>
+        <a href="#primary-verification"><span>18</span> Primary verification</a>
+        <a href="#univer-spreadsheet"><span>19</span> Univer spreadsheet</a>
+        <a href="#linear-regression"><span>20</span> Linear regression 3B1B</a>
       </nav>
       <p class="sidebar-note"><span class="note-dot note-live"></span>Production<span class="note-dot note-candidate"></span>Candidate</p>
     </aside>
@@ -108,7 +115,7 @@ const palette = [
           label="Studio system"
           title="Component showroom"
           description="A live approval surface for the visual system. Every production primitive appears here before it is propagated across the rest of the website."
-          count={17}
+          count={20}
           countLabel="component families"
         />
       </div>
@@ -471,6 +478,36 @@ const palette = [
                 The lines connect — because that's what you do.
               </p>
             </TintedPlane>
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="primary-verification"
+            index="18"
+            title="Primary verification grid"
+            description="Evidence standard container mapping claims to DOIs, arXiv papers, RFCs, and open source commit anchors."
+            source="PrimaryVerification.astro"
+          >
+            <PrimaryVerification />
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="univer-spreadsheet"
+            index="19"
+            title="Univer ML parameter spreadsheet"
+            description="Excel-grade spreadsheet UI with formula bar fx, active cell indicator, color-linked parameter badges, and live calculations."
+            source="UniverSpreadsheet.tsx"
+          >
+            <UniverSpreadsheet client:visible />
+          </ComponentSpecimen>
+
+          <ComponentSpecimen
+            id="linear-regression"
+            index="20"
+            title="Linear regression 3B1B vector fit"
+            description="Interactive Cartesian vector coordinate plane powered by Mafs and Observable Plot with draggable data points."
+            source="LinearRegressionOLS.astro"
+          >
+            <LinearRegressionOLS />
           </ComponentSpecimen>
 
         </div>

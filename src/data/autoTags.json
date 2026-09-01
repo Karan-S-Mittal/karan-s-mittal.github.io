@@ -10,6 +10,11 @@
     "aliases": []
   },
   {
+    "name": "Concurrency",
+    "slug": "concurrency",
+    "aliases": []
+  },
+  {
     "name": "CUDA",
     "slug": "cuda",
     "aliases": []
@@ -17,6 +22,21 @@
   {
     "name": "Decision Trees",
     "slug": "decision-trees",
+    "aliases": []
+  },
+  {
+    "name": "Distributed Systems",
+    "slug": "distributed-systems",
+    "aliases": []
+  },
+  {
+    "name": "Garbage Collection",
+    "slug": "garbage-collection",
+    "aliases": []
+  },
+  {
+    "name": "Go",
+    "slug": "go",
     "aliases": []
   },
   {
@@ -40,6 +60,11 @@
     "aliases": []
   },
   {
+    "name": "linear-algebra",
+    "slug": "linear-algebra",
+    "aliases": []
+  },
+  {
     "name": "LLM Inference",
     "slug": "llm-inference",
     "aliases": []
@@ -55,6 +80,11 @@
     "aliases": []
   },
   {
+    "name": "machine-learning",
+    "slug": "machine-learning",
+    "aliases": []
+  },
+  {
     "name": "Mathematics",
     "slug": "mathematics",
     "aliases": []
@@ -65,8 +95,23 @@
     "aliases": []
   },
   {
+    "name": "Memory Management",
+    "slug": "memory-management",
+    "aliases": []
+  },
+  {
+    "name": "Microarchitecture",
+    "slug": "microarchitecture",
+    "aliases": []
+  },
+  {
     "name": "MLOps",
     "slug": "mlops",
+    "aliases": []
+  },
+  {
+    "name": "optimization",
+    "slug": "optimization",
     "aliases": []
   },
   {
@@ -92,6 +137,16 @@
   {
     "name": "RAG",
     "slug": "rag",
+    "aliases": []
+  },
+  {
+    "name": "regression",
+    "slug": "regression",
+    "aliases": []
+  },
+  {
+    "name": "statistics",
+    "slug": "statistics",
     "aliases": []
   },
   {

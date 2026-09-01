@@ -11,41 +11,76 @@ const { caption, exhibit, title } = Astro.props;
 ---
 
 <ExcalidrawContainer caption={caption} exhibit={exhibit} title={title} badge="MEMORY ALLOCATION">
-  <svg class="ex-svg-canvas sys-diagram" viewBox="0 0 800 448" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Contiguous allocation reserves a long buffer, leaves the unused tail locked after a request finishes, and creates fragmented free memory across requests.">
+  <svg class="ex-svg-canvas sys-diagram" viewBox="0 0 720 380" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Contiguous allocation reserves a long buffer, leaves the unused tail locked after a request finishes, and creates fragmented free memory across requests.">
     <defs>
-      <pattern id="fragment-hatch" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="8" stroke="var(--ex-text-muted)" stroke-opacity=".30" stroke-width="2" /></pattern>
+      <pattern id="waste-hatch-3b" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+        <line x1="0" y1="0" x2="0" y2="6" stroke="var(--muted)" stroke-opacity="0.35" stroke-width="1.5" />
+      </pattern>
     </defs>
-    <text x="32" y="32" class="label">CONTIGUOUS ALLOCATION</text>
-    <text x="768" y="32" class="label" text-anchor="end">CAPACITY IS RESERVED, NOT EARNED</text>
-    <line x1="32" y1="48" x2="768" y2="48" class="rule" />
 
-    <text x="32" y="88" class="label">01 / ADMISSION</text>
-    <text x="176" y="88" class="body-muted">Reserve the maximum sequence length before the request starts.</text>
-    <g transform="translate(176 108)">
-      <rect x="0" y="0" width="560" height="48" rx="4" class="node-muted" />
-      <rect x="0" y="0" width="96" height="48" rx="4" class="node-signal" />
-      <rect x="96" y="0" width="464" height="48" fill="url(#fragment-hatch)" />
-      <text x="48" y="21" class="body" text-anchor="middle">prompt</text><text x="48" y="37" class="label-signal" text-anchor="middle">750 TOKENS</text>
-      <text x="328" y="21" class="body-muted" text-anchor="middle">reserved capacity</text><text x="328" y="37" class="label" text-anchor="middle">7,442 TOKENS</text>
+    <!-- STAGE 1: ADMISSION -->
+    <g transform="translate(20, 16)">
+      <text x="0" y="12" class="label-signal" dominant-baseline="central">01 / ADMISSION (WORST-CASE RESERVATION)</text>
+      <text x="0" y="28" class="body-muted" dominant-baseline="central">Must reserve max sequence capacity (8,192 tokens) upfront before generation begins.</text>
+
+      <g transform="translate(0, 42)">
+        <rect x="0" y="0" width="680" height="42" rx="6" class="node-muted" />
+        <!-- Prompt -->
+        <rect x="0" y="0" width="100" height="42" rx="6" class="node-signal" />
+        <text x="50" y="15" class="body" text-anchor="middle" font-weight="600" dominant-baseline="central">Prompt</text>
+        <text x="50" y="29" class="label-signal" text-anchor="middle" font-size="8.5" dominant-baseline="central">750 TOKENS</text>
+
+        <!-- Reserved tail -->
+        <rect x="100" y="0" width="580" height="42" fill="url(#waste-hatch-3b)" />
+        <text x="390" y="15" class="body-muted" text-anchor="middle" font-weight="500" dominant-baseline="central">Reserved Capacity (Locked)</text>
+        <text x="390" y="29" class="label" text-anchor="middle" font-size="8.5" dominant-baseline="central">7,442 TOKENS PRE-ALLOCATED FOR WORST-CASE EXTENT</text>
+      </g>
     </g>
 
-    <line x1="32" y1="184" x2="768" y2="184" class="rule" />
-    <text x="32" y="224" class="label">02 / EARLY STOP</text>
-    <text x="176" y="224" class="body-muted">When generation ends, the unused tail stays unavailable for this request.</text>
-    <g transform="translate(176 244)">
-      <rect x="0" y="0" width="560" height="48" rx="4" class="node-muted" />
-      <rect x="0" y="0" width="144" height="48" rx="4" class="node-signal" />
-      <rect x="144" y="0" width="416" height="48" fill="url(#fragment-hatch)" />
-      <text x="72" y="21" class="body" text-anchor="middle">used</text><text x="72" y="37" class="label-signal" text-anchor="middle">750 TOKENS</text>
-      <text x="352" y="21" class="body-muted" text-anchor="middle">locked, never touched</text><text x="352" y="37" class="label" text-anchor="middle">INTERNAL FRAGMENTATION</text>
+    <!-- Mid line -->
+    <line x1="20" y1="126" x2="700" y2="126" class="rule" />
+
+    <!-- STAGE 2: EARLY STOP -->
+    <g transform="translate(20, 142)">
+      <text x="0" y="12" class="label-signal" dominant-baseline="central">02 / EARLY STOP (INTERNAL FRAGMENTATION)</text>
+      <text x="0" y="28" class="body-muted" dominant-baseline="central">Request emits &lt;eos&gt; at token 1,200. Remaining reserved memory was held hostage.</text>
+
+      <g transform="translate(0, 42)">
+        <rect x="0" y="0" width="680" height="42" rx="6" class="node-muted" />
+        <!-- Used -->
+        <rect x="0" y="0" width="140" height="42" rx="6" class="node-signal" />
+        <text x="70" y="15" class="body" text-anchor="middle" font-weight="600" dominant-baseline="central">Completed (1,200)</text>
+        <text x="70" y="29" class="label-signal" text-anchor="middle" font-size="8.5" dominant-baseline="central">USED TOKENS</text>
+
+        <!-- Wasted Ghost Tail -->
+        <rect x="140" y="0" width="540" height="42" fill="url(#waste-hatch-3b)" />
+        <text x="410" y="15" class="body" text-anchor="middle" font-weight="600" fill="var(--muted)" dominant-baseline="central">Internal Fragmentation (6,992 Tokens)</text>
+        <text x="410" y="29" class="label" text-anchor="middle" font-size="8.5" dominant-baseline="central">LOCKED FOR REQUEST DURATION, NEVER USED (60-80% TYPICAL WASTE)</text>
+      </g>
     </g>
 
-    <line x1="32" y1="320" x2="768" y2="320" class="rule" />
-    <text x="32" y="348" class="label">03 / MANY REQUESTS</text>
-    <text x="176" y="366" class="body-muted">Free capacity remains, but no request-sized region is contiguous.</text>
-    <g transform="translate(176 380)">
-      <rect x="0" y="0" width="72" height="24" class="node-muted" /><rect x="80" y="0" width="40" height="24" fill="url(#fragment-hatch)" /><rect x="128" y="0" width="96" height="24" class="node-muted" /><rect x="232" y="0" width="40" height="24" fill="url(#fragment-hatch)" /><rect x="280" y="0" width="112" height="24" class="node-muted" /><rect x="400" y="0" width="40" height="24" fill="url(#fragment-hatch)" /><rect x="448" y="0" width="112" height="24" class="node-muted" />
-      <text x="280" y="48" class="label" text-anchor="middle">SCATTERED FREE REGIONS</text>
+    <!-- Mid line -->
+    <line x1="20" y1="252" x2="700" y2="252" class="rule" />
+
+    <!-- STAGE 3: EXTERNAL FRAGMENTATION -->
+    <g transform="translate(20, 268)">
+      <text x="0" y="12" class="label-signal" dominant-baseline="central">03 / MULTI-TENANT DRIFT (EXTERNAL FRAGMENTATION &amp; OOM)</text>
+      <text x="0" y="28" class="body-muted" dominant-baseline="central">24GB free memory exists in scattered holes, but a new 4k request crashes with OOM.</text>
+
+      <g transform="translate(0, 42)">
+        <rect x="0" y="0" width="95" height="34" rx="4" class="node-muted" /><text x="47" y="17" class="label" text-anchor="middle" font-size="9" dominant-baseline="central">REQ A (BUSY)</text>
+        <rect x="100" y="0" width="48" height="34" rx="4" fill="url(#waste-hatch-3b)" stroke="var(--border-default)" /><text x="124" y="17" class="label" text-anchor="middle" font-size="8" dominant-baseline="central">FREE 1k</text>
+        <rect x="153" y="0" width="130" height="34" rx="4" class="node-muted" /><text x="218" y="17" class="label" text-anchor="middle" font-size="9" dominant-baseline="central">REQ B (BUSY)</text>
+        <rect x="288" y="0" width="56" height="34" rx="4" fill="url(#waste-hatch-3b)" stroke="var(--border-default)" /><text x="316" y="17" class="label" text-anchor="middle" font-size="8" dominant-baseline="central">FREE 1.5k</text>
+        <rect x="349" y="0" width="115" height="34" rx="4" class="node-muted" /><text x="406" y="17" class="label" text-anchor="middle" font-size="9" dominant-baseline="central">REQ C (BUSY)</text>
+        <rect x="469" y="0" width="65" height="34" rx="4" fill="url(#waste-hatch-3b)" stroke="var(--border-default)" /><text x="501" y="17" class="label" text-anchor="middle" font-size="8" dominant-baseline="central">FREE 2k</text>
+
+        <!-- New Request Attempt -->
+        <rect x="540" y="0" width="140" height="34" rx="4" stroke="var(--accent)" stroke-dasharray="3 3" fill="var(--ex-blue-bg)" />
+        <text x="610" y="11" class="label-signal" text-anchor="middle" font-size="8.5" dominant-baseline="central">REQ D (4,096 TOKENS)</text>
+        <text x="610" y="23" class="label-signal" text-anchor="middle" font-size="8" dominant-baseline="central">OOM REJECTED (NO CONTIGUOUS SPAN)</text>
+      </g>
     </g>
   </svg>
 </ExcalidrawContainer>
+

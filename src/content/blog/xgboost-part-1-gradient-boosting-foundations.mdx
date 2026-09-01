@@ -2,6 +2,8 @@
 title: "From Decision Trees to Gradient Boosting: Optimization in Function Space"
 description: "A first-principles breakdown of recursive feature space partitioning, the bias-variance dichotomy of bagging vs boosting, and Friedman's geometric formulation of boosting as gradient descent in function space."
 pubDate: 2026-08-24
+image: "/images/blog/xgboost-part-1-hero.webp"
+heroCaption: "Gradient Tree Boosting architectural schematic: sequential additive modeling in Hilbert space and iterative residual fitting."
 tags: ["Machine Learning", "Gradient Boosting", "Decision Trees", "Optimization", "Algorithms", "Mathematics"]
 draft: false
 ---
@@ -9,6 +11,55 @@ draft: false
 import Exhibit from '../../components/editorial/Exhibit.astro';
 import BenchmarkChart from '../../components/diagram/BenchmarkChart.astro';
 import AlgorithmFlow from '../../components/diagram/AlgorithmFlow.astro';
+import PrimaryVerification from '../../components/editorial/PrimaryVerification.astro';
+
+export const xgb1Citations = [
+  {
+    id: "01",
+    badge: "FOUNDATIONAL PAPER",
+    claim: "Proves NP-completeness of constructing optimal, minimum-size decision trees under arbitrary discrete criteria.",
+    authors: "Laurent Hyafil, Ronald L. Rivest",
+    sourceTitle: "Constructing Optimal Binary Decision Trees is NP-Complete (Information Processing Letters, 1976)",
+    sourceAnchor: "Theorem 1: Decision-Tree Consistency",
+    permalink: "https://doi.org/10.1016/0020-0190(76)90095-8"
+  },
+  {
+    id: "02",
+    badge: "MACHINE LEARNING 2001",
+    claim: "Random Forests variance reduction via bootstrap aggregation (bagging) and random feature subspace projection.",
+    authors: "Leo Breiman (UC Berkeley)",
+    sourceTitle: "Random Forests (Machine Learning, 2001)",
+    sourceAnchor: "Section 2: Characterizing the Accuracy of Random Forests",
+    permalink: "https://doi.org/10.1023/A:1010933404324"
+  },
+  {
+    id: "03",
+    badge: "JCSS 1997",
+    claim: "Formulates AdaBoost algorithm with exponential loss and iterative instance re-weighting.",
+    authors: "Yoav Freund, Robert E. Schapire",
+    sourceTitle: "A Decision-Theoretic Generalization of On-Line Learning and an Application to Boosting (1997)",
+    sourceAnchor: "Section 3: The Boosting Algorithm AdaBoost",
+    permalink: "https://doi.org/10.1006/jcss.1997.1504"
+  },
+  {
+    id: "04",
+    badge: "ANNALS OF STATISTICS",
+    claim: "Formulates Gradient Boosting as steepest descent in function space under arbitrary differentiable loss functions.",
+    authors: "Jerome H. Friedman (Stanford University)",
+    sourceTitle: "Greedy Function Approximation: A Gradient Boosting Machine (2001)",
+    sourceAnchor: "Section 2: Numerical Optimization in Function Space",
+    permalink: "https://www.jstor.org/stable/2699986"
+  },
+  {
+    id: "05",
+    badge: "ACM SIGKDD 2016",
+    claim: "XGBoost system design, second-order Taylor expansion objective, weighted quantile sketch, and sparsity-aware split finding.",
+    authors: "Tianqi Chen, Carlos Guestrin (University of Washington)",
+    sourceTitle: "XGBoost: A Scalable Tree Boosting System (ACM SIGKDD 2016)",
+    sourceAnchor: "Section 2: Tree Boosting in a Nutshell",
+    permalink: "https://arxiv.org/abs/1603.02754"
+  }
+];
 
 In modern statistical learning, tree-based ensembles occupy an unusual and resilient position. Despite the dominance of deep neural networks in perceptual domains such as computer vision and natural language processing, gradient boosted decision trees remain the foundational workhorse for structured, tabular, and heterogeneously-typed data.
 
@@ -294,9 +345,9 @@ This decomposition creates a fundamental fork in ensemble design:
 
 ## 3. The Geometric Breakthrough: Optimization in Function Space
 
-Early boosting algorithms, most notably **AdaBoost** (Freund & Schapire, 1996), framed boosting as an iterative sample-reweighting procedure [4].
+Early boosting algorithms, most notably **AdaBoost** (Freund & Schapire, 1996), framed boosting as an iterative sample-reweighting procedure [3].
 
-In 2001, **Jerome H. Friedman** published a unifying conceptual breakthrough: **Greedy Function Approximation: A Gradient Boosting Machine** [5].
+In 2001, **Jerome H. Friedman** published a unifying conceptual breakthrough: **Greedy Function Approximation: A Gradient Boosting Machine** [4].
 
 Friedman realized that AdaBoost was not an ad-hoc sample-weighting trick. It was a specific realization of **numerical gradient descent formulated directly in an infinite-dimensional Hilbert function space** $\mathcal{H}$.
 
@@ -460,7 +511,7 @@ The following chart is a schematic teaching aid, not a measured result. Its purp
   series={[
     {
       name: "Gradient Boosting (η = 0.05, Subsample = 0.8)",
-      color: "#2676aa",
+      color: "#2676AA",
       data: [
         { x: 1, y: 1.42 },
         { x: 10, y: 0.94 },
@@ -474,7 +525,7 @@ The following chart is a schematic teaching aid, not a measured result. Its purp
     },
     {
       name: "Gradient Boosting (η = 1.0, No Shrinkage)",
-      color: "#ffafcc",
+      color: "#D97706",
       dashed: true,
       data: [
         { x: 1, y: 0.98 },
@@ -489,7 +540,7 @@ The following chart is a schematic teaching aid, not a measured result. Its purp
     },
     {
       name: "Random Forest (Parallel Bagging)",
-      color: "#cdb4db",
+      color: "#7C3AED",
       data: [
         { x: 1, y: 0.82 },
         { x: 10, y: 0.48 },
@@ -503,7 +554,7 @@ The following chart is a schematic teaching aid, not a measured result. Its purp
     },
     {
       name: "Single Deep Decision Tree (Baseline)",
-      color: "#68768b",
+      color: "#68768B",
       dashed: true,
       data: [
         { x: 1, y: 0.82 },
@@ -531,15 +582,6 @@ The following chart is a schematic teaching aid, not a measured result. Its purp
 
 ---
 
-## Primary Citations & Verifications
+## Primary Citations & Ground Truth
 
-| ID | Author(s) & Year | Title / Contribution | Primary Publication / DOI |
-|---|---|---|---|
-| `[1]` | Hyafil & Rivest (1976) | NP-completeness of a minimum-size decision-tree consistency problem | *Information Processing Letters*, 5(1), 15–17. [DOI:10.1016/0020-0190(76)90095-8](https://doi.org/10.1016/0020-0190(76)90095-8) |
-| `[2]` | Leo Breiman (2001) | Random Forests (Bootstrap Aggregation and Feature Decorrelation) | *Machine Learning*, 45(1), 5–32. [DOI:10.1023/A:1010933404324](https://doi.org/10.1023/A:1010933404324) |
-| `[3]` | Robert E. Schapire (1990) | The Strength of Weak Learnability (Foundational boosting proof) | *Machine Learning*, 5(2), 197–227. [DOI:10.1007/BF00116037](https://doi.org/10.1007/BF00116037) |
-| `[4]` | Freund & Schapire (1996) | Experiments with a New Boosting Algorithm (AdaBoost) | *ICML 1996*, 148–156. [PDF](https://www.cs.princeton.edu/~schapire/papers/FreundSc96.pdf) |
-| `[5]` | Jerome H. Friedman (2001) | Greedy Function Approximation: A Gradient Boosting Machine | *The Annals of Statistics*, 29(5), 1189–1232. [JSTOR](https://www.jstor.org/stable/2699986) |
-| `[6]` | Tianqi Chen & Carlos Guestrin (2016) | XGBoost: A Scalable Tree Boosting System (Second-order Taylor boosting) | *ACM SIGKDD 2016*, 785–794. [arXiv:1603.02754](https://arxiv.org/abs/1603.02754) |
-| `[7]` | Jerome H. Friedman (2002) | Stochastic Gradient Boosting (Subsample regularization) | *Computational Statistics & Data Analysis*, 38(4), 367–378. [DOI:10.1016/S0167-9473(01)00065-2](https://doi.org/10.1016/S0167-9473(01)00065-2) |
-| `[8]` | Leo Breiman (1996) | Bagging Predictors (Bootstrap aggregation theory) | *Machine Learning*, 24(2), 123–140. [DOI:10.1007/BF00058655](https://doi.org/10.1007/BF00058655) |
+<PrimaryVerification items={xgb1Citations} />
