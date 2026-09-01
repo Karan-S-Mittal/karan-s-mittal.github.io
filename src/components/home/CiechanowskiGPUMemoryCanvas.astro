@@ -1,9 +1,12 @@
 ---
 /**
  * CiechanowskiGPUMemoryCanvas.astro
- * Bartosz Ciechanowski-grade bespoke 2D Canvas hardware & kernel simulator.
- * Scroll-driven: as the reader scrolls through the narrative chapters, the canvas
- * dynamically morphs from naive contiguous allocation failure to paged virtual memory packing at 60 FPS.
+ * Branch Education & Bartosz Ciechanowski-grade multi-scale Silicon DRAM & PagedAttention Canvas engine.
+ * 
+ * 3 Continuous Zoom Scales:
+ * 1. 🔬 Microscopic 1T1C Silicon Cell (MOSFET transistor, deep trench capacitor, electron particles, sense amp oscilloscope)
+ * 2. ⚡ 8×8 Crossbar Matrix & Address Decoders (Wordlines, Bitlines, Row Decoder, Column Sense Amps)
+ * 3. 🧠 Macro GPU Memory & PagedAttention KV Cache (64 Physical Frames, Virtual Page Table, Contiguous vs Paged packing)
  */
 ---
 
@@ -12,12 +15,31 @@
   <div class="canvas-header-shell">
     <div class="canvas-kicker">
       <span class="live-dot"></span>
-      <span>01 / Flagship Hardware Instrument &middot; LLM Inference Mechanics</span>
+      <span>01 / Flagship Hardware Instrument &middot; Silicon Microarchitecture to KV Cache</span>
     </div>
-    <h2 id="gpu-canvas-title">GPU VRAM &amp; The PagedAttention Memory Wall</h2>
+    <h2 id="gpu-canvas-title">How RAM &amp; GPU Memory Work: From Electrons to PagedAttention</h2>
     <p class="canvas-lead-text">
-      Scroll through the narrative below or drag the interactive timeline to watch physical GPU memory banks fragment under naive contiguous pre-allocation—then resolve into virtual page table indexing.
+      Explore the multi-scale physics of DRAM: from a single microscopic 1-Transistor 1-Capacitor (1T1C) cell storing electron charge, up through the wordline crossbar matrix, to the GPU memory wall and PagedAttention virtual paging.
     </p>
+  </div>
+
+  <!-- Multi-Scale Zoom Level Bar -->
+  <div class="scale-selector-bar" role="tablist" aria-label="Micro-to-Macro Silicon Zoom Level">
+    <button type="button" role="tab" class="scale-tab active" data-scale="0" aria-selected="true">
+      <span class="scale-badge">SCALE 01 / MICROSCOPIC</span>
+      <strong>1T1C Silicon Cell</strong>
+      <small>MOSFET Gate &middot; Capacitor Trench &middot; Electron Charge</small>
+    </button>
+    <button type="button" role="tab" class="scale-tab" data-scale="1" aria-selected="false">
+      <span class="scale-badge">SCALE 02 / SILICON ARRAY</span>
+      <strong>Crossbar Wordline Matrix</strong>
+      <small>Row Decoder &middot; Bitline Sense Amps &middot; 8-Bit Latch</small>
+    </button>
+    <button type="button" role="tab" class="scale-tab" data-scale="2" aria-selected="false">
+      <span class="scale-badge">SCALE 03 / SYSTEM ARCHITECTURE</span>
+      <strong>PagedAttention KV Cache</strong>
+      <small>HBM3 DRAM Bank &middot; Virtual Paging &middot; Zero Waste</small>
+    </button>
   </div>
 
   <!-- Main Scrollytelling Stage -->
@@ -25,190 +47,248 @@
     <!-- STICKY CANVAS INSTRUMENT (LEFT/TOP) -->
     <div class="sticky-canvas-container">
       <div class="canvas-frame" data-canvas-frame>
+        <!-- Canvas HUD Bar -->
         <div class="canvas-hud-bar">
           <div class="hud-left">
-            <span class="hud-chip">CHIP: NVIDIA H100 SXM5</span>
+            <span class="hud-chip" data-hud-chip>SILICON SCALE: 1T1C CELL (14nm TRENCH)</span>
             <span class="hud-freq">CLOCK: 1980 MHz</span>
           </div>
           <div class="hud-right">
-            <span class="hud-mode" data-hud-mode>MODE: CONTIGUOUS PRE-ALLOCATION</span>
-            <span class="hud-phase" data-hud-phase>PHASE: 1 / 3</span>
+            <span class="hud-mode" data-hud-mode>GATE: NMOS CONDUCTING (1.2V)</span>
+            <span class="hud-phase" data-hud-electrons>ELECTRONS: 42 e⁻ STORED</span>
           </div>
         </div>
 
-        <canvas class="gpu-sim-canvas" data-canvas width="1200" height="720"></canvas>
+        <canvas class="gpu-sim-canvas" data-canvas width="1200" height="740"></canvas>
 
-        <!-- Interactive Direct Scrubber -->
-        <div class="canvas-scrubber-bar">
-          <span class="scrub-label">INTERACTIVE SCRUBBER</span>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.001"
-            value="0"
-            class="scrubber-slider"
-            data-scrubber
-            aria-label="Simulation Progress Scrubber"
-          />
-          <span class="scrub-val" data-scrub-val>0%</span>
+        <!-- Dynamic Contextual Action Controls -->
+        <div class="canvas-controls-bar">
+          <!-- Scale 1 Controls: 1T1C Cell Operations -->
+          <div class="control-view-panel" data-ctrl-scale="0">
+            <div class="btn-group">
+              <button type="button" class="sim-btn primary" data-act-write1>
+                ⚡ Write '1' (Charge)
+              </button>
+              <button type="button" class="sim-btn secondary" data-act-write0>
+                ⚡ Write '0' (Discharge)
+              </button>
+              <button type="button" class="sim-btn secondary" data-act-read>
+                🔍 Read &amp; Sense
+              </button>
+              <button type="button" class="sim-btn tertiary" data-act-leak>
+                ⏳ Leak &amp; Refresh
+              </button>
+            </div>
+            <div class="slider-group">
+              <label for="gate-v-slider">Wordline Gate Voltage (V<sub>WL</sub>): <strong data-v-val>1.2V</strong></label>
+              <input
+                id="gate-v-slider"
+                type="range"
+                min="0"
+                max="1.2"
+                step="0.05"
+                value="1.2"
+                class="voltage-slider"
+                data-gate-slider
+              />
+            </div>
+          </div>
+
+          <!-- Scale 2 Controls: Crossbar Matrix -->
+          <div class="control-view-panel hidden" data-ctrl-scale="1">
+            <div class="btn-group">
+              <button type="button" class="sim-btn primary" data-act-strobe>
+                ⚡ Strobe Wordline Sequence
+              </button>
+              <button type="button" class="sim-btn secondary" data-act-next-addr>
+                Next Hex Address (+0x08)
+              </button>
+            </div>
+            <div class="hud-meta-badge">
+              <span>SELECTED ADDRESS: <strong data-matrix-addr>ADDR 0x18 (ROW 3, COL 0-7)</strong></span>
+            </div>
+          </div>
+
+          <!-- Scale 3 Controls: PagedAttention KV Cache -->
+          <div class="control-view-panel hidden" data-ctrl-scale="2">
+            <div class="btn-group">
+              <button type="button" class="sim-btn primary" data-act-toggle-paged>
+                ⇄ Toggle: PagedAttention vs Naive
+              </button>
+              <button type="button" class="sim-btn secondary" data-act-step-tokens>
+                + Step Token Batch (+16 Tokens)
+              </button>
+            </div>
+            <div class="hud-meta-badge">
+              <span>ACTIVE ALLOCATION: <strong data-paged-mode-text>PagedAttention (Virtual Paging)</strong></span>
+            </div>
+          </div>
         </div>
       </div>
       <p class="canvas-caption-note">
-        <em>Tip:</em> Scroll to drive the simulation, or hover/touch anywhere on the GPU memory frames to inspect physical byte registers and virtual pointer routes.
+        <em>Branch Education Standard:</em> Click the scale tabs above or scroll down to zoom from the microscopic 1T1C capacitor physics into the 8×8 wordline silicon matrix and the GPU PagedAttention KV cache.
       </p>
     </div>
 
     <!-- SCROLLING NARRATIVE CHAPTERS (RIGHT) -->
     <div class="scrolly-narrative-track">
-      <!-- CHAPTER 1 -->
+      <!-- CHAPTER 1: 1T1C PHYSICS -->
       <article class="narrative-chapter active" data-chapter="0">
         <div class="chapter-register">
           <span class="chapter-num">01.01</span>
-          <span class="chapter-label">WORKLOAD ARRIVAL</span>
+          <span class="chapter-label">MICROSCOPIC SILICON</span>
         </div>
-        <h3>The Memory Bandwidth Bottleneck</h3>
+        <h3>The 1T1C Memory Cell: 1 Transistor, 1 Capacitor</h3>
         <p>
-          In Large Language Model (LLM) serving, token generation is strictly bound by <strong>memory bandwidth</strong>, not compute. At every autoregressive decoding step, the entire model weights and the accumulating <strong>Key-Value (KV) cache</strong> must be streamed from High-Bandwidth Memory (HBM3) to the Tensor Cores.
+          At the atomic level, every single bit of RAM consists of exactly two components:
         </p>
-        <div class="chapter-metric-card">
-          <div class="metric-row">
-            <span>Physical DRAM Bank:</span>
-            <strong>64 &times; 16-Token Pages (1024 Tokens total)</strong>
-          </div>
-          <div class="metric-row">
-            <span>Active Workload:</span>
-            <strong>3 Concurrent Prompt Streams (Req A, B, C)</strong>
-          </div>
-        </div>
-        <p class="chapter-instruction">&darr; Scroll to see how traditional memory allocators fail...</p>
+        <ol class="chapter-list">
+          <li><strong>The Deep Trench Capacitor (C &asymp; 25 fF)</strong>: A microscopic vertical cylinder etched into silicon that holds a tiny packet of electrons. A full charge (V<sub>DD</sub> = 1.2V) represents binary <code>1</code>; empty represents <code>0</code>.</li>
+          <li><strong>The Access NMOS Transistor</strong>: Acts as a voltage-controlled switch. Applying voltage to the horizontal <strong>Wordline</strong> turns ON the conductive channel, connecting the capacitor to the vertical <strong>Bitline</strong>.</li>
+          <li><strong>The Sense Amplifier</strong>: Detects the microscopic voltage ripple (&Delta;V &asymp; 100 mV) when charge drains onto the Bitline, amplifies it into a full digital signal, and immediately recharges (refreshes) the cell.</li>
+        </ol>
+        <p class="chapter-instruction">&darr; Scroll to zoom out into the 8×8 Crossbar Silicon Matrix...</p>
       </article>
 
-      <!-- CHAPTER 2 -->
+      <!-- CHAPTER 2: CROSSBAR ARRAY -->
       <article class="narrative-chapter" data-chapter="1">
         <div class="chapter-register alert">
           <span class="chapter-num">01.02</span>
-          <span class="chapter-label">THE FAILURE STATE</span>
+          <span class="chapter-label">SILICON CROSSBAR ARRAY</span>
         </div>
-        <h3>The Naive Wall: Contiguous Fragmentation</h3>
+        <h3>Wordlines, Bitlines &amp; Address Decoders</h3>
         <p>
-          Because sequence lengths cannot be predicted in advance, naive systems pre-reserve <strong>contiguous memory blocks</strong> for each request's maximum potential context window (e.g. 128 tokens = 8 physical frames).
+          Billions of 1T1C cells are arranged in a 2D grid of horizontal <strong>Wordlines</strong> (Rows) and vertical <strong>Bitlines</strong> (Columns).
         </p>
         <p>
-          As generation proceeds, up to <strong>78% of reserved VRAM sits completely idle</strong> as internal fragmentation (highlighted in rust). When a new client (Req D) arrives, the GPU triggers a <strong>premature Out-of-Memory (OOM) abort</strong>—even though over half the physical silicon capacity is empty.
+          When the memory controller requests an address (e.g. <code>0x18</code>):
         </p>
-        <div class="chapter-metric-card alert">
-          <div class="metric-row">
-            <span>Memory Wasted:</span>
-            <strong class="rust-text">78.1% Internal Fragmentation</strong>
-          </div>
-          <div class="metric-row">
-            <span>Serving Concurrency:</span>
-            <strong>1.0&times; (Hardware Lock)</strong>
-          </div>
-        </div>
-        <p class="chapter-instruction">&darr; Scroll to engage PagedAttention virtual memory paging...</p>
+        <ul class="chapter-list">
+          <li>The <strong>Row Address Decoder</strong> energizes Wordline #3 in bright blue, opening all 8 transistor gates across that row simultaneously.</li>
+          <li>Each cell's capacitor dumps its electrons onto its respective Bitline.</li>
+          <li>The 8 <strong>Column Sense Amplifiers</strong> at the bottom rail latch the 8 bits into a byte and push it out to the memory bus.</li>
+        </ul>
+        <p class="chapter-instruction">&darr; Scroll to zoom out to the GPU Memory Wall &amp; PagedAttention...</p>
       </article>
 
-      <!-- CHAPTER 3 -->
+      <!-- CHAPTER 3: PAGEDATTENTION -->
       <article class="narrative-chapter" data-chapter="2">
         <div class="chapter-register solution">
           <span class="chapter-num">01.03</span>
-          <span class="chapter-label">THE PAGED MECHANISM</span>
+          <span class="chapter-label">SYSTEMS &amp; KV CACHE</span>
         </div>
-        <h3>Virtual Page Tables: &lt; 4% Waste, 3.8&times; Concurrency</h3>
+        <h3>The Memory Wall: Contiguous vs. PagedAttention</h3>
         <p>
-          <strong>PagedAttention</strong> solves the memory wall by adapting OS virtual memory concepts to GPU DRAM. It decouples logical sequences from physical memory layout using a <strong>Virtual Block Pointer Table</strong>.
+          At the GPU level, millions of DRAM cells form <strong>16-token memory page frames</strong> that hold the Large Language Model's Key-Value (KV) cache.
         </p>
         <p>
-          Physical 16-token frames are allocated on demand across non-contiguous memory addresses. Internal fragmentation collapses to <strong>&lt; 4%</strong> (confined only to the tail frame of active sequences), allowing all 4 client batches to run concurrently without memory stalls.
+          <strong>The Naive Wall</strong>: Pre-allocating contiguous memory blocks wastes up to <strong>78% of VRAM</strong> in internal fragmentation because sequence lengths vary wildly, causing premature GPU Out-of-Memory (OOM) aborts.
         </p>
-        <div class="chapter-metric-card solution">
-          <div class="metric-row">
-            <span>Memory Utilization:</span>
-            <strong class="blue-text">96.8% Physical Efficiency</strong>
-          </div>
-          <div class="metric-row">
-            <span>Throughput Multiplier:</span>
-            <strong class="blue-text">3.8&times; Serving Concurrency</strong>
-          </div>
-        </div>
+        <p>
+          <strong>The Paged Solution</strong>: <strong>PagedAttention</strong> uses a dynamic <strong>Virtual Block Pointer Table</strong> to map logical token pages to scattered physical frames on demand. Memory waste drops to <strong>&lt; 4%</strong>, enabling <strong>3.8&times; higher serving concurrency</strong>.
+        </p>
       </article>
     </div>
   </div>
 </section>
 
 <script>
-  function initCiechanowskiCanvas() {
+  interface Electron {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    inCapacitor: boolean;
+  }
+
+  function initBranchEducationCanvas() {
     document.querySelectorAll<HTMLElement>('[data-gpu-scrolly]').forEach((root) => {
       const canvas = root.querySelector<HTMLCanvasElement>('[data-canvas]');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      const scrubber = root.querySelector<HTMLInputElement>('[data-scrubber]');
-      const scrubVal = root.querySelector<HTMLElement>('[data-scrub-val]');
-      const hudMode = root.querySelector<HTMLElement>('[data-hud-mode]');
-      const hudPhase = root.querySelector<HTMLElement>('[data-hud-phase]');
+      const scaleTabs = root.querySelectorAll<HTMLButtonElement>('.scale-tab');
       const chapters = root.querySelectorAll<HTMLElement>('.narrative-chapter');
+      const hudChip = root.querySelector<HTMLElement>('[data-hud-chip]');
+      const hudMode = root.querySelector<HTMLElement>('[data-hud-mode]');
+      const hudElectrons = root.querySelector<HTMLElement>('[data-hud-electrons]');
+      const ctrlPanels = root.querySelectorAll<HTMLElement>('[data-ctrl-scale]');
 
-      let targetProgress = 0;
-      let currentProgress = 0; // Lerped value
-      let isManualScrubbing = false;
-      let mousePos = { x: -1000, y: -1000, active: false };
-      let animFrameId = 0;
+      // Interactive Buttons & Sliders
+      const btnWrite1 = root.querySelector<HTMLButtonElement>('[data-act-write1]');
+      const btnWrite0 = root.querySelector<HTMLButtonElement>('[data-act-write0]');
+      const btnRead = root.querySelector<HTMLButtonElement>('[data-act-read]');
+      const btnLeak = root.querySelector<HTMLButtonElement>('[data-act-leak]');
+      const gateSlider = root.querySelector<HTMLInputElement>('[data-gate-slider]');
+      const vValText = root.querySelector<HTMLElement>('[data-v-val]');
 
-      // Particle streams for memory bus
-      interface Particle {
-        x: number;
-        y: number;
-        speed: number;
-        color: string;
-        targetTile: number;
+      const btnStrobe = root.querySelector<HTMLButtonElement>('[data-act-strobe]');
+      const btnNextAddr = root.querySelector<HTMLButtonElement>('[data-act-next-addr]');
+      const matrixAddrText = root.querySelector<HTMLElement>('[data-matrix-addr]');
+
+      const btnTogglePaged = root.querySelector<HTMLButtonElement>('[data-act-toggle-paged]');
+      const btnStepTokens = root.querySelector<HTMLButtonElement>('[data-act-step-tokens]');
+      const pagedModeText = root.querySelector<HTMLElement>('[data-paged-mode-text]');
+
+      // State
+      let activeScale = 0; // 0: 1T1C, 1: Matrix, 2: PagedAttention
+      let targetScale = 0;
+      let smoothScale = 0; // Interpolated zoom level (0.0 to 2.0)
+
+      // 1T1C State
+      let gateVoltage = 1.2; // 0.0V to 1.2V
+      let isBitlineHigh = true;
+      let capacitorCharge = 1.0; // 0.0 to 1.0 (1.0 = full 1.2V, 0.0 = empty 0V)
+      let senseAmpReading = 1.0;
+      let isSenseActive = false;
+      let oscilloscopeHistory: { wl: number; bl: number; sa: number }[] = [];
+      for (let i = 0; i < 100; i++) oscilloscopeHistory.push({ wl: 1.2, bl: 0.6, sa: 0.6 });
+
+      // Electrons for 1T1C Capacitor
+      let electrons: Electron[] = [];
+      function resetElectrons(count = 42) {
+        electrons = [];
+        for (let i = 0; i < count; i++) {
+          electrons.push({
+            x: 750 + (Math.random() * 80 - 40),
+            y: 350 + (Math.random() * 180 - 90),
+            vx: (Math.random() - 0.5) * 1.5,
+            vy: (Math.random() - 0.5) * 1.5,
+            inCapacitor: true,
+          });
+        }
       }
-      let particles: Particle[] = [];
-      for (let i = 0; i < 24; i++) {
-        particles.push({
-          x: 280 + Math.random() * 200,
-          y: 120 + Math.random() * 400,
-          speed: 1.5 + Math.random() * 2.5,
-          color: '#2857D9',
-          targetTile: Math.floor(Math.random() * 64),
-        });
-      }
+      resetElectrons(42);
 
-      // 64 Physical Frames (8x8)
-      const TOTAL_FRAMES = 64;
-      const ROWS = 8;
-      const COLS = 8;
+      // Matrix State
+      let selectedRow = 3;
+      let matrixStrobe = 0;
 
-      // Deterministic non-contiguous hash for Paged Mode
-      const pagedMap = [
-        4, 19, 33, 2, 45, 12, 58, 23, 7, 39, 50, 15, 61, 28, 8, 42,
-        1, 18, 32, 55, 11, 27, 49, 3, 20, 36, 62, 14, 30, 46, 5, 22,
-        0, 16, 31, 54, 10, 26, 48, 63, 13, 29, 44, 6, 21, 37, 59, 17,
-        34, 51, 9, 25, 41, 57, 24, 40, 56, 35, 52, 47, 60, 38, 53, 43
-      ];
+      // PagedAttention State
+      let isPagedMode = true;
+      let tokenStep = 2; // 0, 1, 2, 3
+      let hoveredFrame = -1;
 
-      // Theme Colors
+      // Colors
       function getColors() {
         const isDark = document.documentElement.classList.contains('dark') || document.body.classList.contains('dark');
         return {
-          bg: isDark ? '#14171E' : '#F7F5EF',
-          surface: isDark ? '#1B2028' : '#FFFFFF',
-          surfaceRaised: isDark ? '#222832' : '#F2EFE8',
+          bg: isDark ? '#11141A' : '#F7F5EF',
+          surface: isDark ? '#181C24' : '#FFFFFF',
+          surfaceRaised: isDark ? '#1F2530' : '#EFECE4',
           ink: isDark ? '#F3F4F6' : '#171A1F',
-          muted: isDark ? '#8E98A8' : '#6B7280',
-          rule: isDark ? '#2E3642' : '#DCD9D0',
+          muted: isDark ? '#8A94A4' : '#646D7D',
+          rule: isDark ? '#2B323F' : '#D6D3CA',
           blue: '#2857D9',
           blueSoft: isDark ? 'rgba(40, 87, 217, 0.25)' : '#E8EEFF',
           rust: '#A63D17',
           rustSoft: isDark ? 'rgba(166, 61, 23, 0.3)' : '#F8E9DF',
-          client0: '#2857D9', // Blue
-          client1: '#0D9488', // Teal
-          client2: '#6366F1', // Indigo
-          client3: '#9333EA', // Purple
-          waste: isDark ? 'rgba(166, 61, 23, 0.45)' : '#FCE8E2',
+          electron: '#38BDF8', // Glowing cyan electron
+          copper: '#EA580C', // Metallic copper interconnect
+          silicon: isDark ? '#334155' : '#CBD5E1', // N+ doped silicon
+          poly: '#6366F1', // Polysilicon gate
+          dielectric: isDark ? '#475569' : '#94A3B8', // Oxide insulator
         };
       }
 
@@ -217,7 +297,7 @@
         const dpr = window.devicePixelRatio || 1;
         const rect = canvas.getBoundingClientRect();
         const displayWidth = rect.width;
-        const displayHeight = displayWidth * (720 / 1200);
+        const displayHeight = displayWidth * (740 / 1200);
 
         if (canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr) {
           canvas.width = displayWidth * dpr;
@@ -225,7 +305,610 @@
         }
       }
 
-      // Main Render Loop
+      // ----------------------------------------------------
+      // SCALE 1 RENDERER: Microscopic 1T1C Silicon Cell
+      // ----------------------------------------------------
+      function renderScale1_1T1C(width: number, height: number, c: ReturnType<typeof getColors>) {
+        // Subsystem Title
+        ctx.font = '700 12px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.blue;
+        ctx.fillText('SCALE 01: MICROSCOPIC 1-TRANSISTOR 1-CAPACITOR (1T1C) SILICON CELL', 35, 45);
+
+        // 1. Bitline Wire (Vertical Copper trace on left)
+        const blX = 140;
+        ctx.fillStyle = c.copper;
+        ctx.fillRect(blX - 12, 80, 24, 460);
+        ctx.strokeStyle = c.rule;
+        ctx.strokeRect(blX - 12, 80, 24, 460);
+
+        ctx.font = '700 11px IBM Plex Mono, monospace';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.save();
+        ctx.translate(blX + 4, 300);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText('BITLINE (DATA WIRE)', 0, 0);
+        ctx.restore();
+
+        // 2. NMOS Transistor Channel & Source/Drain Silicon
+        const gateX = 400;
+        const gateY = 240;
+
+        // P-type Silicon Substrate base
+        ctx.fillStyle = c.surfaceRaised;
+        ctx.fillRect(200, 260, 420, 180);
+        ctx.strokeStyle = c.rule;
+        ctx.strokeRect(200, 260, 420, 180);
+        ctx.font = '600 11px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.muted;
+        ctx.fillText('P-TYPE SILICON SUBSTRATE (BULK)', 220, 420);
+
+        // N+ Source (connected to Bitline)
+        ctx.fillStyle = c.silicon;
+        ctx.fillRect(152, 260, 90, 80);
+        ctx.strokeStyle = c.rule;
+        ctx.strokeRect(152, 260, 90, 80);
+        ctx.fillStyle = c.ink;
+        ctx.font = '700 11px IBM Plex Mono, monospace';
+        ctx.fillText('N⁺ SOURCE', 160, 305);
+
+        // N+ Drain (connected to Capacitor)
+        ctx.fillStyle = c.silicon;
+        ctx.fillRect(520, 260, 90, 80);
+        ctx.strokeStyle = c.rule;
+        ctx.strokeRect(520, 260, 90, 80);
+        ctx.fillStyle = c.ink;
+        ctx.fillText('N⁺ DRAIN', 532, 305);
+
+        // Transistor Channel Inversion Layer (Conducts when Gate V > 0.4V)
+        const isConducting = gateVoltage > 0.4;
+        if (isConducting) {
+          const intensity = Math.min(1, (gateVoltage - 0.4) / 0.8);
+          ctx.fillStyle = `rgba(56, 189, 248, ${intensity * 0.75})`;
+          ctx.fillRect(242, 260, 278, 25);
+          ctx.font = '700 10px IBM Plex Mono, monospace';
+          ctx.fillStyle = c.blue;
+          ctx.fillText('⚡ INVERSION CHANNEL (ELECTRONS CONDUCTING)', 260, 277);
+        } else {
+          ctx.font = '500 10px IBM Plex Mono, monospace';
+          ctx.fillStyle = c.muted;
+          ctx.fillText('DEPLETION REGION (OFF - CHANNEL CLOSED)', 265, 277);
+        }
+
+        // Gate Dielectric Oxide
+        ctx.fillStyle = c.dielectric;
+        ctx.fillRect(242, 245, 278, 15);
+        ctx.strokeStyle = c.rule;
+        ctx.strokeRect(242, 245, 278, 15);
+
+        // Wordline Polysilicon Gate
+        ctx.fillStyle = isConducting ? c.blue : c.poly;
+        ctx.fillRect(242, 160, 278, 85);
+        ctx.strokeStyle = c.rule;
+        ctx.strokeRect(242, 160, 278, 85);
+
+        ctx.font = '700 13px IBM Plex Mono, monospace';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText('WORDLINE (ROW GATE)', 290, 195);
+        ctx.font = '600 11px IBM Plex Mono, monospace';
+        ctx.fillText(`V_GATE = ${gateVoltage.toFixed(2)}V (${isConducting ? 'OPEN' : 'CLOSED'})`, 310, 220);
+
+        // Wordline Control Wire coming from top
+        ctx.strokeStyle = isConducting ? c.blue : c.rule;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(380, 80);
+        ctx.lineTo(380, 160);
+        ctx.stroke();
+        ctx.lineWidth = 1;
+
+        // 3. Deep Trench Capacitor (Right Cylinder)
+        const capX = 720;
+        const capY = 160;
+        const capW = 120;
+        const capH = 340;
+
+        // Outer Plate (Grounded Plate)
+        ctx.fillStyle = c.surfaceRaised;
+        ctx.fillRect(capX - 10, capY - 10, capW + 20, capH + 20);
+        ctx.strokeStyle = c.rule;
+        ctx.strokeRect(capX - 10, capY - 10, capW + 20, capH + 20);
+
+        // Dielectric Barrier Liner
+        ctx.fillStyle = c.dielectric;
+        ctx.fillRect(capX, capY, capW, capH);
+
+        // Inner Trench Storage Node
+        ctx.fillStyle = c.surface;
+        ctx.fillRect(capX + 12, capY + 12, capW - 24, capH - 24);
+        ctx.strokeStyle = c.copper;
+        ctx.strokeRect(capX + 12, capY + 12, capW - 24, capH - 24);
+
+        // Conductor trace from N+ Drain to Capacitor
+        ctx.fillStyle = c.copper;
+        ctx.fillRect(610, 290, 122, 20);
+        ctx.strokeStyle = c.rule;
+        ctx.strokeRect(610, 290, 122, 20);
+
+        // Capacitor Label & Charge State
+        ctx.font = '700 11px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.ink;
+        ctx.fillText('DEEP TRENCH CAPACITOR', capX - 15, capY - 20);
+        ctx.font = '600 11px IBM Plex Mono, monospace';
+        ctx.fillStyle = capacitorCharge > 0.5 ? c.blue : c.rust;
+        ctx.fillText(`CHARGE: ${(capacitorCharge * 100).toFixed(0)}% (${capacitorCharge > 0.5 ? 'BIT 1' : 'BIT 0'})`, capX - 15, capY + capH + 25);
+
+        // 4. Update & Draw Simulated Electron Particles
+        electrons.forEach((e) => {
+          // Physics movement
+          e.x += e.vx;
+          e.y += e.vy;
+
+          // Confine within capacitor trench or let flow across channel
+          if (isConducting) {
+            // Can drift between capacitor (capX) and Bitline (blX)
+            if (e.x < blX) {
+              e.x = blX;
+              e.vx = Math.abs(e.vx);
+            }
+            if (e.x > capX + capW - 25) {
+              e.x = capX + capW - 25;
+              e.vx = -Math.abs(e.vx);
+            }
+            if (e.y < 265) {
+              e.y = 265;
+              e.vy = Math.abs(e.vy);
+            }
+            if (e.y > 460) {
+              e.y = 460;
+              e.vy = -Math.abs(e.vy);
+            }
+          } else {
+            // Confined strictly inside capacitor trench
+            if (e.x < capX + 15) {
+              e.x = capX + 15;
+              e.vx = Math.abs(e.vx);
+            }
+            if (e.x > capX + capW - 25) {
+              e.x = capX + capW - 25;
+              e.vx = -Math.abs(e.vx);
+            }
+            if (e.y < capY + 15) {
+              e.y = capY + 15;
+              e.vy = Math.abs(e.vy);
+            }
+            if (e.y > capY + capH - 25) {
+              e.y = capY + capH - 25;
+              e.vy = -Math.abs(e.vy);
+            }
+          }
+
+          // Draw Glowing Cyan Electron
+          ctx.fillStyle = c.electron;
+          ctx.beginPath();
+          ctx.arc(e.x, e.y, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        // 5. Differential Sense Amplifier & Oscilloscope (Bottom Right Pane)
+        const oscX = 890;
+        const oscY = 80;
+        const oscW = 280;
+        const oscH = 460;
+
+        ctx.fillStyle = c.surface;
+        ctx.strokeStyle = c.rule;
+        ctx.fillRect(oscX, oscY, oscW, oscH);
+        ctx.strokeRect(oscX, oscY, oscW, oscH);
+
+        // Oscilloscope Header
+        ctx.fillStyle = c.surfaceRaised;
+        ctx.fillRect(oscX, oscY, oscW, 35);
+        ctx.strokeStyle = c.rule;
+        ctx.strokeRect(oscX, oscY, oscW, 35);
+        ctx.font = '700 11px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.ink;
+        ctx.fillText('DIFFERENTIAL SENSE AMPLIFIER', oscX + 15, oscY + 22);
+
+        // Sense Amp Icon (Triangle comparator)
+        ctx.fillStyle = c.blueSoft;
+        ctx.strokeStyle = c.blue;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(oscX + 40, oscY + 60);
+        ctx.lineTo(oscX + 140, oscY + 110);
+        ctx.lineTo(oscX + 40, oscY + 160);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.lineWidth = 1;
+
+        ctx.font = '700 10px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.blue;
+        ctx.fillText('AMP ×100', oscX + 55, oscY + 115);
+
+        // Oscilloscope Screen
+        const screenY = oscY + 190;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(oscX + 15, screenY, oscW - 30, 240);
+        ctx.strokeStyle = c.rule;
+        ctx.strokeRect(oscX + 15, screenY, oscW - 30, 240);
+
+        // Oscilloscope Grid Lines
+        ctx.strokeStyle = c.rule;
+        ctx.setLineDash([2, 2]);
+        ctx.beginPath();
+        ctx.moveTo(oscX + 15, screenY + 60);
+        ctx.lineTo(oscX + oscW - 15, screenY + 60);
+        ctx.moveTo(oscX + 15, screenY + 120);
+        ctx.lineTo(oscX + oscW - 15, screenY + 120);
+        ctx.moveTo(oscX + 15, screenY + 180);
+        ctx.lineTo(oscX + oscW - 15, screenY + 180);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.font = '600 9px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.muted;
+        ctx.fillText('V_DD: 1.2V', oscX + 22, screenY + 20);
+        ctx.fillText('V_REF: 0.6V', oscX + 22, screenY + 115);
+        ctx.fillText('GND: 0.0V', oscX + 22, screenY + 230);
+
+        // Update Oscilloscope Waveform History
+        oscilloscopeHistory.shift();
+        const currentBL_V = isConducting ? 0.6 + (capacitorCharge - 0.5) * 0.4 : 0.6;
+        oscilloscopeHistory.push({
+          wl: gateVoltage,
+          bl: currentBL_V,
+          sa: capacitorCharge > 0.5 ? 1.2 : 0.0,
+        });
+
+        // Draw Waveform for Bitline Voltage (Blue)
+        ctx.strokeStyle = c.electron;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        const stepX = (oscW - 30) / oscilloscopeHistory.length;
+        oscilloscopeHistory.forEach((pt, i) => {
+          const x = oscX + 15 + i * stepX;
+          const y = screenY + 240 - (pt.bl / 1.2) * 220;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+
+        // Waveform Legend
+        ctx.font = '700 9px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.electron;
+        ctx.fillText('— V_Bitline (ΔV sense)', oscX + 120, screenY + 20);
+
+        // Telemetry Strip at Bottom
+        renderTelemetryBottom(width, height, c, 'SCALE 01: 1T1C PHYSICS', `CAPACITOR: ${(capacitorCharge * 100).toFixed(0)}% | V_WL: ${gateVoltage.toFixed(2)}V`, isConducting ? 'MOSFET: ON' : 'MOSFET: OFF');
+      }
+
+      // ----------------------------------------------------
+      // SCALE 2 RENDERER: 8x8 Crossbar Matrix & Address Decoders
+      // ----------------------------------------------------
+      function renderScale2_Matrix(width: number, height: number, c: ReturnType<typeof getColors>) {
+        ctx.font = '700 12px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.blue;
+        ctx.fillText('SCALE 02: 8×8 WORDLINE & BITLINE CROSSBAR SILICON ARRAY (64 BITS = 8 BYTES)', 35, 45);
+
+        // 1. Row Address Decoder (Left Column)
+        const decX = 40;
+        const decY = 80;
+        const decW = 180;
+        const decH = 460;
+
+        ctx.fillStyle = c.surface;
+        ctx.strokeStyle = c.rule;
+        ctx.fillRect(decX, decY, decW, decH);
+        ctx.strokeRect(decX, decY, decW, decH);
+
+        ctx.fillStyle = c.surfaceRaised;
+        ctx.fillRect(decX, decY, decW, 35);
+        ctx.strokeRect(decX, decY, decW, 35);
+
+        ctx.font = '700 11px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.ink;
+        ctx.fillText('ROW ADDRESS DECODER', decX + 15, decY + 22);
+
+        // 8 Row Outputs from Decoder
+        for (let row = 0; row < 8; row++) {
+          const rowY = decY + 55 + row * 48;
+          const isRowActive = row === selectedRow;
+
+          ctx.fillStyle = isRowActive ? c.blue : c.surfaceRaised;
+          ctx.strokeStyle = isRowActive ? c.blue : c.rule;
+          ctx.fillRect(decX + 10, rowY, decW - 20, 36);
+          ctx.strokeRect(decX + 10, rowY, decW - 20, 36);
+
+          ctx.font = '700 10px IBM Plex Mono, monospace';
+          ctx.fillStyle = isRowActive ? '#FFFFFF' : c.ink;
+          ctx.fillText(`WL #${row} (ADDR 0x${(row * 8).toString(16).padStart(2, '0').toUpperCase()})`, decX + 20, rowY + 22);
+
+          // Horizontal Wordline Copper Trace across grid
+          ctx.strokeStyle = isRowActive ? c.blue : c.copper;
+          ctx.lineWidth = isRowActive ? 3 : 1.5;
+          ctx.beginPath();
+          ctx.moveTo(decX + decW, rowY + 18);
+          ctx.lineTo(920, rowY + 18);
+          ctx.stroke();
+          ctx.lineWidth = 1;
+        }
+
+        // 2. 8 Vertical Bitlines
+        const gridStartX = 290;
+        const colGap = 75;
+
+        for (let col = 0; col < 8; col++) {
+          const blX = gridStartX + col * colGap;
+
+          // Vertical Copper Bitline Wire
+          ctx.strokeStyle = c.copper;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(blX, decY + 20);
+          ctx.lineTo(blX, decY + 440);
+          ctx.stroke();
+          ctx.lineWidth = 1;
+
+          ctx.font = '700 9px IBM Plex Mono, monospace';
+          ctx.fillStyle = c.muted;
+          ctx.fillText(`BL #${col}`, blX - 12, decY + 10);
+        }
+
+        // 3. 64 Intersecting 1T1C Memory Cells
+        for (let row = 0; row < 8; row++) {
+          const rowY = decY + 55 + row * 48 + 18;
+          const isRowActive = row === selectedRow;
+
+          for (let col = 0; col < 8; col++) {
+            const cellX = gridStartX + col * colGap;
+
+            // Cell Node Circle
+            ctx.fillStyle = isRowActive ? c.blue : c.surface;
+            ctx.strokeStyle = isRowActive ? c.blue : c.rule;
+            ctx.lineWidth = isRowActive ? 2 : 1;
+            ctx.beginPath();
+            ctx.arc(cellX, rowY, 12, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.lineWidth = 1;
+
+            // Tiny 1T1C icon inside
+            ctx.font = '700 8px IBM Plex Mono, monospace';
+            ctx.fillStyle = isRowActive ? '#FFFFFF' : c.muted;
+            ctx.fillText(isRowActive ? '1' : '0', cellX - 2.5, rowY + 3);
+          }
+        }
+
+        // 4. Sense Amplifier Bank (Bottom Rail)
+        const saY = decY + 455;
+        ctx.fillStyle = c.surface;
+        ctx.strokeStyle = c.rule;
+        ctx.fillRect(gridStartX - 30, saY, 8 * colGap, 70);
+        ctx.strokeRect(gridStartX - 30, saY, 8 * colGap, 70);
+
+        for (let col = 0; col < 8; col++) {
+          const saX = gridStartX + col * colGap;
+          ctx.fillStyle = c.blueSoft;
+          ctx.strokeStyle = c.blue;
+          ctx.fillRect(saX - 20, saY + 10, 40, 45);
+          ctx.strokeRect(saX - 20, saY + 10, 40, 45);
+
+          ctx.font = '700 9px IBM Plex Mono, monospace';
+          ctx.fillStyle = c.blue;
+          ctx.fillText(`SA #${col}`, saX - 14, saY + 28);
+          ctx.fillText('0xFF', saX - 12, saY + 45);
+        }
+
+        // Right Info Box
+        const infoX = 950;
+        const infoY = 80;
+        ctx.fillStyle = c.surface;
+        ctx.strokeStyle = c.rule;
+        ctx.fillRect(infoX, infoY, 215, 460);
+        ctx.strokeRect(infoX, infoY, 215, 460);
+
+        ctx.font = '700 11px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.ink;
+        ctx.fillText('CROSSBAR ARCHITECTURE', infoX + 15, infoY + 25);
+
+        ctx.font = '500 10px IBM Plex Sans, sans-serif';
+        ctx.fillStyle = c.muted;
+        const explanation = [
+          '• 1 Row = 8 1T1C Cells (1 Byte)',
+          '• 8 Rows = 64 Cells (8 Bytes)',
+          '• Row Decoder activates 1 Wordline',
+          '• Bitlines sense charge in parallel',
+          '• Sense Amps latch 8 bits to bus',
+        ];
+        explanation.forEach((line, idx) => {
+          ctx.fillText(line, infoX + 15, infoY + 60 + idx * 24);
+        });
+
+        renderTelemetryBottom(width, height, c, 'SCALE 02: CROSSBAR ARRAY', `ACTIVE WORDLINE: WL #${selectedRow} (0x${(selectedRow * 8).toString(16).padStart(2, '0').toUpperCase()})`, 'BUS: 8 BITS LATCHED');
+      }
+
+      // ----------------------------------------------------
+      // SCALE 3 RENDERER: Macro GPU Memory & PagedAttention
+      // ----------------------------------------------------
+      function renderScale3_Paged(width: number, height: number, c: ReturnType<typeof getColors>) {
+        ctx.font = '700 12px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.blue;
+        ctx.fillText('SCALE 03: GPU MEMORY WALL & PAGEDATTENTION KV CACHE ALLOCATION', 35, 45);
+
+        // 1. Logical Request Queue (Left)
+        ctx.font = '700 11px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.muted;
+        ctx.fillText('LOGICAL REQUEST QUEUE (4 CLIENT BATCHES)', 40, 75);
+
+        const requests = [
+          { name: 'Req A (Query)', tokens: 48, col: '#2857D9' },
+          { name: 'Req B (CodeGen)', tokens: 32, col: '#0D9488' },
+          { name: 'Req C (Summary)', tokens: 16, col: '#6366F1' },
+          { name: 'Req D (Batch 4)', tokens: 32, col: '#9333EA' },
+        ];
+
+        let reqY = 90;
+        requests.forEach((r) => {
+          ctx.fillStyle = c.surface;
+          ctx.strokeStyle = r.col;
+          ctx.fillRect(40, reqY, 260, 55);
+          ctx.strokeRect(40, reqY, 260, 55);
+
+          ctx.fillStyle = r.col;
+          ctx.fillRect(52, reqY + 12, 10, 10);
+          ctx.font = '700 11px IBM Plex Mono, monospace';
+          ctx.fillStyle = c.ink;
+          ctx.fillText(r.name, 70, reqY + 22);
+
+          ctx.font = '500 10px IBM Plex Mono, monospace';
+          ctx.fillStyle = c.muted;
+          ctx.fillText(`${r.tokens} Tokens (${Math.ceil(r.tokens / 16)} Pages)`, 175, reqY + 22);
+
+          // Progress track
+          ctx.fillStyle = c.surfaceRaised;
+          ctx.fillRect(52, reqY + 34, 236, 8);
+          ctx.fillStyle = r.col;
+          ctx.fillRect(52, reqY + 34, (r.tokens / 128) * 236, 8);
+
+          reqY += 65;
+        });
+
+        // 2. Middle: Allocation Paradigm Box
+        const midX = 330;
+        ctx.fillStyle = c.surface;
+        ctx.strokeStyle = isPagedMode ? c.blue : c.rust;
+        ctx.fillRect(midX, 90, 320, 250);
+        ctx.strokeRect(midX, 90, 320, 250);
+
+        ctx.font = '700 11px IBM Plex Mono, monospace';
+        ctx.fillStyle = isPagedMode ? c.blue : c.rust;
+        ctx.fillText(isPagedMode ? 'PAGEDATTENTION VIRTUAL TABLE' : 'NAIVE CONTIGUOUS RESERVATION', midX + 15, 115);
+
+        ctx.font = '500 10px IBM Plex Sans, sans-serif';
+        ctx.fillStyle = c.ink;
+        if (isPagedMode) {
+          const pagedNotes = [
+            '• Logical pages map to scattered frames',
+            '• Allocated dynamically per 16 tokens',
+            '• Internal fragmentation < 4%',
+            '• Concurrency: 3.8× throughput',
+          ];
+          pagedNotes.forEach((n, idx) => ctx.fillText(n, midX + 15, 145 + idx * 24));
+        } else {
+          const naiveNotes = [
+            '• Pre-reserves max sequence context (128T)',
+            '• Locks 8 contiguous physical frames',
+            '• Internal fragmentation: 78.1% waste',
+            '• Concurrency: 1.0× (OOM aborts)',
+          ];
+          naiveNotes.forEach((n, idx) => ctx.fillText(n, midX + 15, 145 + idx * 24));
+        }
+
+        // 3. Right: 64 Physical GPU VRAM Memory Frames (8x8 Grid)
+        const gridStartX = 690;
+        const gridStartY = 90;
+        const tileSize = 52;
+        const tileGap = 8;
+
+        ctx.font = '700 11px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.muted;
+        ctx.fillText('PHYSICAL GPU VRAM MATRIX (64 × 16-TOKEN FRAMES)', gridStartX, 75);
+
+        for (let r = 0; r < 8; r++) {
+          for (let col = 0; col < 8; col++) {
+            const idx = r * 8 + col;
+            const x = gridStartX + col * (tileSize + tileGap);
+            const y = gridStartY + r * (tileSize + tileGap);
+            const hex = '0x' + idx.toString(16).padStart(2, '0').toUpperCase();
+
+            let tileCol = c.surfaceRaised;
+            let strokeCol = c.rule;
+            let isWasted = false;
+
+            if (!isPagedMode) {
+              // Naive contiguous: 8 frames per client
+              if (idx < 8) {
+                tileCol = idx < 3 ? '#2857D9' : c.rustSoft;
+                strokeCol = idx < 3 ? '#2857D9' : c.rust;
+                isWasted = idx >= 3;
+              } else if (idx < 16) {
+                tileCol = idx < 10 ? '#0D9488' : c.rustSoft;
+                strokeCol = idx < 10 ? '#0D9488' : c.rust;
+                isWasted = idx >= 10;
+              } else if (idx < 24) {
+                tileCol = idx < 17 ? '#6366F1' : c.rustSoft;
+                strokeCol = idx < 17 ? '#6366F1' : c.rust;
+                isWasted = idx >= 17;
+              }
+            } else {
+              // Paged non-contiguous
+              const pagedMap: { [key: number]: string } = {
+                4: '#2857D9', 19: '#2857D9', 33: '#2857D9',
+                2: '#0D9488', 45: '#0D9488',
+                12: '#6366F1',
+                58: '#9333EA', 23: '#9333EA',
+              };
+              if (pagedMap[idx]) {
+                tileCol = pagedMap[idx];
+                strokeCol = pagedMap[idx];
+              }
+            }
+
+            ctx.fillStyle = tileCol;
+            ctx.fillRect(x, y, tileSize, tileSize);
+            ctx.strokeStyle = strokeCol;
+            ctx.strokeRect(x, y, tileSize, tileSize);
+
+            // Wasted diagonal hatch in Naive
+            if (isWasted) {
+              ctx.save();
+              ctx.beginPath();
+              ctx.rect(x, y, tileSize, tileSize);
+              ctx.clip();
+              ctx.strokeStyle = c.rust;
+              for (let lx = -tileSize; lx < tileSize * 2; lx += 6) {
+                ctx.moveTo(x + lx, y);
+                ctx.lineTo(x + lx + tileSize, y + tileSize);
+              }
+              ctx.stroke();
+              ctx.restore();
+            }
+
+            // Hex Address
+            ctx.font = '700 8px IBM Plex Mono, monospace';
+            ctx.fillStyle = isWasted ? c.rust : tileCol === c.surfaceRaised ? c.muted : '#FFFFFF';
+            ctx.fillText(hex, x + 5, y + 14);
+          }
+        }
+
+        renderTelemetryBottom(width, height, c, 'SCALE 03: GPU MEMORY', isPagedMode ? 'PAGING: VIRTUAL (vLLM)' : 'PAGING: NAIVE CONTIGUOUS', isPagedMode ? 'WASTE: < 3.8%' : 'WASTE: 78.1% (OOM)');
+      }
+
+      // ----------------------------------------------------
+      // Bottom Telemetry Strip Helper
+      // ----------------------------------------------------
+      function renderTelemetryBottom(width: number, height: number, c: ReturnType<typeof getColors>, tag: string, mid: string, right: string) {
+        const barY = height - 55;
+        ctx.fillStyle = c.surface;
+        ctx.strokeStyle = c.rule;
+        ctx.fillRect(30, barY, width - 60, 38);
+        ctx.strokeRect(30, barY, width - 60, 38);
+
+        ctx.font = '700 11px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.blue;
+        ctx.fillText(tag, 45, barY + 24);
+
+        ctx.fillStyle = c.ink;
+        ctx.fillText(mid, 280, barY + 24);
+
+        ctx.fillStyle = right.includes('WASTE: 78') || right.includes('OFF') ? c.rust : c.blue;
+        ctx.fillText(right, 850, barY + 24);
+      }
+
+      // ----------------------------------------------------
+      // Main Animation Loop
+      // ----------------------------------------------------
       function render() {
         resizeCanvas();
         const dpr = window.devicePixelRatio || 1;
@@ -236,420 +919,160 @@
         ctx.save();
         ctx.scale(dpr, dpr);
 
-        // Smooth progress interpolation (lerp)
-        currentProgress += (targetProgress - currentProgress) * 0.12;
+        // Smoothly interpolate scale transitions
+        smoothScale += (targetScale - smoothScale) * 0.15;
 
-        // Clear Canvas Background
+        // Clear Canvas
         ctx.fillStyle = c.bg;
         ctx.fillRect(0, 0, width, height);
 
-        // 1. Draw Architectural Grid & Precision Coordinate Rules
-        ctx.strokeStyle = c.rule;
-        ctx.lineWidth = 1;
-        ctx.setLineDash([4, 4]);
-
-        // Division axes
-        ctx.beginPath();
-        ctx.moveTo(340, 30);
-        ctx.lineTo(340, height - 70);
-        ctx.moveTo(680, 30);
-        ctx.lineTo(680, height - 70);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        // Outer Border
+        // Outer Border & Grid lines
         ctx.strokeStyle = c.rule;
         ctx.strokeRect(15, 15, width - 30, height - 30);
 
-        // Subsystem Labels
-        ctx.font = '600 11px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.muted;
-        ctx.fillText('01 / LOGICAL REQUEST QUEUE', 30, 45);
-        ctx.fillText(currentProgress < 0.55 ? '02 / CONTIGUOUS RESERVATION MAP' : '02 / VIRTUAL BLOCK POINTER TABLE', 355, 45);
-        ctx.fillText('03 / PHYSICAL GPU HBM3 DRAM (8×8 MATRIX)', 700, 45);
-
-        // 2. Render Left Pane: Logical Request Queue
-        const reqA_tokens = 48; // 3 pages
-        const reqB_tokens = 32; // 2 pages
-        const reqC_tokens = 16; // 1 page
-        const reqD_tokens = Math.min(64, Math.floor(currentProgress * 64)); // Arrives dynamically
-
-        const requests = [
-          { name: 'Req A (Query)', tokens: reqA_tokens, max: 128, color: c.client0, active: true },
-          { name: 'Req B (CodeGen)', tokens: reqB_tokens, max: 128, color: c.client1, active: true },
-          { name: 'Req C (Summary)', tokens: reqC_tokens, max: 128, color: c.client2, active: true },
-          { name: 'Req D (Batch 4)', tokens: reqD_tokens, max: 128, color: c.client3, active: currentProgress > 0.3 },
-        ];
-
-        let reqY = 75;
-        requests.forEach((req, idx) => {
-          ctx.fillStyle = c.surface;
-          ctx.strokeStyle = req.active ? req.color : c.rule;
-          ctx.lineWidth = 1;
-          ctx.fillRect(30, reqY, 280, 70);
-          ctx.strokeRect(30, reqY, 280, 70);
-
-          // Req Tag
-          ctx.fillStyle = req.color;
-          ctx.fillRect(42, reqY + 12, 10, 10);
-          ctx.font = '700 12px IBM Plex Mono, monospace';
-          ctx.fillStyle = c.ink;
-          ctx.fillText(req.name, 60, reqY + 22);
-
-          // Token count
-          ctx.font = '500 11px IBM Plex Mono, monospace';
-          ctx.fillStyle = c.muted;
-          const numPages = Math.ceil(req.tokens / 16);
-          ctx.fillText(`${req.tokens} Tokens (${numPages} Pages)`, 180, reqY + 22);
-
-          // Progress gauge
-          ctx.fillStyle = c.surfaceRaised;
-          ctx.fillRect(42, reqY + 38, 256, 12);
-          ctx.strokeStyle = c.rule;
-          ctx.strokeRect(42, reqY + 38, 256, 12);
-
-          const pct = Math.min(1, req.tokens / req.max);
-          ctx.fillStyle = req.color;
-          ctx.fillRect(43, reqY + 39, 254 * pct, 10);
-
-          reqY += 85;
-        });
-
-        // 3. Render Center Pane: Virtual Pointer Table & Flow Conduits
-        const isPaged = currentProgress >= 0.55;
-        const pointerAlpha = isPaged ? Math.min(1, (currentProgress - 0.55) * 4) : 1;
-
-        if (!isPaged) {
-          // Naive mode: Rigid linear allocation blocks
-          ctx.font = '500 11px IBM Plex Mono, monospace';
-          ctx.fillStyle = c.rust;
-          ctx.fillText('FIXED CONTIGUOUS ALLOCATION', 360, 80);
-          ctx.fillText('Each stream locks 8 consecutive frames', 360, 100);
-
-          // Block locks
-          for (let i = 0; i < 3; i++) {
-            const startY = 120 + i * 80;
-            ctx.strokeStyle = c.rule;
-            ctx.strokeRect(360, startY, 290, 60);
-            ctx.fillStyle = c.surface;
-            ctx.fillRect(360, startY, 290, 60);
-
-            ctx.fillStyle = c.ink;
-            ctx.font = '600 11px IBM Plex Mono, monospace';
-            ctx.fillText(`SEQ ${i} RESERVATION: 0x0${i * 8} → 0x0${i * 8 + 7}`, 375, startY + 24);
-
-            // Wasted vs Used
-            ctx.fillStyle = i === 0 ? c.client0 : i === 1 ? c.client1 : c.client2;
-            ctx.fillRect(375, startY + 34, 45, 14);
-            ctx.fillStyle = c.rustSoft;
-            ctx.fillRect(425, startY + 34, 180, 14);
-            ctx.strokeStyle = c.rust;
-            ctx.strokeRect(425, startY + 34, 180, 14);
-
-            ctx.font = '600 9px IBM Plex Mono, monospace';
-            ctx.fillStyle = c.rust;
-            ctx.fillText('75% UNUSED VRAM', 460, startY + 45);
-          }
-
-          // OOM Alert if Req D attempted
-          if (currentProgress > 0.35) {
-            ctx.fillStyle = c.rustSoft;
-            ctx.strokeStyle = c.rust;
-            ctx.fillRect(360, 370, 290, 65);
-            ctx.strokeRect(360, 370, 290, 65);
-
-            ctx.font = '700 12px IBM Plex Mono, monospace';
-            ctx.fillStyle = c.rust;
-            ctx.fillText('⚠ GPU OUT OF MEMORY (OOM)', 380, 396);
-            ctx.font = '500 10px IBM Plex Sans, sans-serif';
-            ctx.fillText('Req D rejected: contiguous slot unavailable', 380, 416);
-          }
+        // Delegate to active scale renderer
+        if (targetScale === 0) {
+          renderScale1_1T1C(width, height, c);
+        } else if (targetScale === 1) {
+          renderScale2_Matrix(width, height, c);
         } else {
-          // Paged mode: Dynamic Virtual Block Pointer Table
-          ctx.font = '600 11px IBM Plex Mono, monospace';
-          ctx.fillStyle = c.blue;
-          ctx.fillText(`VIRTUAL LOOKUP INDEX (ALPHA: ${(pointerAlpha * 100).toFixed(0)}%)`, 360, 80);
-
-          // Pointers table
-          const entries = [
-            { v: 'A:V0', p: '0x04', col: c.client0 },
-            { v: 'A:V1', p: '0x13', col: c.client0 },
-            { v: 'A:V2', p: '0x21', col: c.client0 },
-            { v: 'B:V0', p: '0x02', col: c.client1 },
-            { v: 'B:V1', p: '0x2D', col: c.client1 },
-            { v: 'C:V0', p: '0x0C', col: c.client2 },
-            { v: 'D:V0', p: '0x3A', col: c.client3 },
-            { v: 'D:V1', p: '0x17', col: c.client3 },
-          ];
-
-          let tableX = 360;
-          let tableY = 105;
-          entries.forEach((e, idx) => {
-            ctx.fillStyle = c.surface;
-            ctx.strokeStyle = c.rule;
-            ctx.fillRect(tableX, tableY, 138, 32);
-            ctx.strokeRect(tableX, tableY, 138, 32);
-
-            ctx.fillStyle = e.col;
-            ctx.font = '700 11px IBM Plex Mono, monospace';
-            ctx.fillText(e.v, tableX + 10, tableY + 20);
-
-            ctx.fillStyle = c.muted;
-            ctx.fillText('→', tableX + 58, tableY + 20);
-
-            ctx.fillStyle = c.ink;
-            ctx.fillText(e.p, tableX + 80, tableY + 20);
-
-            tableY += 38;
-            if (idx === 3) {
-              tableX += 148;
-              tableY = 105;
-            }
-          });
-
-          // Conduits from pointer table to physical matrix
-          ctx.strokeStyle = c.blue;
-          ctx.lineWidth = 1.5;
-          ctx.setLineDash([3, 3]);
-          ctx.beginPath();
-          ctx.moveTo(650, 120);
-          ctx.bezierCurveTo(675, 120, 675, 180, 710, 180);
-          ctx.moveTo(650, 160);
-          ctx.bezierCurveTo(680, 160, 680, 240, 710, 240);
-          ctx.moveTo(650, 240);
-          ctx.bezierCurveTo(680, 240, 680, 320, 710, 320);
-          ctx.stroke();
-          ctx.setLineDash([]);
+          renderScale3_Paged(width, height, c);
         }
-
-        // 4. Render Right Pane: Physical 64-Frame Matrix (8x8 Grid)
-        const gridStartX = 705;
-        const gridStartY = 75;
-        const tileSize = 48;
-        const tileGap = 8;
-
-        let hoveredTileIdx = -1;
-
-        for (let r = 0; r < ROWS; r++) {
-          for (let col = 0; col < COLS; col++) {
-            const idx = r * COLS + col;
-            const x = gridStartX + col * (tileSize + tileGap);
-            const y = gridStartY + r * (tileSize + tileGap);
-            const hex = '0x' + idx.toString(16).padStart(2, '0').toUpperCase();
-
-            // Check hover
-            if (
-              mousePos.active &&
-              mousePos.x >= x &&
-              mousePos.x <= x + tileSize &&
-              mousePos.y >= y &&
-              mousePos.y <= y + tileSize
-            ) {
-              hoveredTileIdx = idx;
-            }
-
-            // Determine tile allocation state based on mode
-            let tileColor = c.surfaceRaised;
-            let strokeColor = c.rule;
-            let isWasted = false;
-            let tileClient = '';
-
-            if (!isPaged) {
-              // Naive mode: First 3 sequences lock contiguous blocks of 8
-              if (idx < 8) {
-                // Req A (Query: 3 active, 5 wasted)
-                tileColor = idx < 3 ? c.client0 : c.waste;
-                strokeColor = idx < 3 ? c.client0 : c.rust;
-                isWasted = idx >= 3;
-                tileClient = idx < 3 ? 'Req A (3/8)' : 'Req A (Wasted)';
-              } else if (idx < 16) {
-                // Req B (CodeGen: 2 active, 6 wasted)
-                tileColor = idx < 10 ? c.client1 : c.waste;
-                strokeColor = idx < 10 ? c.client1 : c.rust;
-                isWasted = idx >= 10;
-                tileClient = idx < 10 ? 'Req B (2/8)' : 'Req B (Wasted)';
-              } else if (idx < 24) {
-                // Req C (Summary: 1 active, 7 wasted)
-                tileColor = idx < 17 ? c.client2 : c.waste;
-                strokeColor = idx < 17 ? c.client2 : c.rust;
-                isWasted = idx >= 17;
-                tileClient = idx < 17 ? 'Req C (1/8)' : 'Req C (Wasted)';
-              }
-            } else {
-              // Paged mode: Non-contiguous packed allocation
-              const pagedAllocations: { [key: number]: { color: string; name: string } } = {
-                4: { color: c.client0, name: 'Req A:V0' },
-                19: { color: c.client0, name: 'Req A:V1' },
-                33: { color: c.client0, name: 'Req A:V2' },
-                2: { color: c.client1, name: 'Req B:V0' },
-                45: { color: c.client1, name: 'Req B:V1' },
-                12: { color: c.client2, name: 'Req C:V0' },
-                58: { color: c.client3, name: 'Req D:V0' },
-                23: { color: c.client3, name: 'Req D:V1' },
-              };
-
-              if (pagedAllocations[idx]) {
-                tileColor = pagedAllocations[idx].color;
-                strokeColor = pagedAllocations[idx].color;
-                tileClient = pagedAllocations[idx].name;
-              }
-            }
-
-            // Draw Tile
-            ctx.fillStyle = tileColor;
-            ctx.fillRect(x, y, tileSize, tileSize);
-            ctx.strokeStyle = strokeColor;
-            ctx.lineWidth = hoveredTileIdx === idx ? 2 : 1;
-            ctx.strokeRect(x, y, tileSize, tileSize);
-
-            // Draw Wasted diagonal hatch in Naive Mode
-            if (isWasted) {
-              ctx.save();
-              ctx.beginPath();
-              ctx.rect(x, y, tileSize, tileSize);
-              ctx.clip();
-              ctx.strokeStyle = c.rust;
-              ctx.lineWidth = 1;
-              for (let lineX = -tileSize; lineX < tileSize * 2; lineX += 6) {
-                ctx.moveTo(x + lineX, y);
-                ctx.lineTo(x + lineX + tileSize, y + tileSize);
-              }
-              ctx.stroke();
-              ctx.restore();
-            }
-
-            // Draw Hex Address
-            ctx.font = '600 8px IBM Plex Mono, monospace';
-            ctx.fillStyle = tileColor === c.surfaceRaised || isWasted ? (isWasted ? c.rust : c.muted) : '#FFFFFF';
-            ctx.fillText(hex, x + 5, y + 14);
-          }
-        }
-
-        // 5. Render Memory Bus Animated Pulse Particles
-        particles.forEach((p) => {
-          p.x += p.speed;
-          if (p.x > 700) {
-            p.x = 280;
-            p.y = 120 + Math.random() * 380;
-          }
-          ctx.fillStyle = isPaged ? c.blue : c.rust;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-        // 6. Draw Hover Leader Line Callout
-        if (hoveredTileIdx >= 0) {
-          const r = Math.floor(hoveredTileIdx / COLS);
-          const col = hoveredTileIdx % COLS;
-          const x = gridStartX + col * (tileSize + tileGap) + tileSize / 2;
-          const y = gridStartY + r * (tileSize + tileGap) + tileSize / 2;
-          const hex = '0x' + hoveredTileIdx.toString(16).padStart(2, '0').toUpperCase();
-
-          // Callout Leader Line
-          ctx.strokeStyle = c.ink;
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.arc(x, y, 4, 0, Math.PI * 2);
-          ctx.moveTo(x, y);
-          ctx.lineTo(x - 40, y - 30);
-          ctx.lineTo(x - 160, y - 30);
-          ctx.stroke();
-
-          // Tooltip Card
-          ctx.fillStyle = c.surface;
-          ctx.strokeStyle = c.ink;
-          ctx.fillRect(x - 280, y - 55, 120, 50);
-          ctx.strokeRect(x - 280, y - 55, 120, 50);
-
-          ctx.font = '700 10px IBM Plex Mono, monospace';
-          ctx.fillStyle = c.ink;
-          ctx.fillText(`FRAME ${hex}`, x - 270, y - 38);
-          ctx.font = '500 9px IBM Plex Mono, monospace';
-          ctx.fillStyle = c.muted;
-          ctx.fillText(isPaged ? 'Virtual Paging: Active' : 'Contiguous: Pre-locked', x - 270, y - 22);
-          ctx.fillText('16 Tokens (0x40B)', x - 270, y - 10);
-        }
-
-        // 7. Telemetry Readout Strip (Canvas Bottom)
-        const statBarY = height - 50;
-        ctx.fillStyle = c.surface;
-        ctx.strokeStyle = c.rule;
-        ctx.fillRect(30, statBarY, width - 60, 36);
-        ctx.strokeRect(30, statBarY, width - 60, 36);
-
-        ctx.font = '600 11px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.muted;
-        ctx.fillText('TELEMETRY:', 45, statBarY + 22);
-
-        // Usage
-        ctx.fillStyle = c.ink;
-        ctx.fillText(isPaged ? 'VRAM: 8/64 FRAMES (12.5%)' : 'VRAM RESERVED: 24/64 (37.5%)', 140, statBarY + 22);
-
-        // Waste
-        ctx.fillStyle = isPaged ? c.blue : c.rust;
-        ctx.fillText(isPaged ? 'WASTE: < 3.8% (PACKED)' : 'WASTE: 78.1% (FRAGMENTED)', 460, statBarY + 22);
-
-        // Concurrency
-        ctx.fillStyle = isPaged ? c.blue : c.ink;
-        ctx.fillText(isPaged ? 'CONCURRENCY: 3.8× BASELINE' : 'CONCURRENCY: 1.0× (OOM LOCKED)', 800, statBarY + 22);
 
         ctx.restore();
-
-        // 8. Update HTML HUD & Scrubber text
-        if (hudMode) {
-          hudMode.textContent = isPaged ? 'MODE: PAGEDATTENTION (VIRTUAL PAGING)' : 'MODE: CONTIGUOUS PRE-ALLOCATION';
-          hudMode.style.color = isPaged ? 'var(--ie-blue)' : 'var(--ie-rust)';
-        }
-        if (hudPhase) {
-          hudPhase.textContent = currentProgress < 0.35 ? 'PHASE: 1/3 (INPUT)' : currentProgress < 0.65 ? 'PHASE: 2/3 (OOM FAILURE)' : 'PHASE: 3/3 (PAGED SOLVED)';
-        }
-        if (scrubVal) {
-          scrubVal.textContent = `${Math.round(currentProgress * 100)}%`;
-        }
-
-        animFrameId = requestAnimationFrame(render);
+        requestAnimationFrame(render);
       }
 
-      // Mouse Listeners for Hover Inspection
-      canvas.addEventListener('mousemove', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        mousePos.x = e.clientX - rect.left;
-        mousePos.y = e.clientY - rect.top;
-        mousePos.active = true;
+      // ----------------------------------------------------
+      // Scale Switching & Tab Controls
+      // ----------------------------------------------------
+      function setScale(newScale: number) {
+        targetScale = newScale;
+        activeScale = newScale;
+
+        scaleTabs.forEach((tab, idx) => {
+          const isActive = idx === newScale;
+          tab.classList.toggle('active', isActive);
+          tab.setAttribute('aria-selected', String(isActive));
+        });
+
+        ctrlPanels.forEach((panel) => {
+          const pScale = parseInt(panel.dataset.ctrlScale || '0', 10);
+          panel.classList.toggle('hidden', pScale !== newScale);
+        });
+
+        if (hudChip) {
+          if (newScale === 0) hudChip.textContent = 'SILICON SCALE: 1T1C CELL (14nm TRENCH)';
+          else if (newScale === 1) hudChip.textContent = 'SILICON SCALE: 8×8 CROSSBAR MATRIX';
+          else hudChip.textContent = 'SYSTEM SCALE: GPU HBM3 VRAM & PAGEDATTENTION';
+        }
+      }
+
+      scaleTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const s = parseInt(tab.dataset.scale || '0', 10);
+          setScale(s);
+        });
       });
 
-      canvas.addEventListener('mouseleave', () => {
-        mousePos.active = false;
-      });
-
-      // Manual Scrubber Listener
-      if (scrubber) {
-        scrubber.addEventListener('input', (e) => {
-          isManualScrubbing = true;
-          targetProgress = parseFloat((e.target as HTMLInputElement).value);
+      // Scale 1 Button Handlers
+      if (btnWrite1) {
+        btnWrite1.addEventListener('click', () => {
+          gateVoltage = 1.2;
+          if (gateSlider) gateSlider.value = '1.2';
+          if (vValText) vValText.textContent = '1.2V';
+          capacitorCharge = 1.0;
+          resetElectrons(42);
         });
       }
 
-      // Scroll Observer for Scrollytelling Track
+      if (btnWrite0) {
+        btnWrite0.addEventListener('click', () => {
+          gateVoltage = 1.2;
+          if (gateSlider) gateSlider.value = '1.2';
+          if (vValText) vValText.textContent = '1.2V';
+          capacitorCharge = 0.0;
+          resetElectrons(4);
+        });
+      }
+
+      if (btnRead) {
+        btnRead.addEventListener('click', () => {
+          gateVoltage = 1.2;
+          if (gateSlider) gateSlider.value = '1.2';
+          if (vValText) vValText.textContent = '1.2V';
+          isSenseActive = true;
+          setTimeout(() => (isSenseActive = false), 600);
+        });
+      }
+
+      if (btnLeak) {
+        btnLeak.addEventListener('click', () => {
+          gateVoltage = 0.0;
+          if (gateSlider) gateSlider.value = '0.0';
+          if (vValText) vValText.textContent = '0.0V';
+          capacitorCharge = Math.max(0, capacitorCharge - 0.35);
+          resetElectrons(Math.floor(capacitorCharge * 42));
+        });
+      }
+
+      if (gateSlider) {
+        gateSlider.addEventListener('input', (e) => {
+          gateVoltage = parseFloat((e.target as HTMLInputElement).value);
+          if (vValText) vValText.textContent = `${gateVoltage.toFixed(2)}V`;
+        });
+      }
+
+      // Scale 2 Matrix Button Handlers
+      if (btnStrobe) {
+        btnStrobe.addEventListener('click', () => {
+          selectedRow = (selectedRow + 1) % 8;
+          if (matrixAddrText) matrixAddrText.textContent = `ADDR 0x${(selectedRow * 8).toString(16).padStart(2, '0').toUpperCase()} (ROW ${selectedRow}, COL 0-7)`;
+        });
+      }
+
+      if (btnNextAddr) {
+        btnNextAddr.addEventListener('click', () => {
+          selectedRow = (selectedRow + 1) % 8;
+          if (matrixAddrText) matrixAddrText.textContent = `ADDR 0x${(selectedRow * 8).toString(16).padStart(2, '0').toUpperCase()} (ROW ${selectedRow}, COL 0-7)`;
+        });
+      }
+
+      // Scale 3 Paged Button Handlers
+      if (btnTogglePaged) {
+        btnTogglePaged.addEventListener('click', () => {
+          isPagedMode = !isPagedMode;
+          if (pagedModeText) {
+            pagedModeText.textContent = isPagedMode ? 'PagedAttention (Virtual Paging)' : 'Naive Contiguous Pre-Reservation';
+            pagedModeText.style.color = isPagedMode ? 'var(--ie-blue)' : 'var(--ie-rust)';
+          }
+        });
+      }
+
+      if (btnStepTokens) {
+        btnStepTokens.addEventListener('click', () => {
+          tokenStep = (tokenStep + 1) % 4;
+        });
+      }
+
+      // Scroll-driven scale synchronization
       function onScroll() {
-        if (isManualScrubbing) return;
         const sectionRect = root.getBoundingClientRect();
         const windowHeight = window.innerHeight;
-
-        // Progress from top entering view to bottom leaving
-        const totalScrollDistance = sectionRect.height - windowHeight;
-        if (totalScrollDistance <= 0) return;
+        const totalDist = sectionRect.height - windowHeight;
+        if (totalDist <= 0) return;
 
         const currentScroll = -sectionRect.top;
-        const rawProgress = Math.max(0, Math.min(1, currentScroll / totalScrollDistance));
-        targetProgress = rawProgress;
+        const progress = Math.max(0, Math.min(1, currentScroll / totalDist));
 
-        if (scrubber) {
-          scrubber.value = rawProgress.toString();
+        if (progress < 0.33) {
+          if (targetScale !== 0) setScale(0);
+        } else if (progress < 0.66) {
+          if (targetScale !== 1) setScale(1);
+        } else {
+          if (targetScale !== 2) setScale(2);
         }
 
-        // Highlight active narrative chapter
         chapters.forEach((ch, idx) => {
           const chRect = ch.getBoundingClientRect();
           const isCurrent = chRect.top <= windowHeight * 0.5 && chRect.bottom >= windowHeight * 0.2;
@@ -659,13 +1082,13 @@
 
       window.addEventListener('scroll', onScroll, { passive: true });
 
-      // Start animation loop
+      // Start loop
       render();
     });
   }
 
-  initCiechanowskiCanvas();
-  document.addEventListener('astro:page-load', initCiechanowskiCanvas);
+  initBranchEducationCanvas();
+  document.addEventListener('astro:page-load', initBranchEducationCanvas);
 </script>
 
 <style>
@@ -676,7 +1099,7 @@
   }
 
   .canvas-header-shell {
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--ie-rule);
   }
@@ -719,11 +1142,71 @@
     color: var(--ie-ink-secondary);
   }
 
+  /* Multi-Scale Selector Bar */
+  .scale-selector-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--ie-rule-strong);
+    background: var(--ie-surface);
+    margin-bottom: 2rem;
+    border-radius: var(--radius-card, 8px);
+    overflow: hidden;
+  }
+
+  .scale-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    padding: 1.15rem 1.25rem;
+    border: 0;
+    border-right: 1px solid var(--ie-rule);
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 120ms ease;
+  }
+
+  .scale-tab:last-child {
+    border-right: none;
+  }
+
+  .scale-badge {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--ie-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .scale-tab strong {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ie-ink);
+  }
+
+  .scale-tab small {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ie-muted);
+  }
+
+  .scale-tab.active {
+    background: var(--ie-blue-soft);
+    box-shadow: inset 0 -3px 0 var(--ie-blue);
+  }
+
+  .scale-tab.active .scale-badge,
+  .scale-tab.active strong {
+    color: var(--ie-blue);
+  }
+
   /* Scrollytelling Stage Grid */
   .scrolly-stage-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
-    gap: clamp(2.5rem, 5vw, 5rem);
+    grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.55fr);
+    gap: clamp(2.5rem, 5vw, 4.5rem);
     align-items: start;
     position: relative;
   }
@@ -772,41 +1255,80 @@
     display: block;
     width: 100%;
     height: auto;
-    cursor: crosshair;
+    cursor: default;
   }
 
-  /* Scrubber Controls */
-  .canvas-scrubber-bar {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 1.25rem;
+  /* Contextual Controls Bar */
+  .canvas-controls-bar {
+    padding: 0.85rem 1.25rem;
     background: var(--ie-surface-raised);
     border-top: 1px solid var(--ie-rule);
   }
 
-  .scrub-label {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: var(--ie-muted);
-    letter-spacing: 0.06em;
+  .control-view-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
 
-  .scrubber-slider {
-    flex: 1;
+  .control-view-panel.hidden {
+    display: none;
+  }
+
+  .btn-group {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .sim-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--ie-ink);
+    border-radius: var(--radius, 6px);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 120ms ease;
+  }
+
+  .sim-btn.primary { background: var(--ie-ink); color: var(--ie-canvas); }
+  .sim-btn.primary:hover { border-color: var(--ie-blue); background: var(--ie-blue); color: #fff; }
+  .sim-btn.secondary { background: var(--ie-surface); color: var(--ie-ink); }
+  .sim-btn.secondary:hover { border-color: var(--ie-blue); color: var(--ie-blue); }
+  .sim-btn.tertiary { border-color: var(--ie-rule); background: transparent; color: var(--ie-muted); }
+  .sim-btn.tertiary:hover { border-color: var(--ie-rust); color: var(--ie-rust); }
+
+  .slider-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ie-muted);
+  }
+
+  .voltage-slider {
+    width: 120px;
     height: 4px;
     accent-color: var(--ie-blue);
     cursor: pointer;
   }
 
-  .scrub-val {
+  .hud-meta-badge {
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    font-weight: 700;
+    color: var(--ie-muted);
+  }
+
+  .hud-meta-badge strong {
     color: var(--ie-blue);
-    min-width: 32px;
-    text-align: right;
   }
 
   .canvas-caption-note {
@@ -820,8 +1342,8 @@
   .scrolly-narrative-track {
     display: flex;
     flex-direction: column;
-    gap: 24rem; /* Generous spacing to allow smooth scroll observation */
-    padding-block: 2rem 16rem;
+    gap: 22rem;
+    padding-block: 2rem 14rem;
   }
 
   .narrative-chapter {
@@ -864,51 +1386,30 @@
   .narrative-chapter h3 {
     margin: 0 0 1rem;
     font-family: var(--font-serif);
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     font-weight: 600;
     line-height: 1.2;
     color: var(--ie-ink);
   }
 
   .narrative-chapter p {
-    margin: 0 0 1.25rem;
-    font-size: 0.96rem;
+    margin: 0 0 1.15rem;
+    font-size: 0.95rem;
     line-height: 1.6;
     color: var(--ie-ink-secondary);
   }
 
-  .chapter-metric-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem;
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius, 6px);
-    background: var(--ie-surface-raised);
-    margin-bottom: 1.25rem;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
+  .chapter-list {
+    margin: 0 0 1.25rem;
+    padding-left: 1.25rem;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--ie-ink-secondary);
   }
 
-  .chapter-metric-card.alert {
-    border-color: var(--ie-rust);
-    background: var(--ie-rust-soft);
+  .chapter-list li {
+    margin-bottom: 0.5rem;
   }
-
-  .chapter-metric-card.solution {
-    border-color: var(--ie-blue);
-    background: var(--ie-blue-soft);
-  }
-
-  .metric-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .rust-text { color: var(--ie-rust); }
-  .blue-text { color: var(--ie-blue); }
 
   .chapter-instruction {
     margin: 0;
@@ -919,6 +1420,13 @@
   }
 
   @media (max-width: 1080px) {
+    .scale-selector-bar {
+      grid-template-columns: 1fr;
+    }
+    .scale-tab {
+      border-right: none;
+      border-bottom: 1px solid var(--ie-rule);
+    }
     .scrolly-stage-grid {
       grid-template-columns: 1fr;
     }
@@ -934,3 +1442,4 @@
     }
   }
 </style>
+
