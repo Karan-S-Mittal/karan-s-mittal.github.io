@@ -1,0 +1,936 @@
+---
+/**
+ * CiechanowskiGPUMemoryCanvas.astro
+ * Bartosz Ciechanowski-grade bespoke 2D Canvas hardware & kernel simulator.
+ * Scroll-driven: as the reader scrolls through the narrative chapters, the canvas
+ * dynamically morphs from naive contiguous allocation failure to paged virtual memory packing at 60 FPS.
+ */
+---
+
+<section class="ciechanowski-scrolly-section" data-gpu-scrolly aria-labelledby="gpu-canvas-title">
+  <!-- Section Title & Meta Header -->
+  <div class="canvas-header-shell">
+    <div class="canvas-kicker">
+      <span class="live-dot"></span>
+      <span>01 / Flagship Hardware Instrument &middot; LLM Inference Mechanics</span>
+    </div>
+    <h2 id="gpu-canvas-title">GPU VRAM &amp; The PagedAttention Memory Wall</h2>
+    <p class="canvas-lead-text">
+      Scroll through the narrative below or drag the interactive timeline to watch physical GPU memory banks fragment under naive contiguous pre-allocation—then resolve into virtual page table indexing.
+    </p>
+  </div>
+
+  <!-- Main Scrollytelling Stage -->
+  <div class="scrolly-stage-grid">
+    <!-- STICKY CANVAS INSTRUMENT (LEFT/TOP) -->
+    <div class="sticky-canvas-container">
+      <div class="canvas-frame" data-canvas-frame>
+        <div class="canvas-hud-bar">
+          <div class="hud-left">
+            <span class="hud-chip">CHIP: NVIDIA H100 SXM5</span>
+            <span class="hud-freq">CLOCK: 1980 MHz</span>
+          </div>
+          <div class="hud-right">
+            <span class="hud-mode" data-hud-mode>MODE: CONTIGUOUS PRE-ALLOCATION</span>
+            <span class="hud-phase" data-hud-phase>PHASE: 1 / 3</span>
+          </div>
+        </div>
+
+        <canvas class="gpu-sim-canvas" data-canvas width="1200" height="720"></canvas>
+
+        <!-- Interactive Direct Scrubber -->
+        <div class="canvas-scrubber-bar">
+          <span class="scrub-label">INTERACTIVE SCRUBBER</span>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.001"
+            value="0"
+            class="scrubber-slider"
+            data-scrubber
+            aria-label="Simulation Progress Scrubber"
+          />
+          <span class="scrub-val" data-scrub-val>0%</span>
+        </div>
+      </div>
+      <p class="canvas-caption-note">
+        <em>Tip:</em> Scroll to drive the simulation, or hover/touch anywhere on the GPU memory frames to inspect physical byte registers and virtual pointer routes.
+      </p>
+    </div>
+
+    <!-- SCROLLING NARRATIVE CHAPTERS (RIGHT) -->
+    <div class="scrolly-narrative-track">
+      <!-- CHAPTER 1 -->
+      <article class="narrative-chapter active" data-chapter="0">
+        <div class="chapter-register">
+          <span class="chapter-num">01.01</span>
+          <span class="chapter-label">WORKLOAD ARRIVAL</span>
+        </div>
+        <h3>The Memory Bandwidth Bottleneck</h3>
+        <p>
+          In Large Language Model (LLM) serving, token generation is strictly bound by <strong>memory bandwidth</strong>, not compute. At every autoregressive decoding step, the entire model weights and the accumulating <strong>Key-Value (KV) cache</strong> must be streamed from High-Bandwidth Memory (HBM3) to the Tensor Cores.
+        </p>
+        <div class="chapter-metric-card">
+          <div class="metric-row">
+            <span>Physical DRAM Bank:</span>
+            <strong>64 &times; 16-Token Pages (1024 Tokens total)</strong>
+          </div>
+          <div class="metric-row">
+            <span>Active Workload:</span>
+            <strong>3 Concurrent Prompt Streams (Req A, B, C)</strong>
+          </div>
+        </div>
+        <p class="chapter-instruction">&darr; Scroll to see how traditional memory allocators fail...</p>
+      </article>
+
+      <!-- CHAPTER 2 -->
+      <article class="narrative-chapter" data-chapter="1">
+        <div class="chapter-register alert">
+          <span class="chapter-num">01.02</span>
+          <span class="chapter-label">THE FAILURE STATE</span>
+        </div>
+        <h3>The Naive Wall: Contiguous Fragmentation</h3>
+        <p>
+          Because sequence lengths cannot be predicted in advance, naive systems pre-reserve <strong>contiguous memory blocks</strong> for each request's maximum potential context window (e.g. 128 tokens = 8 physical frames).
+        </p>
+        <p>
+          As generation proceeds, up to <strong>78% of reserved VRAM sits completely idle</strong> as internal fragmentation (highlighted in rust). When a new client (Req D) arrives, the GPU triggers a <strong>premature Out-of-Memory (OOM) abort</strong>—even though over half the physical silicon capacity is empty.
+        </p>
+        <div class="chapter-metric-card alert">
+          <div class="metric-row">
+            <span>Memory Wasted:</span>
+            <strong class="rust-text">78.1% Internal Fragmentation</strong>
+          </div>
+          <div class="metric-row">
+            <span>Serving Concurrency:</span>
+            <strong>1.0&times; (Hardware Lock)</strong>
+          </div>
+        </div>
+        <p class="chapter-instruction">&darr; Scroll to engage PagedAttention virtual memory paging...</p>
+      </article>
+
+      <!-- CHAPTER 3 -->
+      <article class="narrative-chapter" data-chapter="2">
+        <div class="chapter-register solution">
+          <span class="chapter-num">01.03</span>
+          <span class="chapter-label">THE PAGED MECHANISM</span>
+        </div>
+        <h3>Virtual Page Tables: &lt; 4% Waste, 3.8&times; Concurrency</h3>
+        <p>
+          <strong>PagedAttention</strong> solves the memory wall by adapting OS virtual memory concepts to GPU DRAM. It decouples logical sequences from physical memory layout using a <strong>Virtual Block Pointer Table</strong>.
+        </p>
+        <p>
+          Physical 16-token frames are allocated on demand across non-contiguous memory addresses. Internal fragmentation collapses to <strong>&lt; 4%</strong> (confined only to the tail frame of active sequences), allowing all 4 client batches to run concurrently without memory stalls.
+        </p>
+        <div class="chapter-metric-card solution">
+          <div class="metric-row">
+            <span>Memory Utilization:</span>
+            <strong class="blue-text">96.8% Physical Efficiency</strong>
+          </div>
+          <div class="metric-row">
+            <span>Throughput Multiplier:</span>
+            <strong class="blue-text">3.8&times; Serving Concurrency</strong>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<script>
+  function initCiechanowskiCanvas() {
+    document.querySelectorAll<HTMLElement>('[data-gpu-scrolly]').forEach((root) => {
+      const canvas = root.querySelector<HTMLCanvasElement>('[data-canvas]');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const scrubber = root.querySelector<HTMLInputElement>('[data-scrubber]');
+      const scrubVal = root.querySelector<HTMLElement>('[data-scrub-val]');
+      const hudMode = root.querySelector<HTMLElement>('[data-hud-mode]');
+      const hudPhase = root.querySelector<HTMLElement>('[data-hud-phase]');
+      const chapters = root.querySelectorAll<HTMLElement>('.narrative-chapter');
+
+      let targetProgress = 0;
+      let currentProgress = 0; // Lerped value
+      let isManualScrubbing = false;
+      let mousePos = { x: -1000, y: -1000, active: false };
+      let animFrameId = 0;
+
+      // Particle streams for memory bus
+      interface Particle {
+        x: number;
+        y: number;
+        speed: number;
+        color: string;
+        targetTile: number;
+      }
+      let particles: Particle[] = [];
+      for (let i = 0; i < 24; i++) {
+        particles.push({
+          x: 280 + Math.random() * 200,
+          y: 120 + Math.random() * 400,
+          speed: 1.5 + Math.random() * 2.5,
+          color: '#2857D9',
+          targetTile: Math.floor(Math.random() * 64),
+        });
+      }
+
+      // 64 Physical Frames (8x8)
+      const TOTAL_FRAMES = 64;
+      const ROWS = 8;
+      const COLS = 8;
+
+      // Deterministic non-contiguous hash for Paged Mode
+      const pagedMap = [
+        4, 19, 33, 2, 45, 12, 58, 23, 7, 39, 50, 15, 61, 28, 8, 42,
+        1, 18, 32, 55, 11, 27, 49, 3, 20, 36, 62, 14, 30, 46, 5, 22,
+        0, 16, 31, 54, 10, 26, 48, 63, 13, 29, 44, 6, 21, 37, 59, 17,
+        34, 51, 9, 25, 41, 57, 24, 40, 56, 35, 52, 47, 60, 38, 53, 43
+      ];
+
+      // Theme Colors
+      function getColors() {
+        const isDark = document.documentElement.classList.contains('dark') || document.body.classList.contains('dark');
+        return {
+          bg: isDark ? '#14171E' : '#F7F5EF',
+          surface: isDark ? '#1B2028' : '#FFFFFF',
+          surfaceRaised: isDark ? '#222832' : '#F2EFE8',
+          ink: isDark ? '#F3F4F6' : '#171A1F',
+          muted: isDark ? '#8E98A8' : '#6B7280',
+          rule: isDark ? '#2E3642' : '#DCD9D0',
+          blue: '#2857D9',
+          blueSoft: isDark ? 'rgba(40, 87, 217, 0.25)' : '#E8EEFF',
+          rust: '#A63D17',
+          rustSoft: isDark ? 'rgba(166, 61, 23, 0.3)' : '#F8E9DF',
+          client0: '#2857D9', // Blue
+          client1: '#0D9488', // Teal
+          client2: '#6366F1', // Indigo
+          client3: '#9333EA', // Purple
+          waste: isDark ? 'rgba(166, 61, 23, 0.45)' : '#FCE8E2',
+        };
+      }
+
+      // Responsive Retina Sizing
+      function resizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        const displayWidth = rect.width;
+        const displayHeight = displayWidth * (720 / 1200);
+
+        if (canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr) {
+          canvas.width = displayWidth * dpr;
+          canvas.height = displayHeight * dpr;
+        }
+      }
+
+      // Main Render Loop
+      function render() {
+        resizeCanvas();
+        const dpr = window.devicePixelRatio || 1;
+        const width = canvas.width / dpr;
+        const height = canvas.height / dpr;
+        const c = getColors();
+
+        ctx.save();
+        ctx.scale(dpr, dpr);
+
+        // Smooth progress interpolation (lerp)
+        currentProgress += (targetProgress - currentProgress) * 0.12;
+
+        // Clear Canvas Background
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, width, height);
+
+        // 1. Draw Architectural Grid & Precision Coordinate Rules
+        ctx.strokeStyle = c.rule;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+
+        // Division axes
+        ctx.beginPath();
+        ctx.moveTo(340, 30);
+        ctx.lineTo(340, height - 70);
+        ctx.moveTo(680, 30);
+        ctx.lineTo(680, height - 70);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Outer Border
+        ctx.strokeStyle = c.rule;
+        ctx.strokeRect(15, 15, width - 30, height - 30);
+
+        // Subsystem Labels
+        ctx.font = '600 11px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.muted;
+        ctx.fillText('01 / LOGICAL REQUEST QUEUE', 30, 45);
+        ctx.fillText(currentProgress < 0.55 ? '02 / CONTIGUOUS RESERVATION MAP' : '02 / VIRTUAL BLOCK POINTER TABLE', 355, 45);
+        ctx.fillText('03 / PHYSICAL GPU HBM3 DRAM (8×8 MATRIX)', 700, 45);
+
+        // 2. Render Left Pane: Logical Request Queue
+        const reqA_tokens = 48; // 3 pages
+        const reqB_tokens = 32; // 2 pages
+        const reqC_tokens = 16; // 1 page
+        const reqD_tokens = Math.min(64, Math.floor(currentProgress * 64)); // Arrives dynamically
+
+        const requests = [
+          { name: 'Req A (Query)', tokens: reqA_tokens, max: 128, color: c.client0, active: true },
+          { name: 'Req B (CodeGen)', tokens: reqB_tokens, max: 128, color: c.client1, active: true },
+          { name: 'Req C (Summary)', tokens: reqC_tokens, max: 128, color: c.client2, active: true },
+          { name: 'Req D (Batch 4)', tokens: reqD_tokens, max: 128, color: c.client3, active: currentProgress > 0.3 },
+        ];
+
+        let reqY = 75;
+        requests.forEach((req, idx) => {
+          ctx.fillStyle = c.surface;
+          ctx.strokeStyle = req.active ? req.color : c.rule;
+          ctx.lineWidth = 1;
+          ctx.fillRect(30, reqY, 280, 70);
+          ctx.strokeRect(30, reqY, 280, 70);
+
+          // Req Tag
+          ctx.fillStyle = req.color;
+          ctx.fillRect(42, reqY + 12, 10, 10);
+          ctx.font = '700 12px IBM Plex Mono, monospace';
+          ctx.fillStyle = c.ink;
+          ctx.fillText(req.name, 60, reqY + 22);
+
+          // Token count
+          ctx.font = '500 11px IBM Plex Mono, monospace';
+          ctx.fillStyle = c.muted;
+          const numPages = Math.ceil(req.tokens / 16);
+          ctx.fillText(`${req.tokens} Tokens (${numPages} Pages)`, 180, reqY + 22);
+
+          // Progress gauge
+          ctx.fillStyle = c.surfaceRaised;
+          ctx.fillRect(42, reqY + 38, 256, 12);
+          ctx.strokeStyle = c.rule;
+          ctx.strokeRect(42, reqY + 38, 256, 12);
+
+          const pct = Math.min(1, req.tokens / req.max);
+          ctx.fillStyle = req.color;
+          ctx.fillRect(43, reqY + 39, 254 * pct, 10);
+
+          reqY += 85;
+        });
+
+        // 3. Render Center Pane: Virtual Pointer Table & Flow Conduits
+        const isPaged = currentProgress >= 0.55;
+        const pointerAlpha = isPaged ? Math.min(1, (currentProgress - 0.55) * 4) : 1;
+
+        if (!isPaged) {
+          // Naive mode: Rigid linear allocation blocks
+          ctx.font = '500 11px IBM Plex Mono, monospace';
+          ctx.fillStyle = c.rust;
+          ctx.fillText('FIXED CONTIGUOUS ALLOCATION', 360, 80);
+          ctx.fillText('Each stream locks 8 consecutive frames', 360, 100);
+
+          // Block locks
+          for (let i = 0; i < 3; i++) {
+            const startY = 120 + i * 80;
+            ctx.strokeStyle = c.rule;
+            ctx.strokeRect(360, startY, 290, 60);
+            ctx.fillStyle = c.surface;
+            ctx.fillRect(360, startY, 290, 60);
+
+            ctx.fillStyle = c.ink;
+            ctx.font = '600 11px IBM Plex Mono, monospace';
+            ctx.fillText(`SEQ ${i} RESERVATION: 0x0${i * 8} → 0x0${i * 8 + 7}`, 375, startY + 24);
+
+            // Wasted vs Used
+            ctx.fillStyle = i === 0 ? c.client0 : i === 1 ? c.client1 : c.client2;
+            ctx.fillRect(375, startY + 34, 45, 14);
+            ctx.fillStyle = c.rustSoft;
+            ctx.fillRect(425, startY + 34, 180, 14);
+            ctx.strokeStyle = c.rust;
+            ctx.strokeRect(425, startY + 34, 180, 14);
+
+            ctx.font = '600 9px IBM Plex Mono, monospace';
+            ctx.fillStyle = c.rust;
+            ctx.fillText('75% UNUSED VRAM', 460, startY + 45);
+          }
+
+          // OOM Alert if Req D attempted
+          if (currentProgress > 0.35) {
+            ctx.fillStyle = c.rustSoft;
+            ctx.strokeStyle = c.rust;
+            ctx.fillRect(360, 370, 290, 65);
+            ctx.strokeRect(360, 370, 290, 65);
+
+            ctx.font = '700 12px IBM Plex Mono, monospace';
+            ctx.fillStyle = c.rust;
+            ctx.fillText('⚠ GPU OUT OF MEMORY (OOM)', 380, 396);
+            ctx.font = '500 10px IBM Plex Sans, sans-serif';
+            ctx.fillText('Req D rejected: contiguous slot unavailable', 380, 416);
+          }
+        } else {
+          // Paged mode: Dynamic Virtual Block Pointer Table
+          ctx.font = '600 11px IBM Plex Mono, monospace';
+          ctx.fillStyle = c.blue;
+          ctx.fillText(`VIRTUAL LOOKUP INDEX (ALPHA: ${(pointerAlpha * 100).toFixed(0)}%)`, 360, 80);
+
+          // Pointers table
+          const entries = [
+            { v: 'A:V0', p: '0x04', col: c.client0 },
+            { v: 'A:V1', p: '0x13', col: c.client0 },
+            { v: 'A:V2', p: '0x21', col: c.client0 },
+            { v: 'B:V0', p: '0x02', col: c.client1 },
+            { v: 'B:V1', p: '0x2D', col: c.client1 },
+            { v: 'C:V0', p: '0x0C', col: c.client2 },
+            { v: 'D:V0', p: '0x3A', col: c.client3 },
+            { v: 'D:V1', p: '0x17', col: c.client3 },
+          ];
+
+          let tableX = 360;
+          let tableY = 105;
+          entries.forEach((e, idx) => {
+            ctx.fillStyle = c.surface;
+            ctx.strokeStyle = c.rule;
+            ctx.fillRect(tableX, tableY, 138, 32);
+            ctx.strokeRect(tableX, tableY, 138, 32);
+
+            ctx.fillStyle = e.col;
+            ctx.font = '700 11px IBM Plex Mono, monospace';
+            ctx.fillText(e.v, tableX + 10, tableY + 20);
+
+            ctx.fillStyle = c.muted;
+            ctx.fillText('→', tableX + 58, tableY + 20);
+
+            ctx.fillStyle = c.ink;
+            ctx.fillText(e.p, tableX + 80, tableY + 20);
+
+            tableY += 38;
+            if (idx === 3) {
+              tableX += 148;
+              tableY = 105;
+            }
+          });
+
+          // Conduits from pointer table to physical matrix
+          ctx.strokeStyle = c.blue;
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(650, 120);
+          ctx.bezierCurveTo(675, 120, 675, 180, 710, 180);
+          ctx.moveTo(650, 160);
+          ctx.bezierCurveTo(680, 160, 680, 240, 710, 240);
+          ctx.moveTo(650, 240);
+          ctx.bezierCurveTo(680, 240, 680, 320, 710, 320);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // 4. Render Right Pane: Physical 64-Frame Matrix (8x8 Grid)
+        const gridStartX = 705;
+        const gridStartY = 75;
+        const tileSize = 48;
+        const tileGap = 8;
+
+        let hoveredTileIdx = -1;
+
+        for (let r = 0; r < ROWS; r++) {
+          for (let col = 0; col < COLS; col++) {
+            const idx = r * COLS + col;
+            const x = gridStartX + col * (tileSize + tileGap);
+            const y = gridStartY + r * (tileSize + tileGap);
+            const hex = '0x' + idx.toString(16).padStart(2, '0').toUpperCase();
+
+            // Check hover
+            if (
+              mousePos.active &&
+              mousePos.x >= x &&
+              mousePos.x <= x + tileSize &&
+              mousePos.y >= y &&
+              mousePos.y <= y + tileSize
+            ) {
+              hoveredTileIdx = idx;
+            }
+
+            // Determine tile allocation state based on mode
+            let tileColor = c.surfaceRaised;
+            let strokeColor = c.rule;
+            let isWasted = false;
+            let tileClient = '';
+
+            if (!isPaged) {
+              // Naive mode: First 3 sequences lock contiguous blocks of 8
+              if (idx < 8) {
+                // Req A (Query: 3 active, 5 wasted)
+                tileColor = idx < 3 ? c.client0 : c.waste;
+                strokeColor = idx < 3 ? c.client0 : c.rust;
+                isWasted = idx >= 3;
+                tileClient = idx < 3 ? 'Req A (3/8)' : 'Req A (Wasted)';
+              } else if (idx < 16) {
+                // Req B (CodeGen: 2 active, 6 wasted)
+                tileColor = idx < 10 ? c.client1 : c.waste;
+                strokeColor = idx < 10 ? c.client1 : c.rust;
+                isWasted = idx >= 10;
+                tileClient = idx < 10 ? 'Req B (2/8)' : 'Req B (Wasted)';
+              } else if (idx < 24) {
+                // Req C (Summary: 1 active, 7 wasted)
+                tileColor = idx < 17 ? c.client2 : c.waste;
+                strokeColor = idx < 17 ? c.client2 : c.rust;
+                isWasted = idx >= 17;
+                tileClient = idx < 17 ? 'Req C (1/8)' : 'Req C (Wasted)';
+              }
+            } else {
+              // Paged mode: Non-contiguous packed allocation
+              const pagedAllocations: { [key: number]: { color: string; name: string } } = {
+                4: { color: c.client0, name: 'Req A:V0' },
+                19: { color: c.client0, name: 'Req A:V1' },
+                33: { color: c.client0, name: 'Req A:V2' },
+                2: { color: c.client1, name: 'Req B:V0' },
+                45: { color: c.client1, name: 'Req B:V1' },
+                12: { color: c.client2, name: 'Req C:V0' },
+                58: { color: c.client3, name: 'Req D:V0' },
+                23: { color: c.client3, name: 'Req D:V1' },
+              };
+
+              if (pagedAllocations[idx]) {
+                tileColor = pagedAllocations[idx].color;
+                strokeColor = pagedAllocations[idx].color;
+                tileClient = pagedAllocations[idx].name;
+              }
+            }
+
+            // Draw Tile
+            ctx.fillStyle = tileColor;
+            ctx.fillRect(x, y, tileSize, tileSize);
+            ctx.strokeStyle = strokeColor;
+            ctx.lineWidth = hoveredTileIdx === idx ? 2 : 1;
+            ctx.strokeRect(x, y, tileSize, tileSize);
+
+            // Draw Wasted diagonal hatch in Naive Mode
+            if (isWasted) {
+              ctx.save();
+              ctx.beginPath();
+              ctx.rect(x, y, tileSize, tileSize);
+              ctx.clip();
+              ctx.strokeStyle = c.rust;
+              ctx.lineWidth = 1;
+              for (let lineX = -tileSize; lineX < tileSize * 2; lineX += 6) {
+                ctx.moveTo(x + lineX, y);
+                ctx.lineTo(x + lineX + tileSize, y + tileSize);
+              }
+              ctx.stroke();
+              ctx.restore();
+            }
+
+            // Draw Hex Address
+            ctx.font = '600 8px IBM Plex Mono, monospace';
+            ctx.fillStyle = tileColor === c.surfaceRaised || isWasted ? (isWasted ? c.rust : c.muted) : '#FFFFFF';
+            ctx.fillText(hex, x + 5, y + 14);
+          }
+        }
+
+        // 5. Render Memory Bus Animated Pulse Particles
+        particles.forEach((p) => {
+          p.x += p.speed;
+          if (p.x > 700) {
+            p.x = 280;
+            p.y = 120 + Math.random() * 380;
+          }
+          ctx.fillStyle = isPaged ? c.blue : c.rust;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        // 6. Draw Hover Leader Line Callout
+        if (hoveredTileIdx >= 0) {
+          const r = Math.floor(hoveredTileIdx / COLS);
+          const col = hoveredTileIdx % COLS;
+          const x = gridStartX + col * (tileSize + tileGap) + tileSize / 2;
+          const y = gridStartY + r * (tileSize + tileGap) + tileSize / 2;
+          const hex = '0x' + hoveredTileIdx.toString(16).padStart(2, '0').toUpperCase();
+
+          // Callout Leader Line
+          ctx.strokeStyle = c.ink;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(x, y, 4, 0, Math.PI * 2);
+          ctx.moveTo(x, y);
+          ctx.lineTo(x - 40, y - 30);
+          ctx.lineTo(x - 160, y - 30);
+          ctx.stroke();
+
+          // Tooltip Card
+          ctx.fillStyle = c.surface;
+          ctx.strokeStyle = c.ink;
+          ctx.fillRect(x - 280, y - 55, 120, 50);
+          ctx.strokeRect(x - 280, y - 55, 120, 50);
+
+          ctx.font = '700 10px IBM Plex Mono, monospace';
+          ctx.fillStyle = c.ink;
+          ctx.fillText(`FRAME ${hex}`, x - 270, y - 38);
+          ctx.font = '500 9px IBM Plex Mono, monospace';
+          ctx.fillStyle = c.muted;
+          ctx.fillText(isPaged ? 'Virtual Paging: Active' : 'Contiguous: Pre-locked', x - 270, y - 22);
+          ctx.fillText('16 Tokens (0x40B)', x - 270, y - 10);
+        }
+
+        // 7. Telemetry Readout Strip (Canvas Bottom)
+        const statBarY = height - 50;
+        ctx.fillStyle = c.surface;
+        ctx.strokeStyle = c.rule;
+        ctx.fillRect(30, statBarY, width - 60, 36);
+        ctx.strokeRect(30, statBarY, width - 60, 36);
+
+        ctx.font = '600 11px IBM Plex Mono, monospace';
+        ctx.fillStyle = c.muted;
+        ctx.fillText('TELEMETRY:', 45, statBarY + 22);
+
+        // Usage
+        ctx.fillStyle = c.ink;
+        ctx.fillText(isPaged ? 'VRAM: 8/64 FRAMES (12.5%)' : 'VRAM RESERVED: 24/64 (37.5%)', 140, statBarY + 22);
+
+        // Waste
+        ctx.fillStyle = isPaged ? c.blue : c.rust;
+        ctx.fillText(isPaged ? 'WASTE: < 3.8% (PACKED)' : 'WASTE: 78.1% (FRAGMENTED)', 460, statBarY + 22);
+
+        // Concurrency
+        ctx.fillStyle = isPaged ? c.blue : c.ink;
+        ctx.fillText(isPaged ? 'CONCURRENCY: 3.8× BASELINE' : 'CONCURRENCY: 1.0× (OOM LOCKED)', 800, statBarY + 22);
+
+        ctx.restore();
+
+        // 8. Update HTML HUD & Scrubber text
+        if (hudMode) {
+          hudMode.textContent = isPaged ? 'MODE: PAGEDATTENTION (VIRTUAL PAGING)' : 'MODE: CONTIGUOUS PRE-ALLOCATION';
+          hudMode.style.color = isPaged ? 'var(--ie-blue)' : 'var(--ie-rust)';
+        }
+        if (hudPhase) {
+          hudPhase.textContent = currentProgress < 0.35 ? 'PHASE: 1/3 (INPUT)' : currentProgress < 0.65 ? 'PHASE: 2/3 (OOM FAILURE)' : 'PHASE: 3/3 (PAGED SOLVED)';
+        }
+        if (scrubVal) {
+          scrubVal.textContent = `${Math.round(currentProgress * 100)}%`;
+        }
+
+        animFrameId = requestAnimationFrame(render);
+      }
+
+      // Mouse Listeners for Hover Inspection
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mousePos.x = e.clientX - rect.left;
+        mousePos.y = e.clientY - rect.top;
+        mousePos.active = true;
+      });
+
+      canvas.addEventListener('mouseleave', () => {
+        mousePos.active = false;
+      });
+
+      // Manual Scrubber Listener
+      if (scrubber) {
+        scrubber.addEventListener('input', (e) => {
+          isManualScrubbing = true;
+          targetProgress = parseFloat((e.target as HTMLInputElement).value);
+        });
+      }
+
+      // Scroll Observer for Scrollytelling Track
+      function onScroll() {
+        if (isManualScrubbing) return;
+        const sectionRect = root.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+
+        // Progress from top entering view to bottom leaving
+        const totalScrollDistance = sectionRect.height - windowHeight;
+        if (totalScrollDistance <= 0) return;
+
+        const currentScroll = -sectionRect.top;
+        const rawProgress = Math.max(0, Math.min(1, currentScroll / totalScrollDistance));
+        targetProgress = rawProgress;
+
+        if (scrubber) {
+          scrubber.value = rawProgress.toString();
+        }
+
+        // Highlight active narrative chapter
+        chapters.forEach((ch, idx) => {
+          const chRect = ch.getBoundingClientRect();
+          const isCurrent = chRect.top <= windowHeight * 0.5 && chRect.bottom >= windowHeight * 0.2;
+          ch.classList.toggle('active', isCurrent);
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+
+      // Start animation loop
+      render();
+    });
+  }
+
+  initCiechanowskiCanvas();
+  document.addEventListener('astro:page-load', initCiechanowskiCanvas);
+</script>
+
+<style>
+  .ciechanowski-scrolly-section {
+    width: 100%;
+    margin-top: 1rem;
+    position: relative;
+  }
+
+  .canvas-header-shell {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .canvas-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ie-blue);
+    text-transform: uppercase;
+  }
+
+  .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ie-blue);
+    box-shadow: 0 0 0 3px rgba(40, 87, 217, 0.2);
+  }
+
+  .canvas-header-shell h2 {
+    margin: 0 0 0.8rem;
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 500;
+    line-height: 1.1;
+    color: var(--ie-ink);
+  }
+
+  .canvas-lead-text {
+    max-width: 68ch;
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--ie-ink-secondary);
+  }
+
+  /* Scrollytelling Stage Grid */
+  .scrolly-stage-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+    gap: clamp(2.5rem, 5vw, 5rem);
+    align-items: start;
+    position: relative;
+  }
+
+  /* Sticky Canvas Column */
+  .sticky-canvas-container {
+    position: sticky;
+    top: 90px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    z-index: 10;
+  }
+
+  .canvas-frame {
+    border: 1px solid var(--ie-rule-strong);
+    border-radius: var(--radius-card, 8px);
+    background: var(--ie-surface);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+  }
+
+  .canvas-hud-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    background: var(--ie-surface-raised);
+    border-bottom: 1px solid var(--ie-rule);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--ie-muted);
+  }
+
+  .hud-left, .hud-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .hud-chip, .hud-mode {
+    font-weight: 700;
+  }
+
+  .gpu-sim-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: crosshair;
+  }
+
+  /* Scrubber Controls */
+  .canvas-scrubber-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--ie-surface-raised);
+    border-top: 1px solid var(--ie-rule);
+  }
+
+  .scrub-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--ie-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .scrubber-slider {
+    flex: 1;
+    height: 4px;
+    accent-color: var(--ie-blue);
+    cursor: pointer;
+  }
+
+  .scrub-val {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--ie-blue);
+    min-width: 32px;
+    text-align: right;
+  }
+
+  .canvas-caption-note {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--ie-muted);
+    line-height: 1.4;
+  }
+
+  /* Narrative Scrolling Column */
+  .scrolly-narrative-track {
+    display: flex;
+    flex-direction: column;
+    gap: 24rem; /* Generous spacing to allow smooth scroll observation */
+    padding-block: 2rem 16rem;
+  }
+
+  .narrative-chapter {
+    padding: 2rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    background: var(--ie-surface);
+    opacity: 0.45;
+    transition: all 250ms ease;
+  }
+
+  .narrative-chapter.active {
+    opacity: 1;
+    border-color: var(--ie-blue);
+    box-shadow: 0 4px 20px rgba(40, 87, 217, 0.08);
+  }
+
+  .chapter-register {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--ie-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .chapter-register.alert { color: var(--ie-rust); }
+  .chapter-register.solution { color: var(--ie-blue); }
+
+  .chapter-num {
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    background: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
+  }
+
+  .narrative-chapter h3 {
+    margin: 0 0 1rem;
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ie-ink);
+  }
+
+  .narrative-chapter p {
+    margin: 0 0 1.25rem;
+    font-size: 0.96rem;
+    line-height: 1.6;
+    color: var(--ie-ink-secondary);
+  }
+
+  .chapter-metric-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius, 6px);
+    background: var(--ie-surface-raised);
+    margin-bottom: 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  .chapter-metric-card.alert {
+    border-color: var(--ie-rust);
+    background: var(--ie-rust-soft);
+  }
+
+  .chapter-metric-card.solution {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue-soft);
+  }
+
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .rust-text { color: var(--ie-rust); }
+  .blue-text { color: var(--ie-blue); }
+
+  .chapter-instruction {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ie-blue);
+  }
+
+  @media (max-width: 1080px) {
+    .scrolly-stage-grid {
+      grid-template-columns: 1fr;
+    }
+    .sticky-canvas-container {
+      position: static;
+    }
+    .scrolly-narrative-track {
+      gap: 3rem;
+      padding-block: 2rem;
+    }
+    .narrative-chapter {
+      opacity: 1;
+    }
+  }
+</style>

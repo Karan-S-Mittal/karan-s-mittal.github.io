@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import NeuralNet3D from '../components/visuals/neural-net/NeuralNet3D.astro';
-import GPUMemorySimulator from '../components/home/GPUMemorySimulator.astro';
+import CiechanowskiGPUMemoryCanvas from '../components/home/CiechanowskiGPUMemoryCanvas.astro';
 import { getCollection } from 'astro:content';
 import { SITE } from '../config';
 
@@ -75,10 +75,10 @@ function formatDate(date: Date | string) {
       </div>
     </section>
 
-    <!-- SECTION 01: THE CIECHANOWSKI GPU MEMORY & PAGED ATTENTION SIMULATOR -->
-    <section class="ie-section flagship-section" id="memory-simulator" aria-labelledby="flagship-title">
+    <!-- SECTION 01: SCROLL-DRIVEN CIECHANOWSKI GPU MEMORY & PAGED ATTENTION CANVAS -->
+    <section class="ie-section flagship-section" id="memory-simulator" aria-labelledby="gpu-canvas-title">
       <div class="ie-shell">
-        <GPUMemorySimulator />
+        <CiechanowskiGPUMemoryCanvas />
       </div>
     </section>
 
