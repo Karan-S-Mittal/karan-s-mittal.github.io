@@ -1,443 +1,664 @@
 ---
 /**
- * Three concrete engineering paths. A reader selects the kind of system and
- * sees the mechanism, constraint, and definition of inspectability together.
+ * InstrumentedSystemTrace.astro
+ * An inspectable, animated architectural flow instrument.
+ * Readers switch between three system archetypes (Knowledge, Inference, Delivery)
+ * to trace inputs, causal mechanisms, failure constraints, and verified outcomes.
  */
 ---
 
-<section class="system-map" data-system-map aria-labelledby="system-map-title">
-  <div class="map-heading">
+<section class="system-trace-instrument" data-system-trace aria-labelledby="system-trace-title">
+  <div class="trace-header">
     <div>
-      <p class="map-kicker">Inspectable systems / three examples</p>
-      <h3 id="system-map-title">Select the kind of system you need to understand.</h3>
+      <p class="trace-kicker">Interactive System Instrument · 01 Flagship Trace</p>
+      <h3 id="system-trace-title">Select a system archetype to trace its execution path.</h3>
     </div>
-    <p>Each path names what enters, what changes, where it can fail, and what a dependable output contains.</p>
+    <p class="trace-lead">Every dependable system defines what enters, how state transforms, where bottlenecks bind, and what proof accompanies the result.</p>
   </div>
 
-  <div class="map-controls" aria-label="Choose a system path">
-    <button type="button" data-map-control="0" aria-pressed="true">
-      <span>01</span>
-      <strong>Knowledge</strong>
-      <small>Can the answer be traced?</small>
+  <div class="trace-controls" role="tablist" aria-label="System Archetypes">
+    <button type="button" role="tab" data-trace-tab="0" aria-selected="true" class="active">
+      <span class="tab-index">01</span>
+      <div class="tab-copy">
+        <strong>Knowledge Systems</strong>
+        <small>Deterministic RAG · Provenance graph</small>
+      </div>
     </button>
-    <button type="button" data-map-control="1" aria-pressed="false">
-      <span>02</span>
-      <strong>Inference</strong>
-      <small>Can the bottleneck be measured?</small>
+    <button type="button" role="tab" data-trace-tab="1" aria-selected="false">
+      <span class="tab-index">02</span>
+      <div class="tab-copy">
+        <strong>Inference Systems</strong>
+        <small>Paged KV Cache · Memory ceiling</small>
+      </div>
     </button>
-    <button type="button" data-map-control="2" aria-pressed="false">
-      <span>03</span>
-      <strong>Delivery</strong>
-      <small>Can the operating team own it?</small>
+    <button type="button" role="tab" data-trace-tab="2" aria-selected="false">
+      <span class="tab-index">03</span>
+      <div class="tab-copy">
+        <strong>Delivery Systems</strong>
+        <small>Runtime boundaries · Team ownership</small>
+      </div>
     </button>
   </div>
 
-  <div class="mechanism" aria-live="polite">
-    <article class="mechanism-step">
-      <span>Input</span>
-      <strong data-node-title="0">Question</strong>
-      <p data-node-body="0">Request, constraints, and permitted source boundaries.</p>
-    </article>
-    <div class="mechanism-edge" aria-hidden="true"><span data-edge-label="0">retrieve</span></div>
-    <article class="mechanism-step">
-      <span>Mechanism</span>
-      <strong data-node-title="1">Evidence retrieval</strong>
-      <p data-node-body="1">Rank sources while keeping provenance attached.</p>
-    </article>
-    <div class="mechanism-edge" aria-hidden="true"><span data-edge-label="1">test</span></div>
-    <article class="mechanism-step constraint-step">
-      <span>Constraint</span>
-      <strong data-node-title="2">Verification gate</strong>
-      <p data-node-body="2">Compare every claim with the evidence that supports it.</p>
-    </article>
-    <div class="mechanism-edge" aria-hidden="true"><span data-edge-label="2">deliver</span></div>
-    <article class="mechanism-step">
-      <span>Output</span>
-      <strong data-node-title="3">Traceable answer</strong>
-      <p data-node-body="3">The answer, citations, and decision boundary together.</p>
-    </article>
-  </div>
-
-  <div class="map-conclusion">
-    <div class="constraint-note">
-      <span>Where it fails</span>
-      <strong data-constraint>Unsupported claims stop at the verification gate.</strong>
+  <!-- Interactive SVG Visual Instrument -->
+  <div class="trace-canvas-shell">
+    <div class="trace-canvas-header">
+      <div class="canvas-badge">
+        <span class="pulse-dot"></span>
+        <span class="canvas-state-label" data-trace-state-label>EXECUTION PATH: DETERMINISTIC RETRIEVAL &amp; PROVENANCE</span>
+      </div>
+      <span class="canvas-metric" data-trace-metric>p99: &le; 180ms · zero hallucinations</span>
     </div>
-    <div class="takeaway-note">
-      <span>What inspectable means here</span>
-      <strong data-takeaway>Every answer can be traced back to a permitted source.</strong>
+
+    <div class="trace-svg-wrap">
+      <svg class="trace-svg" viewBox="0 0 960 180" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive architecture signal trace">
+        <defs>
+          <marker id="trace-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M1 1L6 4L1 7" stroke="var(--ie-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+          </marker>
+          <marker id="trace-arrow-rust" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M1 1L6 4L1 7" stroke="var(--ie-rust)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+          </marker>
+        </defs>
+
+        <!-- Background grid guides -->
+        <line x1="0" y1="90" x2="960" y2="90" stroke="var(--ie-rule)" stroke-dasharray="4 4" stroke-width="1" />
+
+        <!-- Node 1: Input -->
+        <g class="svg-node input-node" transform="translate(20, 35)">
+          <rect width="180" height="110" rx="8" class="node-box" />
+          <rect x="12" y="14" width="46" height="18" rx="9" class="node-tag-bg" />
+          <text x="23" y="26" class="node-tag">INPUT</text>
+          <text x="14" y="54" class="node-title" data-svg-title="0">Bounded Question</text>
+          <text x="14" y="74" class="node-meta" data-svg-meta="0">Tokens: 512 · Provenance attached</text>
+          <text x="14" y="94" class="node-formula">S₀ &rarr; Contract</text>
+        </g>
+
+        <!-- Connecting Conduit 1 -->
+        <path class="conduit-base" d="M200 90 L270 90" />
+        <path class="conduit-pulse" d="M200 90 L270 90" marker-end="url(#trace-arrow)" />
+        <text x="235" y="80" text-anchor="middle" class="conduit-label" data-svg-edge="0">RETRIEVE</text>
+
+        <!-- Node 2: Mechanism -->
+        <g class="svg-node mechanism-node active" transform="translate(270, 35)">
+          <rect width="185" height="110" rx="8" class="node-box" />
+          <rect x="12" y="14" width="76" height="18" rx="9" class="node-tag-bg blue" />
+          <text x="21" y="26" class="node-tag blue">MECHANISM</text>
+          <text x="14" y="54" class="node-title" data-svg-title="1">Evidence Retrieval</text>
+          <text x="14" y="74" class="node-meta" data-svg-meta="1">Hybrid BM25 + Vector Graph</text>
+          <text x="14" y="94" class="node-formula">Top-k Source Ranking</text>
+        </g>
+
+        <!-- Connecting Conduit 2 -->
+        <path class="conduit-base" d="M455 90 L525 90" />
+        <path class="conduit-pulse" d="M455 90 L525 90" marker-end="url(#trace-arrow)" />
+        <text x="490" y="80" text-anchor="middle" class="conduit-label" data-svg-edge="1">VALIDATE</text>
+
+        <!-- Node 3: Constraint Gate (Bottleneck) -->
+        <g class="svg-node constraint-node" transform="translate(525, 35)">
+          <rect width="185" height="110" rx="8" class="node-box rust" />
+          <rect x="12" y="14" width="76" height="18" rx="9" class="node-tag-bg rust" />
+          <text x="21" y="26" class="node-tag rust">CONSTRAINT</text>
+          <text x="14" y="54" class="node-title" data-svg-title="2">Verification Gate</text>
+          <text x="14" y="74" class="node-meta" data-svg-meta="2">Hallucination check &ge; 0.95</text>
+          <text x="14" y="94" class="node-formula rust">Reject if unsupported</text>
+        </g>
+
+        <!-- Connecting Conduit 3 -->
+        <path class="conduit-base" d="M710 90 L780 90" />
+        <path class="conduit-pulse" d="M710 90 L780 90" marker-end="url(#trace-arrow)" />
+        <text x="745" y="80" text-anchor="middle" class="conduit-label" data-svg-edge="2">DELIVER</text>
+
+        <!-- Node 4: Output -->
+        <g class="svg-node output-node" transform="translate(780, 35)">
+          <rect width="160" height="110" rx="8" class="node-box verified" />
+          <rect x="12" y="14" width="56" height="18" rx="9" class="node-tag-bg green" />
+          <text x="21" y="26" class="node-tag green">VERIFIED</text>
+          <text x="14" y="54" class="node-title" data-svg-title="3">Audited Answer</text>
+          <text x="14" y="74" class="node-meta" data-svg-meta="3">Citations + DOI linked</text>
+          <text x="14" y="94" class="node-formula">Evidence &ge; Bound</text>
+        </g>
+      </svg>
     </div>
+
+    <div class="trace-scroll-hint" aria-hidden="true">↔ Swipe to inspect complete execution path</div>
   </div>
 
-  <p class="accessible-summary" data-accessible-summary>
-    A knowledge system accepts a bounded question, retrieves evidence with provenance, rejects unsupported claims, and returns an answer that can be traced to its sources.
-  </p>
+  <!-- Detailed Step Cards -->
+  <div class="trace-step-grid" aria-live="polite">
+    <article class="step-card">
+      <span class="step-num">STEP 01 / INPUT</span>
+      <h4 data-card-title="0">Bounded Question</h4>
+      <p data-card-body="0">Explicit request boundaries, permitted knowledge bases, token limits, and deterministic routing constraints.</p>
+    </article>
+    <article class="step-card">
+      <span class="step-num">STEP 02 / MECHANISM</span>
+      <h4 data-card-title="1">Evidence Retrieval</h4>
+      <p data-card-body="1">Rank sources with attached provenance. Dense semantic embeddings fused with exact sparse inverted indices.</p>
+    </article>
+    <article class="step-card constraint-card">
+      <span class="step-num rust">STEP 03 / CONSTRAINT</span>
+      <h4 data-card-title="2">Verification Gate</h4>
+      <p data-card-body="2">Compare generated claims against retrieved citations. Unsupported claims fail the invariant gate before emission.</p>
+    </article>
+    <article class="step-card">
+      <span class="step-num">STEP 04 / OUTPUT</span>
+      <h4 data-card-title="3">Traceable Answer</h4>
+      <p data-card-body="3">The synthesized answer, exact primary citations, and decision boundary bundled for complete auditability.</p>
+    </article>
+  </div>
+
+  <!-- Failure vs Inspectability Registers -->
+  <div class="trace-conclusion-grid">
+    <div class="conclusion-block failure-block">
+      <span class="conclusion-tag">WHERE THE PATH BREAKS</span>
+      <strong data-trace-failure>Unsupported claims stop at the verification gate rather than propagating hallucinations to users.</strong>
+    </div>
+    <div class="conclusion-block inspect-block">
+      <span class="conclusion-tag">INVARIANT DEFINITION</span>
+      <strong data-trace-invariant>Every emitted token can be mechanistically traced to a primary citation and verified source.</strong>
+    </div>
+  </div>
 </section>
 
 <script>
-  const SYSTEM_PATHS = [
+  const TRACE_ARCHETYPES = [
     {
+      label: 'EXECUTION PATH: DETERMINISTIC RETRIEVAL & PROVENANCE GRAPH',
+      metric: 'p99: ≤ 180ms · zero hallucinations',
       nodes: [
-        ['Question', 'Request, constraints, and permitted source boundaries.'],
-        ['Evidence retrieval', 'Rank sources while keeping provenance attached.'],
-        ['Verification gate', 'Compare every claim with the evidence that supports it.'],
-        ['Traceable answer', 'The answer, citations, and decision boundary together.'],
+        { title: 'Bounded Question', meta: 'Tokens: 512 · Boundary set', formula: 'S₀ → Contract', desc: 'Explicit request boundaries, permitted knowledge bases, token limits, and deterministic routing constraints.' },
+        { title: 'Evidence Retrieval', meta: 'Hybrid BM25 + Vector Graph', formula: 'Top-k Source Ranking', desc: 'Rank sources with attached provenance. Dense semantic embeddings fused with exact sparse inverted indices.' },
+        { title: 'Verification Gate', meta: 'Hallucination check ≥ 0.95', formula: 'Reject if unsupported', desc: 'Compare generated claims against retrieved citations. Unsupported claims fail the invariant gate before emission.' },
+        { title: 'Audited Answer', meta: 'Citations + DOI linked', formula: 'Evidence ≥ Bound', desc: 'The synthesized answer, exact primary citations, and decision boundary bundled for complete auditability.' },
       ],
-      edges: ['retrieve', 'test', 'deliver'],
-      constraint: 'Unsupported claims stop at the verification gate.',
-      takeaway: 'Every answer can be traced back to a permitted source.',
-      summary: 'A knowledge system accepts a bounded question, retrieves evidence with provenance, rejects unsupported claims, and returns an answer that can be traced to its sources.',
+      edges: ['RETRIEVE', 'VALIDATE', 'DELIVER'],
+      failure: 'Unsupported claims stop at the verification gate rather than propagating hallucinations to users.',
+      invariant: 'Every emitted token can be mechanistically traced to a primary citation and verified source.',
     },
     {
+      label: 'EXECUTION PATH: PAGED KV CACHE & TENSOR MEMORY ALLOCATION',
+      metric: 'Memory waste: < 4% · 3.2× throughput',
       nodes: [
-        ['Workload', 'Traffic shape, token counts, latency target, and cost boundary.'],
-        ['Measurement', 'Profile compute, memory movement, queues, and saturation.'],
-        ['Measured bottleneck', 'Locate the resource that actually limits the request path.'],
-        ['Operating envelope', 'A tested latency, throughput, and cost range.'],
+        { title: 'Inference Workload', meta: 'Batch: 64 · Context: 8k tokens', formula: 'Tokens → KV Cache', desc: 'Continuous batching request queue with variable prompt lengths, target latency bounds, and memory allocations.' },
+        { title: 'Paged Attention', meta: 'Physical block table index', formula: 'Virtual → Physical Pages', desc: 'Eliminate external and internal memory fragmentation by allocating non-contiguous physical page frames.' },
+        { title: 'VRAM Ceiling', meta: 'Peak capacity: 80GB H100', formula: 'Swap / Preempt on Spike', desc: 'The memory wall where continuous sequence expansion threatens GPU Out-of-Memory (OOM) faults.' },
+        { title: 'Predictable Serving', meta: 'Zero OOM · TTFT < 45ms', formula: 'Throughput Maximized', desc: 'Near-zero memory waste with deterministic multi-tenant concurrency and stable latency bounds.' },
       ],
-      edges: ['profile', 'isolate', 'validate'],
-      constraint: 'A faster model does not help when another part of the path misses the service target.',
-      takeaway: 'Performance can be traced to a measured bottleneck and a repeatable test.',
-      summary: 'An inference system begins with a real workload, profiles the complete request path, isolates the limiting resource, and produces a tested operating envelope.',
+      edges: ['PAGE', 'BOUND', 'EXECUTE'],
+      failure: 'Memory fragmentation causes premature OOM aborts long before compute capacity is fully saturated.',
+      invariant: 'Physical GPU memory pages are allocated on-demand with zero contiguous memory pre-reservation.',
     },
     {
+      label: 'EXECUTION PATH: PRODUCTION BOUNDARIES & TEAM OWNERSHIP',
+      metric: 'Handover complete · MTTR < 15m',
       nodes: [
-        ['Problem', 'The decision, user, owner, and consequence of failure.'],
-        ['System boundary', 'Explicit inputs, outputs, dependencies, and responsibilities.'],
-        ['Validation', 'Failure cases, acceptance tests, and observable operating signals.'],
-        ['Owned system', 'Runbooks, handover, and a team able to operate it.'],
+        { title: 'Problem Boundary', meta: 'Core objective & failure risks', formula: 'Scope → Invariants', desc: 'Consequential engineering challenge framed through explicit dependencies, service budgets, and ownership lines.' },
+        { title: 'Deterministic Build', meta: 'Reproducible CI/CD pipeline', formula: 'Artifacts → Verified', desc: 'Clean modular implementation verified against automated test matrices and strict architectural guardrails.' },
+        { title: 'Operating Limit', meta: 'Runbooks & Alert Thresholds', formula: 'Guard against Drift', desc: 'The system is unfinished if operating engineers cannot diagnose, debug, and safely maintain the system.' },
+        { title: 'Owned System', meta: 'Telemetry + Runbooks live', formula: 'Production Sustained', desc: 'Production-ready architecture handed over with reproducible code, clear signals, and operational autonomy.' },
       ],
-      edges: ['frame', 'build', 'hand over'],
-      constraint: 'The system is unfinished if the operating team cannot diagnose and own it.',
-      takeaway: 'Ownership and evidence survive the transition from project to production.',
-      summary: 'A delivery system frames a consequential problem, defines its boundary, validates failure cases, and is handed over with the evidence and operating knowledge required for ownership.',
+      edges: ['COMPOSE', 'VERIFY', 'OPERATE'],
+      failure: 'A system without telemetry or operating runbooks collapses into unmaintainable technical debt.',
+      invariant: 'Engineering handovers include reproducible build pipelines, verification suites, and operational runbooks.',
     },
   ];
 
-  function initialiseSystemMaps() {
-    document.querySelectorAll<HTMLElement>('[data-system-map]').forEach((root) => {
-      if (root.dataset.initialised === 'true') return;
-      root.dataset.initialised = 'true';
+  function initTraceInstrument() {
+    document.querySelectorAll<HTMLElement>('[data-system-trace]').forEach((root) => {
+      const tabs = root.querySelectorAll<HTMLButtonElement>('[data-trace-tab]');
+      const stateLabel = root.querySelector<HTMLElement>('[data-trace-state-label]');
+      const metricLabel = root.querySelector<HTMLElement>('[data-trace-metric]');
+      const svgTitles = root.querySelectorAll<SVGTextElement>('[data-svg-title]');
+      const svgMetas = root.querySelectorAll<SVGTextElement>('[data-svg-meta]');
+      const svgEdges = root.querySelectorAll<SVGTextElement>('[data-svg-edge]');
+      const cardTitles = root.querySelectorAll<HTMLElement>('[data-card-title]');
+      const cardBodies = root.querySelectorAll<HTMLElement>('[data-card-body]');
+      const failureEl = root.querySelector<HTMLElement>('[data-trace-failure]');
+      const invariantEl = root.querySelector<HTMLElement>('[data-trace-invariant]');
 
-      const controls = [...root.querySelectorAll<HTMLButtonElement>('[data-map-control]')];
-      const titles = [...root.querySelectorAll<HTMLElement>('[data-node-title]')];
-      const bodies = [...root.querySelectorAll<HTMLElement>('[data-node-body]')];
-      const edges = [...root.querySelectorAll<HTMLElement>('[data-edge-label]')];
-      const constraint = root.querySelector<HTMLElement>('[data-constraint]');
-      const takeaway = root.querySelector<HTMLElement>('[data-takeaway]');
-      const summary = root.querySelector<HTMLElement>('[data-accessible-summary]');
+      function setArchetype(idx: number) {
+        const arch = TRACE_ARCHETYPES[idx];
+        if (!arch) return;
 
-      const setPath = (index: number) => {
-        const path = SYSTEM_PATHS[index];
-        if (!path) return;
-
-        controls.forEach((control, controlIndex) => {
-          control.setAttribute('aria-pressed', String(controlIndex === index));
+        tabs.forEach((tab, tIdx) => {
+          const isActive = tIdx === idx;
+          tab.classList.toggle('active', isActive);
+          tab.setAttribute('aria-selected', String(isActive));
         });
-        path.nodes.forEach(([title, body], nodeIndex) => {
-          if (titles[nodeIndex]) titles[nodeIndex].textContent = title;
-          if (bodies[nodeIndex]) bodies[nodeIndex].textContent = body;
-        });
-        path.edges.forEach((label, edgeIndex) => {
-          if (edges[edgeIndex]) edges[edgeIndex].textContent = label;
-        });
-        if (constraint) constraint.textContent = path.constraint;
-        if (takeaway) takeaway.textContent = path.takeaway;
-        if (summary) summary.textContent = path.summary;
-      };
 
-      controls.forEach((control) => {
-        control.addEventListener('click', () => setPath(Number(control.dataset.mapControl)));
+        if (stateLabel) stateLabel.textContent = arch.label;
+        if (metricLabel) metricLabel.textContent = arch.metric;
+
+        arch.nodes.forEach((node, nIdx) => {
+          if (svgTitles[nIdx]) svgTitles[nIdx].textContent = node.title;
+          if (svgMetas[nIdx]) svgMetas[nIdx].textContent = node.meta;
+          if (cardTitles[nIdx]) cardTitles[nIdx].textContent = node.title;
+          if (cardBodies[nIdx]) cardBodies[nIdx].textContent = node.desc;
+        });
+
+        arch.edges.forEach((edge, eIdx) => {
+          if (svgEdges[eIdx]) svgEdges[eIdx].textContent = edge;
+        });
+
+        if (failureEl) failureEl.textContent = arch.failure;
+        if (invariantEl) invariantEl.textContent = arch.invariant;
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const idx = parseInt(tab.dataset.traceTab || '0', 10);
+          setArchetype(idx);
+        });
       });
-
-      setPath(0);
     });
   }
 
-  initialiseSystemMaps();
-  document.addEventListener('astro:page-load', initialiseSystemMaps);
+  initTraceInstrument();
+  document.addEventListener('astro:page-load', initTraceInstrument);
 </script>
 
 <style>
-  .system-map {
-    border-top: 2px solid var(--ie-ink);
-    border-bottom: 1px solid var(--ie-rule-strong);
+  .system-trace-instrument {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 1rem;
   }
 
-  .map-heading {
+  .trace-header {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
-    gap: clamp(2rem, 7vw, 6rem);
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+    gap: clamp(2rem, 6vw, 5rem);
     align-items: end;
-    padding: 1.25rem 0 1.5rem;
+    padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--ie-rule);
   }
 
-  .map-kicker,
-  .mechanism-step > span,
-  .constraint-note > span,
-  .takeaway-note > span {
-    margin: 0;
+  .trace-kicker {
+    margin: 0 0 0.5rem;
     color: var(--ie-blue);
     font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
+    font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: 0.055em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
-  .map-heading h3 {
-    max-width: 28ch;
-    margin: 0.45rem 0 0;
-    color: var(--ie-ink);
+  .trace-header h3 {
+    margin: 0;
     font-family: var(--font-serif);
-    font-size: clamp(1.75rem, 3vw, 2.6rem);
-    font-weight: 600;
-    line-height: 1.12;
+    font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--ie-ink);
   }
 
-  .map-heading > p {
-    max-width: 48ch;
+  .trace-lead {
     margin: 0;
     color: var(--ie-ink-secondary);
-    font-size: 1rem;
+    font-size: 0.96rem;
     line-height: 1.6;
   }
 
-  .map-controls {
+  .trace-controls {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border-bottom: 1px solid var(--ie-rule-strong);
+    background: var(--ie-surface);
   }
 
-  .map-controls button {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.15rem 0.75rem;
-    min-height: 88px;
-    padding: 1rem;
+  .trace-controls button {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 1.2rem 1.25rem;
     border: 0;
     border-right: 1px solid var(--ie-rule);
     background: transparent;
-    color: var(--ie-muted);
     text-align: left;
     cursor: pointer;
+    transition: background-color 120ms ease;
   }
 
-  .map-controls button:last-child { border-right: 0; }
+  .trace-controls button:last-child {
+    border-right: none;
+  }
 
-  .map-controls button > span {
-    grid-row: 1 / 3;
-    color: var(--ie-blue);
+  .tab-index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-  }
-
-  .map-controls strong {
-    color: var(--ie-ink);
-    font-size: 1rem;
-  }
-
-  .map-controls small {
+    font-size: 0.75rem;
+    font-weight: 600;
     color: var(--ie-muted);
-    font-size: 0.9rem;
-    line-height: 1.35;
   }
 
-  .map-controls button[aria-pressed='true'] {
+  .tab-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .tab-copy strong {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ie-ink);
+  }
+
+  .tab-copy small {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ie-muted);
+  }
+
+  .trace-controls button.active {
     background: var(--ie-blue-soft);
     box-shadow: inset 0 -3px 0 var(--ie-blue);
   }
 
-  .map-controls button[aria-pressed='true'] strong,
-  .map-controls button[aria-pressed='true'] small {
+  .trace-controls button.active .tab-index,
+  .trace-controls button.active strong {
     color: var(--ie-blue);
   }
 
-  .mechanism {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 56px minmax(0, 1fr) 56px minmax(0, 1fr) 56px minmax(0, 1fr);
-    align-items: stretch;
-    padding: 2rem 0;
+  .trace-controls button:hover:not(.active) {
+    background: var(--ie-surface-raised);
   }
 
-  .mechanism-step {
-    min-height: 190px;
-    padding: 1.25rem;
-    border: 1px solid var(--ie-rule-strong);
+  /* Canvas Visual Stage */
+  .trace-canvas-shell {
+    margin: 2rem 0;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
     background: var(--ie-surface);
+    overflow: hidden;
   }
 
-  .mechanism-step > span {
-    display: block;
-    margin-bottom: 1.75rem;
-    color: var(--ie-muted);
+  .trace-canvas-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--ie-surface-raised);
+    border-bottom: 1px solid var(--ie-rule);
+    flex-wrap: wrap;
   }
 
-  .mechanism-step strong {
-    display: block;
-    margin-bottom: 0.65rem;
+  .canvas-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ie-blue);
+    box-shadow: 0 0 0 3px rgba(40, 87, 217, 0.2);
+    animation: pulse-ring 2s infinite ease-in-out;
+  }
+
+  @keyframes pulse-ring {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.7; }
+  }
+
+  .canvas-state-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
     color: var(--ie-ink);
-    font-size: 1.1rem;
-    line-height: 1.25;
   }
 
-  .mechanism-step p {
-    margin: 0;
-    color: var(--ie-ink-secondary);
-    font-size: 0.94rem;
-    line-height: 1.55;
+  .canvas-metric {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ie-blue);
+    font-weight: 500;
   }
 
-  .constraint-step {
-    border: 2px solid var(--ie-rust);
-    padding: calc(1.25rem - 1px);
+  .trace-svg-wrap {
+    padding: 1.5rem 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-inline: contain;
+  }
+
+  .trace-svg {
+    display: block;
+    width: 100%;
+    min-width: 880px;
+    height: auto;
+  }
+
+  /* SVG Typography & Classes */
+  .node-box {
+    fill: var(--ie-surface);
+    stroke: var(--ie-rule-strong);
+    stroke-width: 1.5;
+    transition: stroke 150ms ease;
+  }
+
+  .node-box.rust {
+    stroke: var(--ie-rust);
+    fill: var(--ie-rust-soft);
+  }
+
+  .node-box.verified {
+    stroke: var(--ie-ink);
+  }
+
+  .node-tag-bg {
+    fill: var(--ie-surface-raised);
+  }
+
+  .node-tag-bg.blue { fill: var(--ie-blue-soft); }
+  .node-tag-bg.rust { fill: var(--ie-rust-soft); }
+  .node-tag-bg.green { fill: var(--ie-surface-raised); }
+
+  .node-tag {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    fill: var(--ie-muted);
+  }
+
+  .node-tag.blue { fill: var(--ie-blue); }
+  .node-tag.rust { fill: var(--ie-rust); }
+  .node-tag.green { fill: var(--ie-ink); }
+
+  .node-title {
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 600;
+    fill: var(--ie-ink);
+  }
+
+  .node-meta {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    fill: var(--ie-muted);
+  }
+
+  .node-formula {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    fill: var(--ie-blue);
+  }
+
+  .node-formula.rust { fill: var(--ie-rust); }
+
+  /* Animated Conduit Lines */
+  .conduit-base {
+    stroke: var(--ie-rule-strong);
+    stroke-width: 1.5;
+  }
+
+  .conduit-pulse {
+    stroke: var(--ie-blue);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 6;
+    animation: flow-dash 1.2s infinite linear;
+  }
+
+  @keyframes flow-dash {
+    from { stroke-dashoffset: 12; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  .conduit-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    fill: var(--ie-blue);
+  }
+
+  .trace-scroll-hint {
+    display: none;
+    padding: 0.4rem 1rem;
+    background: var(--ie-surface-raised);
+    border-top: 1px solid var(--ie-rule);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--ie-muted);
+    text-align: center;
+  }
+
+  /* Step Cards Grid */
+  .trace-step-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .step-card {
+    padding: 1.25rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    background: var(--ie-surface);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .step-card.constraint-card {
+    border-color: var(--ie-rust);
     background: var(--ie-rust-soft);
   }
 
-  .constraint-step > span { color: var(--ie-rust); }
-
-  .mechanism-edge {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .mechanism-edge::before {
-    content: '';
-    position: absolute;
-    right: 0;
-    left: 0;
-    height: 1px;
-    background: var(--ie-blue);
-  }
-
-  .mechanism-edge::after {
-    content: '';
-    position: absolute;
-    right: 1px;
-    width: 7px;
-    height: 7px;
-    border-top: 1px solid var(--ie-blue);
-    border-right: 1px solid var(--ie-blue);
-    transform: rotate(45deg);
-  }
-
-  .mechanism-edge span {
-    position: relative;
-    z-index: 1;
-    padding: 0.25rem 0.35rem;
-    background: var(--ie-surface-raised);
-    color: var(--ie-blue);
+  .step-num {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ie-blue);
   }
 
-  .map-conclusion {
+  .step-num.rust { color: var(--ie-rust); }
+
+  .step-card h4 {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ie-ink);
+  }
+
+  .step-card p {
+    margin: 0;
+    color: var(--ie-ink-secondary);
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  /* Conclusion Blocks */
+  .trace-conclusion-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    border-top: 1px solid var(--ie-rule-strong);
+    gap: 1rem;
   }
 
-  .constraint-note,
-  .takeaway-note {
-    min-height: 116px;
-    padding: 1.25rem;
+  .conclusion-block {
+    padding: 1.25rem 1.4rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    background: var(--ie-surface);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
-  .constraint-note {
-    border-right: 1px solid var(--ie-rule);
+  .failure-block {
+    border-left: 3px solid var(--ie-rust);
   }
 
-  .constraint-note > span { color: var(--ie-rust); }
+  .inspect-block {
+    border-left: 3px solid var(--ie-blue);
+  }
 
-  .constraint-note strong,
-  .takeaway-note strong {
-    display: block;
-    max-width: 54ch;
-    margin-top: 0.55rem;
-    color: var(--ie-ink);
-    font-size: 0.98rem;
+  .conclusion-tag {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ie-muted);
+  }
+
+  .failure-block .conclusion-tag { color: var(--ie-rust); }
+  .inspect-block .conclusion-tag { color: var(--ie-blue); }
+
+  .conclusion-block strong {
+    font-size: 0.95rem;
     font-weight: 500;
     line-height: 1.5;
+    color: var(--ie-ink);
   }
 
-  .accessible-summary {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-
-  @media (max-width: 900px) {
-    .map-heading {
+  @media (max-width: 960px) {
+    .trace-header {
       grid-template-columns: 1fr;
       gap: 1rem;
     }
 
-    .mechanism {
+    .trace-controls {
       grid-template-columns: 1fr;
-      padding-block: 1.5rem;
     }
 
-    .mechanism-step {
-      min-height: 0;
+    .trace-controls button {
+      border-right: none;
+      border-bottom: 1px solid var(--ie-rule);
     }
 
-    .mechanism-step > span {
-      margin-bottom: 1rem;
+    .trace-controls button:last-child {
+      border-bottom: none;
     }
 
-    .mechanism-edge {
-      min-height: 48px;
-      justify-content: flex-start;
-      padding-left: 1.25rem;
+    .trace-step-grid {
+      grid-template-columns: 1fr 1fr;
     }
 
-    .mechanism-edge::before {
-      top: 0;
-      bottom: 0;
-      left: 1.25rem;
-      width: 1px;
-      height: auto;
+    .trace-conclusion-grid {
+      grid-template-columns: 1fr;
     }
 
-    .mechanism-edge::after {
-      right: auto;
-      bottom: 2px;
-      left: calc(1.25rem - 3px);
-      transform: rotate(135deg);
-    }
-
-    .mechanism-edge span {
-      margin-left: 1rem;
+    .trace-scroll-hint {
+      display: block;
     }
   }
 
   @media (max-width: 640px) {
-    .map-controls {
+    .trace-step-grid {
       grid-template-columns: 1fr;
-    }
-
-    .map-controls button {
-      min-height: 72px;
-      border-right: 0;
-      border-bottom: 1px solid var(--ie-rule);
-    }
-
-    .map-controls button:last-child { border-bottom: 0; }
-
-    .map-conclusion {
-      grid-template-columns: 1fr;
-    }
-
-    .constraint-note {
-      border-right: 0;
-      border-bottom: 1px solid var(--ie-rule);
     }
   }
 </style>
