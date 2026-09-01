@@ -391,6 +391,23 @@ const chapters = buildHierarchy(headings);
     background: var(--accent-subtle);
   }
 
+  :global(html.instrumented) .toc-title,
+  :global(html.instrumented) .toc-progress-pct {
+    font-size: 0.8125rem;
+  }
+
+  :global(html.instrumented) .toc-chapter-link {
+    padding-block: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  :global(html.instrumented) .toc-subchapter-link {
+    padding-block: 0.35rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
   @media (max-width: 960px) {
     .toc-root {
       max-height: none;

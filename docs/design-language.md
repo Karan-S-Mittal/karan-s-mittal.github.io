@@ -32,7 +32,8 @@ The visual system combines the authority of an editorial publication with the pr
 | Interface | IBM Plex Sans | Navigation, body copy, controls, diagram labels |
 | Instrument | IBM Plex Mono | Measurements, metadata, citations, code, state readouts |
 
-- Reading column: **700px**, 17px body, 1.68–1.78 line height.
+- Reading column: **700px**, 18px body, 1.72–1.8 line height.
+- Technical labels and metadata: **13px minimum**; dense diagram labels may use 12px only when geometry cannot support 13px.
 - Essay H1: 48–90px depending on viewport; H2: 34–52px.
 - Avoid mixing display and interface faces within the same semantic role.
 

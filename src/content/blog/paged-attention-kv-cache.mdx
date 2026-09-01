@@ -154,8 +154,8 @@ Because the KV cache grows linearly with sequence length and batch size, AI rese
 
 <KVEvolutionArchitecture
   exhibit="02"
-  title="Evolution of KV cache heads"
-  caption="With 8 query heads held constant, MHA stores 8 KV heads (100% VRAM), MQA collapses to 1 shared head (12.5%), and GQA groups query heads to achieve a 25% VRAM footprint with high expressiveness."
+  title="What changes from MHA to GQA to MQA"
+  caption="With eight query heads held constant, MHA stores eight K/V head sets, the illustrated GQA configuration stores two, and MQA stores one. The relative K/V cache footprint falls in the same ratio."
 />
 
 #### 1. Multi-Head Attention (MHA — 2017)
@@ -184,8 +184,8 @@ To avoid continuous dynamic reallocations, serving engines adopted a conservativ
 
 <MemoryFragmentationArchitecture
   exhibit="03"
-  title="The three sins of contiguous allocation"
-  caption="Contiguous memory allocation pre-reserves maximum sequence lengths upfront, permanently locks internal ghost memory after early <eos> termination, and causes multi-tenant external fragmentation leading to premature OOM crashes."
+  title="Why maximum-length reservation wastes capacity"
+  caption="The example request has produced five tokens. Contiguous allocation holds twelve slots for it; fixed-size allocation requests frames as the sequence grows and leaves unused space only in the active final block."
 />
 
 ### The Three Sins of Contiguous Allocation
@@ -218,7 +218,7 @@ PagedAttention decouples the **logical token stream** from **physical GPU device
 
 Let us walk through how a sequence transforms through four progressive stages:
 
-<PagedAttentionStepsArchitecture exhibit="04" title="Logical blocks → physical frames → kernel gather" caption="Follow the four-stage path from logical token blocks to the block table, scattered GPU frames, and the in-kernel gather. Select a stage to isolate its role." />
+<PagedAttentionStepsArchitecture exhibit="04" title="Logical blocks → block table → physical frames" caption="Logical token blocks remain ordered in the request while a block table maps them to any available physical GPU frames. The attention kernel follows that table directly when reading K/V data." />
 
 ### Step 1: Virtual Blocks (Logical Slicing)
 When a request enters the engine, its logical token stream is partitioned into small, fixed-size **logical blocks** (typically 16 tokens; shown with block size $B = 4$ in the diagram for clarity):

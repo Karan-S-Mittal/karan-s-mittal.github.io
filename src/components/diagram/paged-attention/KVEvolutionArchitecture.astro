@@ -1,302 +1,172 @@
 ---
-/**
- * KVEvolutionArchitecture.astro
- * HTML/CSS-native architectural comparison of MHA vs MQA vs GQA KV Cache Heads.
- */
 import Exhibit from '../../editorial/Exhibit.astro';
 
-interface Props {
-  caption?: string;
-  exhibit?: string;
-  title?: string;
-}
+interface Props { caption?: string; exhibit?: string; title?: string; }
 
 const {
-  caption = 'Multi-Head Attention (MHA) pairs each Query head with its own KV head. Multi-Query Attention (MQA) shares 1 KV head across all Query heads (up to 8× memory reduction, with potential quality trade-offs). Grouped-Query Attention (GQA) groups Query heads into clusters, striking a clean balance between memory bandwidth and capacity.',
+  caption = 'For the same eight query heads, MHA stores eight K/V heads, GQA shares two K/V heads across query groups, and MQA shares one K/V head across every query. Fewer stored K/V heads reduce cache capacity and bandwidth requirements.',
   exhibit = '02',
-  title = 'The Evolution of KV-Cache Head Architectures: MHA vs MQA vs GQA',
+  title = 'The quantity that changes from MHA to GQA to MQA',
 } = Astro.props;
+
+const modes = [
+  { name: 'MHA', detail: 'No sharing', kv: 8, ratio: '8 Q : 8 KV', relative: '1.0× cache units', tone: 'constraint' },
+  { name: 'GQA', detail: 'Grouped sharing', kv: 2, ratio: '8 Q : 2 KV', relative: '0.25× cache units', tone: 'active' },
+  { name: 'MQA', detail: 'Full sharing', kv: 1, ratio: '8 Q : 1 KV', relative: '0.125× cache units', tone: 'neutral' },
+];
 ---
 
-<Exhibit exhibit={exhibit} title={title} badge="TENSOR GEOMETRY" caption={caption} wide>
-  <div class="head-root">
-    <div class="head-grid">
-      <!-- MHA -->
-      <div class="head-card">
-        <div class="head-card-top">
-          <span class="head-tag">MHA (MULTI-HEAD)</span>
-          <h4 class="head-title">1:1 Ratio</h4>
-          <span class="head-meta">8 Query Heads &bull; 8 KV Heads</span>
-        </div>
+<Exhibit exhibit={exhibit} title={title} badge="KV HEAD GEOMETRY" caption={caption} wide>
+  <div class="head-comparison">
+    <header class="comparison-question">
+      <span>Question</span>
+      <strong>For eight query heads, how many key/value heads must the cache retain?</strong>
+    </header>
 
-        <div class="tensor-diagram">
-          <div class="q-group">
-            <span class="t-lbl">Query:</span>
-            <div class="q-boxes">
-              <span class="t-box q-box">Q₁</span>
-              <span class="t-box q-box">Q₂</span>
-              <span class="t-box q-box">Q₃</span>
-              <span class="t-box q-box">Q₄</span>
+    <div class="mode-grid">
+      {modes.map((mode) => (
+        <article class:list={['mode', mode.tone]}>
+          <div class="mode-heading">
+            <span>{mode.name}</span>
+            <div><strong>{mode.ratio}</strong><small>{mode.detail}</small></div>
+          </div>
+
+          <div class="head-row">
+            <span class="row-label">Query heads</span>
+            <div class="boxes query-boxes" aria-label="Eight query heads">
+              {Array.from({ length: 8 }, (_, index) => <i>Q{index + 1}</i>)}
             </div>
           </div>
-          <div class="map-arrows">&darr;&darr;&darr;&darr; (1:1 Independent)</div>
-          <div class="kv-group">
-            <span class="t-lbl">KV Heads:</span>
-            <div class="kv-boxes">
-              <span class="t-box kv-box">KV₁</span>
-              <span class="t-box kv-box">KV₂</span>
-              <span class="t-box kv-box">KV₃</span>
-              <span class="t-box kv-box">KV₄</span>
+
+          <div class="sharing-arrow" aria-hidden="true">↓ share across groups ↓</div>
+
+          <div class="head-row">
+            <span class="row-label">Stored K/V heads</span>
+            <div class="boxes kv-boxes" aria-label={`${mode.kv} stored key value heads`}>
+              {Array.from({ length: mode.kv }, (_, index) => <i>KV{index + 1}</i>)}
             </div>
           </div>
-        </div>
 
-        <div class="head-footer">
-          <span class="footer-cost">Baseline Cache: 100% (1.31 GB / seq)</span>
-          <span class="footer-note">Heavy memory bandwidth during decode</span>
-        </div>
-      </div>
-
-      <!-- MQA -->
-      <div class="head-card">
-        <div class="head-card-top">
-          <span class="head-tag tag-warn">MQA (MULTI-QUERY)</span>
-          <h4 class="head-title">8:1 Extreme Sharing</h4>
-          <span class="head-meta">8 Query Heads &bull; 1 Shared KV Head</span>
-        </div>
-
-        <div class="tensor-diagram">
-          <div class="q-group">
-            <span class="t-lbl">Query:</span>
-            <div class="q-boxes">
-              <span class="t-box q-box">Q₁</span>
-              <span class="t-box q-box">Q₂</span>
-              <span class="t-box q-box">Q₃</span>
-              <span class="t-box q-box">Q₄</span>
-            </div>
-          </div>
-          <div class="map-arrows">&searrow;&swarrow; (Shared Broadcast)</div>
-          <div class="kv-group">
-            <span class="t-lbl">KV Heads:</span>
-            <div class="kv-boxes">
-              <span class="t-box kv-box-shared">Single Shared KV Head</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="head-footer">
-          <span class="footer-cost">Max Savings: 12.5% (8× reduction)</span>
-          <span class="footer-note">May suffer representational capacity loss</span>
-        </div>
-      </div>
-
-      <!-- GQA -->
-      <div class="head-card card-gqa">
-        <div class="head-card-top">
-          <span class="head-tag tag-signal">GQA (GROUPED-QUERY)</span>
-          <h4 class="head-title">4:1 Grouped Balance</h4>
-          <span class="head-meta">8 Query Heads &bull; 2 KV Heads (Llama-3 Standard)</span>
-        </div>
-
-        <div class="tensor-diagram">
-          <div class="q-group">
-            <span class="t-lbl">Query Groups:</span>
-            <div class="q-boxes">
-              <span class="t-box q-box">[Q₁, Q₂]</span>
-              <span class="t-box q-box">[Q₃, Q₄]</span>
-            </div>
-          </div>
-          <div class="map-arrows">&darr; &darr; (Grouped Projections)</div>
-          <div class="kv-group">
-            <span class="t-lbl">KV Heads:</span>
-            <div class="kv-boxes">
-              <span class="t-box kv-box-gqa">Group 1 KV</span>
-              <span class="t-box kv-box-gqa">Group 2 KV</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="head-footer">
-          <span class="footer-cost footer-signal">Optimal: 25% (4× reduction)</span>
-          <span class="footer-note">Full model expressivity with 4× throughput</span>
-        </div>
-      </div>
+          <p class="mode-result"><strong>{mode.relative}</strong><span>relative to MHA</span></p>
+        </article>
+      ))}
     </div>
 
-    <!-- NOTICE LEADER -->
-    <div class="head-notice">
-      <span class="notice-arrow">&larr;</span>
-      <span>Notice how Grouped-Query Attention (GQA) strikes the golden mean: 4× reduction in memory bandwidth bottlenecks while preserving full expressive capacity.</span>
-    </div>
+    <aside class="head-takeaway">
+      <span>What changes</span>
+      <p>The number of query heads stays fixed. Only the number of retained K/V head sets falls. That directly reduces how much cache data the decoder stores and moves.</p>
+    </aside>
   </div>
 </Exhibit>
 
 <style>
-  .head-root {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-4);
-    background: var(--surface-card);
-    border-radius: var(--radius-card);
-  }
+  .head-comparison { width: 100%; }
 
-  .head-grid {
+  .comparison-question,
+  .head-takeaway {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: var(--space-3);
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: 1rem 0;
+    border-top: 2px solid var(--ie-ink, var(--text));
+    border-bottom: 1px solid var(--ie-rule-strong, var(--border-default));
   }
 
-  .head-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-4);
-    background: var(--bg);
-    border: 1px solid var(--border-default);
-    border-radius: 8px;
-  }
-
-  .card-gqa {
-    background: color-mix(in srgb, var(--accent) 5%, var(--bg));
-    border-color: var(--accent);
-  }
-
-  .head-card-top {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .head-tag {
+  .comparison-question > span,
+  .head-takeaway > span,
+  .row-label,
+  .mode-heading > span {
+    color: var(--ie-blue, var(--accent));
     font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-  }
-
-  .tag-warn { color: var(--text-muted); }
-  .tag-signal { color: var(--accent); }
-
-  .head-title {
-    margin: 0;
-    font-size: 13.5px;
+    font-size: 0.8125rem;
     font-weight: 600;
-    color: var(--text);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
-  .head-meta {
-    font-size: 11px;
-    color: var(--text-muted);
+  .comparison-question strong {
+    color: var(--ie-ink, var(--text));
+    font-size: 1rem;
+    font-weight: 550;
   }
 
-  .tensor-diagram {
+  .mode-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .mode {
+    padding: 1.35rem;
+    border-right: 1px solid var(--ie-rule, var(--border-default));
+  }
+
+  .mode:last-child { border-right: 0; }
+  .mode.active { background: var(--ie-blue-soft, var(--accent-subtle)); }
+
+  .mode-heading {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr;
+    gap: 0.7rem;
+    min-height: 68px;
+    border-bottom: 1px solid var(--ie-rule, var(--border-default));
+  }
+
+  .mode.constraint .mode-heading > span { color: var(--ie-rust, var(--signal-warm)); }
+  .mode-heading div { display: flex; flex-direction: column; }
+  .mode-heading strong { color: var(--ie-ink, var(--text)); font-size: 1rem; }
+  .mode-heading small { color: var(--ie-muted, var(--text-muted)); font-size: 0.88rem; }
+
+  .head-row { padding-top: 1rem; }
+  .row-label { display: block; margin-bottom: 0.55rem; color: var(--ie-muted, var(--text-muted)); }
+
+  .boxes { display: grid; gap: 0.3rem; }
+  .query-boxes { grid-template-columns: repeat(4, 1fr); }
+  .kv-boxes { grid-template-columns: repeat(4, 1fr); }
+
+  .boxes i {
+    display: flex;
+    min-height: 34px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--ie-rule-strong, var(--border-default));
+    border-radius: 3px;
+    color: var(--ie-ink-secondary, var(--text-secondary));
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-style: normal;
+  }
+
+  .kv-boxes i {
+    border-color: var(--ie-blue, var(--accent));
+    color: var(--ie-blue, var(--accent));
+  }
+
+  .sharing-arrow {
+    margin-top: 0.9rem;
+    color: var(--ie-muted, var(--text-muted));
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-align: center;
+  }
+
+  .mode-result {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: var(--space-3);
-    background: var(--surface-card);
-    border: 1px solid var(--border-default);
-    border-radius: 6px;
+    margin: 1.25rem 0 0;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--ie-rule, var(--border-default));
   }
 
-  .t-lbl {
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    font-weight: 600;
-    color: var(--text-muted);
-  }
+  .mode-result strong { color: var(--ie-ink, var(--text)); font-size: 1rem; }
+  .mode-result span { color: var(--ie-muted, var(--text-muted)); font-size: 0.85rem; }
 
-  .q-boxes, .kv-boxes {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    margin-top: 2px;
-  }
+  .head-takeaway { border-top-width: 1px; }
+  .head-takeaway p { margin: 0; color: var(--ie-ink-secondary, var(--text-secondary)); font-size: 0.95rem; line-height: 1.55; }
 
-  .t-box {
-    padding: 3px 6px;
-    border-radius: 4px;
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    font-weight: 700;
-  }
-
-  .q-box {
-    background: color-mix(in srgb, var(--text) 6%, transparent);
-    border: 1px solid var(--border-default);
-    color: var(--text);
-  }
-
-  .kv-box {
-    background: color-mix(in srgb, var(--accent) 15%, transparent);
-    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-    color: var(--accent);
-  }
-
-  .kv-box-shared {
-    flex: 1;
-    text-align: center;
-    background: color-mix(in srgb, var(--signal-warm, #A63D17) 20%, transparent);
-    border: 1px solid var(--accent);
-    color: var(--text);
-  }
-
-  .kv-box-gqa {
-    flex: 1;
-    text-align: center;
-    background: color-mix(in srgb, var(--accent) 15%, transparent);
-    border: 1px solid var(--accent);
-    color: var(--accent);
-  }
-
-  .map-arrows {
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    text-align: center;
-    color: var(--text-muted);
-    padding: 2px 0;
-  }
-
-  .head-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding-top: var(--space-2);
-    border-top: 1px dashed var(--border-default);
-    margin-top: auto;
-  }
-
-  .footer-cost {
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .footer-signal {
-    color: var(--accent);
-  }
-
-  .footer-note {
-    font-size: 10.5px;
-    color: var(--text-muted);
-  }
-
-  .head-notice {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    font-size: 12px;
-    line-height: 1.5;
-    color: var(--text-muted);
-    padding-top: var(--space-2);
-    border-top: 1px dashed var(--border-default);
-  }
-
-  .notice-arrow {
-    font-weight: 700;
-    color: var(--accent);
+  @media (max-width: 800px) {
+    .mode-grid { grid-template-columns: 1fr; }
+    .mode { border-right: 0; border-bottom: 1px solid var(--ie-rule-strong, var(--border-default)); }
+    .mode:last-child { border-bottom: 0; }
+    .comparison-question, .head-takeaway { grid-template-columns: 1fr; gap: 0.4rem; }
   }
 </style>

@@ -364,13 +364,13 @@ const citations = rawCitations.map((c) => ({
 
   :global(html.instrumented) .vh-tag {
     color: var(--ie-ink);
-    font-size: 0.72rem;
+    font-size: var(--ie-type-label);
   }
 
   :global(html.instrumented) .vh-subtitle {
     color: var(--ie-muted);
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: var(--ie-type-label);
   }
 
   :global(html.instrumented) .verification-grid {
@@ -406,7 +406,7 @@ const citations = rawCitations.map((c) => ({
   :global(html.instrumented) .citation-claim {
     max-width: 55ch;
     color: var(--ie-ink);
-    font-size: 0.9rem;
+    font-size: 1rem;
     line-height: 1.5;
   }
 
@@ -428,7 +428,7 @@ const citations = rawCitations.map((c) => ({
     .citation-anchor-code,
     .citation-link
   ) {
-    font-size: 0.72rem;
+    font-size: var(--ie-type-label);
   }
 
   @media (min-width: 640px) {

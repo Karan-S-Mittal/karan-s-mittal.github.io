@@ -19,6 +19,9 @@ html.instrumented {
   --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
   --font-serif: 'IBM Plex Serif', Georgia, serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --ie-type-label: 0.8125rem;
+  --ie-type-small: 0.9375rem;
+  --ie-type-body: 1.125rem;
 
   --bg: var(--ie-canvas);
   --bg-elevated: var(--ie-surface);
@@ -90,8 +93,8 @@ html.instrumented body {
   background-image: none;
   color: var(--ie-ink);
   font-family: var(--font-sans);
-  font-size: 17px;
-  line-height: 1.68;
+  font-size: 18px;
+  line-height: 1.72;
   font-feature-settings: 'ss01' on, 'ss03' on;
   transition: background-color 140ms ease, color 140ms ease;
 }
@@ -139,6 +142,6 @@ html.instrumented .copy-code {
 
 @media (max-width: 720px) {
   html.instrumented body {
-    font-size: 16px;
+    font-size: 17px;
   }
 }

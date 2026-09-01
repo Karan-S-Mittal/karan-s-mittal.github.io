@@ -1,250 +1,139 @@
 ---
-/**
- * CopyOnWriteArchitecture.astro
- * HTML/CSS-native diagram of Parallel Sampling with Copy-On-Write (CoW) block sharing.
- */
 import Exhibit from '../../editorial/Exhibit.astro';
 
-interface Props {
-  caption?: string;
-  exhibit?: string;
-  title?: string;
-}
+interface Props { caption?: string; exhibit?: string; title?: string; }
 
 const {
-  caption = 'In parallel sampling, beam search, or shared system prompts, multiple output sequences share physical GPU prompt blocks with an incremented reference count (ref_count = 2). When a candidate branches, only its newly generated diverging token block is allocated separately (Copy-on-Write).',
+  caption = 'Two generated candidates initially reference the same physical prompt block. When their outputs diverge, each candidate allocates only a new private block; the unchanged prefix remains stored once.',
   exhibit = '05',
-  title = 'Parallel Sampling and Copy-on-Write (CoW) Block Sharing',
+  title = 'What is shared and what is copied during copy-on-write',
 } = Astro.props;
 ---
 
-<Exhibit exhibit={exhibit} title={title} badge="PREFIX SHARING &amp; COW" caption={caption} wide>
-  <div class="cow-root">
-    <div class="cow-grid">
-      <!-- SHARED PROMPT BLOCKS -->
-      <div class="cow-card card-shared">
-        <div class="cow-head">
-          <span class="cow-tag tag-signal">SHARED PROMPT PREFIX</span>
-          <h4 class="cow-title">Physical Frame #10</h4>
-          <span class="cow-ref">Reference Count: ref_count = 2</span>
-        </div>
+<Exhibit exhibit={exhibit} title={title} badge="PREFIX SHARING" caption={caption} wide>
+  <div class="cow-path">
+    <header class="cow-question">
+      <span>Question</span>
+      <strong>Two samples begin with the same prompt. Which tokens need two physical copies?</strong>
+    </header>
 
-        <div class="cow-content-box">
-          <span class="box-lbl">Shared Prompt Tokens:</span>
-          <div class="token-list">
-            <span class="tok-pill">"San"</span>
-            <span class="tok-pill">"Francisco"</span>
-            <span class="tok-pill">"is"</span>
-            <span class="tok-pill">"a"</span>
-          </div>
+    <div class="cow-flow">
+      <section class="shared-prefix">
+        <span class="step-label">01 · Before divergence</span>
+        <h4>One physical prefix block</h4>
+        <div class="frame shared-frame">
+          <span>Frame 10 · ref_count = 2</span>
+          <div><i>San</i><i>Francisco</i><i>is</i><i>a</i></div>
         </div>
+        <p>Sample A and Sample B both point to this frame.</p>
+      </section>
 
-        <div class="cow-foot">
-          <span class="foot-bold">Zero Duplicate Memory</span>
-          <span class="foot-sub">Sample A and Sample B alias the same physical VRAM</span>
-        </div>
+      <div class="branch" aria-hidden="true">
+        <span>first different token</span>
+        <i></i>
       </div>
 
-      <div class="cow-branch-indicator">
-        <span class="branch-label">COW DIVERGENCE &rarr;</span>
-      </div>
+      <section class="private-branches">
+        <span class="step-label">02 · After divergence</span>
+        <h4>Only new output blocks become private</h4>
 
-      <!-- DIVERGED CANDIDATES -->
-      <div class="diverge-col">
-        <!-- Candidate A -->
-        <div class="cow-card">
-          <div class="cow-head">
-            <span class="cow-tag">SAMPLE A (DIVERGED)</span>
-            <h4 class="cow-title">Physical Frame #14</h4>
-            <span class="cow-ref">ref_count = 1</span>
-          </div>
-          <div class="cow-content-box">
-            <span class="box-lbl">Appended Tokens:</span>
-            <div class="token-list">
-              <span class="tok-pill pill-cand">"historic"</span>
-              <span class="tok-pill pill-cand">"city"</span>
-            </div>
-          </div>
-        </div>
+        <article class="candidate">
+          <div class="candidate-label"><strong>Sample A</strong><span>still references Frame 10</span></div>
+          <div class="frame private-frame"><span>New Frame 14</span><div><i>historic</i><i>city</i></div></div>
+        </article>
 
-        <!-- Candidate B -->
-        <div class="cow-card">
-          <div class="cow-head">
-            <span class="cow-tag">SAMPLE B (DIVERGED)</span>
-            <h4 class="cow-title">Physical Frame #19</h4>
-            <span class="cow-ref">ref_count = 1</span>
-          </div>
-          <div class="cow-content-box">
-            <span class="box-lbl">Appended Tokens:</span>
-            <div class="token-list">
-              <span class="tok-pill pill-cand">"vibrant"</span>
-              <span class="tok-pill pill-cand">"hub"</span>
-            </div>
-          </div>
-        </div>
-      </div>
+        <article class="candidate">
+          <div class="candidate-label"><strong>Sample B</strong><span>still references Frame 10</span></div>
+          <div class="frame private-frame"><span>New Frame 19</span><div><i>vibrant</i><i>hub</i></div></div>
+        </article>
+      </section>
     </div>
 
-    <!-- NOTICE LEADER -->
-    <div class="cow-notice">
-      <span class="notice-arrow">&larr;</span>
-      <span>Notice how Copy-on-Write sharing reduces memory usage by up to 55% during parallel sampling and multi-candidate generation.</span>
-    </div>
+    <aside class="cow-takeaway">
+      <span>What gets copied</span>
+      <p><strong>Not the shared prompt.</strong> Copy-on-write allocates new physical storage only for the blocks that differ after the branch.</p>
+    </aside>
   </div>
 </Exhibit>
 
 <style>
-  .cow-root {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-4);
-    background: var(--surface-card);
-    border-radius: var(--radius-card);
-  }
+  .cow-path { width: 100%; }
 
-  .cow-grid {
+  .cow-question,
+  .cow-takeaway {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--space-3);
-    align-items: center;
+    grid-template-columns: 9rem minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: 1rem 0;
+    border-top: 2px solid var(--ie-ink, var(--text));
+    border-bottom: 1px solid var(--ie-rule-strong, var(--border-default));
   }
 
-  .cow-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    padding: var(--space-3) var(--space-4);
-    background: var(--bg);
-    border: 1px solid var(--border-default);
-    border-radius: 8px;
-  }
-
-  .card-shared {
-    background: color-mix(in srgb, var(--accent) 5%, var(--bg));
-    border-color: var(--accent);
-  }
-
-  .cow-head {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .cow-tag {
+  .cow-question > span,
+  .cow-takeaway > span,
+  .step-label {
+    color: var(--ie-blue, var(--accent));
     font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
   }
 
-  .tag-signal { color: var(--accent); }
+  .cow-question strong { color: var(--ie-ink, var(--text)); font-size: 1rem; font-weight: 550; }
 
-  .cow-title {
-    margin: 0;
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--text);
+  .cow-flow {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) 110px minmax(0, 1.2fr);
+    align-items: stretch;
+    padding: 1.5rem 0;
   }
 
-  .cow-ref {
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    font-weight: 700;
-    color: var(--accent);
+  .shared-prefix,
+  .private-branches {
+    padding: 1.25rem;
+    border: 1px solid var(--ie-rule-strong, var(--border-default));
+    background: var(--ie-surface, var(--surface-card));
   }
 
-  .cow-content-box {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: var(--space-2) var(--space-3);
-    background: var(--surface-card);
-    border: 1px solid var(--border-default);
-    border-radius: 6px;
-  }
+  .shared-prefix h4,
+  .private-branches h4 { margin: 0.55rem 0 1.25rem; color: var(--ie-ink, var(--text)); font-size: 1.15rem; }
+  .shared-prefix > p { margin: 1rem 0 0; color: var(--ie-ink-secondary, var(--text-secondary)); font-size: 0.94rem; line-height: 1.5; }
 
-  .box-lbl {
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    font-weight: 600;
-    color: var(--text-muted);
-  }
+  .frame { border: 1px solid var(--ie-blue, var(--accent)); }
+  .frame > span { display: block; padding: 0.5rem 0.65rem; border-bottom: 1px solid var(--ie-blue, var(--accent)); background: var(--ie-blue-soft, var(--accent-subtle)); color: var(--ie-blue, var(--accent)); font-family: var(--font-mono); font-size: 0.78rem; }
+  .frame > div { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.75rem; }
+  .frame i { padding: 0.35rem 0.5rem; border: 1px solid var(--ie-rule-strong, var(--border-default)); border-radius: 3px; color: var(--ie-ink, var(--text)); font-family: var(--font-mono); font-size: 0.82rem; font-style: normal; }
 
-  .token-list {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-  }
+  .branch { position: relative; display: flex; align-items: center; justify-content: center; }
+  .branch::before, .branch::after { content: ''; position: absolute; right: 0; left: 0; height: 1px; background: var(--ie-blue, var(--accent)); }
+  .branch::before { top: 38%; transform: rotate(-13deg); transform-origin: left; }
+  .branch::after { bottom: 38%; transform: rotate(13deg); transform-origin: left; }
+  .branch i::before, .branch i::after { content: ''; position: absolute; right: 1px; width: 7px; height: 7px; border-top: 1px solid var(--ie-blue, var(--accent)); border-right: 1px solid var(--ie-blue, var(--accent)); transform: rotate(45deg); }
+  .branch i::before { top: calc(38% - 4px); }
+  .branch i::after { bottom: calc(38% - 4px); }
+  .branch > span { position: relative; z-index: 1; padding: 0.3rem; background: var(--ie-surface-raised, var(--bg)); color: var(--ie-rust, var(--signal-warm)); font-family: var(--font-mono); font-size: 0.72rem; text-align: center; text-transform: uppercase; }
 
-  .tok-pill {
-    padding: 3px 6px;
-    border-radius: 4px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 600;
-    background: color-mix(in srgb, var(--accent) 15%, transparent);
-    color: var(--accent);
-    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-  }
+  .candidate { display: grid; grid-template-columns: minmax(8rem, 0.7fr) minmax(0, 1.3fr); gap: 1rem; align-items: center; padding: 0.85rem 0; border-top: 1px solid var(--ie-rule, var(--border-default)); }
+  .candidate:first-of-type { border-top: 0; }
+  .candidate-label { display: flex; flex-direction: column; }
+  .candidate-label strong { color: var(--ie-ink, var(--text)); font-size: 0.95rem; }
+  .candidate-label span { color: var(--ie-muted, var(--text-muted)); font-size: 0.82rem; line-height: 1.4; }
+  .private-frame { border-color: var(--ie-rust, var(--signal-warm)); }
+  .private-frame > span { border-color: var(--ie-rust, var(--signal-warm)); background: var(--ie-rust-soft, transparent); color: var(--ie-rust, var(--signal-warm)); }
 
-  .pill-cand {
-    background: color-mix(in srgb, var(--text) 6%, transparent);
-    color: var(--text);
-    border-color: var(--border-default);
-  }
+  .cow-takeaway { border-top-width: 1px; }
+  .cow-takeaway p { margin: 0; color: var(--ie-ink-secondary, var(--text-secondary)); font-size: 0.95rem; line-height: 1.55; }
+  .cow-takeaway strong { color: var(--ie-ink, var(--text)); }
 
-  .cow-foot {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding-top: var(--space-2);
-    border-top: 1px dashed var(--border-default);
-    margin-top: auto;
-  }
-
-  .foot-bold {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .foot-sub {
-    font-size: 10px;
-    color: var(--text-muted);
-  }
-
-  .cow-branch-indicator {
-    display: flex;
-    justify-content: center;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 0.05em;
-  }
-
-  .diverge-col {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  .cow-notice {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    font-size: 12px;
-    line-height: 1.5;
-    color: var(--text-muted);
-    padding-top: var(--space-2);
-    border-top: 1px dashed var(--border-default);
-  }
-
-  .notice-arrow {
-    font-weight: 700;
-    color: var(--accent);
+  @media (max-width: 760px) {
+    .cow-question, .cow-takeaway { grid-template-columns: 1fr; gap: 0.4rem; }
+    .cow-flow { grid-template-columns: 1fr; }
+    .branch { min-height: 76px; }
+    .branch::before, .branch::after { right: 50%; left: 50%; width: 1px; height: 100%; transform: none; }
+    .branch::before { top: 0; }
+    .branch::after { display: none; }
+    .branch i::before, .branch i::after { display: none; }
+    .candidate { grid-template-columns: 1fr; }
   }
 </style>

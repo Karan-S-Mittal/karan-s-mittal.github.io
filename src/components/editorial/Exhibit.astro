@@ -237,7 +237,7 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
 
   :global(html.instrumented) .exhibit-label {
     color: var(--ie-blue);
-    font-size: 0.72rem;
+    font-size: var(--ie-type-label);
     font-weight: 600;
     letter-spacing: 0.075em;
   }
@@ -252,7 +252,7 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
     border-radius: 0;
     background: transparent;
     color: var(--ie-muted);
-    font-size: 0.72rem;
+    font-size: var(--ie-type-label);
   }
 
   :global(html.instrumented) .exhibit-frame {
@@ -269,7 +269,7 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
     border-left-color: var(--ie-rust);
     color: var(--ie-muted);
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: var(--ie-type-label);
     line-height: 1.55;
   }
 </style>
