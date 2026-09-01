@@ -223,4 +223,53 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
     max-width: 100%;
     margin-left: 0;
   }
+
+  :global(html.instrumented) .exhibit {
+    margin: 3.75rem 0;
+  }
+
+  :global(html.instrumented) .exhibit-header {
+    align-items: baseline;
+    margin-bottom: 0.65rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--ie-rule-strong);
+  }
+
+  :global(html.instrumented) .exhibit-label {
+    color: var(--ie-blue);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.075em;
+  }
+
+  :global(html.instrumented) .exhibit-label-title {
+    color: var(--ie-ink-secondary);
+  }
+
+  :global(html.instrumented) .exhibit-badge {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--ie-muted);
+    font-size: 0.58rem;
+  }
+
+  :global(html.instrumented) .exhibit-frame {
+    padding: clamp(1rem, 2.8vw, 1.75rem);
+    border-color: var(--ie-rule);
+    border-radius: 6px;
+    background: var(--ie-surface);
+    box-shadow: none;
+  }
+
+  :global(html.instrumented) .exhibit-caption {
+    margin-top: 0.8rem;
+    padding-left: 0.8rem;
+    border-left-color: var(--ie-rust);
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.55;
+  }
 </style>

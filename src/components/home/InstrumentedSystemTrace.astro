@@ -1,0 +1,543 @@
+---
+/**
+ * InstrumentedSystemTrace
+ * Homepage signature exhibit for the Instrumented Editorial prototype.
+ * A reader selects one system stage and inspects state, constraint, and evidence.
+ */
+---
+
+<section class="system-trace" data-system-trace aria-labelledby="trace-title">
+  <div class="trace-bar">
+    <div>
+      <p class="trace-kicker">Live system / trace 001</p>
+      <h3 id="trace-title">An answer is only useful when its path can be inspected.</h3>
+    </div>
+    <div class="trace-status" aria-label="System status">
+      <span class="status-mark" aria-hidden="true"></span>
+      Deterministic path
+    </div>
+  </div>
+
+  <div class="trace-controls" aria-label="Inspect system stage">
+    <button type="button" data-trace-control="0" aria-pressed="false">
+      <span>01</span> Input
+    </button>
+    <button type="button" data-trace-control="1" aria-pressed="false">
+      <span>02</span> Retrieve
+    </button>
+    <button type="button" data-trace-control="2" aria-pressed="true">
+      <span>03</span> Verify
+    </button>
+    <button type="button" data-trace-control="3" aria-pressed="false">
+      <span>04</span> Deliver
+    </button>
+  </div>
+
+  <div class="trace-machine" data-active-index="2">
+    <article class="trace-node" data-trace-node="0" data-past="true">
+      <span class="node-index">01 / PREMISE</span>
+      <strong>Ambiguous request</strong>
+      <code>question + constraints</code>
+      <span class="node-foot">Untrusted input</span>
+    </article>
+
+    <div class="trace-edge" data-trace-edge="0" aria-hidden="true">
+      <span></span>
+      <small>normalize</small>
+    </div>
+
+    <article class="trace-node" data-trace-node="1" data-past="true">
+      <span class="node-index">02 / MECHANISM</span>
+      <strong>Evidence retrieval</strong>
+      <code>rank(source, claim)</code>
+      <span class="node-foot">Provenance retained</span>
+    </article>
+
+    <div class="trace-edge" data-trace-edge="1" aria-hidden="true">
+      <span></span>
+      <small>evaluate</small>
+    </div>
+
+    <article class="trace-node constraint" data-trace-node="2" data-active="true">
+      <span class="node-index">03 / CONSTRAINT</span>
+      <strong>Verification gate</strong>
+      <code>claim ⊆ evidence</code>
+      <span class="node-foot">Reject unsupported paths</span>
+    </article>
+
+    <div class="trace-edge" data-trace-edge="2" aria-hidden="true">
+      <span></span>
+      <small>commit</small>
+    </div>
+
+    <article class="trace-node" data-trace-node="3">
+      <span class="node-index">04 / DECISION</span>
+      <strong>Inspectable answer</strong>
+      <code>result + source trace</code>
+      <span class="node-foot">Owned output</span>
+    </article>
+  </div>
+
+  <div class="trace-readout" aria-live="polite">
+    <div class="readout-register">
+      <span>ACTIVE STATE</span>
+      <strong data-trace-name>Verification gate</strong>
+    </div>
+    <p data-trace-description>
+      Every generated claim is tested against retrieved evidence. Unsupported paths stop here instead of leaking into the delivered answer.
+    </p>
+    <div class="readout-measure">
+      <span>Invariant</span>
+      <code data-trace-invariant>claim ⊆ evidence</code>
+    </div>
+  </div>
+
+  <div class="trace-legend" aria-label="Diagram legend">
+    <span><i class="legend-active"></i> Active path</span>
+    <span><i class="legend-constraint"></i> Constraint</span>
+    <span><i class="legend-inactive"></i> Not yet introduced</span>
+  </div>
+
+  <p class="trace-accessible-summary">
+    The system accepts an ambiguous request, retrieves attributable evidence, rejects claims that cannot be verified, and delivers an answer with its source trace intact.
+  </p>
+</section>
+
+<script>
+  const TRACE_STAGES = [
+    {
+      name: 'Ambiguous request',
+      description: 'The system records the question, operating constraints, and source boundaries before selecting a retrieval or model path.',
+      invariant: 'input ≠ assumption',
+    },
+    {
+      name: 'Evidence retrieval',
+      description: 'Candidate evidence is ranked without severing provenance. Every result remains addressable back to its source boundary.',
+      invariant: 'result → source',
+    },
+    {
+      name: 'Verification gate',
+      description: 'Every generated claim is tested against retrieved evidence. Unsupported paths stop here instead of leaking into the delivered answer.',
+      invariant: 'claim ⊆ evidence',
+    },
+    {
+      name: 'Inspectable answer',
+      description: 'The result is delivered together with the evidence path, decision boundary, and enough context for a human to challenge it.',
+      invariant: 'output = answer + trace',
+    },
+  ];
+
+  function initialiseSystemTraces() {
+    document.querySelectorAll<HTMLElement>('[data-system-trace]').forEach((root) => {
+      if (root.dataset.initialised === 'true') return;
+      root.dataset.initialised = 'true';
+
+      const controls = [...root.querySelectorAll<HTMLButtonElement>('[data-trace-control]')];
+      const nodes = [...root.querySelectorAll<HTMLElement>('[data-trace-node]')];
+      const edges = [...root.querySelectorAll<HTMLElement>('[data-trace-edge]')];
+      const machine = root.querySelector<HTMLElement>('.trace-machine');
+      const name = root.querySelector<HTMLElement>('[data-trace-name]');
+      const description = root.querySelector<HTMLElement>('[data-trace-description]');
+      const invariant = root.querySelector<HTMLElement>('[data-trace-invariant]');
+
+      const setStage = (activeIndex: number) => {
+        const stage = TRACE_STAGES[activeIndex];
+        if (!stage) return;
+
+        machine?.setAttribute('data-active-index', String(activeIndex));
+        controls.forEach((control, index) => control.setAttribute('aria-pressed', String(index === activeIndex)));
+        nodes.forEach((node, index) => {
+          node.toggleAttribute('data-active', index === activeIndex);
+          node.toggleAttribute('data-past', index < activeIndex);
+        });
+        edges.forEach((edge, index) => edge.toggleAttribute('data-past', index < activeIndex));
+
+        if (name) name.textContent = stage.name;
+        if (description) description.textContent = stage.description;
+        if (invariant) invariant.textContent = stage.invariant;
+      };
+
+      controls.forEach((control) => {
+        control.addEventListener('click', () => setStage(Number(control.dataset.traceControl)));
+      });
+
+      setStage(2);
+    });
+  }
+
+  initialiseSystemTraces();
+  document.addEventListener('astro:page-load', initialiseSystemTraces);
+</script>
+
+<style>
+  .system-trace {
+    overflow: hidden;
+    border: 1px solid var(--ie-rule-strong);
+    border-radius: 8px;
+    background: var(--ie-surface);
+  }
+
+  .trace-bar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .trace-kicker {
+    margin: 0 0 0.3rem;
+    color: var(--ie-blue);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .trace-bar h3 {
+    max-width: 46rem;
+    margin: 0;
+    color: var(--ie-ink);
+    font-family: var(--font-sans);
+    font-size: clamp(1.1rem, 2vw, 1.45rem);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .trace-status {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex: 0 0 auto;
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .status-mark {
+    width: 18px;
+    height: 2px;
+    background: var(--ie-blue);
+  }
+
+  .trace-controls {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--ie-rule);
+    background: var(--ie-surface-raised);
+  }
+
+  .trace-controls button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.55rem 0.75rem;
+    border: 0;
+    border-right: 1px solid var(--ie-rule);
+    background: transparent;
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    cursor: pointer;
+  }
+
+  .trace-controls button:last-child {
+    border-right: 0;
+  }
+
+  .trace-controls button span {
+    color: var(--ie-muted);
+    font-size: 0.6rem;
+  }
+
+  .trace-controls button[aria-pressed='true'] {
+    background: var(--ie-blue-soft);
+    color: var(--ie-blue);
+    box-shadow: inset 0 -2px 0 var(--ie-blue);
+  }
+
+  .trace-controls button[aria-pressed='true'] span {
+    color: currentColor;
+  }
+
+  .trace-machine {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 72px minmax(0, 1fr) 72px minmax(0, 1fr) 72px minmax(0, 1fr);
+    align-items: stretch;
+    padding: 2rem 1.5rem 1.5rem;
+  }
+
+  .trace-node {
+    display: flex;
+    min-height: 154px;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.65rem;
+    padding: 1rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: 6px;
+    background: var(--ie-surface-raised);
+    color: var(--ie-muted);
+    transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+  }
+
+  .trace-node[data-past] {
+    border-color: color-mix(in srgb, var(--ie-blue) 35%, var(--ie-rule));
+  }
+
+  .trace-node[data-active] {
+    border: 2px solid var(--ie-blue);
+    padding: calc(1rem - 1px);
+    background: var(--ie-blue-soft);
+    color: var(--ie-ink);
+  }
+
+  .trace-node.constraint[data-active] {
+    border-color: var(--ie-rust);
+    background: var(--ie-rust-soft);
+  }
+
+  .node-index,
+  .node-foot {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+  }
+
+  .trace-node[data-active] .node-index {
+    color: var(--ie-blue);
+  }
+
+  .trace-node.constraint[data-active] .node-index {
+    color: var(--ie-rust);
+  }
+
+  .trace-node strong {
+    color: var(--ie-ink);
+    font-size: 0.96rem;
+    line-height: 1.25;
+  }
+
+  .trace-node code {
+    color: currentColor;
+    font-family: var(--font-mono);
+    font-size: 0.67rem;
+    overflow-wrap: anywhere;
+  }
+
+  .node-foot {
+    padding-top: 0.65rem;
+    border-top: 1px solid currentColor;
+    opacity: 0.72;
+  }
+
+  .trace-edge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    color: var(--ie-muted);
+  }
+
+  .trace-edge span {
+    position: relative;
+    width: 100%;
+    height: 1px;
+    background: var(--ie-rule-strong);
+  }
+
+  .trace-edge span::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    right: 0;
+    width: 6px;
+    height: 6px;
+    border-top: 1px solid currentColor;
+    border-right: 1px solid currentColor;
+    transform: rotate(45deg);
+  }
+
+  .trace-edge[data-past] {
+    color: var(--ie-blue);
+  }
+
+  .trace-edge[data-past] span {
+    background: var(--ie-blue);
+  }
+
+  .trace-edge small {
+    font-family: var(--font-mono);
+    font-size: 0.53rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .trace-readout {
+    display: grid;
+    grid-template-columns: 170px minmax(0, 1fr) 220px;
+    gap: 1.5rem;
+    align-items: start;
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid var(--ie-rule);
+    border-bottom: 1px solid var(--ie-rule);
+    background: var(--ie-surface-raised);
+  }
+
+  .readout-register,
+  .readout-measure {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .readout-register span,
+  .readout-measure span {
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .readout-register strong {
+    color: var(--ie-ink);
+    font-size: 0.83rem;
+  }
+
+  .trace-readout p {
+    margin: 0;
+    color: var(--ie-ink-secondary);
+    font-size: 0.83rem;
+    line-height: 1.55;
+  }
+
+  .readout-measure code {
+    color: var(--ie-rust);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  .trace-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    padding: 0.75rem 1.5rem;
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .trace-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .trace-legend i {
+    width: 16px;
+    height: 2px;
+    background: var(--ie-rule-strong);
+  }
+
+  .trace-legend .legend-active { background: var(--ie-blue); }
+  .trace-legend .legend-constraint { background: var(--ie-rust); }
+
+  .trace-accessible-summary {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 900px) {
+    .trace-machine {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .trace-edge {
+      min-height: 42px;
+    }
+
+    .trace-edge span {
+      width: 1px;
+      height: 28px;
+    }
+
+    .trace-edge span::after {
+      top: auto;
+      right: -3px;
+      bottom: 0;
+      transform: rotate(135deg);
+    }
+
+    .trace-edge small {
+      display: none;
+    }
+
+    .trace-node {
+      min-height: 128px;
+    }
+
+    .trace-readout {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .trace-readout p {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .trace-bar {
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 1rem;
+    }
+
+    .trace-controls {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .trace-controls button:nth-child(2) {
+      border-right: 0;
+    }
+
+    .trace-controls button:nth-child(-n + 2) {
+      border-bottom: 1px solid var(--ie-rule);
+    }
+
+    .trace-machine {
+      padding: 1rem;
+    }
+
+    .trace-readout {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      padding: 1rem;
+    }
+
+    .trace-readout p {
+      grid-column: auto;
+      grid-row: auto;
+    }
+
+    .trace-legend {
+      padding-inline: 1rem;
+    }
+  }
+</style>

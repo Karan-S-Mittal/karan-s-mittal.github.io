@@ -1,0 +1,144 @@
+/* Instrumented Editorial prototype. Scoped to <html class="instrumented">. */
+
+html.instrumented {
+  color-scheme: light;
+  --ie-canvas: #f7f5ef;
+  --ie-surface: #ffffff;
+  --ie-surface-raised: #fbfaf6;
+  --ie-ink: #171a1f;
+  --ie-ink-secondary: #3f4752;
+  --ie-muted: #5b6470;
+  --ie-rule: #d8d6cf;
+  --ie-rule-strong: #b9bdc4;
+  --ie-blue: #2857d9;
+  --ie-blue-soft: #e8eeff;
+  --ie-rust: #a63d17;
+  --ie-rust-soft: #f8e9df;
+  --ie-code: #15181d;
+
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-serif: 'IBM Plex Serif', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --bg: var(--ie-canvas);
+  --bg-elevated: var(--ie-surface);
+  --bg-inset: var(--ie-surface-raised);
+  --surface-page: var(--ie-canvas);
+  --surface-card: var(--ie-surface);
+  --surface-subtle: var(--ie-surface-raised);
+  --surface: var(--ie-surface);
+  --surface-inverse: var(--ie-ink);
+  --text: var(--ie-ink);
+  --text-secondary: var(--ie-ink-secondary);
+  --text-muted: var(--ie-muted);
+  --muted: var(--ie-muted);
+  --accent: var(--ie-blue);
+  --accent-hover: #1f46b7;
+  --accent-subtle: var(--ie-blue-soft);
+  --link: var(--ie-blue);
+  --link-hover: #1f46b7;
+  --interactive-primary: var(--ie-blue);
+  --interactive-primary-hover: #1f46b7;
+  --interactive-focus: var(--ie-blue);
+  --signal-warm: var(--ie-rust);
+  --signal-emphasis: var(--ie-rust-soft);
+  --signal-secondary: var(--ie-muted);
+  --diagram-node-primary: var(--ie-blue);
+  --diagram-node-attention: var(--ie-rust);
+  --diagram-edge-primary: var(--ie-ink);
+  --diagram-edge-secondary: var(--ie-muted);
+  --diagram-plane: var(--ie-surface-raised);
+  --border: var(--ie-rule);
+  --border-default: var(--ie-rule);
+  --border-muted: var(--ie-rule-strong);
+  --border-accent: var(--ie-blue);
+  --ex-bg: var(--ie-surface);
+  --radius: 6px;
+  --radius-sm: 4px;
+  --radius-card: 8px;
+  --radius-lg: 8px;
+  --radius-pill: 999px;
+  --shadow-card: none;
+  --shadow-card-hover: none;
+  --page-max-width: 1280px;
+  --width-content: 1040px;
+  --prose-max-width: 700px;
+}
+
+html.instrumented.dark {
+  color-scheme: dark;
+  --ie-canvas: #111318;
+  --ie-surface: #181c22;
+  --ie-surface-raised: #1d222a;
+  --ie-ink: #f3f4f6;
+  --ie-ink-secondary: #d5d9df;
+  --ie-muted: #aeb6c2;
+  --ie-rule: #2b3038;
+  --ie-rule-strong: #49515e;
+  --ie-blue: #8daaff;
+  --ie-blue-soft: #202c4f;
+  --ie-rust: #ffb36b;
+  --ie-rust-soft: #3a281e;
+  --ie-code: #0b0d10;
+  --accent-hover: #b2c4ff;
+  --link-hover: #b2c4ff;
+  --interactive-primary-hover: #b2c4ff;
+}
+
+html.instrumented body {
+  background: var(--ie-canvas);
+  background-image: none;
+  color: var(--ie-ink);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.68;
+  font-feature-settings: 'ss01' on, 'ss03' on;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+html.instrumented h1,
+html.instrumented h2 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+html.instrumented h3,
+html.instrumented h4,
+html.instrumented h5,
+html.instrumented h6 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.015em;
+}
+
+html.instrumented a {
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+
+html.instrumented :focus-visible {
+  outline: 2px solid var(--ie-blue);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+html.instrumented ::selection {
+  background: var(--ie-blue-soft);
+  color: var(--ie-ink);
+}
+
+html.instrumented pre {
+  background: var(--ie-code);
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+html.instrumented .copy-code {
+  border-radius: 4px;
+}
+
+@media (max-width: 720px) {
+  html.instrumented body {
+    font-size: 16px;
+  }
+}

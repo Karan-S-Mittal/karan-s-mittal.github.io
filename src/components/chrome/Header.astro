@@ -1,6 +1,13 @@
 ---
 const currentPath = Astro.url.pathname;
 
+interface Props {
+  variant?: 'default' | 'instrumented';
+}
+
+const { variant = 'default' } = Astro.props;
+const isInstrumented = variant === 'instrumented';
+
 const nav = [
   { href: '/work', label: 'Work' },
   { href: '/blog', label: 'Blog' },
@@ -19,18 +26,19 @@ function isActive(href: string) {
 }
 ---
 
-<header id="site-header">
+<header id="site-header" class:list={{ instrumented: isInstrumented }}>
   <div class="header-inner">
     <div class="header-left">
       <a href="/" class="brand" aria-label="Karan Mittal Home">
         <span class="brand-name">Karan Mittal</span>
+        {isInstrumented && <span class="brand-role">Explanatory Systems Studio</span>}
       </a>
     </div>
 
     <nav class="main-nav" aria-label="Primary">
       {nav.map(item => (
         <a href={item.href} class={isActive(item.href) ? 'active' : ''} aria-current={isActive(item.href) ? 'page' : undefined}>
-          {item.label}
+          {isInstrumented && item.href === '/blog' ? 'Field notes' : item.label}
         </a>
       ))}
     </nav>
@@ -54,7 +62,7 @@ function isActive(href: string) {
       </button>
 
       <a href="/#contact" class="consult-cta">
-        <span>Contact</span>
+        <span>{isInstrumented ? 'Work together' : 'Contact'}</span>
       </a>
     </div>
   </div>
@@ -233,6 +241,110 @@ function isActive(href: string) {
     .consult-cta {
       padding: 0.3rem 0.65rem;
       font-size: 0.7rem;
+    }
+  }
+
+  header.instrumented {
+    background: color-mix(in srgb, var(--ie-canvas) 96%, transparent);
+    border-bottom-color: var(--ie-rule);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  header.instrumented .header-inner {
+    max-width: 1280px;
+    min-height: 64px;
+    padding: 0 var(--space-5);
+  }
+
+  header.instrumented .brand {
+    gap: 0.75rem;
+  }
+
+  header.instrumented .brand-name {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  header.instrumented .brand-role {
+    display: inline-block;
+    padding-left: 0.75rem;
+    border-left: 1px solid var(--ie-rule);
+    color: var(--ie-muted);
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+
+  header.instrumented .main-nav {
+    gap: 1.5rem;
+  }
+
+  header.instrumented .main-nav a {
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: 0.69rem;
+    letter-spacing: 0.025em;
+  }
+
+  header.instrumented .main-nav a:hover,
+  header.instrumented .main-nav a.active {
+    color: var(--ie-ink);
+  }
+
+  header.instrumented .theme-toggle-btn {
+    width: 34px;
+    height: 34px;
+    border-color: var(--ie-rule);
+    border-radius: 5px;
+    background: transparent;
+    color: var(--ie-muted);
+  }
+
+  header.instrumented .consult-cta {
+    min-height: 34px;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--ie-ink);
+    border-radius: 5px;
+    background: var(--ie-ink);
+    box-shadow: none;
+    color: var(--ie-canvas);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.02em;
+  }
+
+  header.instrumented .consult-cta:hover {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue);
+    box-shadow: none;
+    transform: none;
+  }
+
+  :global(html.dark) header.instrumented {
+    background: color-mix(in srgb, var(--ie-canvas) 96%, transparent);
+  }
+
+  @media (max-width: 900px) {
+    header.instrumented .brand-role {
+      display: none;
+    }
+  }
+
+  @media (max-width: 720px) {
+    header.instrumented .header-inner {
+      min-height: 56px;
+      padding: 0 var(--space-4);
+    }
+
+    header.instrumented .main-nav {
+      display: none;
+    }
+
+    header.instrumented .consult-cta {
+      padding-inline: 0.65rem;
     }
   }
 </style>

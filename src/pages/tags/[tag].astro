@@ -12,9 +12,13 @@ export async function getStaticPaths() {
   const tagMap = new Map<string, typeof posts>();
   for (const post of posts) {
     for (const tag of post.data.tags) {
-      const key = tag.toLowerCase();
+      // Treat "machine learning", "machine-learning", and "machine_learning"
+      // as one canonical route instead of emitting colliding static paths.
+      const key = tag.toLowerCase().replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim();
       if (!tagMap.has(key)) tagMap.set(key, []);
-      tagMap.get(key)!.push(post);
+      if (!tagMap.get(key)!.some((existing) => existing.id === post.id)) {
+        tagMap.get(key)!.push(post);
+      }
     }
   }
 

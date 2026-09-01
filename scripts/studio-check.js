@@ -7,6 +7,7 @@ import fg from 'fast-glob';
 const root = resolve(import.meta.dirname, '..');
 const sourcePatterns = [
   'src/**/*.astro',
+  'src/**/*.css',
   'src/**/*.md',
   'src/**/*.mdx',
   'public/styles/**/*.css',
@@ -36,14 +37,13 @@ function findInlineSvgProblems(file, source) {
 function findLegacyLanguage(file, source) {
   const legacyPatterns = [
     { pattern: /Fraunces/g, label: 'Fraunces' },
-    { pattern: /IBM[ -]Plex/gi, label: 'legacy IBM Plex font' },
     { pattern: /#c14a21/gi, label: 'legacy clay accent #c14a21' },
     { pattern: /#faf8f4/gi, label: 'legacy warm-paper background #faf8f4' },
   ];
 
   legacyPatterns.forEach(({ pattern, label }) => {
     if (pattern.test(source)) {
-      report(errors, file, `contains ${label}; the active studio language uses Plex and semantic tokens`);
+      report(errors, file, `contains ${label}; the active Instrumented Editorial language uses IBM Plex and semantic tokens`);
     }
   });
 }

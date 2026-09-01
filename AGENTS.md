@@ -28,17 +28,15 @@ When assisting Karan with content creation, architectural diagrams, technical wr
 
 ## 3. Visual & Diagram Grammar
 
-All diagrams must adhere to the **Soft Architecture** visual language ([`docs/design-language.md`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/design-language.md); canonical spec at repo root):
+All pages and diagrams must adhere to the **Instrumented Editorial** visual language ([`docs/design-language.md`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/design-language.md); full specification in [`docs/instrumented-editorial.md`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/instrumented-editorial.md)):
 
 ### Semantic Palette:
-- **Page / Card**: `#F8F9FC` (page) / `#FFFFFF` (card)
-- **Ink / Structure**: `#1A1A2E` (`--ink-900`; text, code surfaces, dark CTA planes)
-- **Anchor blue (`#2676AA`, `--blue-500`)**: Headings, links, primary action, diagram nodes, active nav.
-- **Signal warm (`#FFAFCC`, `--pink-400`)**: Attention, bottleneck/decision/constraint nodes, editorial marks — sparse by rule; never a default CTA.
-- **Emphasis (`#FFC8DD`, `--pink-300`)**: Soft emphasis plane only.
-- **Lavender (`#CDB4DB`, `--lavender-400`)**: Async/inferred edges, metadata, secondary separators.
-- **Muted (`#68768B`)**: Dimensions, byte offsets, secondary annotations.
-- Shadows are blue-tinted (`rgba(162, 210, 255, …)`). No site-wide dark mode — darkness is semantic (conclusion/code planes only).
+- **Paper / Surface**: `#F7F5EF` / `#FFFFFF`; dark `#111318` / `#181C22`.
+- **Ink / Structure**: `#171A1F`; dark `#F3F4F6`.
+- **Instrument blue (`#2857D9`)**: Links, active state, direct flow, selected controls.
+- **Constraint rust (`#A63D17`)**: Bottlenecks, failures, caveats, and editorial callouts only.
+- **Muted (`#5B6470`)**: Dimensions, byte offsets, metadata, secondary annotations.
+- Use rules and spatial grouping before cards, radii, tint, or shadows. Dark mode is supported and must preserve the same hierarchy.
 
 ### Standard Visual Archetypes:
 1. **C4 & System Maps**: Clean subsystem boundaries, data vs. control plane separation.
@@ -47,8 +45,8 @@ All diagrams must adhere to the **Soft Architecture** visual language ([`docs/de
 4. **Trade-Off Curves**: Multi-axis latency vs. memory vs. cost comparisons.
 
 ### Diagram Rules:
-- 1.5px stroke weight, solid edges = direct/synchronous, dashed lavender edges = async/inferred, one pink attention node max per diagram.
-- Fonts: Inter (sans) + JetBrains Mono (labels/metrics).
+- 1.5px stroke weight, solid edges = direct/synchronous, dashed muted edges = async/inferred, one rust constraint node max per diagram.
+- Fonts: IBM Plex Sans (labels) + IBM Plex Mono (metrics/code); IBM Plex Serif is reserved for editorial headings.
 - Use leader line callouts for unexpected behavior: `"← notice zero allocation here"`.
 - Every diagram needs an accessible text explanation; no meaning carried by colour alone.
 
@@ -56,7 +54,7 @@ All diagrams must adhere to the **Soft Architecture** visual language ([`docs/de
 
 ## 4. Components & Content Schema
 
-- **`<Exhibit />` Container**: Wrap all figures, diagrams, and Excalidraw SVGs in `<Exhibit exhibit="01" title="..." badge="..." caption="...">` ([`src/components/Exhibit.astro`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/src/components/Exhibit.astro)).
+- **`<Exhibit />` Container**: Wrap all figures, diagrams, and Excalidraw SVGs in `<Exhibit exhibit="01" title="..." badge="..." caption="...">` ([`src/components/editorial/Exhibit.astro`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/src/components/editorial/Exhibit.astro)).
 - **Post Template**: All new posts should be scaffolded via `npm run new` (or directly duplicated from [`src/content/blog/_template.mdx`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/src/content/blog/_template.mdx)).
 - **Obsidian / Excalidraw**: Diagrams are drawn locally in Obsidian Excalidraw and auto-exported to `.svg`. Pre-built swatches and components are located at [`public/templates/studio-starter.excalidraw`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/public/templates/studio-starter.excalidraw).
 

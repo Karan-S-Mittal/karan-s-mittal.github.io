@@ -111,7 +111,7 @@ In Go 1.4, the Go team re-engineered stacks into **contiguous dynamic stacks**:
 
 1. **Initial Allocation**: Every Goroutine begins with a compact **$2\text{ KB}$** contiguous memory block in the heap arena ($2,048\text{ bytes}$).
 2. **Compiler Prologue Check**: At the entry of every non-leaf function, the compiler inserts a few assembly instructions comparing the current Stack Pointer ($SP$) against the stack limit ($stackguard0$):
-   ```nasm
+   ```asm
    CMPQ  SP, 16(R14)     ; Compare SP against g.stackguard0
    JLS   morestack        ; Jump to runtime.morestack if overflow imminent
    ```

@@ -333,4 +333,107 @@ const citations = rawCitations.map((c) => ({
     width: 10px;
     height: 10px;
   }
+
+  :global(html.instrumented) .verification-wrapper {
+    margin: 5rem 0 4rem;
+    padding: 0;
+    border: 0;
+    border-top: 2px solid var(--ie-ink);
+    border-bottom: 1px solid var(--ie-rule-strong);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  :global(html.instrumented) .verification-header {
+    display: grid;
+    grid-template-columns: minmax(13rem, 0.8fr) minmax(0, 1.2fr);
+    gap: 2rem;
+    margin: 0;
+    padding: 1rem 0 1.25rem;
+    border-bottom-color: var(--ie-rule-strong);
+  }
+
+  :global(html.instrumented) .vh-dot {
+    width: 12px;
+    height: 2px;
+    border-radius: 0;
+    background: var(--ie-rust);
+    box-shadow: none;
+  }
+
+  :global(html.instrumented) .vh-tag {
+    color: var(--ie-ink);
+    font-size: 0.64rem;
+  }
+
+  :global(html.instrumented) .vh-subtitle {
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  :global(html.instrumented) .verification-grid {
+    gap: 0;
+  }
+
+  :global(html.instrumented) .citation-card {
+    padding: 1.35rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--ie-rule);
+    border-radius: 0;
+    background: transparent;
+    transition: none;
+  }
+
+  :global(html.instrumented) .citation-card:hover {
+    border-color: var(--ie-rule);
+    box-shadow: none;
+  }
+
+  :global(html.instrumented) .citation-id {
+    color: var(--ie-rust);
+  }
+
+  :global(html.instrumented) .citation-badge {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--ie-blue);
+  }
+
+  :global(html.instrumented) .citation-claim {
+    max-width: 55ch;
+    color: var(--ie-ink);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  :global(html.instrumented) .citation-anchor-code {
+    border-radius: 2px;
+    background: var(--ie-surface-raised);
+  }
+
+  :global(html.instrumented) .citation-action {
+    border-top-color: var(--ie-rule);
+  }
+
+  @media (min-width: 640px) {
+    :global(html.instrumented) .citation-card:nth-child(odd) {
+      padding-right: 1.5rem;
+      border-right: 1px solid var(--ie-rule);
+    }
+
+    :global(html.instrumented) .citation-card:nth-child(even) {
+      padding-left: 1.5rem;
+    }
+  }
+
+  @media (max-width: 639px) {
+    :global(html.instrumented) .verification-header {
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+    }
+  }
 </style>

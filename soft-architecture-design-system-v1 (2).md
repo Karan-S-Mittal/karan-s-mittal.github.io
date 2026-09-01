@@ -1,5 +1,7 @@
 # Soft Architecture — Personal Design System & Engineering Specification
 
+> **Archived 2026-09-01.** This specification is retained as historical context and is no longer active. The governing language is [Instrumented Editorial](docs/instrumented-editorial.md), with its working digest in [docs/design-language.md](docs/design-language.md).
+
 **Owner:** Karan Mittal  
 **Version:** 1.0  
 **Status:** Implementation-ready  

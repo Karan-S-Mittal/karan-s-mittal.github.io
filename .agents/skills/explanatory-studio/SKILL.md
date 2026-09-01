@@ -50,25 +50,24 @@ import PrimaryVerification from '../../components/editorial/PrimaryVerification.
 
 ---
 
-## 3. Visual Exhibit Construction: Soft Architecture Grammar
+## 3. Visual Exhibit Construction: Instrumented Editorial Grammar
 
-All diagrams must adhere to the **Soft Architecture** visual grammar (`docs/design-language.md`):
+All diagrams must adhere to the **Instrumented Editorial** visual grammar (`docs/design-language.md`):
 
 ### Semantic Palette:
-- **Canvas / Page**: `#F8F9FC` (Light) / `#141417` (Dark)
-- **Ink / Structure**: `#1A1A2E` (`--ink-900`; lines, text, code surfaces)
-- **Anchor Blue (`#2676AA`, `--blue-500`)**: Primary nodes, flows, active structures, key headings.
-- **Subtle Plane (`#DCEEFF` / `#1E293B`)**: Subsystem, boundary, memory arena, or ownership plane.
-- **Signal Warm (`#FFAFCC`, `--pink-400`)**: Attention, bottleneck/decision/constraint nodes, editorial marks (sparse by rule; max 1 per diagram).
-- **Lavender (`#CDB4DB`, `--lavender-400`)**: Async/inferred edges, secondary metadata, background queues.
-- **Muted (`#68768B`)**: Dimensions, byte offsets, secondary annotations, empty slots.
+- **Canvas / Surface**: `#F7F5EF` / `#FFFFFF` (Light), `#111318` / `#181C22` (Dark).
+- **Ink / Structure**: `#171A1F` (Light), `#F3F4F6` (Dark).
+- **Instrument Blue (`#2857D9`)**: Direct flows, selected controls, links, and active structures.
+- **Subtle Plane (`#FBFAF6` / `#1D222A`)**: Subsystem, memory arena, or ownership boundary.
+- **Constraint Rust (`#A63D17`)**: Bottlenecks, failures, decisions, and caveats only (max 1 primary rust node per diagram).
+- **Muted (`#5B6470`)**: Dimensions, byte offsets, async/inferred edges, annotations, and empty slots.
 
 ### Diagram Layout & Geometry Rules:
-1. **ViewBox Width**: Fixed at `720px` (`viewBox="0 0 720 [height]"`), aligning 1:1 with the reading column.
+1. **ViewBox Width**: Use `1040px` for inspection exhibits and `700px` for prose-bound figures; choose the width that preserves legible labels without crowding.
 2. **Internal Inset & Padding**: Minimum 16 units of inner padding inside nodes. Text tokens must never touch or crowd rectangle borders.
 3. **Typography**:
-   - `Inter` for node titles and descriptions.
-   - `JetBrains Mono` for memory addresses, byte offsets, formulas, and code symbols.
+   - `IBM Plex Sans` for node titles and descriptions.
+   - `IBM Plex Mono` for memory addresses, byte offsets, formulas, and code symbols.
    - Explicit `dominant-baseline="central"` on all `<text>` elements.
 4. **Authentic Mechanistic Metaphors**:
    - Draw actual ring buffers with slot indices (`[0]`, `[1]`, `...`), SIMD 128-bit vector registers, memory arena bitmaps, and pointer state sets rather than generic placeholder boxes.
@@ -137,7 +136,7 @@ When completing a canonical deep-dive, prepare the syndication outline:
 
 Before publishing any essay:
 1. Every architectural claim has a verified primary source citation.
-2. All exhibits have accessible captions and proper Soft Architecture palette tokens.
+2. All exhibits have accessible captions and proper Instrumented Editorial semantic tokens.
 3. Interactive canvases pause when off-screen (`IntersectionObserver`).
 4. `npm run build` compiles with 0 errors and 0 warnings.
 
@@ -145,7 +144,7 @@ Before publishing any essay:
 Before calling an essay or diagram complete:
 1. Measure the longest label against its node width and inner padding (ensure ≥16px breathing room).
 2. Check that no connector path intersects a node or text block.
-3. Confirm single ink arrowheads (`#1A1A2E`) across all flows.
+3. Confirm single ink arrowheads using the active semantic ink token across all flows.
 4. Ensure all mathematical notations use `$ ... $` or `$$ ... $$` instead of code backticks.
 5. Run `npm run prebuild` (`sync-tags`, `studio:check`, `render-exhibits`) and confirm 0 warnings.
 6. Verify rendering in desktop light mode, desktop dark mode, and mobile viewport via screenshots.

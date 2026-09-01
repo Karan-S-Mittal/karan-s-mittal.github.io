@@ -17,6 +17,13 @@ export default defineConfig({
   base: '/',
   // Link prefetch on hover/viewport — perceived-instant navigation, zero JS cost
   prefetch: { prefetchAll: true },
+  vite: {
+    build: {
+      // The two route-scoped visual-engine bundles include Three.js/Mafs and
+      // remain lazy-loaded. Their measured ceiling is ~532 kB minified.
+      chunkSizeWarningLimit: 600,
+    },
+  },
   integrations: [
     // Keep redirect stubs and internal studio tooling out of the public sitemap.
     sitemap({ filter: (page) => !/karan-s-mittal\.github\.io\/(?:contact|now|studio(?:\/.*)?)\/?$/.test(page) }),
