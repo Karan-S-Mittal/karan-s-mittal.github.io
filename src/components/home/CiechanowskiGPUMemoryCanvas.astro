@@ -1,73 +1,75 @@
 ---
 /**
  * CiechanowskiGPUMemoryCanvas.astro
- * Branch Education & Bartosz Ciechanowski-grade multi-scale Silicon DRAM & PagedAttention Canvas engine.
- * 
- * 3 Continuous Zoom Scales:
- * 1. 🔬 Microscopic 1T1C Silicon Cell (MOSFET transistor, deep trench capacitor, electron particles, sense amp oscilloscope)
- * 2. ⚡ 8×8 Crossbar Matrix & Address Decoders (Wordlines, Bitlines, Row Decoder, Column Sense Amps)
- * 3. 🧠 Macro GPU Memory & PagedAttention KV Cache (64 Physical Frames, Virtual Page Table, Contiguous vs Paged packing)
+ * Branch Education-grade 3D WebGL Silicon DRAM & PagedAttention Interactive Engine.
+ * Built on Three.js with metallic PBR materials (copper sheen, polysilicon gates, translucent capacitor trenches,
+ * 3D glowing electron particle physics, and smooth 3D camera zoom orbits).
  */
 ---
 
-<section class="ciechanowski-scrolly-section" data-gpu-scrolly aria-labelledby="gpu-canvas-title">
-  <!-- Section Title & Meta Header -->
+<section class="branch-3d-scrolly-section" data-branch-3d aria-labelledby="gpu-canvas-title">
+  <!-- Section Header -->
   <div class="canvas-header-shell">
     <div class="canvas-kicker">
       <span class="live-dot"></span>
-      <span>01 / Flagship Hardware Instrument &middot; Silicon Microarchitecture to KV Cache</span>
+      <span>01 / Flagship 3D Hardware Instrument &middot; Silicon Microarchitecture to KV Cache</span>
     </div>
-    <h2 id="gpu-canvas-title">How RAM &amp; GPU Memory Work: From Electrons to PagedAttention</h2>
+    <h2 id="gpu-canvas-title">How RAM &amp; GPU Memory Work: The 3D Silicon Machine</h2>
     <p class="canvas-lead-text">
-      Explore the multi-scale physics of DRAM: from a single microscopic 1-Transistor 1-Capacitor (1T1C) cell storing electron charge, up through the wordline crossbar matrix, to the GPU memory wall and PagedAttention virtual paging.
+      Explore the multi-scale physics of memory in full 3D: rotate and inspect a microscopic 1T1C transistor and capacitor with metallic copper sheen and glowing electron particles, pull back to the 8&times;8 silicon crossbar die, and zoom out to the GPU memory wall.
     </p>
   </div>
 
-  <!-- Multi-Scale Zoom Level Bar -->
-  <div class="scale-selector-bar" role="tablist" aria-label="Micro-to-Macro Silicon Zoom Level">
+  <!-- Multi-Scale 3D Camera Zoom Selector -->
+  <div class="scale-selector-bar" role="tablist" aria-label="3D Silicon Zoom Scale">
     <button type="button" role="tab" class="scale-tab active" data-scale="0" aria-selected="true">
-      <span class="scale-badge">SCALE 01 / MICROSCOPIC</span>
-      <strong>1T1C Silicon Cell</strong>
-      <small>MOSFET Gate &middot; Capacitor Trench &middot; Electron Charge</small>
+      <span class="scale-badge">SCALE 01 / 3D MICROSCOPIC</span>
+      <strong>3D 1T1C Silicon Cell</strong>
+      <small>Copper Bitline &middot; MOSFET Gate &middot; Glowing Capacitor Trench</small>
     </button>
     <button type="button" role="tab" class="scale-tab" data-scale="1" aria-selected="false">
-      <span class="scale-badge">SCALE 02 / SILICON ARRAY</span>
-      <strong>Crossbar Wordline Matrix</strong>
-      <small>Row Decoder &middot; Bitline Sense Amps &middot; 8-Bit Latch</small>
+      <span class="scale-badge">SCALE 02 / 3D SILICON DIE</span>
+      <strong>8&times;8 Crossbar Array</strong>
+      <small>64 Pillar Capacitors &middot; Wordline Decoders &middot; Sense Amps</small>
     </button>
     <button type="button" role="tab" class="scale-tab" data-scale="2" aria-selected="false">
       <span class="scale-badge">SCALE 03 / SYSTEM ARCHITECTURE</span>
-      <strong>PagedAttention KV Cache</strong>
-      <small>HBM3 DRAM Bank &middot; Virtual Paging &middot; Zero Waste</small>
+      <strong>GPU VRAM &amp; PagedAttention</strong>
+      <small>HBM3 DRAM Bank &middot; Virtual Paging &middot; Zero Fragmentation</small>
     </button>
   </div>
 
-  <!-- Main Scrollytelling Stage -->
+  <!-- 3D Stage & Narrative Grid -->
   <div class="scrolly-stage-grid">
-    <!-- STICKY CANVAS INSTRUMENT (LEFT/TOP) -->
-    <div class="sticky-canvas-container">
-      <div class="canvas-frame" data-canvas-frame>
-        <!-- Canvas HUD Bar -->
+    <!-- STICKY 3D WEBGL VIEWPORT -->
+    <div class="sticky-3d-container">
+      <div class="webgl-frame" data-webgl-frame>
+        <!-- Top HUD Bar -->
         <div class="canvas-hud-bar">
           <div class="hud-left">
-            <span class="hud-chip" data-hud-chip>SILICON SCALE: 1T1C CELL (14nm TRENCH)</span>
+            <span class="hud-chip" data-hud-chip>3D SILICON: 1T1C CELL (14nm FINFET &amp; DEEP TRENCH)</span>
             <span class="hud-freq">CLOCK: 1980 MHz</span>
           </div>
           <div class="hud-right">
             <span class="hud-mode" data-hud-mode>GATE: NMOS CONDUCTING (1.2V)</span>
-            <span class="hud-phase" data-hud-electrons>ELECTRONS: 42 e⁻ STORED</span>
+            <span class="hud-phase" data-hud-electrons>3D ELECTRONS: 42 e⁻ ACTIVE</span>
           </div>
         </div>
 
-        <canvas class="gpu-sim-canvas" data-canvas width="1200" height="740"></canvas>
+        <!-- Three.js WebGL Mount Container -->
+        <div class="three-mount-area" data-three-mount>
+          <div class="orbit-hint-overlay">
+            <span>&olarr; Drag in 3D to rotate perspective &middot; Scroll to zoom scale</span>
+          </div>
+        </div>
 
-        <!-- Dynamic Contextual Action Controls -->
+        <!-- Contextual Direct Controls Plane -->
         <div class="canvas-controls-bar">
-          <!-- Scale 1 Controls: 1T1C Cell Operations -->
+          <!-- Scale 1: 1T1C Physics Controls -->
           <div class="control-view-panel" data-ctrl-scale="0">
             <div class="btn-group">
               <button type="button" class="sim-btn primary" data-act-write1>
-                ⚡ Write '1' (Charge)
+                ⚡ Write '1' (Charge 3D Trench)
               </button>
               <button type="button" class="sim-btn secondary" data-act-write0>
                 ⚡ Write '0' (Discharge)
@@ -76,7 +78,7 @@
                 🔍 Read &amp; Sense
               </button>
               <button type="button" class="sim-btn tertiary" data-act-leak>
-                ⏳ Leak &amp; Refresh
+                ⏳ Leak Electrons
               </button>
             </div>
             <div class="slider-group">
@@ -94,22 +96,22 @@
             </div>
           </div>
 
-          <!-- Scale 2 Controls: Crossbar Matrix -->
+          <!-- Scale 2: Crossbar Array Controls -->
           <div class="control-view-panel hidden" data-ctrl-scale="1">
             <div class="btn-group">
               <button type="button" class="sim-btn primary" data-act-strobe>
-                ⚡ Strobe Wordline Sequence
+                ⚡ Strobe Wordline Row
               </button>
               <button type="button" class="sim-btn secondary" data-act-next-addr>
-                Next Hex Address (+0x08)
+                Next Wordline Rail (+0x08)
               </button>
             </div>
             <div class="hud-meta-badge">
-              <span>SELECTED ADDRESS: <strong data-matrix-addr>ADDR 0x18 (ROW 3, COL 0-7)</strong></span>
+              <span>ACTIVE 3D RAIL: <strong data-matrix-addr>WORDLINE #3 (ADDR 0x18)</strong></span>
             </div>
           </div>
 
-          <!-- Scale 3 Controls: PagedAttention KV Cache -->
+          <!-- Scale 3: PagedAttention Controls -->
           <div class="control-view-panel hidden" data-ctrl-scale="2">
             <div class="btn-group">
               <button type="button" class="sim-btn primary" data-act-toggle-paged>
@@ -120,72 +122,72 @@
               </button>
             </div>
             <div class="hud-meta-badge">
-              <span>ACTIVE ALLOCATION: <strong data-paged-mode-text>PagedAttention (Virtual Paging)</strong></span>
+              <span>ALLOCATION: <strong data-paged-mode-text>PagedAttention (Virtual Paging)</strong></span>
             </div>
           </div>
         </div>
       </div>
       <p class="canvas-caption-note">
-        <em>Branch Education Standard:</em> Click the scale tabs above or scroll down to zoom from the microscopic 1T1C capacitor physics into the 8×8 wordline silicon matrix and the GPU PagedAttention KV cache.
+        <em>Branch Education Standard:</em> Rendered in real-time WebGL with metallic PBR shaders (copper sheen, polysilicon gates, translucent dielectric capacitor cylinders, and simulated glowing electron particles).
       </p>
     </div>
 
-    <!-- SCROLLING NARRATIVE CHAPTERS (RIGHT) -->
+    <!-- NARRATIVE CHAPTERS -->
     <div class="scrolly-narrative-track">
-      <!-- CHAPTER 1: 1T1C PHYSICS -->
+      <!-- CHAPTER 1 -->
       <article class="narrative-chapter active" data-chapter="0">
         <div class="chapter-register">
           <span class="chapter-num">01.01</span>
-          <span class="chapter-label">MICROSCOPIC SILICON</span>
+          <span class="chapter-label">3D MICROSCOPIC SILICON</span>
         </div>
         <h3>The 1T1C Memory Cell: 1 Transistor, 1 Capacitor</h3>
         <p>
-          At the atomic level, every single bit of RAM consists of exactly two components:
+          At the silicon scale, every bit of dynamic RAM consists of a single <strong>NMOS access transistor</strong> and a <strong>vertical deep trench capacitor</strong>:
         </p>
         <ol class="chapter-list">
-          <li><strong>The Deep Trench Capacitor (C &asymp; 25 fF)</strong>: A microscopic vertical cylinder etched into silicon that holds a tiny packet of electrons. A full charge (V<sub>DD</sub> = 1.2V) represents binary <code>1</code>; empty represents <code>0</code>.</li>
-          <li><strong>The Access NMOS Transistor</strong>: Acts as a voltage-controlled switch. Applying voltage to the horizontal <strong>Wordline</strong> turns ON the conductive channel, connecting the capacitor to the vertical <strong>Bitline</strong>.</li>
-          <li><strong>The Sense Amplifier</strong>: Detects the microscopic voltage ripple (&Delta;V &asymp; 100 mV) when charge drains onto the Bitline, amplifies it into a full digital signal, and immediately recharges (refreshes) the cell.</li>
+          <li><strong>The Metallic Copper Bitline (Left)</strong>: Carries data into and out of the cell.</li>
+          <li><strong>The Polysilicon Wordline Gate (Top)</strong>: Applying 1.2V creates an electric field that turns ON the conductive channel underneath the gate oxide.</li>
+          <li><strong>The Deep Trench Capacitor (Right)</strong>: A 3D cylindrical container etched into silicon that holds a tiny packet of glowing electrons. Charge = 1; discharged = 0.</li>
         </ol>
-        <p class="chapter-instruction">&darr; Scroll to zoom out into the 8×8 Crossbar Silicon Matrix...</p>
+        <p class="chapter-instruction">&darr; Scroll to pull back the 3D camera into the 8&times;8 Crossbar Array...</p>
       </article>
 
-      <!-- CHAPTER 2: CROSSBAR ARRAY -->
+      <!-- CHAPTER 2 -->
       <article class="narrative-chapter" data-chapter="1">
         <div class="chapter-register alert">
           <span class="chapter-num">01.02</span>
-          <span class="chapter-label">SILICON CROSSBAR ARRAY</span>
+          <span class="chapter-label">3D SILICON CROSSBAR DIE</span>
         </div>
-        <h3>Wordlines, Bitlines &amp; Address Decoders</h3>
+        <h3>The 64-Pillar Crossbar Array</h3>
         <p>
-          Billions of 1T1C cells are arranged in a 2D grid of horizontal <strong>Wordlines</strong> (Rows) and vertical <strong>Bitlines</strong> (Columns).
+          Individual 1T1C cells are arranged in a 2D matrix of horizontal <strong>Wordlines</strong> (Rows) and vertical <strong>Bitlines</strong> (Columns).
         </p>
         <p>
-          When the memory controller requests an address (e.g. <code>0x18</code>):
+          When an address is decoded:
         </p>
         <ul class="chapter-list">
-          <li>The <strong>Row Address Decoder</strong> energizes Wordline #3 in bright blue, opening all 8 transistor gates across that row simultaneously.</li>
-          <li>Each cell's capacitor dumps its electrons onto its respective Bitline.</li>
-          <li>The 8 <strong>Column Sense Amplifiers</strong> at the bottom rail latch the 8 bits into a byte and push it out to the memory bus.</li>
+          <li>The <strong>Row Decoder</strong> energizes a single horizontal copper Wordline rail across the die.</li>
+          <li>All 8 transistor gates on that row turn ON in parallel.</li>
+          <li>The 8 cylindrical capacitors dump their electron charge onto the vertical Bitlines, latched by the Sense Amplifiers at the bottom edge.</li>
         </ul>
-        <p class="chapter-instruction">&darr; Scroll to zoom out to the GPU Memory Wall &amp; PagedAttention...</p>
+        <p class="chapter-instruction">&darr; Scroll to zoom to the GPU Memory Wall &amp; PagedAttention...</p>
       </article>
 
-      <!-- CHAPTER 3: PAGEDATTENTION -->
+      <!-- CHAPTER 3 -->
       <article class="narrative-chapter" data-chapter="2">
         <div class="chapter-register solution">
           <span class="chapter-num">01.03</span>
-          <span class="chapter-label">SYSTEMS &amp; KV CACHE</span>
+          <span class="chapter-label">GPU MEMORY &amp; KV CACHE</span>
         </div>
         <h3>The Memory Wall: Contiguous vs. PagedAttention</h3>
         <p>
-          At the GPU level, millions of DRAM cells form <strong>16-token memory page frames</strong> that hold the Large Language Model's Key-Value (KV) cache.
+          In GPU LLM serving, millions of DRAM cells form <strong>16-token page frames</strong> that store the Key-Value (KV) cache.
         </p>
         <p>
-          <strong>The Naive Wall</strong>: Pre-allocating contiguous memory blocks wastes up to <strong>78% of VRAM</strong> in internal fragmentation because sequence lengths vary wildly, causing premature GPU Out-of-Memory (OOM) aborts.
+          <strong>Naive Contiguous Allocation</strong> pre-reserves fixed blocks for the maximum context window (e.g. 128 tokens), leaving up to <strong>78% of VRAM wasted as idle internal fragmentation</strong> and triggering premature Out-of-Memory faults.
         </p>
         <p>
-          <strong>The Paged Solution</strong>: <strong>PagedAttention</strong> uses a dynamic <strong>Virtual Block Pointer Table</strong> to map logical token pages to scattered physical frames on demand. Memory waste drops to <strong>&lt; 4%</strong>, enabling <strong>3.8&times; higher serving concurrency</strong>.
+          <strong>PagedAttention</strong> adapts OS virtual memory paging, dynamically assigning non-contiguous 16-token physical frames on demand via a Virtual Block Table—slashing waste to <strong>&lt; 4%</strong> and unlocking <strong>3.8&times; serving throughput</strong>.
         </p>
       </article>
     </div>
@@ -193,20 +195,12 @@
 </section>
 
 <script>
-  interface Electron {
-    x: number;
-    y: number;
-    vx: number;
-    vy: number;
-    inCapacitor: boolean;
-  }
+  import * as THREE from 'three';
 
-  function initBranchEducationCanvas() {
-    document.querySelectorAll<HTMLElement>('[data-gpu-scrolly]').forEach((root) => {
-      const canvas = root.querySelector<HTMLCanvasElement>('[data-canvas]');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+  function initBranch3D() {
+    document.querySelectorAll<HTMLElement>('[data-branch-3d]').forEach((root) => {
+      const mount = root.querySelector<HTMLElement>('[data-three-mount]');
+      if (!mount) return;
 
       const scaleTabs = root.querySelectorAll<HTMLButtonElement>('.scale-tab');
       const chapters = root.querySelectorAll<HTMLElement>('.narrative-chapter');
@@ -215,7 +209,7 @@
       const hudElectrons = root.querySelector<HTMLElement>('[data-hud-electrons]');
       const ctrlPanels = root.querySelectorAll<HTMLElement>('[data-ctrl-scale]');
 
-      // Interactive Buttons & Sliders
+      // Buttons
       const btnWrite1 = root.querySelector<HTMLButtonElement>('[data-act-write1]');
       const btnWrite0 = root.querySelector<HTMLButtonElement>('[data-act-write0]');
       const btnRead = root.querySelector<HTMLButtonElement>('[data-act-read]');
@@ -231,740 +225,473 @@
       const btnStepTokens = root.querySelector<HTMLButtonElement>('[data-act-step-tokens]');
       const pagedModeText = root.querySelector<HTMLElement>('[data-paged-mode-text]');
 
-      // State
-      let activeScale = 0; // 0: 1T1C, 1: Matrix, 2: PagedAttention
-      let targetScale = 0;
-      let smoothScale = 0; // Interpolated zoom level (0.0 to 2.0)
+      // 3D Scene Setup
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, mount.clientWidth / mount.clientHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      renderer.setSize(mount.clientWidth, mount.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.1;
+      mount.appendChild(renderer.domElement);
 
-      // 1T1C State
-      let gateVoltage = 1.2; // 0.0V to 1.2V
-      let isBitlineHigh = true;
-      let capacitorCharge = 1.0; // 0.0 to 1.0 (1.0 = full 1.2V, 0.0 = empty 0V)
-      let senseAmpReading = 1.0;
-      let isSenseActive = false;
-      let oscilloscopeHistory: { wl: number; bl: number; sa: number }[] = [];
-      for (let i = 0; i < 100; i++) oscilloscopeHistory.push({ wl: 1.2, bl: 0.6, sa: 0.6 });
+      // Lighting with Metallic PBR Highlights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
 
-      // Electrons for 1T1C Capacitor
-      let electrons: Electron[] = [];
-      function resetElectrons(count = 42) {
-        electrons = [];
-        for (let i = 0; i < count; i++) {
-          electrons.push({
-            x: 750 + (Math.random() * 80 - 40),
-            y: 350 + (Math.random() * 180 - 90),
-            vx: (Math.random() - 0.5) * 1.5,
-            vy: (Math.random() - 0.5) * 1.5,
-            inCapacitor: true,
+      const dirLight = new THREE.DirectionalLight(0xffffff, 2.4);
+      dirLight.position.set(20, 35, 25);
+      scene.add(dirLight);
+
+      const fillLight = new THREE.DirectionalLight(0x8daaff, 1.2);
+      fillLight.position.set(-20, -10, -15);
+      scene.add(fillLight);
+
+      // Glowing Point Light inside the Capacitor Trench
+      const capPointLight = new THREE.PointLight(0x38bdf8, 4.5, 30);
+      capPointLight.position.set(4.5, 2.5, 0);
+      scene.add(capPointLight);
+
+      const gatePointLight = new THREE.PointLight(0x2857d9, 2.5, 20);
+      gatePointLight.position.set(-1.25, 3.0, 0);
+      scene.add(gatePointLight);
+
+      // Materials (Metallic PBR & Sheen)
+      const copperMat = new THREE.MeshStandardMaterial({
+        color: 0xb87333,
+        metalness: 0.96,
+        roughness: 0.14,
+      });
+
+      const goldMat = new THREE.MeshStandardMaterial({
+        color: 0xf59e0b,
+        metalness: 0.98,
+        roughness: 0.12,
+      });
+
+      const gateMat = new THREE.MeshStandardMaterial({
+        color: 0x2857d9,
+        metalness: 0.88,
+        roughness: 0.18,
+        emissive: 0x1d4ed8,
+        emissiveIntensity: 0.45,
+      });
+
+      const siliconMat = new THREE.MeshStandardMaterial({
+        color: 0x0f172a,
+        metalness: 0.65,
+        roughness: 0.35,
+      });
+
+      const dopedSiliconMat = new THREE.MeshStandardMaterial({
+        color: 0x334155,
+        metalness: 0.8,
+        roughness: 0.2,
+      });
+
+      const glassCapMat = new THREE.MeshPhysicalMaterial({
+        color: 0xa5f3fc,
+        transparent: true,
+        opacity: 0.55,
+        roughness: 0.08,
+        metalness: 0.15,
+        transmission: 0.75,
+        ior: 1.5,
+      });
+
+      const electronMat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        emissive: 0x0284c7,
+        emissiveIntensity: 2.2,
+        roughness: 0.1,
+      });
+
+      // Helper to generate crisp 3D Canvas Text Sprites
+      function createTextSprite(text: string, bgColor = 'rgba(23, 26, 31, 0.85)', textColor = '#38bdf8') {
+        const sprCanvas = document.createElement('canvas');
+        sprCanvas.width = 512;
+        sprCanvas.height = 128;
+        const sprCtx = sprCanvas.getContext('2d')!;
+
+        sprCtx.fillStyle = bgColor;
+        sprCtx.roundRect(10, 10, 492, 108, 16);
+        sprCtx.fill();
+        sprCtx.strokeStyle = textColor;
+        sprCtx.lineWidth = 4;
+        sprCtx.stroke();
+
+        sprCtx.font = '700 28px IBM Plex Mono, monospace';
+        sprCtx.fillStyle = '#FFFFFF';
+        sprCtx.textAlign = 'center';
+        sprCtx.textBaseline = 'middle';
+        sprCtx.fillText(text, 256, 64);
+
+        const tex = new THREE.CanvasTexture(sprCanvas);
+        tex.minFilter = THREE.LinearFilter;
+        const sprMat = new THREE.SpriteMaterial({ map: tex, transparent: true });
+        const sprite = new THREE.Sprite(sprMat);
+        sprite.scale.set(4.5, 1.15, 1);
+        return sprite;
+      }
+
+      // ----------------------------------------------------
+      // BUILD 3D SCALE 1: MICROSCOPIC 1T1C CELL
+      // ----------------------------------------------------
+      const group1T1C = new THREE.Group();
+      scene.add(group1T1C);
+
+      // 1. Silicon Substrate Block
+      const subGeom = new THREE.BoxGeometry(16, 2.5, 8);
+      const subMesh = new THREE.Mesh(subGeom, siliconMat);
+      subMesh.position.set(0, -1.25, 0);
+      group1T1C.add(subMesh);
+
+      // 2. N+ Doped Source (Left)
+      const sourceGeom = new THREE.BoxGeometry(3, 1.5, 5);
+      const sourceMesh = new THREE.Mesh(sourceGeom, dopedSiliconMat);
+      sourceMesh.position.set(-4, 0.75, 0);
+      group1T1C.add(sourceMesh);
+
+      // 3. N+ Doped Drain (Right)
+      const drainGeom = new THREE.BoxGeometry(3, 1.5, 5);
+      const drainMesh = new THREE.Mesh(drainGeom, dopedSiliconMat);
+      drainMesh.position.set(1.5, 0.75, 0);
+      group1T1C.add(drainMesh);
+
+      // 4. Inversion Channel (Active Cyan Conduction Layer)
+      const chanGeom = new THREE.BoxGeometry(3, 0.35, 4.5);
+      const chanMat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        emissive: 0x0284c7,
+        emissiveIntensity: 1.2,
+        transparent: true,
+        opacity: 0.9,
+      });
+      const chanMesh = new THREE.Mesh(chanGeom, chanMat);
+      chanMesh.position.set(-1.25, 0.18, 0);
+      group1T1C.add(chanMesh);
+
+      // 5. Polysilicon Wordline Gate & Gold Pad
+      const gateGeom = new THREE.BoxGeometry(3.2, 1.8, 5.5);
+      const gateMesh = new THREE.Mesh(gateGeom, gateMat);
+      gateMesh.position.set(-1.25, 2.2, 0);
+      group1T1C.add(gateMesh);
+
+      const gateGoldPad = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.3, 4.5), goldMat);
+      gateGoldPad.position.set(-1.25, 3.15, 0);
+      group1T1C.add(gateGoldPad);
+
+      // 6. Vertical Metallic Copper Bitline Rail (Left)
+      const bitlineGeom = new THREE.BoxGeometry(1.2, 10, 1.2);
+      const bitlineMesh = new THREE.Mesh(bitlineGeom, copperMat);
+      bitlineMesh.position.set(-5.5, 4.0, 0);
+      group1T1C.add(bitlineMesh);
+
+      // Copper Interconnect Bridge to Source
+      const bridgeGeom = new THREE.BoxGeometry(2.0, 0.6, 1.2);
+      const bridgeMesh = new THREE.Mesh(bridgeGeom, copperMat);
+      bridgeMesh.position.set(-4.5, 1.5, 0);
+      group1T1C.add(bridgeMesh);
+
+      // 7. 3D Deep Trench Capacitor (Translucent Cylinder on Right)
+      const capOuterGeom = new THREE.CylinderGeometry(1.8, 1.8, 7.5, 32, 1, true);
+      const capOuterMesh = new THREE.Mesh(capOuterGeom, glassCapMat);
+      capOuterMesh.position.set(4.5, 2.75, 0);
+      group1T1C.add(capOuterMesh);
+
+      // Metallic Copper Rim at Top of Trench
+      const capRimGeom = new THREE.TorusGeometry(1.8, 0.15, 16, 32);
+      const capRimMesh = new THREE.Mesh(capRimGeom, copperMat);
+      capRimMesh.rotation.x = Math.PI / 2;
+      capRimMesh.position.set(4.5, 6.5, 0);
+      group1T1C.add(capRimMesh);
+
+      const capInnerGeom = new THREE.CylinderGeometry(1.4, 1.4, 6.8, 32);
+      const capInnerMat = new THREE.MeshStandardMaterial({
+        color: 0x0284c7,
+        emissive: 0x0369a1,
+        emissiveIntensity: 0.6,
+        transparent: true,
+        opacity: 0.45,
+      });
+      const capInnerMesh = new THREE.Mesh(capInnerGeom, capInnerMat);
+      capInnerMesh.position.set(4.5, 2.75, 0);
+      group1T1C.add(capInnerMesh);
+
+      // Conductor trace from N+ Drain to Capacitor
+      const drainCapBridge = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.6, 1.2), copperMat);
+      drainCapBridge.position.set(3.0, 1.5, 0);
+      group1T1C.add(drainCapBridge);
+
+      // 8. 3D Sprites Labels in World Space
+      const sprBitline = createTextSprite('BITLINE (COPPER)', 'rgba(15, 23, 42, 0.9)', '#f97316');
+      sprBitline.position.set(-5.5, 9.8, 0);
+      group1T1C.add(sprBitline);
+
+      const sprGate = createTextSprite('WORDLINE GATE (1.2V)', 'rgba(15, 23, 42, 0.9)', '#38bdf8');
+      sprGate.position.set(-1.25, 4.2, 0);
+      group1T1C.add(sprGate);
+
+      const sprCap = createTextSprite('DEEP TRENCH CAPACITOR', 'rgba(15, 23, 42, 0.9)', '#38bdf8');
+      sprCap.position.set(4.5, 7.5, 0);
+      group1T1C.add(sprCap);
+
+      // 9. Kinetic 3D Electron Spheres
+      const electronSpheres: { mesh: THREE.Mesh; vx: number; vy: number; vz: number }[] = [];
+      const sphereGeom = new THREE.SphereGeometry(0.18, 16, 16);
+
+      for (let i = 0; i < 42; i++) {
+        const mesh = new THREE.Mesh(sphereGeom, electronMat);
+        mesh.position.set(
+          4.5 + (Math.random() * 2.0 - 1.0),
+          1.0 + Math.random() * 4.5,
+          (Math.random() * 2.0 - 1.0)
+        );
+        group1T1C.add(mesh);
+        electronSpheres.push({
+          mesh,
+          vx: (Math.random() - 0.5) * 0.05,
+          vy: (Math.random() - 0.5) * 0.05,
+          vz: (Math.random() - 0.5) * 0.05,
+        });
+      }
+
+      // ----------------------------------------------------
+      // BUILD 3D SCALE 2: 8×8 CROSSBAR MATRIX DIE
+      // ----------------------------------------------------
+      const groupMatrix = new THREE.Group();
+      groupMatrix.position.set(0, 0, 0);
+      scene.add(groupMatrix);
+
+      // 64 Pillar Capacitors and 8 Wordline Copper Rails
+      const matrixCapacitors: THREE.Mesh[] = [];
+      const matrixWordlines: THREE.Mesh[] = [];
+
+      const gridSpacing = 2.2;
+      const startX = -((7 * gridSpacing) / 2);
+      const startZ = -((7 * gridSpacing) / 2);
+
+      // Silicon Die Base Plate
+      const dieBaseGeom = new THREE.BoxGeometry(22, 1.5, 22);
+      const dieBaseMesh = new THREE.Mesh(dieBaseGeom, siliconMat);
+      dieBaseMesh.position.set(0, -0.75, 0);
+      groupMatrix.add(dieBaseMesh);
+
+      // 8 Horizontal Wordline Metallic Rails
+      for (let r = 0; r < 8; r++) {
+        const wlGeom = new THREE.BoxGeometry(20, 0.4, 0.6);
+        const wlMesh = new THREE.Mesh(wlGeom, r === 3 ? gateMat : copperMat);
+        wlMesh.position.set(0, 1.8, startZ + r * gridSpacing);
+        groupMatrix.add(wlMesh);
+        matrixWordlines.push(wlMesh);
+      }
+
+      // 8 Vertical Bitline Metallic Rails (Underneath)
+      for (let c = 0; c < 8; c++) {
+        const blGeom = new THREE.BoxGeometry(0.6, 0.4, 20);
+        const blMesh = new THREE.Mesh(blGeom, copperMat);
+        blMesh.position.set(startX + c * gridSpacing, 0.6, 0);
+        groupMatrix.add(blMesh);
+      }
+
+      // 64 Deep Trench Pillars
+      const pillarGeom = new THREE.CylinderGeometry(0.45, 0.45, 3.2, 16);
+      for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+          const isRow3 = r === 3;
+          const pMat = new THREE.MeshStandardMaterial({
+            color: isRow3 ? 0x38bdf8 : 0x0284c7,
+            emissive: isRow3 ? 0x0284c7 : 0x000000,
+            emissiveIntensity: isRow3 ? 0.8 : 0,
+            metalness: 0.8,
+            roughness: 0.2,
           });
-        }
-      }
-      resetElectrons(42);
-
-      // Matrix State
-      let selectedRow = 3;
-      let matrixStrobe = 0;
-
-      // PagedAttention State
-      let isPagedMode = true;
-      let tokenStep = 2; // 0, 1, 2, 3
-      let hoveredFrame = -1;
-
-      // Colors
-      function getColors() {
-        const isDark = document.documentElement.classList.contains('dark') || document.body.classList.contains('dark');
-        return {
-          bg: isDark ? '#11141A' : '#F7F5EF',
-          surface: isDark ? '#181C24' : '#FFFFFF',
-          surfaceRaised: isDark ? '#1F2530' : '#EFECE4',
-          ink: isDark ? '#F3F4F6' : '#171A1F',
-          muted: isDark ? '#8A94A4' : '#646D7D',
-          rule: isDark ? '#2B323F' : '#D6D3CA',
-          blue: '#2857D9',
-          blueSoft: isDark ? 'rgba(40, 87, 217, 0.25)' : '#E8EEFF',
-          rust: '#A63D17',
-          rustSoft: isDark ? 'rgba(166, 61, 23, 0.3)' : '#F8E9DF',
-          electron: '#38BDF8', // Glowing cyan electron
-          copper: '#EA580C', // Metallic copper interconnect
-          silicon: isDark ? '#334155' : '#CBD5E1', // N+ doped silicon
-          poly: '#6366F1', // Polysilicon gate
-          dielectric: isDark ? '#475569' : '#94A3B8', // Oxide insulator
-        };
-      }
-
-      // Responsive Retina Sizing
-      function resizeCanvas() {
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        const displayWidth = rect.width;
-        const displayHeight = displayWidth * (740 / 1200);
-
-        if (canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr) {
-          canvas.width = displayWidth * dpr;
-          canvas.height = displayHeight * dpr;
+          const pillar = new THREE.Mesh(pillarGeom, pMat);
+          pillar.position.set(startX + c * gridSpacing, 1.6, startZ + r * gridSpacing);
+          groupMatrix.add(pillar);
+          matrixCapacitors.push(pillar);
         }
       }
 
       // ----------------------------------------------------
-      // SCALE 1 RENDERER: Microscopic 1T1C Silicon Cell
+      // BUILD 3D SCALE 3: GPU HBM3 STACKED DRAM PACKAGE
       // ----------------------------------------------------
-      function renderScale1_1T1C(width: number, height: number, c: ReturnType<typeof getColors>) {
-        // Subsystem Title
-        ctx.font = '700 12px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.blue;
-        ctx.fillText('SCALE 01: MICROSCOPIC 1-TRANSISTOR 1-CAPACITOR (1T1C) SILICON CELL', 35, 45);
+      const groupScale3 = new THREE.Group();
+      scene.add(groupScale3);
 
-        // 1. Bitline Wire (Vertical Copper trace on left)
-        const blX = 140;
-        ctx.fillStyle = c.copper;
-        ctx.fillRect(blX - 12, 80, 24, 460);
-        ctx.strokeStyle = c.rule;
-        ctx.strokeRect(blX - 12, 80, 24, 460);
+      // 1. Silicon Interposer Substrate
+      const interposerGeom = new THREE.BoxGeometry(26, 1.2, 26);
+      const interposerMesh = new THREE.Mesh(interposerGeom, siliconMat);
+      interposerMesh.position.set(0, -2.0, 0);
+      groupScale3.add(interposerMesh);
 
-        ctx.font = '700 11px IBM Plex Mono, monospace';
-        ctx.fillStyle = '#FFFFFF';
-        ctx.save();
-        ctx.translate(blX + 4, 300);
-        ctx.rotate(-Math.PI / 2);
-        ctx.fillText('BITLINE (DATA WIRE)', 0, 0);
-        ctx.restore();
+      // 2. 4 Stacked 3D DRAM Dies with Metallic Gold TSVs
+      const dramDieMeshes: THREE.Mesh[] = [];
+      for (let d = 0; d < 4; d++) {
+        const dieGeom = new THREE.BoxGeometry(22, 0.7, 22);
+        const dieMat = new THREE.MeshStandardMaterial({
+          color: d === 3 ? 0x1e293b : 0x0f172a,
+          metalness: 0.85,
+          roughness: 0.22,
+        });
+        const dieMesh = new THREE.Mesh(dieGeom, dieMat);
+        dieMesh.position.set(0, -1.0 + d * 1.4, 0);
+        groupScale3.add(dieMesh);
+        dramDieMeshes.push(dieMesh);
 
-        // 2. NMOS Transistor Channel & Source/Drain Silicon
-        const gateX = 400;
-        const gateY = 240;
-
-        // P-type Silicon Substrate base
-        ctx.fillStyle = c.surfaceRaised;
-        ctx.fillRect(200, 260, 420, 180);
-        ctx.strokeStyle = c.rule;
-        ctx.strokeRect(200, 260, 420, 180);
-        ctx.font = '600 11px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.muted;
-        ctx.fillText('P-TYPE SILICON SUBSTRATE (BULK)', 220, 420);
-
-        // N+ Source (connected to Bitline)
-        ctx.fillStyle = c.silicon;
-        ctx.fillRect(152, 260, 90, 80);
-        ctx.strokeStyle = c.rule;
-        ctx.strokeRect(152, 260, 90, 80);
-        ctx.fillStyle = c.ink;
-        ctx.font = '700 11px IBM Plex Mono, monospace';
-        ctx.fillText('N⁺ SOURCE', 160, 305);
-
-        // N+ Drain (connected to Capacitor)
-        ctx.fillStyle = c.silicon;
-        ctx.fillRect(520, 260, 90, 80);
-        ctx.strokeStyle = c.rule;
-        ctx.strokeRect(520, 260, 90, 80);
-        ctx.fillStyle = c.ink;
-        ctx.fillText('N⁺ DRAIN', 532, 305);
-
-        // Transistor Channel Inversion Layer (Conducts when Gate V > 0.4V)
-        const isConducting = gateVoltage > 0.4;
-        if (isConducting) {
-          const intensity = Math.min(1, (gateVoltage - 0.4) / 0.8);
-          ctx.fillStyle = `rgba(56, 189, 248, ${intensity * 0.75})`;
-          ctx.fillRect(242, 260, 278, 25);
-          ctx.font = '700 10px IBM Plex Mono, monospace';
-          ctx.fillStyle = c.blue;
-          ctx.fillText('⚡ INVERSION CHANNEL (ELECTRONS CONDUCTING)', 260, 277);
-        } else {
-          ctx.font = '500 10px IBM Plex Mono, monospace';
-          ctx.fillStyle = c.muted;
-          ctx.fillText('DEPLETION REGION (OFF - CHANNEL CLOSED)', 265, 277);
+        // Gold TSV Microbumps between stacked dies
+        if (d < 3) {
+          for (let bx = -8; bx <= 8; bx += 8) {
+            for (let bz = -8; bz <= 8; bz += 8) {
+              const tsv = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.7, 12), goldMat);
+              tsv.position.set(bx, -0.3 + d * 1.4, bz);
+              groupScale3.add(tsv);
+            }
+          }
         }
+      }
 
-        // Gate Dielectric Oxide
-        ctx.fillStyle = c.dielectric;
-        ctx.fillRect(242, 245, 278, 15);
-        ctx.strokeStyle = c.rule;
-        ctx.strokeRect(242, 245, 278, 15);
+      // 3. 64 3D Memory Page Frames on Top Die
+      const scale3Tiles: THREE.Mesh[] = [];
+      const tileSpacing = 2.4;
+      const tStartX = -((7 * tileSpacing) / 2);
+      const tStartZ = -((7 * tileSpacing) / 2);
 
-        // Wordline Polysilicon Gate
-        ctx.fillStyle = isConducting ? c.blue : c.poly;
-        ctx.fillRect(242, 160, 278, 85);
-        ctx.strokeStyle = c.rule;
-        ctx.strokeRect(242, 160, 278, 85);
+      for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+          const idx = r * 8 + c;
+          const tGeom = new THREE.BoxGeometry(2.0, 0.2, 2.0);
+          const tMat = new THREE.MeshStandardMaterial({
+            color: 0x334155,
+            metalness: 0.8,
+            roughness: 0.2,
+          });
+          const tile = new THREE.Mesh(tGeom, tMat);
+          tile.position.set(tStartX + c * tileSpacing, 3.6, tStartZ + r * tileSpacing);
+          groupScale3.add(tile);
+          scale3Tiles.push(tile);
+        }
+      }
 
-        ctx.font = '700 13px IBM Plex Mono, monospace';
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillText('WORDLINE (ROW GATE)', 290, 195);
-        ctx.font = '600 11px IBM Plex Mono, monospace';
-        ctx.fillText(`V_GATE = ${gateVoltage.toFixed(2)}V (${isConducting ? 'OPEN' : 'CLOSED'})`, 310, 220);
+      // 4. 3D Sprites for Scale 3
+      const sprHbm = createTextSprite('GPU HBM3 STACKED VRAM (819 GB/s)', 'rgba(15, 23, 42, 0.9)', '#38bdf8');
+      sprHbm.position.set(0, 7.5, 0);
+      groupScale3.add(sprHbm);
 
-        // Wordline Control Wire coming from top
-        ctx.strokeStyle = isConducting ? c.blue : c.rule;
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(380, 80);
-        ctx.lineTo(380, 160);
-        ctx.stroke();
-        ctx.lineWidth = 1;
-
-        // 3. Deep Trench Capacitor (Right Cylinder)
-        const capX = 720;
-        const capY = 160;
-        const capW = 120;
-        const capH = 340;
-
-        // Outer Plate (Grounded Plate)
-        ctx.fillStyle = c.surfaceRaised;
-        ctx.fillRect(capX - 10, capY - 10, capW + 20, capH + 20);
-        ctx.strokeStyle = c.rule;
-        ctx.strokeRect(capX - 10, capY - 10, capW + 20, capH + 20);
-
-        // Dielectric Barrier Liner
-        ctx.fillStyle = c.dielectric;
-        ctx.fillRect(capX, capY, capW, capH);
-
-        // Inner Trench Storage Node
-        ctx.fillStyle = c.surface;
-        ctx.fillRect(capX + 12, capY + 12, capW - 24, capH - 24);
-        ctx.strokeStyle = c.copper;
-        ctx.strokeRect(capX + 12, capY + 12, capW - 24, capH - 24);
-
-        // Conductor trace from N+ Drain to Capacitor
-        ctx.fillStyle = c.copper;
-        ctx.fillRect(610, 290, 122, 20);
-        ctx.strokeStyle = c.rule;
-        ctx.strokeRect(610, 290, 122, 20);
-
-        // Capacitor Label & Charge State
-        ctx.font = '700 11px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.ink;
-        ctx.fillText('DEEP TRENCH CAPACITOR', capX - 15, capY - 20);
-        ctx.font = '600 11px IBM Plex Mono, monospace';
-        ctx.fillStyle = capacitorCharge > 0.5 ? c.blue : c.rust;
-        ctx.fillText(`CHARGE: ${(capacitorCharge * 100).toFixed(0)}% (${capacitorCharge > 0.5 ? 'BIT 1' : 'BIT 0'})`, capX - 15, capY + capH + 25);
-
-        // 4. Update & Draw Simulated Electron Particles
-        electrons.forEach((e) => {
-          // Physics movement
-          e.x += e.vx;
-          e.y += e.vy;
-
-          // Confine within capacitor trench or let flow across channel
-          if (isConducting) {
-            // Can drift between capacitor (capX) and Bitline (blX)
-            if (e.x < blX) {
-              e.x = blX;
-              e.vx = Math.abs(e.vx);
-            }
-            if (e.x > capX + capW - 25) {
-              e.x = capX + capW - 25;
-              e.vx = -Math.abs(e.vx);
-            }
-            if (e.y < 265) {
-              e.y = 265;
-              e.vy = Math.abs(e.vy);
-            }
-            if (e.y > 460) {
-              e.y = 460;
-              e.vy = -Math.abs(e.vy);
+      function updateScale3Colors() {
+        scale3Tiles.forEach((tile, idx) => {
+          const mat = tile.material as THREE.MeshStandardMaterial;
+          if (isPagedMode) {
+            // PagedAttention: dynamic packed virtual allocation
+            const pagedMap: { [key: number]: number } = {
+              4: 0x2857d9, 19: 0x2857d9, 33: 0x2857d9, 52: 0x2857d9,
+              2: 0x0d9488, 45: 0x0d9488, 11: 0x0d9488,
+              12: 0x6366f1, 28: 0x6366f1,
+              58: 0x9333ea, 23: 0x9333ea,
+            };
+            if (pagedMap[idx]) {
+              mat.color.setHex(pagedMap[idx]);
+              mat.emissive.setHex(pagedMap[idx]);
+              mat.emissiveIntensity = 0.6;
+            } else {
+              mat.color.setHex(0x334155);
+              mat.emissive.setHex(0x000000);
+              mat.emissiveIntensity = 0;
             }
           } else {
-            // Confined strictly inside capacitor trench
-            if (e.x < capX + 15) {
-              e.x = capX + 15;
-              e.vx = Math.abs(e.vx);
-            }
-            if (e.x > capX + capW - 25) {
-              e.x = capX + capW - 25;
-              e.vx = -Math.abs(e.vx);
-            }
-            if (e.y < capY + 15) {
-              e.y = capY + 15;
-              e.vy = Math.abs(e.vy);
-            }
-            if (e.y > capY + capH - 25) {
-              e.y = capY + capH - 25;
-              e.vy = -Math.abs(e.vy);
-            }
-          }
-
-          // Draw Glowing Cyan Electron
-          ctx.fillStyle = c.electron;
-          ctx.beginPath();
-          ctx.arc(e.x, e.y, 3.5, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-        // 5. Differential Sense Amplifier & Oscilloscope (Bottom Right Pane)
-        const oscX = 890;
-        const oscY = 80;
-        const oscW = 280;
-        const oscH = 460;
-
-        ctx.fillStyle = c.surface;
-        ctx.strokeStyle = c.rule;
-        ctx.fillRect(oscX, oscY, oscW, oscH);
-        ctx.strokeRect(oscX, oscY, oscW, oscH);
-
-        // Oscilloscope Header
-        ctx.fillStyle = c.surfaceRaised;
-        ctx.fillRect(oscX, oscY, oscW, 35);
-        ctx.strokeStyle = c.rule;
-        ctx.strokeRect(oscX, oscY, oscW, 35);
-        ctx.font = '700 11px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.ink;
-        ctx.fillText('DIFFERENTIAL SENSE AMPLIFIER', oscX + 15, oscY + 22);
-
-        // Sense Amp Icon (Triangle comparator)
-        ctx.fillStyle = c.blueSoft;
-        ctx.strokeStyle = c.blue;
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(oscX + 40, oscY + 60);
-        ctx.lineTo(oscX + 140, oscY + 110);
-        ctx.lineTo(oscX + 40, oscY + 160);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-        ctx.lineWidth = 1;
-
-        ctx.font = '700 10px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.blue;
-        ctx.fillText('AMP ×100', oscX + 55, oscY + 115);
-
-        // Oscilloscope Screen
-        const screenY = oscY + 190;
-        ctx.fillStyle = c.bg;
-        ctx.fillRect(oscX + 15, screenY, oscW - 30, 240);
-        ctx.strokeStyle = c.rule;
-        ctx.strokeRect(oscX + 15, screenY, oscW - 30, 240);
-
-        // Oscilloscope Grid Lines
-        ctx.strokeStyle = c.rule;
-        ctx.setLineDash([2, 2]);
-        ctx.beginPath();
-        ctx.moveTo(oscX + 15, screenY + 60);
-        ctx.lineTo(oscX + oscW - 15, screenY + 60);
-        ctx.moveTo(oscX + 15, screenY + 120);
-        ctx.lineTo(oscX + oscW - 15, screenY + 120);
-        ctx.moveTo(oscX + 15, screenY + 180);
-        ctx.lineTo(oscX + oscW - 15, screenY + 180);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        ctx.font = '600 9px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.muted;
-        ctx.fillText('V_DD: 1.2V', oscX + 22, screenY + 20);
-        ctx.fillText('V_REF: 0.6V', oscX + 22, screenY + 115);
-        ctx.fillText('GND: 0.0V', oscX + 22, screenY + 230);
-
-        // Update Oscilloscope Waveform History
-        oscilloscopeHistory.shift();
-        const currentBL_V = isConducting ? 0.6 + (capacitorCharge - 0.5) * 0.4 : 0.6;
-        oscilloscopeHistory.push({
-          wl: gateVoltage,
-          bl: currentBL_V,
-          sa: capacitorCharge > 0.5 ? 1.2 : 0.0,
-        });
-
-        // Draw Waveform for Bitline Voltage (Blue)
-        ctx.strokeStyle = c.electron;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        const stepX = (oscW - 30) / oscilloscopeHistory.length;
-        oscilloscopeHistory.forEach((pt, i) => {
-          const x = oscX + 15 + i * stepX;
-          const y = screenY + 240 - (pt.bl / 1.2) * 220;
-          if (i === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        });
-        ctx.stroke();
-
-        // Waveform Legend
-        ctx.font = '700 9px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.electron;
-        ctx.fillText('— V_Bitline (ΔV sense)', oscX + 120, screenY + 20);
-
-        // Telemetry Strip at Bottom
-        renderTelemetryBottom(width, height, c, 'SCALE 01: 1T1C PHYSICS', `CAPACITOR: ${(capacitorCharge * 100).toFixed(0)}% | V_WL: ${gateVoltage.toFixed(2)}V`, isConducting ? 'MOSFET: ON' : 'MOSFET: OFF');
-      }
-
-      // ----------------------------------------------------
-      // SCALE 2 RENDERER: 8x8 Crossbar Matrix & Address Decoders
-      // ----------------------------------------------------
-      function renderScale2_Matrix(width: number, height: number, c: ReturnType<typeof getColors>) {
-        ctx.font = '700 12px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.blue;
-        ctx.fillText('SCALE 02: 8×8 WORDLINE & BITLINE CROSSBAR SILICON ARRAY (64 BITS = 8 BYTES)', 35, 45);
-
-        // 1. Row Address Decoder (Left Column)
-        const decX = 40;
-        const decY = 80;
-        const decW = 180;
-        const decH = 460;
-
-        ctx.fillStyle = c.surface;
-        ctx.strokeStyle = c.rule;
-        ctx.fillRect(decX, decY, decW, decH);
-        ctx.strokeRect(decX, decY, decW, decH);
-
-        ctx.fillStyle = c.surfaceRaised;
-        ctx.fillRect(decX, decY, decW, 35);
-        ctx.strokeRect(decX, decY, decW, 35);
-
-        ctx.font = '700 11px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.ink;
-        ctx.fillText('ROW ADDRESS DECODER', decX + 15, decY + 22);
-
-        // 8 Row Outputs from Decoder
-        for (let row = 0; row < 8; row++) {
-          const rowY = decY + 55 + row * 48;
-          const isRowActive = row === selectedRow;
-
-          ctx.fillStyle = isRowActive ? c.blue : c.surfaceRaised;
-          ctx.strokeStyle = isRowActive ? c.blue : c.rule;
-          ctx.fillRect(decX + 10, rowY, decW - 20, 36);
-          ctx.strokeRect(decX + 10, rowY, decW - 20, 36);
-
-          ctx.font = '700 10px IBM Plex Mono, monospace';
-          ctx.fillStyle = isRowActive ? '#FFFFFF' : c.ink;
-          ctx.fillText(`WL #${row} (ADDR 0x${(row * 8).toString(16).padStart(2, '0').toUpperCase()})`, decX + 20, rowY + 22);
-
-          // Horizontal Wordline Copper Trace across grid
-          ctx.strokeStyle = isRowActive ? c.blue : c.copper;
-          ctx.lineWidth = isRowActive ? 3 : 1.5;
-          ctx.beginPath();
-          ctx.moveTo(decX + decW, rowY + 18);
-          ctx.lineTo(920, rowY + 18);
-          ctx.stroke();
-          ctx.lineWidth = 1;
-        }
-
-        // 2. 8 Vertical Bitlines
-        const gridStartX = 290;
-        const colGap = 75;
-
-        for (let col = 0; col < 8; col++) {
-          const blX = gridStartX + col * colGap;
-
-          // Vertical Copper Bitline Wire
-          ctx.strokeStyle = c.copper;
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.moveTo(blX, decY + 20);
-          ctx.lineTo(blX, decY + 440);
-          ctx.stroke();
-          ctx.lineWidth = 1;
-
-          ctx.font = '700 9px IBM Plex Mono, monospace';
-          ctx.fillStyle = c.muted;
-          ctx.fillText(`BL #${col}`, blX - 12, decY + 10);
-        }
-
-        // 3. 64 Intersecting 1T1C Memory Cells
-        for (let row = 0; row < 8; row++) {
-          const rowY = decY + 55 + row * 48 + 18;
-          const isRowActive = row === selectedRow;
-
-          for (let col = 0; col < 8; col++) {
-            const cellX = gridStartX + col * colGap;
-
-            // Cell Node Circle
-            ctx.fillStyle = isRowActive ? c.blue : c.surface;
-            ctx.strokeStyle = isRowActive ? c.blue : c.rule;
-            ctx.lineWidth = isRowActive ? 2 : 1;
-            ctx.beginPath();
-            ctx.arc(cellX, rowY, 12, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-            ctx.lineWidth = 1;
-
-            // Tiny 1T1C icon inside
-            ctx.font = '700 8px IBM Plex Mono, monospace';
-            ctx.fillStyle = isRowActive ? '#FFFFFF' : c.muted;
-            ctx.fillText(isRowActive ? '1' : '0', cellX - 2.5, rowY + 3);
-          }
-        }
-
-        // 4. Sense Amplifier Bank (Bottom Rail)
-        const saY = decY + 455;
-        ctx.fillStyle = c.surface;
-        ctx.strokeStyle = c.rule;
-        ctx.fillRect(gridStartX - 30, saY, 8 * colGap, 70);
-        ctx.strokeRect(gridStartX - 30, saY, 8 * colGap, 70);
-
-        for (let col = 0; col < 8; col++) {
-          const saX = gridStartX + col * colGap;
-          ctx.fillStyle = c.blueSoft;
-          ctx.strokeStyle = c.blue;
-          ctx.fillRect(saX - 20, saY + 10, 40, 45);
-          ctx.strokeRect(saX - 20, saY + 10, 40, 45);
-
-          ctx.font = '700 9px IBM Plex Mono, monospace';
-          ctx.fillStyle = c.blue;
-          ctx.fillText(`SA #${col}`, saX - 14, saY + 28);
-          ctx.fillText('0xFF', saX - 12, saY + 45);
-        }
-
-        // Right Info Box
-        const infoX = 950;
-        const infoY = 80;
-        ctx.fillStyle = c.surface;
-        ctx.strokeStyle = c.rule;
-        ctx.fillRect(infoX, infoY, 215, 460);
-        ctx.strokeRect(infoX, infoY, 215, 460);
-
-        ctx.font = '700 11px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.ink;
-        ctx.fillText('CROSSBAR ARCHITECTURE', infoX + 15, infoY + 25);
-
-        ctx.font = '500 10px IBM Plex Sans, sans-serif';
-        ctx.fillStyle = c.muted;
-        const explanation = [
-          '• 1 Row = 8 1T1C Cells (1 Byte)',
-          '• 8 Rows = 64 Cells (8 Bytes)',
-          '• Row Decoder activates 1 Wordline',
-          '• Bitlines sense charge in parallel',
-          '• Sense Amps latch 8 bits to bus',
-        ];
-        explanation.forEach((line, idx) => {
-          ctx.fillText(line, infoX + 15, infoY + 60 + idx * 24);
-        });
-
-        renderTelemetryBottom(width, height, c, 'SCALE 02: CROSSBAR ARRAY', `ACTIVE WORDLINE: WL #${selectedRow} (0x${(selectedRow * 8).toString(16).padStart(2, '0').toUpperCase()})`, 'BUS: 8 BITS LATCHED');
-      }
-
-      // ----------------------------------------------------
-      // SCALE 3 RENDERER: Macro GPU Memory & PagedAttention
-      // ----------------------------------------------------
-      function renderScale3_Paged(width: number, height: number, c: ReturnType<typeof getColors>) {
-        ctx.font = '700 12px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.blue;
-        ctx.fillText('SCALE 03: GPU MEMORY WALL & PAGEDATTENTION KV CACHE ALLOCATION', 35, 45);
-
-        // 1. Logical Request Queue (Left)
-        ctx.font = '700 11px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.muted;
-        ctx.fillText('LOGICAL REQUEST QUEUE (4 CLIENT BATCHES)', 40, 75);
-
-        const requests = [
-          { name: 'Req A (Query)', tokens: 48, col: '#2857D9' },
-          { name: 'Req B (CodeGen)', tokens: 32, col: '#0D9488' },
-          { name: 'Req C (Summary)', tokens: 16, col: '#6366F1' },
-          { name: 'Req D (Batch 4)', tokens: 32, col: '#9333EA' },
-        ];
-
-        let reqY = 90;
-        requests.forEach((r) => {
-          ctx.fillStyle = c.surface;
-          ctx.strokeStyle = r.col;
-          ctx.fillRect(40, reqY, 260, 55);
-          ctx.strokeRect(40, reqY, 260, 55);
-
-          ctx.fillStyle = r.col;
-          ctx.fillRect(52, reqY + 12, 10, 10);
-          ctx.font = '700 11px IBM Plex Mono, monospace';
-          ctx.fillStyle = c.ink;
-          ctx.fillText(r.name, 70, reqY + 22);
-
-          ctx.font = '500 10px IBM Plex Mono, monospace';
-          ctx.fillStyle = c.muted;
-          ctx.fillText(`${r.tokens} Tokens (${Math.ceil(r.tokens / 16)} Pages)`, 175, reqY + 22);
-
-          // Progress track
-          ctx.fillStyle = c.surfaceRaised;
-          ctx.fillRect(52, reqY + 34, 236, 8);
-          ctx.fillStyle = r.col;
-          ctx.fillRect(52, reqY + 34, (r.tokens / 128) * 236, 8);
-
-          reqY += 65;
-        });
-
-        // 2. Middle: Allocation Paradigm Box
-        const midX = 330;
-        ctx.fillStyle = c.surface;
-        ctx.strokeStyle = isPagedMode ? c.blue : c.rust;
-        ctx.fillRect(midX, 90, 320, 250);
-        ctx.strokeRect(midX, 90, 320, 250);
-
-        ctx.font = '700 11px IBM Plex Mono, monospace';
-        ctx.fillStyle = isPagedMode ? c.blue : c.rust;
-        ctx.fillText(isPagedMode ? 'PAGEDATTENTION VIRTUAL TABLE' : 'NAIVE CONTIGUOUS RESERVATION', midX + 15, 115);
-
-        ctx.font = '500 10px IBM Plex Sans, sans-serif';
-        ctx.fillStyle = c.ink;
-        if (isPagedMode) {
-          const pagedNotes = [
-            '• Logical pages map to scattered frames',
-            '• Allocated dynamically per 16 tokens',
-            '• Internal fragmentation < 4%',
-            '• Concurrency: 3.8× throughput',
-          ];
-          pagedNotes.forEach((n, idx) => ctx.fillText(n, midX + 15, 145 + idx * 24));
-        } else {
-          const naiveNotes = [
-            '• Pre-reserves max sequence context (128T)',
-            '• Locks 8 contiguous physical frames',
-            '• Internal fragmentation: 78.1% waste',
-            '• Concurrency: 1.0× (OOM aborts)',
-          ];
-          naiveNotes.forEach((n, idx) => ctx.fillText(n, midX + 15, 145 + idx * 24));
-        }
-
-        // 3. Right: 64 Physical GPU VRAM Memory Frames (8x8 Grid)
-        const gridStartX = 690;
-        const gridStartY = 90;
-        const tileSize = 52;
-        const tileGap = 8;
-
-        ctx.font = '700 11px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.muted;
-        ctx.fillText('PHYSICAL GPU VRAM MATRIX (64 × 16-TOKEN FRAMES)', gridStartX, 75);
-
-        for (let r = 0; r < 8; r++) {
-          for (let col = 0; col < 8; col++) {
-            const idx = r * 8 + col;
-            const x = gridStartX + col * (tileSize + tileGap);
-            const y = gridStartY + r * (tileSize + tileGap);
-            const hex = '0x' + idx.toString(16).padStart(2, '0').toUpperCase();
-
-            let tileCol = c.surfaceRaised;
-            let strokeCol = c.rule;
-            let isWasted = false;
-
-            if (!isPagedMode) {
-              // Naive contiguous: 8 frames per client
-              if (idx < 8) {
-                tileCol = idx < 3 ? '#2857D9' : c.rustSoft;
-                strokeCol = idx < 3 ? '#2857D9' : c.rust;
-                isWasted = idx >= 3;
-              } else if (idx < 16) {
-                tileCol = idx < 10 ? '#0D9488' : c.rustSoft;
-                strokeCol = idx < 10 ? '#0D9488' : c.rust;
-                isWasted = idx >= 10;
-              } else if (idx < 24) {
-                tileCol = idx < 17 ? '#6366F1' : c.rustSoft;
-                strokeCol = idx < 17 ? '#6366F1' : c.rust;
-                isWasted = idx >= 17;
-              }
+            // Naive Contiguous: 78% internal fragmentation waste in red
+            if (idx < 8) {
+              const isUsed = idx < 3;
+              mat.color.setHex(isUsed ? 0x2857d9 : 0xa63d17);
+              mat.emissive.setHex(isUsed ? 0x2857d9 : 0xa63d17);
+              mat.emissiveIntensity = isUsed ? 0.6 : 0.3;
+            } else if (idx < 16) {
+              const isUsed = idx < 10;
+              mat.color.setHex(isUsed ? 0x0d9488 : 0xa63d17);
+              mat.emissive.setHex(isUsed ? 0x0d9488 : 0xa63d17);
+              mat.emissiveIntensity = isUsed ? 0.6 : 0.3;
+            } else if (idx < 24) {
+              const isUsed = idx < 17;
+              mat.color.setHex(isUsed ? 0x6366f1 : 0xa63d17);
+              mat.emissive.setHex(isUsed ? 0x6366f1 : 0xa63d17);
+              mat.emissiveIntensity = isUsed ? 0.6 : 0.3;
             } else {
-              // Paged non-contiguous
-              const pagedMap: { [key: number]: string } = {
-                4: '#2857D9', 19: '#2857D9', 33: '#2857D9',
-                2: '#0D9488', 45: '#0D9488',
-                12: '#6366F1',
-                58: '#9333EA', 23: '#9333EA',
-              };
-              if (pagedMap[idx]) {
-                tileCol = pagedMap[idx];
-                strokeCol = pagedMap[idx];
-              }
+              mat.color.setHex(0x334155);
+              mat.emissive.setHex(0x000000);
+              mat.emissiveIntensity = 0;
             }
-
-            ctx.fillStyle = tileCol;
-            ctx.fillRect(x, y, tileSize, tileSize);
-            ctx.strokeStyle = strokeCol;
-            ctx.strokeRect(x, y, tileSize, tileSize);
-
-            // Wasted diagonal hatch in Naive
-            if (isWasted) {
-              ctx.save();
-              ctx.beginPath();
-              ctx.rect(x, y, tileSize, tileSize);
-              ctx.clip();
-              ctx.strokeStyle = c.rust;
-              for (let lx = -tileSize; lx < tileSize * 2; lx += 6) {
-                ctx.moveTo(x + lx, y);
-                ctx.lineTo(x + lx + tileSize, y + tileSize);
-              }
-              ctx.stroke();
-              ctx.restore();
-            }
-
-            // Hex Address
-            ctx.font = '700 8px IBM Plex Mono, monospace';
-            ctx.fillStyle = isWasted ? c.rust : tileCol === c.surfaceRaised ? c.muted : '#FFFFFF';
-            ctx.fillText(hex, x + 5, y + 14);
           }
-        }
-
-        renderTelemetryBottom(width, height, c, 'SCALE 03: GPU MEMORY', isPagedMode ? 'PAGING: VIRTUAL (vLLM)' : 'PAGING: NAIVE CONTIGUOUS', isPagedMode ? 'WASTE: < 3.8%' : 'WASTE: 78.1% (OOM)');
+        });
       }
+      updateScale3Colors();
 
       // ----------------------------------------------------
-      // Bottom Telemetry Strip Helper
+      // SCALE CAMERA & ANIMATION STATE
       // ----------------------------------------------------
-      function renderTelemetryBottom(width: number, height: number, c: ReturnType<typeof getColors>, tag: string, mid: string, right: string) {
-        const barY = height - 55;
-        ctx.fillStyle = c.surface;
-        ctx.strokeStyle = c.rule;
-        ctx.fillRect(30, barY, width - 60, 38);
-        ctx.strokeRect(30, barY, width - 60, 38);
+      let targetScale = 0;
+      let currentScale = 0;
 
-        ctx.font = '700 11px IBM Plex Mono, monospace';
-        ctx.fillStyle = c.blue;
-        ctx.fillText(tag, 45, barY + 24);
+      // Camera Target Positions per scale
+      const cameraPositions = [
+        new THREE.Vector3(0, 3.5, 14), // Scale 1: 1T1C Close-up
+        new THREE.Vector3(0, 22, 26),  // Scale 2: 8x8 Matrix Isometric
+        new THREE.Vector3(0, 26, 34),  // Scale 3: Macro GPU VRAM Bank
+      ];
+      const cameraLookAts = [
+        new THREE.Vector3(0, 2, 0),
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(0, 0, 0),
+      ];
 
-        ctx.fillStyle = c.ink;
-        ctx.fillText(mid, 280, barY + 24);
+      camera.position.copy(cameraPositions[0]);
+      camera.lookAt(cameraLookAts[0]);
 
-        ctx.fillStyle = right.includes('WASTE: 78') || right.includes('OFF') ? c.rust : c.blue;
-        ctx.fillText(right, 850, barY + 24);
-      }
+      // State
+      let gateVoltage = 1.2;
+      let isPagedMode = true;
+      let selectedRow = 3;
 
-      // ----------------------------------------------------
-      // Main Animation Loop
-      // ----------------------------------------------------
-      function render() {
-        resizeCanvas();
-        const dpr = window.devicePixelRatio || 1;
-        const width = canvas.width / dpr;
-        const height = canvas.height / dpr;
-        const c = getColors();
+      // Orbit Drag Controls
+      let isDragging = false;
+      let prevMousePos = { x: 0, y: 0 };
+      let orbitOffset = { theta: 0, phi: 0 };
 
-        ctx.save();
-        ctx.scale(dpr, dpr);
+      mount.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        prevMousePos = { x: e.clientX, y: e.clientY };
+      });
 
-        // Smoothly interpolate scale transitions
-        smoothScale += (targetScale - smoothScale) * 0.15;
+      window.addEventListener('mouseup', () => (isDragging = false));
 
-        // Clear Canvas
-        ctx.fillStyle = c.bg;
-        ctx.fillRect(0, 0, width, height);
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - prevMousePos.x;
+        const deltaY = e.clientY - prevMousePos.y;
+        prevMousePos = { x: e.clientX, y: e.clientY };
 
-        // Outer Border & Grid lines
-        ctx.strokeStyle = c.rule;
-        ctx.strokeRect(15, 15, width - 30, height - 30);
+        orbitOffset.theta -= deltaX * 0.006;
+        orbitOffset.phi = Math.max(-0.5, Math.min(0.8, orbitOffset.phi + deltaY * 0.006));
+      });
 
-        // Delegate to active scale renderer
-        if (targetScale === 0) {
-          renderScale1_1T1C(width, height, c);
-        } else if (targetScale === 1) {
-          renderScale2_Matrix(width, height, c);
-        } else {
-          renderScale3_Paged(width, height, c);
-        }
-
-        ctx.restore();
-        requestAnimationFrame(render);
-      }
-
-      // ----------------------------------------------------
-      // Scale Switching & Tab Controls
-      // ----------------------------------------------------
-      function setScale(newScale: number) {
-        targetScale = newScale;
-        activeScale = newScale;
+      // Scale Switcher Function
+      function setScale(scaleIdx: number) {
+        targetScale = scaleIdx;
 
         scaleTabs.forEach((tab, idx) => {
-          const isActive = idx === newScale;
+          const isActive = idx === scaleIdx;
           tab.classList.toggle('active', isActive);
           tab.setAttribute('aria-selected', String(isActive));
         });
 
-        ctrlPanels.forEach((panel) => {
-          const pScale = parseInt(panel.dataset.ctrlScale || '0', 10);
-          panel.classList.toggle('hidden', pScale !== newScale);
+        ctrlPanels.forEach((p) => {
+          const s = parseInt(p.dataset.ctrlScale || '0', 10);
+          p.classList.toggle('hidden', s !== scaleIdx);
         });
 
         if (hudChip) {
-          if (newScale === 0) hudChip.textContent = 'SILICON SCALE: 1T1C CELL (14nm TRENCH)';
-          else if (newScale === 1) hudChip.textContent = 'SILICON SCALE: 8×8 CROSSBAR MATRIX';
-          else hudChip.textContent = 'SYSTEM SCALE: GPU HBM3 VRAM & PAGEDATTENTION';
+          if (scaleIdx === 0) hudChip.textContent = '3D SILICON: 1T1C CELL (14nm FINFET & DEEP TRENCH)';
+          else if (scaleIdx === 1) hudChip.textContent = '3D SILICON: 8×8 CROSSBAR MATRIX DIE (64 BITS)';
+          else hudChip.textContent = '3D SYSTEM: GPU HBM3 MEMORY & PAGEDATTENTION';
         }
       }
 
@@ -975,14 +702,14 @@
         });
       });
 
-      // Scale 1 Button Handlers
+      // Button Handlers
       if (btnWrite1) {
         btnWrite1.addEventListener('click', () => {
           gateVoltage = 1.2;
           if (gateSlider) gateSlider.value = '1.2';
           if (vValText) vValText.textContent = '1.2V';
-          capacitorCharge = 1.0;
-          resetElectrons(42);
+          capPointLight.intensity = 4.0;
+          chanMesh.visible = true;
         });
       }
 
@@ -991,18 +718,16 @@
           gateVoltage = 1.2;
           if (gateSlider) gateSlider.value = '1.2';
           if (vValText) vValText.textContent = '1.2V';
-          capacitorCharge = 0.0;
-          resetElectrons(4);
+          capPointLight.intensity = 0.2;
+          chanMesh.visible = true;
         });
       }
 
       if (btnRead) {
         btnRead.addEventListener('click', () => {
           gateVoltage = 1.2;
-          if (gateSlider) gateSlider.value = '1.2';
-          if (vValText) vValText.textContent = '1.2V';
-          isSenseActive = true;
-          setTimeout(() => (isSenseActive = false), 600);
+          capPointLight.intensity = 5.0;
+          setTimeout(() => (capPointLight.intensity = 4.0), 600);
         });
       }
 
@@ -1011,8 +736,8 @@
           gateVoltage = 0.0;
           if (gateSlider) gateSlider.value = '0.0';
           if (vValText) vValText.textContent = '0.0V';
-          capacitorCharge = Math.max(0, capacitorCharge - 0.35);
-          resetElectrons(Math.floor(capacitorCharge * 42));
+          capPointLight.intensity = Math.max(0.2, capPointLight.intensity - 1.2);
+          chanMesh.visible = false;
         });
       }
 
@@ -1020,25 +745,31 @@
         gateSlider.addEventListener('input', (e) => {
           gateVoltage = parseFloat((e.target as HTMLInputElement).value);
           if (vValText) vValText.textContent = `${gateVoltage.toFixed(2)}V`;
+          chanMesh.visible = gateVoltage > 0.4;
+          gateMesh.position.y = 2.2 - (1.2 - gateVoltage) * 0.3;
         });
       }
 
-      // Scale 2 Matrix Button Handlers
       if (btnStrobe) {
         btnStrobe.addEventListener('click', () => {
           selectedRow = (selectedRow + 1) % 8;
-          if (matrixAddrText) matrixAddrText.textContent = `ADDR 0x${(selectedRow * 8).toString(16).padStart(2, '0').toUpperCase()} (ROW ${selectedRow}, COL 0-7)`;
+          if (matrixAddrText) matrixAddrText.textContent = `WORDLINE #${selectedRow} (ADDR 0x${(selectedRow * 8).toString(16).padStart(2, '0').toUpperCase()})`;
+          matrixWordlines.forEach((wl, idx) => {
+            (wl.material as THREE.MeshStandardMaterial).color.setHex(idx === selectedRow ? 0x2857d9 : 0xb87333);
+          });
         });
       }
 
       if (btnNextAddr) {
         btnNextAddr.addEventListener('click', () => {
           selectedRow = (selectedRow + 1) % 8;
-          if (matrixAddrText) matrixAddrText.textContent = `ADDR 0x${(selectedRow * 8).toString(16).padStart(2, '0').toUpperCase()} (ROW ${selectedRow}, COL 0-7)`;
+          if (matrixAddrText) matrixAddrText.textContent = `WORDLINE #${selectedRow} (ADDR 0x${(selectedRow * 8).toString(16).padStart(2, '0').toUpperCase()})`;
+          matrixWordlines.forEach((wl, idx) => {
+            (wl.material as THREE.MeshStandardMaterial).color.setHex(idx === selectedRow ? 0x2857d9 : 0xb87333);
+          });
         });
       }
 
-      // Scale 3 Paged Button Handlers
       if (btnTogglePaged) {
         btnTogglePaged.addEventListener('click', () => {
           isPagedMode = !isPagedMode;
@@ -1046,16 +777,11 @@
             pagedModeText.textContent = isPagedMode ? 'PagedAttention (Virtual Paging)' : 'Naive Contiguous Pre-Reservation';
             pagedModeText.style.color = isPagedMode ? 'var(--ie-blue)' : 'var(--ie-rust)';
           }
+          updateScale3Colors();
         });
       }
 
-      if (btnStepTokens) {
-        btnStepTokens.addEventListener('click', () => {
-          tokenStep = (tokenStep + 1) % 4;
-        });
-      }
-
-      // Scroll-driven scale synchronization
+      // Scroll Observer
       function onScroll() {
         const sectionRect = root.getBoundingClientRect();
         const windowHeight = window.innerHeight;
@@ -1082,17 +808,76 @@
 
       window.addEventListener('scroll', onScroll, { passive: true });
 
-      // Start loop
-      render();
+      // Resize Handler
+      window.addEventListener('resize', () => {
+        camera.aspect = mount.clientWidth / mount.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(mount.clientWidth, mount.clientHeight);
+      });
+
+      // 60 FPS Render Loop
+      function animate() {
+        requestAnimationFrame(animate);
+
+        // Interpolate camera zoom transition
+        currentScale += (targetScale - currentScale) * 0.08;
+        const basePos = cameraPositions[Math.min(2, Math.floor(currentScale))];
+        const nextPos = cameraPositions[Math.min(2, Math.ceil(currentScale))];
+        const t = currentScale % 1;
+
+        const targetX = THREE.MathUtils.lerp(basePos.x, nextPos.x, t);
+        const targetY = THREE.MathUtils.lerp(basePos.y, nextPos.y, t);
+        const targetZ = THREE.MathUtils.lerp(basePos.z, nextPos.z, t);
+
+        // Apply Orbit Rotation
+        const radius = Math.sqrt(targetX * targetX + targetY * targetY + targetZ * targetZ);
+        camera.position.x = radius * Math.sin(orbitOffset.theta) * Math.cos(orbitOffset.phi);
+        camera.position.y = targetY + radius * Math.sin(orbitOffset.phi);
+        camera.position.z = radius * Math.cos(orbitOffset.theta) * Math.cos(orbitOffset.phi);
+        camera.lookAt(0, 1.5, 0);
+
+        // Transition Group Visibilities across scales
+        group1T1C.visible = currentScale < 0.8;
+        groupMatrix.visible = currentScale >= 0.5 && currentScale < 1.6;
+        groupScale3.visible = currentScale >= 1.4;
+
+        if (group1T1C.visible) {
+          // Animate 3D Electrons
+          electronSpheres.forEach((e) => {
+            e.mesh.position.x += e.vx;
+            e.mesh.position.y += e.vy;
+            e.mesh.position.z += e.vz;
+
+            // Bounce within 3D capacitor cylinder
+            if (e.mesh.position.x < 3.5 || e.mesh.position.x > 5.5) e.vx *= -1;
+            if (e.mesh.position.y < 0.2 || e.mesh.position.y > 5.8) e.vy *= -1;
+            if (e.mesh.position.z < -1.0 || e.mesh.position.z > 1.0) e.vz *= -1;
+          });
+        }
+
+        if (groupMatrix.visible) {
+          // Slow subtle rotation for 3D matrix die
+          groupMatrix.rotation.y += 0.003;
+        }
+
+        if (groupScale3.visible) {
+          // Slow subtle rotation for 3D GPU stack
+          groupScale3.rotation.y += 0.003;
+        }
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
     });
   }
 
-  initBranchEducationCanvas();
-  document.addEventListener('astro:page-load', initBranchEducationCanvas);
+  initBranch3D();
+  document.addEventListener('astro:page-load', initBranch3D);
 </script>
 
 <style>
-  .ciechanowski-scrolly-section {
+  .branch-3d-scrolly-section {
     width: 100%;
     margin-top: 1rem;
     position: relative;
@@ -1142,7 +927,7 @@
     color: var(--ie-ink-secondary);
   }
 
-  /* Multi-Scale Selector Bar */
+  /* Multi-Scale Zoom Bar */
   .scale-selector-bar {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1202,7 +987,7 @@
     color: var(--ie-blue);
   }
 
-  /* Scrollytelling Stage Grid */
+  /* Scrolly Grid */
   .scrolly-stage-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.55fr);
@@ -1211,8 +996,8 @@
     position: relative;
   }
 
-  /* Sticky Canvas Column */
-  .sticky-canvas-container {
+  /* Sticky WebGL Container */
+  .sticky-3d-container {
     position: sticky;
     top: 90px;
     display: flex;
@@ -1221,7 +1006,7 @@
     z-index: 10;
   }
 
-  .canvas-frame {
+  .webgl-frame {
     border: 1px solid var(--ie-rule-strong);
     border-radius: var(--radius-card, 8px);
     background: var(--ie-surface);
@@ -1251,14 +1036,34 @@
     font-weight: 700;
   }
 
-  .gpu-sim-canvas {
-    display: block;
+  .three-mount-area {
+    position: relative;
     width: 100%;
-    height: auto;
-    cursor: default;
+    height: 520px;
+    background: radial-gradient(circle at center, rgba(40, 87, 217, 0.04) 0%, transparent 70%);
+    cursor: grab;
   }
 
-  /* Contextual Controls Bar */
+  .three-mount-area:active {
+    cursor: grabbing;
+  }
+
+  .orbit-hint-overlay {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    padding: 0.35rem 0.75rem;
+    background: rgba(23, 26, 31, 0.8);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-pill, 999px);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: #ffffff;
+    pointer-events: none;
+  }
+
+  /* Controls Panel */
   .canvas-controls-bar {
     padding: 0.85rem 1.25rem;
     background: var(--ie-surface-raised);
@@ -1430,7 +1235,7 @@
     .scrolly-stage-grid {
       grid-template-columns: 1fr;
     }
-    .sticky-canvas-container {
+    .sticky-3d-container {
       position: static;
     }
     .scrolly-narrative-track {
@@ -1442,4 +1247,5 @@
     }
   }
 </style>
+
 
