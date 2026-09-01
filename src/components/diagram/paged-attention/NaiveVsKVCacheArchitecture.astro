@@ -12,7 +12,7 @@ interface Props {
 }
 
 const {
-  caption = 'At decoding step 3, naive decoding recomputes all past token projections ($O(N^2)$); KV caching reuses stored Key and Value tensors in GPU VRAM and projects only the single active token ($O(1)$).',
+  caption = 'At decoding step 3, naive decoding recomputes all past token projections (O(N²)); KV caching reuses stored Key and Value tensors in GPU VRAM and projects only the single active token (O(1)).',
   exhibit = '01',
   title = 'Naive Recomputation vs KV Caching in Autoregressive Decoding',
 } = Astro.props;
@@ -107,7 +107,7 @@ const {
     <!-- NOTICE LEADER -->
     <div class="kv-notice">
       <span class="notice-arrow">&larr;</span>
-      <span>Notice how KV caching converts $O(N^2)$ quadratic projection FLOPs into constant $O(1)$ token appends at the expense of GPU memory capacity.</span>
+      <span>Notice how KV caching converts O(N²) quadratic projection FLOPs into constant O(1) token appends at the expense of GPU memory capacity.</span>
     </div>
   </div>
 </Exhibit>
@@ -151,7 +151,7 @@ const {
 
   .comp-tag {
     font-family: var(--font-mono);
-    font-size: 10.5px;
+    font-size: 11.5px;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -169,7 +169,7 @@ const {
 
   .comp-cost {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 600;
     color: var(--accent);
   }
@@ -190,7 +190,7 @@ const {
     background: var(--surface-card);
     border: 1px solid var(--border-default);
     border-radius: 6px;
-    font-size: 11px;
+    font-size: 11.5px;
   }
 
   .step-highlight {
@@ -201,7 +201,7 @@ const {
     font-family: var(--font-mono);
     font-weight: 600;
     color: var(--text-muted);
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .token-pills {
@@ -215,7 +215,7 @@ const {
     padding: 2px 6px;
     border-radius: 4px;
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
   }
 
@@ -233,7 +233,7 @@ const {
 
   .step-ops {
     font-family: var(--font-mono);
-    font-size: 9.5px;
+    font-size: 10.5px;
     color: var(--text-muted);
   }
 
@@ -256,7 +256,7 @@ const {
 
   .kv-store-title {
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     color: var(--text-muted);
   }
@@ -284,14 +284,14 @@ const {
 
   .kv-tok {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 600;
     color: var(--text);
   }
 
   .kv-tensors {
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--accent);
   }
@@ -308,13 +308,13 @@ const {
 
   .qa-tag {
     font-family: var(--font-mono);
-    font-size: 9.5px;
+    font-size: 10.5px;
     font-weight: 700;
     color: var(--accent);
   }
 
   .qa-desc {
-    font-size: 11px;
+    font-size: 11.5px;
     color: var(--text);
   }
 

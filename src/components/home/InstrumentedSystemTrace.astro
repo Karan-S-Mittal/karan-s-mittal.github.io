@@ -462,6 +462,22 @@
     white-space: nowrap;
   }
 
+  :is(
+    .trace-kicker,
+    .trace-status,
+    .trace-controls button,
+    .trace-controls button span,
+    .node-index,
+    .node-foot,
+    .trace-node code,
+    .trace-edge small,
+    .readout-register span,
+    .readout-measure span,
+    .trace-legend
+  ) {
+    font-size: 0.72rem;
+  }
+
   @media (max-width: 900px) {
     .trace-machine {
       grid-template-columns: 1fr;

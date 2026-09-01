@@ -44,6 +44,24 @@ function isActive(href: string) {
     </nav>
 
     <div class="header-right">
+      {isInstrumented && (
+        <details class="mobile-nav">
+          <summary>Index</summary>
+          <nav class="mobile-nav-panel" aria-label="Mobile primary navigation">
+            {nav.map(item => (
+              <a href={item.href} class={isActive(item.href) ? 'active' : ''} aria-current={isActive(item.href) ? 'page' : undefined}>
+                <span>{isInstrumented && item.href === '/blog' ? 'Field notes' : item.label}</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            ))}
+            <a href="/#contact" class="mobile-nav-contact">
+              <span>Work together</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </nav>
+        </details>
+      )}
+
       <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode" title="Toggle theme">
         <svg class="sun-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="5"></circle>
@@ -81,6 +99,23 @@ function isActive(href: string) {
 
   setupThemeToggle();
   document.addEventListener('astro:page-load', setupThemeToggle);
+
+  function setupMobileNavigation() {
+    const menu = document.querySelector('.mobile-nav');
+    if (!(menu instanceof HTMLDetailsElement) || menu.dataset.initialised === 'true') return;
+    menu.dataset.initialised = 'true';
+
+    menu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => menu.removeAttribute('open'));
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') menu.removeAttribute('open');
+    });
+  }
+
+  setupMobileNavigation();
+  document.addEventListener('astro:page-load', setupMobileNavigation);
 </script>
 
 <style>
@@ -160,6 +195,10 @@ function isActive(href: string) {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+  }
+
+  .mobile-nav {
+    display: none;
   }
 
   .theme-toggle-btn {
@@ -273,7 +312,7 @@ function isActive(href: string) {
     padding-left: 0.75rem;
     border-left: 1px solid var(--ie-rule);
     color: var(--ie-muted);
-    font-size: 0.62rem;
+    font-size: 0.72rem;
     font-weight: 500;
     letter-spacing: 0.08em;
   }
@@ -285,7 +324,7 @@ function isActive(href: string) {
   header.instrumented .main-nav a {
     color: var(--ie-muted);
     font-family: var(--font-mono);
-    font-size: 0.69rem;
+    font-size: 0.75rem;
     letter-spacing: 0.025em;
   }
 
@@ -312,7 +351,7 @@ function isActive(href: string) {
     box-shadow: none;
     color: var(--ie-canvas);
     font-family: var(--font-mono);
-    font-size: 0.66rem;
+    font-size: 0.72rem;
     letter-spacing: 0.02em;
   }
 
@@ -343,8 +382,81 @@ function isActive(href: string) {
       display: none;
     }
 
+    header.instrumented .mobile-nav {
+      display: block;
+      order: 2;
+    }
+
+    header.instrumented .mobile-nav summary {
+      display: inline-flex;
+      min-width: 54px;
+      min-height: 36px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--ie-rule-strong);
+      border-radius: 5px;
+      color: var(--ie-ink);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    header.instrumented .mobile-nav summary::-webkit-details-marker {
+      display: none;
+    }
+
+    header.instrumented .mobile-nav[open] summary {
+      border-color: var(--ie-blue);
+      background: var(--ie-blue-soft);
+      color: var(--ie-blue);
+    }
+
+    header.instrumented .mobile-nav-panel {
+      position: fixed;
+      top: 56px;
+      right: 0;
+      left: 0;
+      display: grid;
+      padding: 0.6rem 1rem 1rem;
+      border-top: 1px solid var(--ie-rule);
+      border-bottom: 1px solid var(--ie-rule-strong);
+      background: var(--ie-canvas);
+      box-shadow: 0 16px 32px color-mix(in srgb, var(--ie-ink) 8%, transparent);
+    }
+
+    header.instrumented .mobile-nav-panel a {
+      display: flex;
+      min-height: 46px;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--ie-rule);
+      color: var(--ie-ink-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-decoration: none;
+    }
+
+    header.instrumented .mobile-nav-panel a.active {
+      color: var(--ie-blue);
+    }
+
+    header.instrumented .mobile-nav-panel .mobile-nav-contact {
+      margin-top: 0.6rem;
+      padding-inline: 0.8rem;
+      border: 1px solid var(--ie-ink);
+      border-radius: 5px;
+      background: var(--ie-ink);
+      color: var(--ie-canvas);
+    }
+
+    header.instrumented .theme-toggle-btn {
+      order: 1;
+    }
+
     header.instrumented .consult-cta {
-      padding-inline: 0.65rem;
+      display: none;
     }
   }
 </style>

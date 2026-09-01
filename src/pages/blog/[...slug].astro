@@ -47,12 +47,15 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     <article class="post-content">
       <header class="post-header">
         {isInstrumentedPrototype && (
-          <div class="article-trace" aria-label="Article explanatory sequence">
-            <span class="trace-active">Premise</span>
-            <span>Mechanism</span>
-            <span class="trace-constraint">Constraint</span>
-            <span>Evidence</span>
-            <span>Decision</span>
+          <div class="article-sequence" aria-label="Article explanatory sequence">
+            <span class="sequence-label">Explanatory sequence</span>
+            <ol>
+              <li>Premise</li>
+              <li>Mechanism</li>
+              <li class="sequence-constraint">Constraint</li>
+              <li>Evidence</li>
+              <li>Decision</li>
+            </ol>
           </div>
         )}
 
@@ -278,54 +281,64 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     max-width: 760px;
   }
 
-  .article-trace {
+  .article-sequence {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: center;
     margin-bottom: 3.5rem;
+    padding: 0.75rem 0;
     border-top: 1px solid var(--ie-rule-strong);
     border-bottom: 1px solid var(--ie-rule);
   }
 
-  .article-trace span {
-    position: relative;
-    padding: 0.65rem 0.7rem;
-    border-right: 1px solid var(--ie-rule);
+  .sequence-label {
     color: var(--ie-muted);
     font-family: var(--font-mono);
-    font-size: 0.58rem;
-    letter-spacing: 0.055em;
-    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
-  .article-trace span:last-child { border-right: 0; }
-
-  .article-trace .trace-active {
-    background: var(--ie-blue-soft);
-    color: var(--ie-blue);
-    box-shadow: inset 0 -2px 0 var(--ie-blue);
+  .article-sequence ol {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.35rem 0.55rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .article-trace .trace-constraint::before {
-    content: '';
-    display: inline-block;
-    width: 10px;
-    height: 2px;
-    margin-right: 0.4rem;
-    vertical-align: middle;
-    background: var(--ie-rust);
+  .article-sequence li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--ie-ink-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  .article-sequence li:not(:last-child)::after {
+    content: '→';
+    color: var(--ie-rule-strong);
+  }
+
+  .article-sequence .sequence-constraint {
+    color: var(--ie-rust);
   }
 
   .instrumented-essay .post-eyebrow {
     margin-bottom: 1.25rem;
     color: var(--ie-blue);
-    font-size: 0.65rem;
+    font-size: 0.72rem;
   }
 
   .instrumented-essay .post-meta {
     margin-bottom: 1.25rem;
     color: var(--ie-muted);
-    font-size: 0.65rem;
+    font-size: 0.72rem;
   }
 
   .instrumented-essay .post-header h1 {
@@ -356,7 +369,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     border-radius: 0;
     background: transparent;
     color: var(--ie-muted);
-    font-size: 0.62rem;
+    font-size: 0.72rem;
   }
 
   .instrumented-essay .post-hero-figure {
@@ -436,21 +449,21 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
       margin-bottom: 3rem;
     }
 
+    .article-sequence {
+      grid-template-columns: 1fr;
+      gap: 0.45rem;
+      margin-bottom: 2rem;
+      padding-block: 0.65rem;
+    }
+
+    .article-sequence ol {
+      justify-content: flex-start;
+    }
+
     .instrumented-essay .post-header h1 {
-      font-size: clamp(2.8rem, 14vw, 4rem);
+      font-size: clamp(2.35rem, 11.5vw, 3rem);
+      line-height: 1.01;
     }
-
-    .article-trace {
-      grid-template-columns: 1fr 1fr;
-      margin-bottom: 2.5rem;
-    }
-
-    .article-trace span {
-      border-bottom: 1px solid var(--ie-rule);
-    }
-
-    .article-trace span:nth-child(2n) { border-right: 0; }
-    .article-trace span:last-child { grid-column: 1 / -1; border-bottom: 0; }
   }
 </style>
 
@@ -623,7 +636,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     margin-bottom: 0.7rem;
     color: var(--ie-blue);
     font-family: var(--font-mono);
-    font-size: 0.58rem;
+    font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;

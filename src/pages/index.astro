@@ -64,10 +64,10 @@ function formatDate(date: Date | string) {
         </aside>
       </div>
 
-      <div class="ie-shell hero-proof" aria-label="Studio operating principles">
-        <span><strong>Mechanism</strong> before abstraction</span>
-        <span><strong>Constraint</strong> before capability</span>
-        <span><strong>Evidence</strong> before assertion</span>
+      <div class="ie-shell hero-proof" aria-label="Published studio evidence">
+        <span><strong>{String(publishedPosts.length).padStart(2, '0')}</strong> published field notes</span>
+        <span><strong>{String(talkCount).padStart(2, '0')}</strong> talks and workshops</span>
+        <span><strong>01</strong> interactive visual laboratory</span>
       </div>
     </section>
 
@@ -416,7 +416,12 @@ function formatDate(date: Date | string) {
   }
 
   .hero-proof span:last-child { border-right: 0; }
-  .hero-proof strong { color: var(--ie-ink); font-weight: 600; }
+  .hero-proof strong {
+    margin-right: 0.3rem;
+    color: var(--ie-blue);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
 
   .ie-section {
     padding-block: clamp(5rem, 10vw, 9rem);
@@ -816,6 +821,34 @@ function formatDate(date: Date | string) {
     gap: clamp(3rem, 9vw, 8rem);
     padding-top: 1.5rem;
     border-top: 2px solid var(--ie-rust);
+  }
+
+  :is(
+    .ie-register,
+    .ie-action,
+    .register-head,
+    .ledger-head,
+    .practice-register li > span,
+    .practice-register small,
+    .register-note,
+    .hero-proof span,
+    .section-link,
+    .text-link,
+    .visual-label,
+    .note-meta,
+    .ledger-copy time,
+    .ledger-copy small,
+    .ledger-index,
+    .ledger-arrow,
+    .practice-index,
+    .practice-main p,
+    .practice-flow li,
+    .proof-measures span,
+    .talk-row time,
+    .talk-row span,
+    .studio-code
+  ) {
+    font-size: 0.72rem;
   }
 
   @media (max-width: 980px) {
