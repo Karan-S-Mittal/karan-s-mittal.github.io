@@ -168,7 +168,7 @@ test('runtime smoke: homepage boots and theme switches between explicit light/da
   await expect(page.locator('#home-title')).toBeVisible();
   await expect(page.locator('.hero-portrait')).toBeVisible();
   await expect(page.locator('#theme-toggle')).toBeVisible();
-  await expect(page.locator('.capability-card')).toHaveCount(4);
+  await expect(page.locator('.note-row')).toHaveCount(5);
 
   const lightCanvas = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ie-canvas').trim());
   expect(lightCanvas.toLowerCase()).toBe('#f7f5ef');

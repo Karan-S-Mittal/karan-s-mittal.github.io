@@ -1,17 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Icon from '../components/chrome/Icon.astro';
 import { getCollection } from 'astro:content';
 import { SITE, SOCIALS } from '../config';
-import communitiesData from '../data/communities.json';
-
-const { communities } = communitiesData;
 
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const featuredPost = publishedPosts.find((post) => post.data.featured) || publishedPosts[0];
-const recentNotes = publishedPosts.filter((post) => post.id !== featuredPost?.id).slice(0, 4);
+const featuredPosts = publishedPosts.slice(0, 5);
 
 function formatDate(date: Date | string) {
   const value = typeof date === 'string' ? new Date(date) : date;
@@ -19,240 +14,93 @@ function formatDate(date: Date | string) {
 }
 
 const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https://www.linkedin.com/in/karansmittal/';
+const githubSocial = SOCIALS.find((s) => s.name === 'GitHub')?.url || 'https://github.com/karan-s-mittal';
 ---
 
 <Layout
   title={`${SITE.title} | AI Systems Architect & Advisor`}
   description="Karan Mittal is an AI Systems Architect and co-founder of Dextar, specializing in deterministic RAG, low-level inference optimization, and production-grade AI systems."
 >
-  <main class="ie-home">
-    <!-- HERO SECTION: Executive Positioning + Prominent Portrait -->
-    <section class="ie-hero" aria-labelledby="home-title">
-      <div class="ie-shell hero-grid">
-        <div class="hero-copy">
-          <p class="ie-register"><span>Studio 01</span> AI Systems Architect &middot; Co-Founder, Dextar</p>
-          <h1 id="home-title">I turn uncertain AI prototypes into dependable production systems.</h1>
-          <p class="hero-lead">
-            I design deterministic knowledge systems, optimize low-level inference memory, and build inspectable AI architectures that teams can operate with confidence in high-stakes domains.
-          </p>
-
-          <div class="hero-actions">
-            <a class="ie-action primary" href="/contact">Open project brief <span aria-hidden="true">&rarr;</span></a>
-            <a class="ie-action secondary" href="/blog">Read field notes <span aria-hidden="true">&nearr;</span></a>
-            <a class="ie-action secondary" href="/work">Review selected work <span aria-hidden="true">&nearr;</span></a>
-          </div>
-
-          <div class="hero-status-pill">
-            <span class="live-dot"></span>
-            <span>Indore &middot; Global Systems Advisory</span>
-          </div>
+  <main class="home-shell">
+    <!-- HERO -->
+    <section class="home-hero" aria-labelledby="home-title">
+      <div class="hero-header">
+        <div class="hero-avatar-frame">
+          <img
+            src="/profile-400.jpg"
+            alt="Karan Mittal"
+            class="hero-portrait"
+            width="88"
+            height="88"
+            loading="eager"
+          />
         </div>
-
-        <!-- Prominent Editorial Portrait Card -->
-        <div class="hero-portrait-col">
-          <div class="hero-portrait-card">
-            <div class="portrait-image-frame">
-              <img
-                src="/profile-400.jpg"
-                alt="Karan Mittal - AI Systems Architect"
-                class="hero-portrait"
-                width="400"
-                height="400"
-                loading="eager"
-              />
-              <div class="portrait-live-badge">
-                <span class="live-dot"></span>
-                <span>Active Advisory</span>
-              </div>
-            </div>
-            <div class="portrait-meta">
-              <div class="portrait-header">
-                <strong>Karan Mittal</strong>
-                <span class="portrait-location">Indore, India</span>
-              </div>
-              <p class="portrait-quote">&ldquo;Reliability is designed into the system&mdash;never added as an afterthought.&rdquo;</p>
-            </div>
-          </div>
+        <div class="hero-header-text">
+          <p class="hero-role">AI Systems Architect &middot; Co-Founder, Dextar</p>
+          <h1 id="home-title">Karan Mittal</h1>
         </div>
       </div>
 
-      <!-- Proof Strip -->
-      <div class="ie-shell hero-proof" aria-label="Published studio evidence">
-        <a href="/blog" class="proof-pill-link"><strong>{String(publishedPosts.length).padStart(2, '0')}</strong> published field notes &nearr;</a>
-        <a href="#practice" class="proof-pill-link"><strong>04</strong> systems practice areas &darr;</a>
-        <a href="#community" class="proof-pill-link"><strong>03</strong> developer communities &darr;</a>
-        <a href="/work" class="proof-pill-link"><strong>Dextar</strong> co-founder &middot; advisory &nearr;</a>
+      <p class="hero-lead">
+        I design deterministic knowledge systems, optimize low-level LLM inference memory, and build inspectable AI architectures that engineering teams can operate with confidence in high-stakes domains.
+      </p>
+
+      <div class="hero-actions">
+        <a class="ie-action primary" href="/blog">Read field notes &rarr;</a>
+        <a class="ie-action secondary" href="/work">Selected work &nearr;</a>
+        <a class="ie-action secondary" href="/contact">Get in touch &rarr;</a>
       </div>
     </section>
 
-    <!-- SECTION 01: PRACTICE PILLARS -->
-    <section class="ie-section practice-section" id="practice" aria-labelledby="practice-title">
-      <div class="ie-shell">
-        <div class="section-heading split">
-          <div>
-            <p class="ie-register"><span>01 / Practice</span> Technical Focus</p>
-            <h2 id="practice-title">Deterministic AI, inference performance, and systems architecture.</h2>
-          </div>
-          <a class="section-link" href="/work">Explore selected work &amp; case studies <span aria-hidden="true">&rarr;</span></a>
+    <!-- SELECTED FIELD NOTES -->
+    <section class="notes-section" aria-labelledby="notes-title">
+      <div class="section-head">
+        <div>
+          <span class="section-register">01 / Writing</span>
+          <h2 id="notes-title">Selected Field Notes</h2>
         </div>
-
-        <div class="capabilities-grid">
-          <!-- Pillar 1 -->
-          <div class="capability-card">
-            <div class="cap-header">
-              <span class="cap-num">01</span>
-              <span class="cap-tag">Architecture</span>
-            </div>
-            <h3>AI Architecture &amp; Deterministic RAG</h3>
-            <p>
-              Deterministic knowledge systems, structured retrieval contracts, graph-aware discovery, citation chains, and predictable LLM orchestration for high-stakes workloads.
-            </p>
-            <a href="/blog/deterministic-rag-intro/" class="cap-link">Read architecture lens <span aria-hidden="true">&nearr;</span></a>
-          </div>
-
-          <!-- Pillar 2 -->
-          <div class="capability-card">
-            <div class="cap-header">
-              <span class="cap-num">02</span>
-              <span class="cap-tag">Performance</span>
-            </div>
-            <h3>Inference &amp; GPU Performance</h3>
-            <p>
-              KV-cache layout optimization, CUDA kernel gathering, memory fragmentation bounds, and low-latency token generation at high operational concurrency.
-            </p>
-            <a href="/blog/paged-attention-kv-cache/" class="cap-link">Trace KV-cache mechanics <span aria-hidden="true">&nearr;</span></a>
-          </div>
-
-          <!-- Pillar 3 -->
-          <div class="capability-card">
-            <div class="cap-header">
-              <span class="cap-num">03</span>
-              <span class="cap-tag">Infrastructure</span>
-            </div>
-            <h3>Infrastructure, MLOps &amp; Guardrails</h3>
-            <p>
-              Production evaluation harnesses, distributed data pipelines, Kubernetes orchestration, and deterministic testing boundaries for operational reliability.
-            </p>
-            <a href="/work" class="cap-link">View systems portfolio <span aria-hidden="true">&nearr;</span></a>
-          </div>
-
-          <!-- Pillar 4 -->
-          <div class="capability-card">
-            <div class="cap-header">
-              <span class="cap-num">04</span>
-              <span class="cap-tag">Advisory</span>
-            </div>
-            <h3>Technical Advisory &amp; Strategy</h3>
-            <p>
-              Architecture reviews, mentoring engineering teams, resolving prototype-to-production bottlenecks, and delivering durable technical handover.
-            </p>
-            <a href="/contact" class="cap-link">Explore advisory scope <span aria-hidden="true">&rarr;</span></a>
-          </div>
-        </div>
+        <a class="section-link" href="/blog">All notes ({publishedPosts.length}) <span aria-hidden="true">&nearr;</span></a>
       </div>
-    </section>
 
-    <!-- SECTION 02: FIELD NOTES (TECHNICAL ESSAYS & DEEP DIVES) -->
-    <section class="ie-section notes-section" aria-labelledby="notes-title">
-      <div class="ie-shell">
-        <div class="section-heading split">
-          <div>
-            <p class="ie-register"><span>02 / Field notes</span> Published mechanisms</p>
-            <h2 id="notes-title">Ideas become useful when they can be challenged.</h2>
-          </div>
-          <a class="section-link" href="/blog">All field notes ({publishedPosts.length}) <span aria-hidden="true">&nearr;</span></a>
-        </div>
-
-        <div class="notes-layout">
-          {featuredPost && (
-            <article class="featured-note">
-              <a href={`/blog/${featuredPost.id}/`} class="featured-note-visual" aria-label={`Read ${featuredPost.data.title}`}>
-                <img src={featuredPost.data.image} alt="" width="1920" height="1072" loading="lazy" decoding="async" />
-                <span class="visual-label">Featured deep dive / GPU memory</span>
-              </a>
-              <div class="featured-note-copy">
-                <p class="note-meta"><time datetime={featuredPost.data.pubDate.toISOString()}>{formatDate(featuredPost.data.pubDate)}</time> &middot; LLM inference</p>
-                <h3><a href={`/blog/${featuredPost.id}/`}>{featuredPost.data.title}</a></h3>
-                <p>{featuredPost.data.description}</p>
-                <a class="text-link" href={`/blog/${featuredPost.id}/`}>Trace the mechanism <span aria-hidden="true">&rarr;</span></a>
-              </div>
-            </article>
-          )}
-
-          <div class="notes-ledger" aria-label="Recent field notes">
-            <div class="ledger-head"><span>Recent technical notes</span><code>{String(recentNotes.length).padStart(2, '0')} entries</code></div>
-            {recentNotes.map((post, index) => (
-              <a href={`/blog/${post.id}/`} class="ledger-row">
-                <span class="ledger-index">{String(index + 1).padStart(2, '0')}</span>
-                <span class="ledger-copy">
-                  <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
-                  <strong>{post.data.title}</strong>
-                  <small>{post.data.tags.slice(0, 2).join(' &middot; ')}</small>
-                </span>
-                <span class="ledger-arrow" aria-hidden="true">&nearr;</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 03: COMMUNITY & SPEAKING -->
-    <section class="ie-section community-section" id="community" aria-labelledby="community-title">
-      <div class="ie-shell">
-        <div class="section-heading split">
-          <div>
-            <p class="ie-register"><span>03 / Ecosystem</span> Community &amp; Speaking</p>
-            <h2 id="community-title">Building technical communities and teaching systems.</h2>
-          </div>
-          <div class="community-heading-links">
-            <a class="section-link" href="/talks">View talks &amp; lectures <span aria-hidden="true">&nearr;</span></a>
-          </div>
-        </div>
-
-        <div class="community-grid">
-          {communities.map((c) => (
-            <div class="community-card">
-              <div class="community-header">
-                <img src={c.logo} alt={c.name} class="community-logo" loading="lazy" decoding="async" />
-                <div class="community-title-group">
-                  <h3 class="community-name">{c.name}</h3>
-                  <span class="community-role-pill">Community Organizer</span>
-                </div>
-              </div>
-              <p class="community-desc">{c.description}</p>
-              {c.links && c.links.length > 0 && (
-                <div class="community-links">
-                  {c.links.map((link: { label: string; url: string }) => (
-                    <a href={link.url} target="_blank" rel="noopener" class="comm-link">
-                      <span>{link.label}</span>
-                      <Icon name="arrow-up-right" size={12} />
-                    </a>
-                  ))}
-                </div>
+      <div class="notes-list" role="feed" aria-label="Selected field notes">
+        {featuredPosts.map((post) => (
+          <article class="note-row">
+            <div class="note-meta">
+              <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+              {post.data.tags && post.data.tags.length > 0 && (
+                <span class="note-tag">{post.data.tags[0]}</span>
               )}
             </div>
-          ))}
-        </div>
+            <div class="note-body">
+              <h3>
+                <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+              </h3>
+              <p>{post.data.description}</p>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
 
-    <!-- SECTION 04: DECISION & CONSULTATION INTAKE -->
-    <section class="contact-section" id="contact" aria-labelledby="contact-title">
-      <div class="ie-shell contact-grid">
-        <div>
-          <p class="ie-register"><span>04 / Decision</span> Work together</p>
-          <h2 id="contact-title">Have a system that needs to be understood before it can be trusted?</h2>
-        </div>
-        <div class="contact-copy">
-          <p>
-            Bring the architecture, workload, or unresolved constraint. Submit a short project brief through our intake form or reach out directly for advisory inquiries.
-          </p>
-          <div class="hero-actions">
-            <a class="ie-action primary" href="/contact">Start consultation inquiry <span aria-hidden="true">&rarr;</span></a>
-            <a class="ie-action secondary" href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>Send direct email</a>
-            <a class="ie-action secondary" href={linkedinSocial} target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">&nearr;</span></a>
+    <!-- ADVISORY & FOCUS -->
+    <section class="advisory-section" aria-labelledby="advisory-title">
+      <div class="advisory-frame">
+        <div class="section-head">
+          <div>
+            <span class="section-register">02 / Advisory</span>
+            <h2 id="advisory-title">Technical Advisory &amp; Architecture</h2>
           </div>
+        </div>
+
+        <p class="advisory-bio">
+          Available for technical advisory, deep-dive architecture reviews, and resolving prototype-to-production bottlenecks across deterministic retrieval contracts, GPU memory layout, and evaluation harnesses.
+        </p>
+
+        <div class="hero-actions">
+          <a class="ie-action primary" href="/contact">Start consultation inquiry &rarr;</a>
+          <a class="ie-action secondary" href={`mailto:${SITE.email}?subject=Systems%20Architecture%20Inquiry`}>Email</a>
+          <a class="ie-action secondary" href={linkedinSocial} target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">&nearr;</span></a>
+          <a class="ie-action secondary" href={githubSocial} target="_blank" rel="noopener">GitHub <span aria-hidden="true">&nearr;</span></a>
         </div>
       </div>
     </section>
@@ -260,263 +108,42 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
 </Layout>
 
 <style>
-  .ie-home { overflow: clip; }
-  .ie-shell { width: min(100% - 3rem, 1280px); margin-inline: auto; }
-  .ie-register { margin: 0 0 1rem; color: var(--ie-muted); font-family: var(--font-mono); font-size: var(--ie-type-label); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
-  .ie-register span { margin-right: 0.6rem; color: var(--ie-blue); font-weight: 600; }
-  .ie-hero { border-bottom: 1px solid var(--ie-rule); }
-
-  .hero-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
-    gap: clamp(2.5rem, 6vw, 6rem);
-    align-items: center;
-    min-height: min(680px, calc(100vh - 64px));
-    padding-block: clamp(4.5rem, 9vh, 7rem) clamp(3.5rem, 7vh, 5.5rem);
+  .home-shell {
+    width: min(100% - 3rem, 860px);
+    margin-inline: auto;
+    padding-block: clamp(3.5rem, 7vw, 5.5rem);
   }
 
-  .hero-copy { max-width: 720px; min-width: 0; }
-  .hero-copy h1 { max-width: 15ch; margin: 0 0 1.5rem; color: var(--ie-ink); font-family: var(--font-serif); font-size: clamp(2.75rem, 5.2vw, 4.75rem); font-weight: 500; line-height: 1.04; text-wrap: balance; }
-  .hero-lead { max-width: 640px; margin: 0; color: var(--ie-ink-secondary); font-size: var(--ie-type-body); line-height: 1.65; }
-
-  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-top: 2.25rem; }
-  .ie-action {
-    display: inline-flex;
-    min-height: 44px;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.72rem 1.25rem;
-    border: 1px solid var(--ie-ink);
-    border-radius: var(--radius, 6px);
-    font-family: var(--font-sans);
-    font-size: var(--ie-type-ui);
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    text-decoration: none;
-    transition: all 120ms ease;
-  }
-  .ie-action.primary { background: var(--ie-ink); color: var(--ie-canvas); }
-  .ie-action.primary:hover { border-color: var(--ie-blue); background: var(--ie-blue); color: #fff; }
-  .ie-action.secondary { background: transparent; color: var(--ie-ink); border-color: var(--ie-rule-strong); }
-  .ie-action.secondary:hover { border-color: var(--ie-blue); color: var(--ie-blue); background: var(--ie-surface-raised); }
-
-  .hero-status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 2rem;
-    padding: 0.45rem 0.95rem;
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-pill, 999px);
-    background: var(--ie-surface);
+  /* Shared Typography & Controls */
+  .section-register {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    color: var(--ie-muted);
     font-family: var(--font-mono);
     font-size: var(--ie-type-label);
-    font-weight: 500;
-    color: var(--ie-ink-secondary);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
-  .live-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #10b981;
-    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
-  }
-
-  /* Hero Portrait Card */
-  .hero-portrait-col {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .hero-portrait-card {
-    width: 100%;
-    max-width: 420px;
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-card, 8px);
-    background: var(--ie-surface);
-    overflow: hidden;
-    transition: transform 150ms ease, border-color 150ms ease;
-  }
-
-  .hero-portrait-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--ie-blue);
-  }
-
-  .portrait-image-frame {
-    position: relative;
-    aspect-ratio: 1 / 1;
-    width: 100%;
-    overflow: hidden;
-    background: var(--ie-surface-raised);
-    border-bottom: 1px solid var(--ie-rule);
-  }
-
-  .hero-portrait {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    transition: transform 300ms ease;
-  }
-
-  .hero-portrait-card:hover .hero-portrait {
-    transform: scale(1.02);
-  }
-
-  .portrait-live-badge {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0.35rem 0.75rem;
-    border-radius: var(--radius-pill, 999px);
-    background: rgba(23, 26, 31, 0.88);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-    font-weight: 500;
-  }
-
-  .portrait-meta {
-    padding: 1.35rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-  }
-
-  .portrait-header {
+  .section-head {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    border-bottom: 1px solid var(--ie-rule);
-    padding-bottom: 0.6rem;
-  }
-
-  .portrait-header strong {
-    font-family: var(--font-sans);
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--ie-ink);
-  }
-
-  .portrait-location {
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    color: var(--ie-muted);
-    font-weight: 500;
-  }
-
-  .portrait-quote {
-    margin: 0;
-    font-family: var(--font-serif);
-    font-size: var(--ie-type-small);
-    font-style: italic;
-    color: var(--ie-ink-secondary);
-    line-height: 1.5;
-  }
-
-  /* Hero Proof Strip */
-  .hero-proof {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    border-top: 1px solid var(--ie-rule);
-  }
-
-  .proof-pill-link {
-    display: block;
-    padding: 1.15rem 1.25rem;
-    border-right: 1px solid var(--ie-rule);
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    text-align: center;
-    text-decoration: none;
-    transition: background-color 120ms ease, color 120ms ease;
-  }
-
-  .proof-pill-link:last-child { border-right: 0; }
-  .proof-pill-link:hover { background: var(--ie-surface-raised); color: var(--ie-blue); }
-  .proof-pill-link strong { margin-right: 0.35rem; color: var(--ie-blue); font-size: 1.15rem; font-weight: 600; }
-
-  /* Sections */
-  .ie-section { padding-block: clamp(4.5rem, 8vw, 7rem); border-bottom: 1px solid var(--ie-rule); }
-  .section-heading { margin-bottom: clamp(2rem, 5vw, 3.5rem); }
-  .section-heading.split { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr); gap: clamp(2rem, 8vw, 7rem); align-items: end; }
-  .section-heading h2, .contact-grid h2 { max-width: 18ch; margin: 0; color: var(--ie-ink); font-family: var(--font-serif); font-size: var(--ie-type-h2); font-weight: 500; line-height: 1.08; text-wrap: balance; }
-  .section-link { display: inline-flex; align-items: center; gap: 0.35rem; justify-self: start; color: var(--ie-blue); font-family: var(--font-mono); font-size: var(--ie-type-ui); font-weight: 600; text-decoration: none; }
-  .section-link:hover { text-decoration: underline; }
-
-  /* Capabilities Grid (4 Pillars) */
-  .capabilities-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+    margin-bottom: 2rem;
   }
 
-  .capability-card {
-    background: var(--ie-surface);
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-card, 8px);
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.95rem;
-    transition: transform 150ms ease, border-color 150ms ease;
-  }
-
-  .capability-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--ie-blue);
-  }
-
-  .cap-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--ie-rule);
-    padding-bottom: 0.75rem;
-  }
-
-  .cap-num {
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-ui);
-    font-weight: 600;
-    color: var(--ie-blue);
-  }
-
-  .cap-tag {
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    color: var(--ie-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  .capability-card h3 {
+  .section-head h2 {
     margin: 0;
-    font-family: var(--font-sans);
-    font-size: var(--ie-type-h3);
-    font-weight: 600;
     color: var(--ie-ink);
-    line-height: 1.3;
+    font-family: var(--font-serif);
+    font-size: clamp(1.65rem, 3.2vw, 2.25rem);
+    font-weight: 500;
+    line-height: 1.15;
   }
 
-  .capability-card p {
-    margin: 0;
-    font-size: var(--ie-type-small);
-    line-height: 1.65;
-    color: var(--ie-ink-secondary);
-    flex-grow: 1;
-  }
-
-  .cap-link {
+  .section-link {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
@@ -525,163 +152,234 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
     font-size: var(--ie-type-ui);
     font-weight: 600;
     text-decoration: none;
-    margin-top: 0.5rem;
+    white-space: nowrap;
   }
 
-  .cap-link:hover { text-decoration: underline; }
-
-  /* Notes Layout */
-  .notes-layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.95fr); gap: clamp(2.5rem, 6vw, 5rem); align-items: start; }
-  .featured-note { display: flex; flex-direction: column; gap: 1.25rem; }
-  .featured-note-visual { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid var(--ie-rule); border-radius: var(--radius-card, 8px); background: var(--ie-surface); }
-  .featured-note-visual img { width: 100%; height: 100%; object-fit: cover; transition: transform 300ms ease; }
-  .featured-note:hover .featured-note-visual img { transform: scale(1.02); }
-  .visual-label { position: absolute; top: 12px; left: 12px; padding: 0.35rem 0.75rem; border-radius: var(--radius-pill, 999px); background: rgba(23, 26, 31, 0.88); backdrop-filter: blur(6px); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; font-family: var(--font-mono); font-size: var(--ie-type-label); }
-  .featured-note-copy { display: flex; flex-direction: column; gap: 0.6rem; }
-  .note-meta { margin: 0; color: var(--ie-muted); font-family: var(--font-mono); font-size: var(--ie-type-label); text-transform: uppercase; }
-  .featured-note-copy h3 { margin: 0; font-family: var(--font-serif); font-size: clamp(1.4rem, 2.2vw, 1.9rem); font-weight: 600; line-height: 1.22; }
-  .featured-note-copy h3 a { color: var(--ie-ink); text-decoration: none; transition: color 120ms ease; }
-  .featured-note-copy h3 a:hover { color: var(--ie-blue); }
-  .featured-note-copy p { margin: 0; color: var(--ie-ink-secondary); font-size: var(--ie-type-small); line-height: 1.62; }
-  .text-link { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.5rem; color: var(--ie-blue); font-family: var(--font-mono); font-size: var(--ie-type-ui); font-weight: 600; text-decoration: none; }
-  .text-link:hover { text-decoration: underline; }
-
-  /* Notes Ledger */
-  .notes-ledger { border-top: 2px solid var(--ie-ink); }
-  .ledger-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.85rem 0; border-bottom: 1px solid var(--ie-rule); color: var(--ie-muted); font-family: var(--font-mono); font-size: var(--ie-type-label); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
-  .ledger-row { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr) auto; gap: 0.85rem; align-items: start; padding: 1.25rem 0; border-bottom: 1px solid var(--ie-rule); color: var(--ie-ink); text-decoration: none; transition: background-color 100ms ease; }
-  .ledger-index, .ledger-arrow { color: var(--ie-blue); font-family: var(--font-mono); font-size: var(--ie-type-label); font-weight: 600; }
-  .ledger-copy { display: flex; flex-direction: column; gap: 0.35rem; }
-  .ledger-copy time { color: var(--ie-muted); font-family: var(--font-mono); font-size: var(--ie-type-label); }
-  .ledger-copy strong { font-family: var(--font-sans); font-size: 1.05rem; font-weight: 600; line-height: 1.38; color: var(--ie-ink); transition: color 120ms ease; }
-  .ledger-copy small { color: var(--ie-muted); font-family: var(--font-mono); font-size: var(--ie-type-label); }
-  .ledger-row:hover .ledger-copy strong { color: var(--ie-blue); }
-
-  /* Community Section */
-  .community-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+  .section-link:hover {
+    text-decoration: underline;
   }
 
-  .community-card {
-    background: var(--ie-surface);
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-card, 8px);
-    padding: 1.85rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.1rem;
-    transition: transform 150ms ease, border-color 150ms ease;
-  }
-
-  .community-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--ie-blue);
-  }
-
-  .community-header {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-  }
-
-  .community-logo {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
-    object-fit: cover;
-    border: 1px solid var(--ie-rule);
-    flex-shrink: 0;
-  }
-
-  .community-title-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .community-name {
-    margin: 0;
-    font-family: var(--font-sans);
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--ie-ink);
-  }
-
-  .community-role-pill {
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    color: var(--ie-blue);
-    font-weight: 600;
-  }
-
-  .community-desc {
-    margin: 0;
-    font-size: var(--ie-type-small);
-    line-height: 1.62;
-    color: var(--ie-ink-secondary);
-    flex-grow: 1;
-  }
-
-  .community-links {
+  .hero-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
-    border-top: 1px solid var(--ie-rule);
-    padding-top: 1rem;
+    gap: 0.75rem;
+    margin-top: 2rem;
   }
 
-  .comm-link {
+  .ie-action {
     display: inline-flex;
+    min-height: 40px;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.38rem 0.75rem;
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-sm, 4px);
-    font-family: var(--font-mono);
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.6rem 1.15rem;
+    border: 1px solid var(--ie-ink);
+    border-radius: var(--radius, 6px);
+    font-family: var(--font-sans);
     font-size: var(--ie-type-ui);
-    color: var(--ie-ink);
+    font-weight: 600;
     text-decoration: none;
     transition: all 120ms ease;
   }
 
-  .comm-link:hover {
-    border-color: var(--ie-blue);
-    color: var(--ie-blue);
-    background: var(--ie-surface-raised);
+  .ie-action.primary {
+    background: var(--ie-ink);
+    color: var(--ie-canvas);
   }
 
-  /* Contact Section */
-  .contact-section { padding-block: clamp(4.5rem, 8vw, 7rem); }
-  .contact-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr); gap: clamp(3rem, 9vw, 8rem); padding-top: 1.5rem; border-top: 2px solid var(--ie-rust); }
+  .ie-action.primary:hover {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue);
+    color: #ffffff;
+  }
 
-  @media (max-width: 980px) {
-    .hero-grid, .section-heading.split, .notes-layout, .contact-grid { grid-template-columns: minmax(0, 1fr); }
-    .hero-grid { min-height: auto; align-items: start; }
-    .hero-portrait-col { justify-content: flex-start; }
-    .hero-portrait-card { max-width: 380px; }
-    .capabilities-grid { grid-template-columns: 1fr; }
-    .community-grid { grid-template-columns: 1fr; }
-    .section-heading h2, .contact-grid h2 { max-width: 20ch; }
-    .hero-proof { grid-template-columns: repeat(2, 1fr); }
-    .proof-pill-link:nth-child(2) { border-right: 0; }
-    .proof-pill-link:nth-child(1), .proof-pill-link:nth-child(2) { border-bottom: 1px solid var(--ie-rule); }
+  .ie-action.secondary {
+    background: transparent;
+    color: var(--ie-ink);
+    border-color: var(--ie-rule-strong);
+  }
+
+  .ie-action.secondary:hover {
+    border-color: var(--ie-blue);
+    color: var(--ie-blue);
+    background: var(--ie-surface);
+  }
+
+  /* HERO SECTION */
+  .home-hero {
+    padding-bottom: clamp(3rem, 6vw, 4.5rem);
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .hero-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-avatar-frame {
+    flex-shrink: 0;
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--ie-rule);
+    background: var(--ie-surface);
+  }
+
+  .hero-portrait {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .hero-role {
+    margin: 0 0 0.4rem;
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .hero-header-text h1 {
+    margin: 0;
+    color: var(--ie-ink);
+    font-family: var(--font-serif);
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    font-weight: 500;
+    line-height: 1.05;
+  }
+
+  .hero-lead {
+    max-width: 66ch;
+    margin: 0;
+    color: var(--ie-ink-secondary);
+    font-size: var(--ie-type-body);
+    line-height: 1.68;
+  }
+
+  /* SELECTED NOTES */
+  .notes-section {
+    padding-block: clamp(3rem, 6vw, 4.5rem);
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .note-row {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: baseline;
+    padding-block: 1.4rem;
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .note-row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .note-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .note-meta time {
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
+  }
+
+  .note-tag {
+    display: inline-block;
+    color: var(--ie-blue);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .note-body h3 {
+    margin: 0 0 0.45rem;
+    font-family: var(--font-sans);
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.38;
+  }
+
+  .note-body h3 a {
+    color: var(--ie-ink);
+    text-decoration: none;
+    transition: color 120ms ease;
+  }
+
+  .note-body h3 a:hover {
+    color: var(--ie-blue);
+  }
+
+  .note-body p {
+    margin: 0;
+    color: var(--ie-ink-secondary);
+    font-size: var(--ie-type-small);
+    line-height: 1.6;
+  }
+
+  /* ADVISORY SECTION */
+  .advisory-section {
+    padding-top: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .advisory-frame {
+    border-top: 2px solid var(--ie-rust);
+    padding-top: 2rem;
+  }
+
+  .advisory-bio {
+    max-width: 66ch;
+    margin: 0;
+    color: var(--ie-ink-secondary);
+    font-size: var(--ie-type-body);
+    line-height: 1.68;
   }
 
   @media (max-width: 680px) {
-    .ie-shell { width: min(100% - 2rem, 1280px); }
-    .hero-grid { gap: 2.5rem; padding-block: 3.5rem; }
-    .hero-copy h1 { font-size: clamp(2.1rem, 7.5vw, 3.2rem); letter-spacing: -0.02em; line-height: 1.08; text-wrap: balance; }
-    .hero-proof { grid-template-columns: repeat(2, 1fr); }
-    .proof-pill-link { padding: 0.9rem 0.75rem; font-size: var(--ie-type-micro); text-align: center; }
-    .proof-pill-link:nth-child(even) { border-right: 0; }
-    .proof-pill-link:nth-child(odd) { border-right: 1px solid var(--ie-rule); }
-    .proof-pill-link:nth-child(1), .proof-pill-link:nth-child(2) { border-bottom: 1px solid var(--ie-rule); }
-    .proof-pill-link:nth-child(3), .proof-pill-link:nth-child(4) { border-bottom: 0; }
-    .ie-section, .contact-section { padding-block: 3.5rem; }
-    .section-heading h2, .contact-grid h2 { font-size: clamp(1.85rem, 8vw, 2.5rem); }
-    .hero-portrait-card { max-width: 100%; }
+    .home-shell {
+      width: min(100% - 2rem, 860px);
+      padding-block: 2.5rem;
+    }
+
+    .hero-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .section-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .note-row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      padding-block: 1.25rem;
+    }
+
+    .note-meta {
+      flex-direction: row;
+      gap: 0.75rem;
+      align-items: baseline;
+    }
   }
 </style>
-
