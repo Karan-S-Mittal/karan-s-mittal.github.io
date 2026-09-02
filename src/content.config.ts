@@ -11,6 +11,7 @@ const blog = defineCollection({
     updatedDate: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
+    featured: z.boolean().default(false),
     /** Path (from site root) to a social share card or hero header image. */
     image: z.string().optional(),
     /** Editorial caption describing the hero visual. */

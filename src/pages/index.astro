@@ -10,8 +10,8 @@ const { communities } = communitiesData;
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const pagedPost = publishedPosts.find((post) => post.id === 'paged-attention-kv-cache') || publishedPosts[0];
-const recentNotes = publishedPosts.filter((post) => post.id !== pagedPost?.id).slice(0, 4);
+const featuredPost = publishedPosts.find((post) => post.data.featured) || publishedPosts[0];
+const recentNotes = publishedPosts.filter((post) => post.id !== featuredPost?.id).slice(0, 4);
 
 function formatDate(date: Date | string) {
   const value = typeof date === 'string' ? new Date(date) : date;
@@ -68,7 +68,7 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
             <div class="portrait-meta">
               <div class="portrait-header">
                 <strong>Karan Mittal</strong>
-                <span>AI Systems Architect</span>
+                <span class="portrait-location">Indore, India</span>
               </div>
               <p class="portrait-quote">&ldquo;Reliability is designed into the system&mdash;never added as an afterthought.&rdquo;</p>
             </div>
@@ -81,7 +81,7 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
         <a href="/blog" class="proof-pill-link"><strong>{String(publishedPosts.length).padStart(2, '0')}</strong> published field notes &nearr;</a>
         <a href="#practice" class="proof-pill-link"><strong>04</strong> systems practice areas &darr;</a>
         <a href="#community" class="proof-pill-link"><strong>03</strong> developer communities &darr;</a>
-        <a href="/studio/visuals" class="proof-pill-link"><strong>01</strong> interactive visual lab &nearr;</a>
+        <a href="/work" class="proof-pill-link"><strong>Dextar</strong> co-founder &middot; advisory &nearr;</a>
       </div>
     </section>
 
@@ -107,7 +107,7 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
             <p>
               Deterministic knowledge systems, structured retrieval contracts, graph-aware discovery, citation chains, and predictable LLM orchestration for high-stakes workloads.
             </p>
-            <a href="/blog/deterministic-rag-intro/" class="cap-link">Read architecture lens <span aria-hidden="true">&rarr;</span></a>
+            <a href="/blog/deterministic-rag-intro/" class="cap-link">Read architecture lens <span aria-hidden="true">&nearr;</span></a>
           </div>
 
           <!-- Pillar 2 -->
@@ -120,7 +120,7 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
             <p>
               KV-cache layout optimization, CUDA kernel gathering, memory fragmentation bounds, and low-latency token generation at high operational concurrency.
             </p>
-            <a href="/blog/paged-attention-kv-cache/" class="cap-link">Trace KV-cache mechanics <span aria-hidden="true">&rarr;</span></a>
+            <a href="/blog/paged-attention-kv-cache/" class="cap-link">Trace KV-cache mechanics <span aria-hidden="true">&nearr;</span></a>
           </div>
 
           <!-- Pillar 3 -->
@@ -133,7 +133,7 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
             <p>
               Production evaluation harnesses, distributed data pipelines, Kubernetes orchestration, and deterministic testing boundaries for operational reliability.
             </p>
-            <a href="/work" class="cap-link">View infrastructure systems <span aria-hidden="true">&rarr;</span></a>
+            <a href="/work" class="cap-link">View systems portfolio <span aria-hidden="true">&nearr;</span></a>
           </div>
 
           <!-- Pillar 4 -->
@@ -146,7 +146,7 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
             <p>
               Architecture reviews, mentoring engineering teams, resolving prototype-to-production bottlenecks, and delivering durable technical handover.
             </p>
-            <a href="/contact" class="cap-link">Start an advisory inquiry <span aria-hidden="true">&rarr;</span></a>
+            <a href="/contact" class="cap-link">Explore advisory scope <span aria-hidden="true">&rarr;</span></a>
           </div>
         </div>
       </div>
@@ -164,17 +164,17 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
         </div>
 
         <div class="notes-layout">
-          {pagedPost && (
+          {featuredPost && (
             <article class="featured-note">
-              <a href={`/blog/${pagedPost.id}/`} class="featured-note-visual" aria-label={`Read ${pagedPost.data.title}`}>
-                <img src={pagedPost.data.image} alt="" width="1920" height="1072" loading="lazy" decoding="async" />
+              <a href={`/blog/${featuredPost.id}/`} class="featured-note-visual" aria-label={`Read ${featuredPost.data.title}`}>
+                <img src={featuredPost.data.image} alt="" width="1920" height="1072" loading="lazy" decoding="async" />
                 <span class="visual-label">Featured deep dive / GPU memory</span>
               </a>
               <div class="featured-note-copy">
-                <p class="note-meta"><time datetime={pagedPost.data.pubDate.toISOString()}>{formatDate(pagedPost.data.pubDate)}</time> &middot; LLM inference</p>
-                <h3><a href={`/blog/${pagedPost.id}/`}>{pagedPost.data.title}</a></h3>
-                <p>{pagedPost.data.description}</p>
-                <a class="text-link" href={`/blog/${pagedPost.id}/`}>Trace the mechanism <span aria-hidden="true">&rarr;</span></a>
+                <p class="note-meta"><time datetime={featuredPost.data.pubDate.toISOString()}>{formatDate(featuredPost.data.pubDate)}</time> &middot; LLM inference</p>
+                <h3><a href={`/blog/${featuredPost.id}/`}>{featuredPost.data.title}</a></h3>
+                <p>{featuredPost.data.description}</p>
+                <a class="text-link" href={`/blog/${featuredPost.id}/`}>Trace the mechanism <span aria-hidden="true">&rarr;</span></a>
               </div>
             </article>
           )}
@@ -249,7 +249,7 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
             Bring the architecture, workload, or unresolved constraint. Submit a short project brief through our intake form or reach out directly for advisory inquiries.
           </p>
           <div class="hero-actions">
-            <a class="ie-action primary" href="/contact">Open project brief &amp; consultation <span aria-hidden="true">&rarr;</span></a>
+            <a class="ie-action primary" href="/contact">Start consultation inquiry <span aria-hidden="true">&rarr;</span></a>
             <a class="ie-action secondary" href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>Send direct email</a>
             <a class="ie-action secondary" href={linkedinSocial} target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">&nearr;</span></a>
           </div>
@@ -334,16 +334,15 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
     width: 100%;
     max-width: 420px;
     border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-card, 10px);
+    border-radius: var(--radius-card, 8px);
     background: var(--ie-surface);
     overflow: hidden;
-    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-    transition: transform 200ms ease, box-shadow 200ms ease;
+    transition: transform 150ms ease, border-color 150ms ease;
   }
 
   .hero-portrait-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.09);
+    border-color: var(--ie-blue);
   }
 
   .portrait-image-frame {
@@ -407,11 +406,11 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
     color: var(--ie-ink);
   }
 
-  .portrait-header span {
+  .portrait-location {
     font-family: var(--font-mono);
     font-size: var(--ie-type-label);
-    color: var(--ie-blue);
-    font-weight: 600;
+    color: var(--ie-muted);
+    font-weight: 500;
   }
 
   .portrait-quote {
@@ -673,12 +672,15 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
   @media (max-width: 680px) {
     .ie-shell { width: min(100% - 2rem, 1280px); }
     .hero-grid { gap: 2.5rem; padding-block: 3.5rem; }
-    .hero-copy h1 { font-size: clamp(2.5rem, 12vw, 3.8rem); letter-spacing: -0.03em; }
-    .hero-proof { grid-template-columns: 1fr; }
-    .proof-pill-link { border-right: 0; border-bottom: 1px solid var(--ie-rule); text-align: left; }
-    .proof-pill-link:last-child { border-bottom: 0; }
+    .hero-copy h1 { font-size: clamp(2.1rem, 7.5vw, 3.2rem); letter-spacing: -0.02em; line-height: 1.08; text-wrap: balance; }
+    .hero-proof { grid-template-columns: repeat(2, 1fr); }
+    .proof-pill-link { padding: 0.9rem 0.75rem; font-size: var(--ie-type-micro); text-align: center; }
+    .proof-pill-link:nth-child(even) { border-right: 0; }
+    .proof-pill-link:nth-child(odd) { border-right: 1px solid var(--ie-rule); }
+    .proof-pill-link:nth-child(1), .proof-pill-link:nth-child(2) { border-bottom: 1px solid var(--ie-rule); }
+    .proof-pill-link:nth-child(3), .proof-pill-link:nth-child(4) { border-bottom: 0; }
     .ie-section, .contact-section { padding-block: 3.5rem; }
-    .section-heading h2, .contact-grid h2 { font-size: clamp(2rem, 10vw, 3rem); }
+    .section-heading h2, .contact-grid h2 { font-size: clamp(1.85rem, 8vw, 2.5rem); }
     .hero-portrait-card { max-width: 100%; }
   }
 </style>
