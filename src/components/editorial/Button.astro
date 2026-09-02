@@ -10,15 +10,19 @@ interface Props {
   variant?: 'primary' | 'secondary';
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
+  target?: string;
+  rel?: string;
 }
 
-const { href, variant = 'primary', type = 'button', disabled = false } = Astro.props;
+const { href, variant = 'primary', type = 'button', disabled = false, target, rel } = Astro.props;
 const Tag = href ? 'a' : 'button';
 ---
 
 <Tag
   class:list={['btn', `btn-${variant}`, { 'btn-disabled': disabled }]}
   href={href}
+  target={href ? target : undefined}
+  rel={href ? rel : undefined}
   type={href ? undefined : type}
   disabled={href ? undefined : disabled}
   aria-disabled={disabled ? 'true' : undefined}

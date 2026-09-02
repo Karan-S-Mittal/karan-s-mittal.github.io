@@ -1,6 +1,7 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import PageHeader from '@components/content/PageHeader.astro';
+import Button from '@components/editorial/Button.astro';
 import Icon from '@components/layout/Icon.astro';
 import { SITE, SOCIALS } from '../config';
 import communitiesData from '@data/communities.json';
@@ -44,9 +45,9 @@ const githubSocial = SOCIALS.find((s) => s.name === 'GitHub')?.url || 'https://g
         </div>
 
         <div class="hero-actions">
-          <a class="ie-action primary" href="/blog">Read field notes &rarr;</a>
-          <a class="ie-action secondary" href="/work">Selected work &nearr;</a>
-          <a class="ie-action secondary" href="/now">What I'm doing now &rarr;</a>
+          <Button href="/blog">Read field notes &rarr;</Button>
+          <Button href="/work" variant="secondary">Selected work &nearr;</Button>
+          <Button href="/now" variant="secondary">What I'm doing now &rarr;</Button>
         </div>
       </div>
     </div>
@@ -122,10 +123,10 @@ const githubSocial = SOCIALS.find((s) => s.name === 'GitHub')?.url || 'https://g
           Available for technical advisory, deep-dive architecture reviews, and resolving prototype-to-production bottlenecks across deterministic retrieval and inference optimization.
         </p>
         <div class="hero-actions">
-          <a href="/contact" class="ie-action primary">Start consultation inquiry &rarr;</a>
-          <a href={`mailto:${SITE.email}?subject=Systems%20Architecture%20Inquiry`} class="ie-action secondary">Email</a>
-          <a href={linkedinSocial} target="_blank" rel="noopener" class="ie-action secondary">LinkedIn &nearr;</a>
-          <a href={githubSocial} target="_blank" rel="noopener" class="ie-action secondary">GitHub &nearr;</a>
+          <Button href="/contact">Start consultation inquiry &rarr;</Button>
+          <Button href={`mailto:${SITE.email}?subject=Systems%20Architecture%20Inquiry`} variant="secondary">Email</Button>
+          <Button href={linkedinSocial} target="_blank" rel="noopener" variant="secondary">LinkedIn &nearr;</Button>
+          <Button href={githubSocial} target="_blank" rel="noopener" variant="secondary">GitHub &nearr;</Button>
         </div>
       </div>
     </section>
@@ -220,45 +221,6 @@ const githubSocial = SOCIALS.find((s) => s.name === 'GitHub')?.url || 'https://g
     flex-wrap: wrap;
     gap: 0.75rem;
     margin-top: 0.5rem;
-  }
-
-  .ie-action {
-    display: inline-flex;
-    min-height: 40px;
-    align-items: center;
-    justify-content: center;
-    gap: 0.45rem;
-    padding: 0.6rem 1.15rem;
-    border: 1px solid var(--ie-ink);
-    border-radius: var(--radius, 6px);
-    font-family: var(--font-sans);
-    font-size: var(--ie-type-ui);
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 120ms ease;
-  }
-
-  .ie-action.primary {
-    background: var(--ie-ink);
-    color: var(--ie-canvas);
-  }
-
-  .ie-action.primary:hover {
-    border-color: var(--ie-blue);
-    background: var(--ie-blue);
-    color: #ffffff;
-  }
-
-  .ie-action.secondary {
-    background: transparent;
-    color: var(--ie-ink);
-    border-color: var(--ie-rule-strong);
-  }
-
-  .ie-action.secondary:hover {
-    border-color: var(--ie-blue);
-    color: var(--ie-blue);
-    background: var(--ie-surface);
   }
 
   /* SECTIONS */

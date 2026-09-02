@@ -10,7 +10,6 @@ const sourcePatterns = [
   'src/**/*.css',
   'src/**/*.md',
   'src/**/*.mdx',
-  'public/styles/**/*.css',
 ];
 
 const errors = [];
