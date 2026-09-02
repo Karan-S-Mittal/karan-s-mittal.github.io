@@ -448,7 +448,6 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
 
   /* Sections */
   .ie-section { padding-block: clamp(4.5rem, 8vw, 7rem); border-bottom: 1px solid var(--ie-rule); }
-  .practice-section { background: var(--ie-surface-raised); }
   .section-heading { margin-bottom: clamp(2rem, 5vw, 3.5rem); }
   .section-heading.split { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr); gap: clamp(2rem, 8vw, 7rem); align-items: end; }
   .section-heading h2, .contact-grid h2 { max-width: 18ch; margin: 0; color: var(--ie-ink); font-family: var(--font-serif); font-size: var(--ie-type-h2); font-weight: 500; line-height: 1.08; text-wrap: balance; }
@@ -560,7 +559,6 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
   .ledger-row:hover .ledger-copy strong { color: var(--ie-blue); }
 
   /* Community Section */
-  .community-section { background: var(--ie-surface-raised); }
   .community-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -656,7 +654,7 @@ const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https
   }
 
   /* Contact Section */
-  .contact-section { padding-block: clamp(4.5rem, 8vw, 7rem); border-bottom: 1px solid var(--ie-rule); background: var(--ie-surface); }
+  .contact-section { padding-block: clamp(4.5rem, 8vw, 7rem); }
   .contact-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr); gap: clamp(3rem, 9vw, 8rem); padding-top: 1.5rem; border-top: 2px solid var(--ie-rust); }
 
   @media (max-width: 980px) {
