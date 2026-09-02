@@ -2,16 +2,9 @@
 import { SOCIALS, SITE } from '../../config';
 
 const socials = SOCIALS;
-
-interface Props {
-  variant?: 'default' | 'instrumented';
-}
-
-const { variant = 'instrumented' } = Astro.props;
-const isInstrumented = variant === 'instrumented';
 ---
 
-<footer class:list={{ instrumented: isInstrumented }}>
+<footer>
   <div class="footer-inner">
     <!-- Top Multi-Column Navigation Directory -->
     <div class="footer-directory">
@@ -33,7 +26,7 @@ const isInstrumented = variant === 'instrumented';
           <li><a href="/studio/visuals" class="highlight-link"><span class="link-dot"></span>Interactive Visuals Lab</a></li>
           <li><a href="/studio">Studio Overview</a></li>
           <li><a href="/studio/components">Component Gallery</a></li>
-          <li><a href="/case-studies/soft-architecture">{isInstrumented ? 'Design-system archive' : 'Soft Architecture Spec'}</a></li>
+          <li><a href="/case-studies/soft-architecture">Design-system archive</a></li>
         </ul>
       </div>
 
@@ -96,42 +89,42 @@ const isInstrumented = variant === 'instrumented';
 
 <style>
   footer {
-    border-top: 1px solid var(--border);
-    margin-top: var(--space-9);
-    background: var(--surface-card);
+    margin-top: 0;
+    border-top: 1px solid var(--ie-rule);
+    background: var(--ie-surface);
   }
 
   .footer-inner {
-    max-width: var(--page-max-width, 1040px);
+    max-width: 1280px;
     margin: 0 auto;
-    padding: var(--space-7) var(--space-5) var(--space-6);
+    padding: 3.5rem var(--space-5, 1.5rem) 2.5rem;
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--space-6, 2rem);
   }
 
   /* Multi-Column Directory */
   .footer-directory {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-6);
-    border-bottom: 1px solid var(--border);
-    padding-bottom: var(--space-6);
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: var(--space-6, 2rem);
+    border-bottom: 1px solid var(--ie-rule);
+    padding-bottom: var(--space-6, 2rem);
   }
 
   .footer-col {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--space-3, 0.75rem);
   }
 
   .col-title {
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    font-weight: 700;
+    font-size: var(--ie-type-label, 0.8125rem);
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--muted);
+    color: var(--ie-ink);
     margin: 0;
   }
 
@@ -141,7 +134,7 @@ const isInstrumented = variant === 'instrumented';
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-2, 0.5rem);
   }
 
   .col-links li {
@@ -149,32 +142,31 @@ const isInstrumented = variant === 'instrumented';
   }
 
   .col-links a {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: var(--text-muted, #68768b);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui, 0.875rem);
+    color: var(--ie-muted);
     text-decoration: none;
-    transition: all var(--transition-fast);
+    transition: color 120ms ease;
     display: inline-flex;
     align-items: center;
     gap: 6px;
   }
 
-  .col-links a:hover {
-    color: var(--accent);
-    transform: translateX(2px);
+  .col-links a:hover,
+  .highlight-link {
+    color: var(--ie-blue) !important;
   }
 
   .highlight-link {
-    color: var(--accent) !important;
     font-weight: 600;
   }
 
   .link-dot {
     display: inline-block;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--accent);
+    width: 6px;
+    height: 2px;
+    border-radius: 0;
+    background: var(--ie-blue);
   }
 
   /* Bottom Bar */
@@ -183,108 +175,53 @@ const isInstrumented = variant === 'instrumented';
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: var(--space-4);
+    gap: var(--space-4, 1rem);
   }
 
   .footer-brand-info {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
   }
 
-  .copyright {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: var(--muted);
-    margin: 0;
-  }
-
+  .copyright,
   .brand-subtext {
     font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--muted);
-    opacity: 0.8;
+    font-size: var(--ie-type-label, 0.8125rem);
+    color: var(--ie-muted);
+    margin: 0;
   }
 
   .footer-socials {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-2, 0.5rem);
   }
 
   .social-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-sm);
-    color: var(--muted);
-    border: 1px solid var(--border);
-    background: var(--surface);
-    transition: all var(--transition-fast);
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    color: var(--ie-muted);
+    border: 1px solid var(--ie-rule);
+    background: transparent;
+    transition: all 120ms ease;
   }
 
   .social-btn:hover {
-    color: var(--accent);
-    border-color: var(--accent);
-    transform: translateY(-1px);
-  }
-
-  footer.instrumented {
-    margin-top: 0;
-    border-top-color: var(--ie-rule);
-    background: var(--ie-surface);
-  }
-
-  footer.instrumented .footer-inner {
-    max-width: 1280px;
-    padding: 3.5rem var(--space-5) 2rem;
-  }
-
-  footer.instrumented .footer-directory {
-    grid-template-columns: 1.2fr 1fr 1fr;
-    border-bottom-color: var(--ie-rule);
-  }
-
-  footer.instrumented .col-title {
-    color: var(--ie-ink);
-    font-size: 0.65rem;
-    font-weight: 600;
-  }
-
-  footer.instrumented .col-links a,
-  footer.instrumented .copyright,
-  footer.instrumented .brand-subtext {
-    color: var(--ie-muted);
-  }
-
-  footer.instrumented .col-links a:hover,
-  footer.instrumented .highlight-link {
-    color: var(--ie-blue) !important;
-    transform: none;
-  }
-
-  footer.instrumented .link-dot {
-    width: 6px;
-    height: 2px;
-    border-radius: 0;
-    background: var(--ie-blue);
-  }
-
-  footer.instrumented .social-btn {
-    border-color: var(--ie-rule);
-    border-radius: 4px;
-    background: transparent;
-    color: var(--ie-muted);
+    color: var(--ie-blue);
+    border-color: var(--ie-blue);
   }
 
   @media (max-width: 720px) {
-    footer.instrumented .footer-inner {
-      padding-inline: var(--space-4);
+    .footer-inner {
+      padding-inline: var(--space-4, 1rem);
     }
 
-    footer.instrumented .footer-directory {
+    .footer-directory {
       grid-template-columns: 1fr;
     }
   }

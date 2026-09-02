@@ -80,6 +80,8 @@ const ROUTES = [
 for (const vp of VIEWPORTS) {
   for (const page of PAGES) {
     test(`${page.name} @ ${vp.name}`, async ({ page: p }) => {
+      const pageErrors: string[] = [];
+      p.on('pageerror', (error) => pageErrors.push(error.message));
       await p.setViewportSize({ width: vp.width, height: vp.height });
       await p.goto(page.path, { waitUntil: 'networkidle' });
       await p.evaluate(() => document.fonts.ready);
@@ -100,6 +102,7 @@ for (const vp of VIEWPORTS) {
 
       expect(layoutContract.overflowX, 'page must not overflow horizontally').toBe(0);
       expect(layoutContract.tocHashes, 'TOC labels must not inherit heading anchor glyphs').toBe(0);
+      expect(pageErrors, `${page.path} must load without browser page errors`).toEqual([]);
 
       if (page.name === 'home' && vp.name === 'mobile') {
         expect(layoutContract.h1Right, 'mobile homepage title must fit the viewport')
@@ -120,20 +123,11 @@ for (const vp of VIEWPORTS) {
   test(`all 50 generated pages satisfy the layout contract @ ${vp.name}`, async ({ page: p }) => {
     test.setTimeout(120_000);
     await p.setViewportSize({ width: vp.width, height: vp.height });
+    const pageErrors: string[] = [];
+    p.on('pageerror', (error) => pageErrors.push(error.message));
 
     for (const route of ROUTES) {
-      if (route === '/contact/' || route === '/now/') {
-        const response = await p.request.get(route);
-        const html = await response.text();
-        expect(response.ok(), `${route} redirect document must load`).toBe(true);
-        expect(html, `${route} redirect must not be indexed`).toContain('noindex, follow');
-        expect(html, `${route} redirect must use an absolute canonical URL`)
-          .toMatch(/rel="canonical" href="https:\/\//);
-        expect(html, `${route} redirect must preserve a non-JavaScript fallback`)
-          .toContain('http-equiv="refresh"');
-        continue;
-      }
-
+      pageErrors.length = 0;
       await p.goto(route, { waitUntil: 'domcontentloaded' });
       const contract = await p.evaluate(() => ({
         overflowX: Math.max(0, document.documentElement.scrollWidth - window.innerWidth),
@@ -155,12 +149,38 @@ for (const vp of VIEWPORTS) {
       expect(contract.unlabeledControls, `${route} must label form controls`).toBe(0);
       expect(contract.instrumented, `${route} must use Instrumented Editorial`).toBe(true);
       expect(contract.tocHashes, `${route} TOC labels must stay clean`).toBe(0);
+      expect(pageErrors, `${route} must load without browser page errors`).toEqual([]);
       if (vp.name === 'mobile') {
         expect(contract.bodyFont, `${route} mobile body text must be at least 17px`).toBeGreaterThanOrEqual(17);
       }
     }
   });
 }
+
+test('runtime smoke: homepage boots and theme switches between explicit light/dark states', async ({ page }) => {
+  const pageErrors: string[] = [];
+  page.on('pageerror', (error) => pageErrors.push(error.message));
+  await page.addInitScript(() => localStorage.removeItem('theme'));
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/', { waitUntil: 'networkidle' });
+
+  expect(pageErrors, 'homepage must not emit browser page errors').toEqual([]);
+  await expect(page.locator('#home-title')).toBeVisible();
+  await expect(page.locator('.hero-portrait')).toBeVisible();
+  await expect(page.locator('#theme-toggle')).toBeVisible();
+  await expect(page.locator('.capability-card')).toHaveCount(4);
+
+  const lightCanvas = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ie-canvas').trim());
+  expect(lightCanvas.toLowerCase()).toBe('#f7f5ef');
+
+  await page.locator('#theme-toggle').click();
+  await expect.poll(() => page.locator('html').evaluate((element) => element.classList.contains('dark'))).toBe(true);
+  const darkCanvas = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ie-canvas').trim());
+  expect(darkCanvas.toLowerCase()).toBe('#111318');
+
+  await page.locator('#theme-toggle').click();
+  await expect.poll(() => page.locator('html').evaluate((element) => element.classList.contains('dark'))).toBe(false);
+});
 
 test('mobile navigation and dense figure inspection remain contained', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });

@@ -1,84 +1,154 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import NeuralNet3D from '../components/visuals/neural-net/NeuralNet3D.astro';
-import CiechanowskiGPUMemoryCanvas from '../components/home/CiechanowskiGPUMemoryCanvas.astro';
+import Icon from '../components/chrome/Icon.astro';
 import { getCollection } from 'astro:content';
-import { SITE } from '../config';
+import { SITE, SOCIALS } from '../config';
+import communitiesData from '../data/communities.json';
+
+const { communities } = communitiesData;
 
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const pagedPost = publishedPosts.find((post) => post.id === 'paged-attention-kv-cache') || publishedPosts[0];
-const recentNotes = publishedPosts.filter((post) => post.id !== pagedPost?.id).slice(0, 3);
+const recentNotes = publishedPosts.filter((post) => post.id !== pagedPost?.id).slice(0, 4);
 
 function formatDate(date: Date | string) {
   const value = typeof date === 'string' ? new Date(date) : date;
   return value.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
 }
+
+const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https://www.linkedin.com/in/karansmittal/';
 ---
 
 <Layout
-  title={`${SITE.title} | Explanatory Systems Studio`}
-  description="Karan Mittal builds inspectable AI, data, and performance systems—and publishes the mechanisms, constraints, and evidence behind them."
-  variant="instrumented"
+  title={`${SITE.title} | AI Systems Architect & Advisor`}
+  description="Karan Mittal is an AI Systems Architect and co-founder of Dextar, specializing in deterministic RAG, low-level inference optimization, and production-grade AI systems."
 >
   <main class="ie-home">
-    <!-- HERO SECTION: 3Blue1Brown/Linear Precision Manifold + Statement + Identity -->
+    <!-- HERO SECTION: Executive Positioning + Prominent Portrait -->
     <section class="ie-hero" aria-labelledby="home-title">
       <div class="ie-shell hero-grid">
         <div class="hero-copy">
-          <p class="ie-register"><span>Studio 01</span> Engineer-scientist · Systems practice</p>
-          <h1 id="home-title">I make complex systems inspectable.</h1>
+          <p class="ie-register"><span>Studio 01</span> AI Systems Architect &middot; Co-Founder, Dextar</p>
+          <h1 id="home-title">I turn uncertain AI prototypes into dependable production systems.</h1>
           <p class="hero-lead">
-            I design AI, data, and performance systems whose behaviour can be traced from input to decision—then publish the mechanisms, constraints, and evidence that make them dependable.
+            I design deterministic knowledge systems, optimize low-level inference memory, and build inspectable AI architectures that teams can operate with confidence in high-stakes domains.
           </p>
+
           <div class="hero-actions">
-            <a class="ie-action primary" href="#memory-simulator">Inspect hardware machine <span aria-hidden="true">&darr;</span></a>
+            <a class="ie-action primary" href="/contact">Open project brief <span aria-hidden="true">&rarr;</span></a>
+            <a class="ie-action secondary" href="/blog">Read field notes <span aria-hidden="true">&nearr;</span></a>
             <a class="ie-action secondary" href="/work">Review selected work <span aria-hidden="true">&nearr;</span></a>
           </div>
 
-          <!-- Integrated Identity & Location Card -->
-          <div class="hero-identity-card">
-            <img
-              src="/profile-400.jpg"
-              alt="Karan Mittal speaking on deterministic AI systems"
-              class="identity-avatar"
-              width="52"
-              height="52"
-              loading="eager"
-            />
-            <div class="identity-info">
-              <div class="identity-status">
-                <span class="live-dot"></span>
-                <strong>Indore &middot; Global Advisory</strong>
-              </div>
-              <p class="identity-principle">&ldquo;Reliability is designed into the system&mdash;never added as an afterthought.&rdquo;</p>
-            </div>
+          <div class="hero-status-pill">
+            <span class="live-dot"></span>
+            <span>Indore &middot; Global Systems Advisory</span>
           </div>
         </div>
 
-        <!-- 3Blue1Brown / Linear 3D Neural Flow Engine -->
-        <div class="hero-canvas-frame">
-          <NeuralNet3D
-            exhibit="00"
-            title="3D Deep Neural Architecture & Signal Propagation Engine"
-            badge="Hero Precision Instrument"
-            caption="Interactive 3Blue1Brown-grade tensor manifold. Rotate in 3D orbit: inspect weight matrices and real-time activation pulse propagation across layers."
-          />
+        <!-- Prominent Editorial Portrait Card -->
+        <div class="hero-portrait-col">
+          <div class="hero-portrait-card">
+            <div class="portrait-image-frame">
+              <img
+                src="/profile-400.jpg"
+                alt="Karan Mittal - AI Systems Architect"
+                class="hero-portrait"
+                width="400"
+                height="400"
+                loading="eager"
+              />
+              <div class="portrait-live-badge">
+                <span class="live-dot"></span>
+                <span>Active Advisory</span>
+              </div>
+            </div>
+            <div class="portrait-meta">
+              <div class="portrait-header">
+                <strong>Karan Mittal</strong>
+                <span>AI Systems Architect</span>
+              </div>
+              <p class="portrait-quote">&ldquo;Reliability is designed into the system&mdash;never added as an afterthought.&rdquo;</p>
+            </div>
+          </div>
         </div>
       </div>
 
+      <!-- Proof Strip -->
       <div class="ie-shell hero-proof" aria-label="Published studio evidence">
         <a href="/blog" class="proof-pill-link"><strong>{String(publishedPosts.length).padStart(2, '0')}</strong> published field notes &nearr;</a>
-        <a href="/work" class="proof-pill-link"><strong>03</strong> systems practice areas &nearr;</a>
-        <a href="/studio/visuals" class="proof-pill-link"><strong>01</strong> interactive visual laboratory &nearr;</a>
+        <a href="#practice" class="proof-pill-link"><strong>04</strong> systems practice areas &darr;</a>
+        <a href="#community" class="proof-pill-link"><strong>03</strong> developer communities &darr;</a>
+        <a href="/studio/visuals" class="proof-pill-link"><strong>01</strong> interactive visual lab &nearr;</a>
       </div>
     </section>
 
-    <!-- SECTION 01: SCROLL-DRIVEN CIECHANOWSKI GPU MEMORY & PAGED ATTENTION CANVAS -->
-    <section class="ie-section flagship-section" id="memory-simulator" aria-labelledby="gpu-canvas-title">
+    <!-- SECTION 01: PRACTICE PILLARS -->
+    <section class="ie-section practice-section" id="practice" aria-labelledby="practice-title">
       <div class="ie-shell">
-        <CiechanowskiGPUMemoryCanvas />
+        <div class="section-heading split">
+          <div>
+            <p class="ie-register"><span>01 / Practice</span> Technical Focus</p>
+            <h2 id="practice-title">Deterministic AI, inference performance, and systems architecture.</h2>
+          </div>
+          <a class="section-link" href="/work">Explore selected work &amp; case studies <span aria-hidden="true">&rarr;</span></a>
+        </div>
+
+        <div class="capabilities-grid">
+          <!-- Pillar 1 -->
+          <div class="capability-card">
+            <div class="cap-header">
+              <span class="cap-num">01</span>
+              <span class="cap-tag">Architecture</span>
+            </div>
+            <h3>AI Architecture &amp; Deterministic RAG</h3>
+            <p>
+              Deterministic knowledge systems, structured retrieval contracts, graph-aware discovery, citation chains, and predictable LLM orchestration for high-stakes workloads.
+            </p>
+            <a href="/blog/deterministic-rag-intro/" class="cap-link">Read architecture lens <span aria-hidden="true">&rarr;</span></a>
+          </div>
+
+          <!-- Pillar 2 -->
+          <div class="capability-card">
+            <div class="cap-header">
+              <span class="cap-num">02</span>
+              <span class="cap-tag">Performance</span>
+            </div>
+            <h3>Inference &amp; GPU Performance</h3>
+            <p>
+              KV-cache layout optimization, CUDA kernel gathering, memory fragmentation bounds, and low-latency token generation at high operational concurrency.
+            </p>
+            <a href="/blog/paged-attention-kv-cache/" class="cap-link">Trace KV-cache mechanics <span aria-hidden="true">&rarr;</span></a>
+          </div>
+
+          <!-- Pillar 3 -->
+          <div class="capability-card">
+            <div class="cap-header">
+              <span class="cap-num">03</span>
+              <span class="cap-tag">Infrastructure</span>
+            </div>
+            <h3>Infrastructure, MLOps &amp; Guardrails</h3>
+            <p>
+              Production evaluation harnesses, distributed data pipelines, Kubernetes orchestration, and deterministic testing boundaries for operational reliability.
+            </p>
+            <a href="/work" class="cap-link">View infrastructure systems <span aria-hidden="true">&rarr;</span></a>
+          </div>
+
+          <!-- Pillar 4 -->
+          <div class="capability-card">
+            <div class="cap-header">
+              <span class="cap-num">04</span>
+              <span class="cap-tag">Advisory</span>
+            </div>
+            <h3>Technical Advisory &amp; Strategy</h3>
+            <p>
+              Architecture reviews, mentoring engineering teams, resolving prototype-to-production bottlenecks, and delivering durable technical handover.
+            </p>
+            <a href="/contact" class="cap-link">Start an advisory inquiry <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -97,7 +167,7 @@ function formatDate(date: Date | string) {
           {pagedPost && (
             <article class="featured-note">
               <a href={`/blog/${pagedPost.id}/`} class="featured-note-visual" aria-label={`Read ${pagedPost.data.title}`}>
-                <img src={pagedPost.data.image} alt="" loading="lazy" decoding="async" />
+                <img src={pagedPost.data.image} alt="" width="1920" height="1072" loading="lazy" decoding="async" />
                 <span class="visual-label">Featured deep dive / GPU memory</span>
               </a>
               <div class="featured-note-copy">
@@ -127,18 +197,61 @@ function formatDate(date: Date | string) {
       </div>
     </section>
 
-    <!-- SECTION 03: DECISION & CONSULTATION INTAKE -->
+    <!-- SECTION 03: COMMUNITY & SPEAKING -->
+    <section class="ie-section community-section" id="community" aria-labelledby="community-title">
+      <div class="ie-shell">
+        <div class="section-heading split">
+          <div>
+            <p class="ie-register"><span>03 / Ecosystem</span> Community &amp; Speaking</p>
+            <h2 id="community-title">Building technical communities and teaching systems.</h2>
+          </div>
+          <div class="community-heading-links">
+            <a class="section-link" href="/talks">View talks &amp; lectures <span aria-hidden="true">&nearr;</span></a>
+          </div>
+        </div>
+
+        <div class="community-grid">
+          {communities.map((c) => (
+            <div class="community-card">
+              <div class="community-header">
+                <img src={c.logo} alt={c.name} class="community-logo" loading="lazy" decoding="async" />
+                <div class="community-title-group">
+                  <h3 class="community-name">{c.name}</h3>
+                  <span class="community-role-pill">Community Organizer</span>
+                </div>
+              </div>
+              <p class="community-desc">{c.description}</p>
+              {c.links && c.links.length > 0 && (
+                <div class="community-links">
+                  {c.links.map((link: { label: string; url: string }) => (
+                    <a href={link.url} target="_blank" rel="noopener" class="comm-link">
+                      <span>{link.label}</span>
+                      <Icon name="arrow-up-right" size={12} />
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 04: DECISION & CONSULTATION INTAKE -->
     <section class="contact-section" id="contact" aria-labelledby="contact-title">
       <div class="ie-shell contact-grid">
         <div>
-          <p class="ie-register"><span>03 / Decision</span> Work together</p>
+          <p class="ie-register"><span>04 / Decision</span> Work together</p>
           <h2 id="contact-title">Have a system that needs to be understood before it can be trusted?</h2>
         </div>
         <div class="contact-copy">
-          <p>Bring the architecture, workload, or unresolved constraint. Submit a short project brief through our intake form or reach out directly.</p>
+          <p>
+            Bring the architecture, workload, or unresolved constraint. Submit a short project brief through our intake form or reach out directly for advisory inquiries.
+          </p>
           <div class="hero-actions">
             <a class="ie-action primary" href="/contact">Open project brief &amp; consultation <span aria-hidden="true">&rarr;</span></a>
             <a class="ie-action secondary" href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>Send direct email</a>
+            <a class="ie-action secondary" href={linkedinSocial} target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">&nearr;</span></a>
           </div>
         </div>
       </div>
@@ -149,121 +262,275 @@ function formatDate(date: Date | string) {
 <style>
   .ie-home { overflow: clip; }
   .ie-shell { width: min(100% - 3rem, 1280px); margin-inline: auto; }
-  .ie-register { margin: 0 0 1rem; color: var(--ie-muted); font-family: var(--font-mono); font-size: 0.67rem; font-weight: 500; letter-spacing: 0.075em; text-transform: uppercase; }
+  .ie-register { margin: 0 0 1rem; color: var(--ie-muted); font-family: var(--font-mono); font-size: var(--ie-type-label); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
   .ie-register span { margin-right: 0.6rem; color: var(--ie-blue); font-weight: 600; }
   .ie-hero { border-bottom: 1px solid var(--ie-rule); }
 
   .hero-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
+    grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
     gap: clamp(2.5rem, 6vw, 6rem);
     align-items: center;
-    min-height: min(720px, calc(100vh - 64px));
-    padding-block: clamp(4.5rem, 10vh, 8rem) clamp(3.5rem, 8vh, 6rem);
+    min-height: min(680px, calc(100vh - 64px));
+    padding-block: clamp(4.5rem, 9vh, 7rem) clamp(3.5rem, 7vh, 5.5rem);
   }
 
-  .hero-copy { max-width: 720px; }
-  .hero-copy h1 { max-width: 13ch; margin: 0 0 1.5rem; color: var(--ie-ink); font-size: clamp(3.35rem, 7.2vw, 6.5rem); font-weight: 500; line-height: 0.98; text-wrap: balance; }
-  .hero-lead { max-width: 680px; margin: 0; color: var(--ie-ink-secondary); font-size: clamp(1.12rem, 1.7vw, 1.38rem); line-height: 1.58; }
+  .hero-copy { max-width: 720px; min-width: 0; }
+  .hero-copy h1 { max-width: 15ch; margin: 0 0 1.5rem; color: var(--ie-ink); font-family: var(--font-serif); font-size: clamp(2.75rem, 5.2vw, 4.75rem); font-weight: 500; line-height: 1.04; text-wrap: balance; }
+  .hero-lead { max-width: 640px; margin: 0; color: var(--ie-ink-secondary); font-size: var(--ie-type-body); line-height: 1.65; }
 
-  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-top: 2.25rem; }
   .ie-action {
     display: inline-flex;
-    min-height: 42px;
+    min-height: 44px;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.68rem 1.15rem;
+    padding: 0.72rem 1.25rem;
     border: 1px solid var(--ie-ink);
     border-radius: var(--radius, 6px);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
     text-decoration: none;
     transition: all 120ms ease;
   }
   .ie-action.primary { background: var(--ie-ink); color: var(--ie-canvas); }
   .ie-action.primary:hover { border-color: var(--ie-blue); background: var(--ie-blue); color: #fff; }
-  .ie-action.secondary { background: transparent; color: var(--ie-ink); }
-  .ie-action.secondary:hover { border-color: var(--ie-blue); color: var(--ie-blue); }
+  .ie-action.secondary { background: transparent; color: var(--ie-ink); border-color: var(--ie-rule-strong); }
+  .ie-action.secondary:hover { border-color: var(--ie-blue); color: var(--ie-blue); background: var(--ie-surface-raised); }
 
-  /* Hero Identity Card */
-  .hero-identity-card {
-    display: flex;
+  .hero-status-pill {
+    display: inline-flex;
     align-items: center;
-    gap: 1rem;
-    padding: 0.85rem 1.15rem;
-    margin-top: 2.25rem;
+    gap: 8px;
+    margin-top: 2rem;
+    padding: 0.45rem 0.95rem;
     border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-card, 8px);
+    border-radius: var(--radius-pill, 999px);
     background: var(--ie-surface);
-    max-width: 540px;
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
+    font-weight: 500;
+    color: var(--ie-ink-secondary);
   }
 
-  .identity-avatar {
-    width: 52px;
-    height: 52px;
+  .live-dot {
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    object-fit: cover;
-    border: 1.5px solid var(--ie-rule-strong);
-    filter: grayscale(100%);
-    transition: filter 250ms ease;
-    flex-shrink: 0;
+    background: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
   }
 
-  .hero-identity-card:hover .identity-avatar {
-    filter: grayscale(0%);
-  }
-
-  .identity-info {
+  /* Hero Portrait Card */
+  .hero-portrait-col {
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    justify-content: flex-end;
   }
 
-  .identity-status {
+  .hero-portrait-card {
+    width: 100%;
+    max-width: 420px;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 10px);
+    background: var(--ie-surface);
+    overflow: hidden;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+
+  .hero-portrait-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.09);
+  }
+
+  .portrait-image-frame {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    overflow: hidden;
+    background: var(--ie-surface-raised);
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .hero-portrait {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 300ms ease;
+  }
+
+  .hero-portrait-card:hover .hero-portrait {
+    transform: scale(1.02);
+  }
+
+  .portrait-live-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-pill, 999px);
+    background: rgba(23, 26, 31, 0.88);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
     font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: var(--ie-type-micro);
+    font-weight: 500;
+  }
+
+  .portrait-meta {
+    padding: 1.35rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .portrait-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--ie-rule);
+    padding-bottom: 0.6rem;
+  }
+
+  .portrait-header strong {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    font-weight: 600;
     color: var(--ie-ink);
   }
 
-  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.3); }
-
-  .identity-principle {
-    margin: 0;
-    font-family: var(--font-serif);
-    font-size: 0.86rem;
-    font-style: italic;
-    color: var(--ie-ink-secondary);
-    line-height: 1.4;
+  .portrait-header span {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
+    color: var(--ie-blue);
+    font-weight: 600;
   }
 
-  .hero-canvas-frame {
-    width: 100%;
-    max-width: 540px;
-    justify-self: end;
+  .portrait-quote {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: var(--ie-type-small);
+    font-style: italic;
+    color: var(--ie-ink-secondary);
+    line-height: 1.5;
   }
 
   /* Hero Proof Strip */
-  .hero-proof { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--ie-rule); }
-  .proof-pill-link { display: block; padding: 1rem 1.25rem; border-right: 1px solid var(--ie-rule); color: var(--ie-muted); font-family: var(--font-mono); font-size: 0.68rem; text-align: center; text-decoration: none; transition: background-color 120ms ease, color 120ms ease; }
+  .hero-proof {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--ie-rule);
+  }
+
+  .proof-pill-link {
+    display: block;
+    padding: 1.15rem 1.25rem;
+    border-right: 1px solid var(--ie-rule);
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 120ms ease, color 120ms ease;
+  }
+
   .proof-pill-link:last-child { border-right: 0; }
   .proof-pill-link:hover { background: var(--ie-surface-raised); color: var(--ie-blue); }
-  .proof-pill-link strong { margin-right: 0.3rem; color: var(--ie-blue); font-size: 0.95rem; font-weight: 600; }
+  .proof-pill-link strong { margin-right: 0.35rem; color: var(--ie-blue); font-size: 1.15rem; font-weight: 600; }
 
-  /* Section Layouts */
-  .ie-section { padding-block: clamp(4.5rem, 9vw, 8rem); border-bottom: 1px solid var(--ie-rule); }
-  .flagship-section { background: var(--ie-surface-raised); }
+  /* Sections */
+  .ie-section { padding-block: clamp(4.5rem, 8vw, 7rem); border-bottom: 1px solid var(--ie-rule); }
+  .practice-section { background: var(--ie-surface-raised); }
   .section-heading { margin-bottom: clamp(2rem, 5vw, 3.5rem); }
   .section-heading.split { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr); gap: clamp(2rem, 8vw, 7rem); align-items: end; }
-  .section-heading h2, .contact-grid h2 { max-width: 18ch; margin: 0; color: var(--ie-ink); font-family: var(--font-serif); font-size: clamp(2.3rem, 4.4vw, 3.8rem); font-weight: 500; line-height: 1.05; text-wrap: balance; }
-  .section-heading > p, .contact-copy > p { max-width: 48ch; margin: 0; color: var(--ie-ink-secondary); font-size: 1rem; line-height: 1.6; }
-  .section-link { display: inline-flex; align-items: center; gap: 0.35rem; justify-self: start; color: var(--ie-blue); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; text-decoration: none; }
+  .section-heading h2, .contact-grid h2 { max-width: 18ch; margin: 0; color: var(--ie-ink); font-family: var(--font-serif); font-size: var(--ie-type-h2); font-weight: 500; line-height: 1.08; text-wrap: balance; }
+  .section-link { display: inline-flex; align-items: center; gap: 0.35rem; justify-self: start; color: var(--ie-blue); font-family: var(--font-mono); font-size: var(--ie-type-ui); font-weight: 600; text-decoration: none; }
   .section-link:hover { text-decoration: underline; }
+
+  /* Capabilities Grid (4 Pillars) */
+  .capabilities-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .capability-card {
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+    transition: transform 150ms ease, border-color 150ms ease;
+  }
+
+  .capability-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--ie-blue);
+  }
+
+  .cap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--ie-rule);
+    padding-bottom: 0.75rem;
+  }
+
+  .cap-num {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-ui);
+    font-weight: 600;
+    color: var(--ie-blue);
+  }
+
+  .cap-tag {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
+    color: var(--ie-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .capability-card h3 {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-h3);
+    font-weight: 600;
+    color: var(--ie-ink);
+    line-height: 1.3;
+  }
+
+  .capability-card p {
+    margin: 0;
+    font-size: var(--ie-type-small);
+    line-height: 1.65;
+    color: var(--ie-ink-secondary);
+    flex-grow: 1;
+  }
+
+  .cap-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--ie-blue);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-ui);
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 0.5rem;
+  }
+
+  .cap-link:hover { text-decoration: underline; }
 
   /* Notes Layout */
   .notes-layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.95fr); gap: clamp(2.5rem, 6vw, 5rem); align-items: start; }
@@ -271,46 +538,150 @@ function formatDate(date: Date | string) {
   .featured-note-visual { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid var(--ie-rule); border-radius: var(--radius-card, 8px); background: var(--ie-surface); }
   .featured-note-visual img { width: 100%; height: 100%; object-fit: cover; transition: transform 300ms ease; }
   .featured-note:hover .featured-note-visual img { transform: scale(1.02); }
-  .visual-label { position: absolute; top: 12px; left: 12px; padding: 0.3rem 0.6rem; border-radius: var(--radius-pill, 999px); background: rgba(23, 26, 31, 0.85); backdrop-filter: blur(6px); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; font-family: var(--font-mono); font-size: 0.65rem; }
-  .featured-note-copy { display: flex; flex-direction: column; gap: 0.5rem; }
-  .note-meta { margin: 0; color: var(--ie-muted); font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; }
-  .featured-note-copy h3 { margin: 0; font-family: var(--font-serif); font-size: clamp(1.4rem, 2.2vw, 1.9rem); font-weight: 600; line-height: 1.2; }
+  .visual-label { position: absolute; top: 12px; left: 12px; padding: 0.35rem 0.75rem; border-radius: var(--radius-pill, 999px); background: rgba(23, 26, 31, 0.88); backdrop-filter: blur(6px); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; font-family: var(--font-mono); font-size: var(--ie-type-label); }
+  .featured-note-copy { display: flex; flex-direction: column; gap: 0.6rem; }
+  .note-meta { margin: 0; color: var(--ie-muted); font-family: var(--font-mono); font-size: var(--ie-type-label); text-transform: uppercase; }
+  .featured-note-copy h3 { margin: 0; font-family: var(--font-serif); font-size: clamp(1.4rem, 2.2vw, 1.9rem); font-weight: 600; line-height: 1.22; }
   .featured-note-copy h3 a { color: var(--ie-ink); text-decoration: none; transition: color 120ms ease; }
   .featured-note-copy h3 a:hover { color: var(--ie-blue); }
-  .featured-note-copy p { margin: 0; color: var(--ie-ink-secondary); font-size: 0.94rem; line-height: 1.58; }
-  .text-link { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.5rem; color: var(--ie-blue); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; text-decoration: none; }
+  .featured-note-copy p { margin: 0; color: var(--ie-ink-secondary); font-size: var(--ie-type-small); line-height: 1.62; }
+  .text-link { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.5rem; color: var(--ie-blue); font-family: var(--font-mono); font-size: var(--ie-type-ui); font-weight: 600; text-decoration: none; }
   .text-link:hover { text-decoration: underline; }
 
   /* Notes Ledger */
   .notes-ledger { border-top: 2px solid var(--ie-ink); }
-  .ledger-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--ie-rule); color: var(--ie-muted); font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase; }
-  .ledger-row { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto; gap: 0.75rem; align-items: start; padding: 1.15rem 0; border-bottom: 1px solid var(--ie-rule); color: var(--ie-ink); text-decoration: none; transition: background-color 100ms ease; }
-  .ledger-index, .ledger-arrow { color: var(--ie-blue); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; }
-  .ledger-copy { display: flex; flex-direction: column; gap: 0.3rem; }
-  .ledger-copy time { color: var(--ie-muted); font-family: var(--font-mono); font-size: 0.65rem; }
-  .ledger-copy strong { font-family: var(--font-sans); font-size: 0.95rem; font-weight: 600; line-height: 1.35; color: var(--ie-ink); transition: color 120ms ease; }
-  .ledger-copy small { color: var(--ie-muted); font-family: var(--font-mono); font-size: 0.68rem; }
+  .ledger-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.85rem 0; border-bottom: 1px solid var(--ie-rule); color: var(--ie-muted); font-family: var(--font-mono); font-size: var(--ie-type-label); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+  .ledger-row { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr) auto; gap: 0.85rem; align-items: start; padding: 1.25rem 0; border-bottom: 1px solid var(--ie-rule); color: var(--ie-ink); text-decoration: none; transition: background-color 100ms ease; }
+  .ledger-index, .ledger-arrow { color: var(--ie-blue); font-family: var(--font-mono); font-size: var(--ie-type-label); font-weight: 600; }
+  .ledger-copy { display: flex; flex-direction: column; gap: 0.35rem; }
+  .ledger-copy time { color: var(--ie-muted); font-family: var(--font-mono); font-size: var(--ie-type-label); }
+  .ledger-copy strong { font-family: var(--font-sans); font-size: 1.05rem; font-weight: 600; line-height: 1.38; color: var(--ie-ink); transition: color 120ms ease; }
+  .ledger-copy small { color: var(--ie-muted); font-family: var(--font-mono); font-size: var(--ie-type-label); }
   .ledger-row:hover .ledger-copy strong { color: var(--ie-blue); }
 
+  /* Community Section */
+  .community-section { background: var(--ie-surface-raised); }
+  .community-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .community-card {
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    padding: 1.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    transition: transform 150ms ease, border-color 150ms ease;
+  }
+
+  .community-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--ie-blue);
+  }
+
+  .community-header {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .community-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--ie-rule);
+    flex-shrink: 0;
+  }
+
+  .community-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .community-name {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ie-ink);
+  }
+
+  .community-role-pill {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
+    color: var(--ie-blue);
+    font-weight: 600;
+  }
+
+  .community-desc {
+    margin: 0;
+    font-size: var(--ie-type-small);
+    line-height: 1.62;
+    color: var(--ie-ink-secondary);
+    flex-grow: 1;
+  }
+
+  .community-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    border-top: 1px solid var(--ie-rule);
+    padding-top: 1rem;
+  }
+
+  .comm-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.38rem 0.75rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-sm, 4px);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-ui);
+    color: var(--ie-ink);
+    text-decoration: none;
+    transition: all 120ms ease;
+  }
+
+  .comm-link:hover {
+    border-color: var(--ie-blue);
+    color: var(--ie-blue);
+    background: var(--ie-surface-raised);
+  }
+
   /* Contact Section */
-  .contact-section { padding-block: clamp(4.5rem, 9vw, 8rem); border-bottom: 1px solid var(--ie-rule); background: var(--ie-surface); }
+  .contact-section { padding-block: clamp(4.5rem, 8vw, 7rem); border-bottom: 1px solid var(--ie-rule); background: var(--ie-surface); }
   .contact-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr); gap: clamp(3rem, 9vw, 8rem); padding-top: 1.5rem; border-top: 2px solid var(--ie-rust); }
 
   @media (max-width: 980px) {
-    .hero-grid, .section-heading.split, .notes-layout, .contact-grid { grid-template-columns: 1fr; }
+    .hero-grid, .section-heading.split, .notes-layout, .contact-grid { grid-template-columns: minmax(0, 1fr); }
     .hero-grid { min-height: auto; align-items: start; }
-    .hero-canvas-frame { max-width: 100%; justify-self: start; }
+    .hero-portrait-col { justify-content: flex-start; }
+    .hero-portrait-card { max-width: 380px; }
+    .capabilities-grid { grid-template-columns: 1fr; }
+    .community-grid { grid-template-columns: 1fr; }
     .section-heading h2, .contact-grid h2 { max-width: 20ch; }
+    .hero-proof { grid-template-columns: repeat(2, 1fr); }
+    .proof-pill-link:nth-child(2) { border-right: 0; }
+    .proof-pill-link:nth-child(1), .proof-pill-link:nth-child(2) { border-bottom: 1px solid var(--ie-rule); }
   }
 
   @media (max-width: 680px) {
     .ie-shell { width: min(100% - 2rem, 1280px); }
     .hero-grid { gap: 2.5rem; padding-block: 3.5rem; }
-    .hero-copy h1 { font-size: clamp(3rem, 16vw, 4.6rem); }
+    .hero-copy h1 { font-size: clamp(2.5rem, 12vw, 3.8rem); letter-spacing: -0.03em; }
     .hero-proof { grid-template-columns: 1fr; }
     .proof-pill-link { border-right: 0; border-bottom: 1px solid var(--ie-rule); text-align: left; }
     .proof-pill-link:last-child { border-bottom: 0; }
     .ie-section, .contact-section { padding-block: 3.5rem; }
-    .section-heading h2, .contact-grid h2 { font-size: clamp(2.2rem, 12vw, 3.4rem); }
+    .section-heading h2, .contact-grid h2 { font-size: clamp(2rem, 10vw, 3rem); }
+    .hero-portrait-card { max-width: 100%; }
   }
 </style>
+

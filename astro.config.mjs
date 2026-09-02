@@ -35,8 +35,9 @@ const indexableTagPaths = new Set(
 export default defineConfig({
   site: 'https://karan-s-mittal.github.io',
   base: '/',
-  // Link prefetch on hover/viewport — perceived-instant navigation, zero JS cost
-  prefetch: { prefetchAll: true },
+  // Prefetch links as they approach the viewport. This keeps navigation quick
+  // without downloading every page on initial load.
+  prefetch: { defaultStrategy: 'viewport', prefetchAll: false },
   vite: {
     build: {
       // The two route-scoped visual-engine bundles include Three.js/Mafs and

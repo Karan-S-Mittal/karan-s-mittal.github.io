@@ -15,24 +15,24 @@
       <span>01 / Flagship 3D Hardware Instrument &middot; Silicon Microarchitecture to KV Cache</span>
     </div>
     <h2 id="gpu-canvas-title">How RAM &amp; GPU Memory Work: The 3D Silicon Machine</h2>
-    <p class="canvas-lead-text">
+    <p class="canvas-lead-text" id="gpu-canvas-description">
       Explore the multi-scale physics of memory in full 3D: rotate and inspect a microscopic 1T1C transistor and capacitor with metallic copper sheen and glowing electron particles, pull back to the 8&times;8 silicon crossbar die, and zoom out to the GPU memory wall.
     </p>
   </div>
 
   <!-- Multi-Scale 3D Camera Zoom Selector -->
   <div class="scale-selector-bar" role="tablist" aria-label="3D Silicon Zoom Scale">
-    <button type="button" role="tab" class="scale-tab active" data-scale="0" aria-selected="true">
+    <button type="button" role="tab" class="scale-tab active" data-scale="0" id="scale-tab-0" aria-controls="scale-panel-0" aria-selected="true" tabindex="0">
       <span class="scale-badge">SCALE 01 / 3D MICROSCOPIC</span>
       <strong>3D 1T1C Silicon Cell</strong>
       <small>Copper Bitline &middot; MOSFET Gate &middot; Glowing Capacitor Trench</small>
     </button>
-    <button type="button" role="tab" class="scale-tab" data-scale="1" aria-selected="false">
+    <button type="button" role="tab" class="scale-tab" data-scale="1" id="scale-tab-1" aria-controls="scale-panel-1" aria-selected="false" tabindex="-1">
       <span class="scale-badge">SCALE 02 / 3D SILICON DIE</span>
       <strong>8&times;8 Crossbar Array</strong>
       <small>64 Pillar Capacitors &middot; Wordline Decoders &middot; Sense Amps</small>
     </button>
-    <button type="button" role="tab" class="scale-tab" data-scale="2" aria-selected="false">
+    <button type="button" role="tab" class="scale-tab" data-scale="2" id="scale-tab-2" aria-controls="scale-panel-2" aria-selected="false" tabindex="-1">
       <span class="scale-badge">SCALE 03 / SYSTEM ARCHITECTURE</span>
       <strong>GPU VRAM &amp; PagedAttention</strong>
       <small>HBM3 DRAM Bank &middot; Virtual Paging &middot; Zero Fragmentation</small>
@@ -57,27 +57,38 @@
         </div>
 
         <!-- Three.js WebGL Mount Container -->
-        <div class="three-mount-area" data-three-mount>
+        <div
+          class="three-mount-area"
+          data-three-mount
+          tabindex="0"
+          role="img"
+          aria-label="Interactive three-dimensional silicon memory model"
+          aria-describedby="gpu-canvas-title gpu-canvas-description"
+        >
+          <div class="webgl-fallback" data-webgl-fallback hidden>
+            <strong>3D preview unavailable</strong>
+            <p>This browser could not start WebGL. Use the scale controls and chapter text below to inspect the same memory architecture.</p>
+          </div>
           <div class="orbit-hint-overlay">
-            <span>&olarr; Drag in 3D to rotate perspective &middot; Scroll to zoom scale</span>
+            <span>&olarr; Drag or use arrow keys to rotate &middot; Scroll to zoom scale</span>
           </div>
         </div>
 
         <!-- Contextual Direct Controls Plane -->
         <div class="canvas-controls-bar">
           <!-- Scale 1: 1T1C Physics Controls -->
-          <div class="control-view-panel" data-ctrl-scale="0">
+          <div class="control-view-panel" id="scale-panel-0" role="tabpanel" aria-labelledby="scale-tab-0" data-ctrl-scale="0">
             <div class="btn-group">
-              <button type="button" class="sim-btn primary" data-act-write1>
+              <button type="button" class="sim-btn primary" data-act-write1 aria-label="Write a charged one into the memory cell">
                 ⚡ Write '1' (Charge 3D Trench)
               </button>
-              <button type="button" class="sim-btn secondary" data-act-write0>
+              <button type="button" class="sim-btn secondary" data-act-write0 aria-label="Discharge the memory cell and write zero">
                 ⚡ Write '0' (Discharge)
               </button>
-              <button type="button" class="sim-btn secondary" data-act-read>
+              <button type="button" class="sim-btn secondary" data-act-read aria-label="Read and sense the memory cell">
                 🔍 Read &amp; Sense
               </button>
-              <button type="button" class="sim-btn tertiary" data-act-leak>
+              <button type="button" class="sim-btn tertiary" data-act-leak aria-label="Leak charge from the memory cell">
                 ⏳ Leak Electrons
               </button>
             </div>
@@ -92,12 +103,13 @@
                 value="1.2"
                 class="voltage-slider"
                 data-gate-slider
+                aria-label="Wordline gate voltage in volts"
               />
             </div>
           </div>
 
           <!-- Scale 2: Crossbar Array Controls -->
-          <div class="control-view-panel hidden" data-ctrl-scale="1">
+          <div class="control-view-panel hidden" id="scale-panel-1" role="tabpanel" aria-labelledby="scale-tab-1" data-ctrl-scale="1" hidden>
             <div class="btn-group">
               <button type="button" class="sim-btn primary" data-act-strobe>
                 ⚡ Strobe Wordline Row
@@ -112,12 +124,12 @@
           </div>
 
           <!-- Scale 3: PagedAttention Controls -->
-          <div class="control-view-panel hidden" data-ctrl-scale="2">
+          <div class="control-view-panel hidden" id="scale-panel-2" role="tabpanel" aria-labelledby="scale-tab-2" data-ctrl-scale="2" hidden>
             <div class="btn-group">
-              <button type="button" class="sim-btn primary" data-act-toggle-paged>
+              <button type="button" class="sim-btn primary" data-act-toggle-paged aria-pressed="true">
                 ⇄ Toggle: PagedAttention vs Naive
               </button>
-              <button type="button" class="sim-btn secondary" data-act-step-tokens>
+              <button type="button" class="sim-btn secondary" data-act-step-tokens aria-label="Add a batch of sixteen tokens to the key value cache">
                 + Step Token Batch (+16 Tokens)
               </button>
             </div>
@@ -125,6 +137,7 @@
               <span>ALLOCATION: <strong data-paged-mode-text>PagedAttention (Virtual Paging)</strong></span>
             </div>
           </div>
+          <p class="canvas-status" data-canvas-status role="status" aria-live="polite"></p>
         </div>
       </div>
       <p class="canvas-caption-note">
@@ -197,8 +210,13 @@
 <script>
   import * as THREE from 'three';
 
+  const branchCleanups = new WeakMap<HTMLElement, () => void>();
+  let branchLifecycleBound = false;
+
   function initBranch3D() {
     document.querySelectorAll<HTMLElement>('[data-branch-3d]').forEach((root) => {
+      if (branchCleanups.has(root)) return;
+
       const mount = root.querySelector<HTMLElement>('[data-three-mount]');
       if (!mount) return;
 
@@ -224,11 +242,45 @@
       const btnTogglePaged = root.querySelector<HTMLButtonElement>('[data-act-toggle-paged]');
       const btnStepTokens = root.querySelector<HTMLButtonElement>('[data-act-step-tokens]');
       const pagedModeText = root.querySelector<HTMLElement>('[data-paged-mode-text]');
+      const canvasStatus = root.querySelector<HTMLElement>('[data-canvas-status]');
+      const webglFallback = root.querySelector<HTMLElement>('[data-webgl-fallback]');
+
+      // One source of truth for the HUD and all interactive controls.
+      let gateVoltage = 1.2;
+      let storedElectrons = 42;
+      let isPagedMode = true;
+      let selectedRow = 3;
+      let tokenBatch = 0;
+      let destroyed = false;
+      let isVisible = true;
+      let prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let animationFrameId = 0;
+      let readFlashTimeout = 0;
+      const removeListeners: Array<() => void> = [];
+      const listen = <T extends EventTarget>(target: T, type: string, handler: EventListener, options?: AddEventListenerOptions) => {
+        target.addEventListener(type, handler, options);
+        removeListeners.push(() => target.removeEventListener(type, handler, options));
+      };
+      const announce = (message: string) => {
+        if (canvasStatus) canvasStatus.textContent = message;
+      };
 
       // 3D Scene Setup
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, mount.clientWidth / mount.clientHeight, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      let renderer: THREE.WebGLRenderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      } catch {
+        if (webglFallback) webglFallback.hidden = false;
+        mount.classList.add('webgl-unavailable');
+        announce('WebGL is unavailable. The textual description remains available below.');
+        branchCleanups.set(root, () => {
+          destroyed = true;
+          removeListeners.splice(0).forEach((remove) => remove());
+        });
+        return;
+      }
       renderer.setSize(mount.clientWidth, mount.clientHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -456,6 +508,22 @@
         });
       }
 
+      function updateHud() {
+        if (hudMode) hudMode.textContent = `GATE: NMOS ${gateVoltage > 0.4 ? 'CONDUCTING' : 'OFF'} (${gateVoltage.toFixed(2)}V)`;
+        if (hudElectrons) hudElectrons.textContent = `3D ELECTRONS: ${storedElectrons} e⁻ ACTIVE`;
+        if (vValText) vValText.textContent = `${gateVoltage.toFixed(2)}V`;
+      }
+
+      function updateElectronVisuals() {
+        const visibleCount = storedElectrons <= 0 ? 0 : Math.ceil((storedElectrons / 42) * electronSpheres.length);
+        electronSpheres.forEach((electron, index) => {
+          electron.mesh.visible = index < visibleCount;
+        });
+      }
+
+      updateHud();
+      updateElectronVisuals();
+
       // ----------------------------------------------------
       // BUILD 3D SCALE 2: 8×8 CROSSBAR MATRIX DIE
       // ----------------------------------------------------
@@ -585,9 +653,9 @@
             // PagedAttention: dynamic packed virtual allocation
             const pagedMap: { [key: number]: number } = {
               4: 0x2857d9, 19: 0x2857d9, 33: 0x2857d9, 52: 0x2857d9,
-              2: 0x0d9488, 45: 0x0d9488, 11: 0x0d9488,
-              12: 0x6366f1, 28: 0x6366f1,
-              58: 0x9333ea, 23: 0x9333ea,
+              2: 0x5b6470, 45: 0x5b6470, 11: 0x5b6470,
+              12: 0x2857d9, 28: 0x2857d9,
+              58: 0x5b6470, 23: 0x5b6470,
             };
             if (pagedMap[idx]) {
               mat.color.setHex(pagedMap[idx]);
@@ -607,13 +675,13 @@
               mat.emissiveIntensity = isUsed ? 0.6 : 0.3;
             } else if (idx < 16) {
               const isUsed = idx < 10;
-              mat.color.setHex(isUsed ? 0x0d9488 : 0xa63d17);
-              mat.emissive.setHex(isUsed ? 0x0d9488 : 0xa63d17);
+              mat.color.setHex(isUsed ? 0x5b6470 : 0xa63d17);
+              mat.emissive.setHex(isUsed ? 0x5b6470 : 0xa63d17);
               mat.emissiveIntensity = isUsed ? 0.6 : 0.3;
             } else if (idx < 24) {
               const isUsed = idx < 17;
-              mat.color.setHex(isUsed ? 0x6366f1 : 0xa63d17);
-              mat.emissive.setHex(isUsed ? 0x6366f1 : 0xa63d17);
+              mat.color.setHex(isUsed ? 0x2857d9 : 0xa63d17);
+              mat.emissive.setHex(isUsed ? 0x2857d9 : 0xa63d17);
               mat.emissiveIntensity = isUsed ? 0.6 : 0.3;
             } else {
               mat.color.setHex(0x334155);
@@ -623,8 +691,6 @@
           }
         });
       }
-      updateScale3Colors();
-
       // ----------------------------------------------------
       // SCALE CAMERA & ANIMATION STATE
       // ----------------------------------------------------
@@ -647,142 +713,227 @@
       camera.lookAt(cameraLookAts[0]);
 
       // State
-      let gateVoltage = 1.2;
-      let isPagedMode = true;
-      let selectedRow = 3;
+      updateScale3Colors();
 
       // Orbit Drag Controls
       let isDragging = false;
       let prevMousePos = { x: 0, y: 0 };
       let orbitOffset = { theta: 0, phi: 0 };
+      let tabSelectionLockUntil = 0;
 
-      mount.addEventListener('mousedown', (e) => {
+      const onPointerDown = (e: Event) => {
+        const pointer = e as PointerEvent;
         isDragging = true;
-        prevMousePos = { x: e.clientX, y: e.clientY };
-      });
-
-      window.addEventListener('mouseup', () => (isDragging = false));
-
-      window.addEventListener('mousemove', (e) => {
+        prevMousePos = { x: pointer.clientX, y: pointer.clientY };
+        mount.setPointerCapture?.(pointer.pointerId);
+      };
+      const onPointerUp = (e: Event) => {
+        isDragging = false;
+        const pointer = e as PointerEvent;
+        if (mount.hasPointerCapture?.(pointer.pointerId)) mount.releasePointerCapture(pointer.pointerId);
+      };
+      const onPointerMove = (e: Event) => {
         if (!isDragging) return;
-        const deltaX = e.clientX - prevMousePos.x;
-        const deltaY = e.clientY - prevMousePos.y;
-        prevMousePos = { x: e.clientX, y: e.clientY };
+        const pointer = e as PointerEvent;
+        const deltaX = pointer.clientX - prevMousePos.x;
+        const deltaY = pointer.clientY - prevMousePos.y;
+        prevMousePos = { x: pointer.clientX, y: pointer.clientY };
 
         orbitOffset.theta -= deltaX * 0.006;
         orbitOffset.phi = Math.max(-0.5, Math.min(0.8, orbitOffset.phi + deltaY * 0.006));
+        if (prefersReducedMotion) renderScene(false);
+      };
+
+      listen(mount, 'pointerdown', onPointerDown);
+      listen(mount, 'pointermove', onPointerMove);
+      listen(mount, 'pointerup', onPointerUp);
+      listen(mount, 'pointercancel', onPointerUp);
+      listen(mount, 'pointerleave', onPointerUp);
+      listen(mount, 'keydown', (event) => {
+        const keyEvent = event as KeyboardEvent;
+        const step = 0.08;
+        if (keyEvent.key === 'ArrowLeft') orbitOffset.theta -= step;
+        else if (keyEvent.key === 'ArrowRight') orbitOffset.theta += step;
+        else if (keyEvent.key === 'ArrowUp') orbitOffset.phi = Math.max(-0.5, orbitOffset.phi - step);
+        else if (keyEvent.key === 'ArrowDown') orbitOffset.phi = Math.min(0.8, orbitOffset.phi + step);
+        else if (keyEvent.key === '+' || keyEvent.key === '=') setScale(Math.min(2, targetScale + 1));
+        else if (keyEvent.key === '-' || keyEvent.key === '_') setScale(Math.max(0, targetScale - 1));
+        else return;
+        keyEvent.preventDefault();
+        if (prefersReducedMotion) renderScene(false);
       });
 
       // Scale Switcher Function
       function setScale(scaleIdx: number) {
-        targetScale = scaleIdx;
+        const nextScale = Math.max(0, Math.min(2, scaleIdx));
+        targetScale = nextScale;
 
         scaleTabs.forEach((tab, idx) => {
-          const isActive = idx === scaleIdx;
+          const isActive = idx === nextScale;
           tab.classList.toggle('active', isActive);
           tab.setAttribute('aria-selected', String(isActive));
+          tab.tabIndex = isActive ? 0 : -1;
         });
 
         ctrlPanels.forEach((p) => {
           const s = parseInt(p.dataset.ctrlScale || '0', 10);
-          p.classList.toggle('hidden', s !== scaleIdx);
+          const isActive = s === nextScale;
+          p.classList.toggle('hidden', !isActive);
+          p.hidden = !isActive;
         });
 
         if (hudChip) {
-          if (scaleIdx === 0) hudChip.textContent = '3D SILICON: 1T1C CELL (14nm FINFET & DEEP TRENCH)';
-          else if (scaleIdx === 1) hudChip.textContent = '3D SILICON: 8×8 CROSSBAR MATRIX DIE (64 BITS)';
+          if (nextScale === 0) hudChip.textContent = '3D SILICON: 1T1C CELL (14nm FINFET & DEEP TRENCH)';
+          else if (nextScale === 1) hudChip.textContent = '3D SILICON: 8×8 CROSSBAR MATRIX DIE (64 BITS)';
           else hudChip.textContent = '3D SYSTEM: GPU HBM3 MEMORY & PAGEDATTENTION';
         }
+        if (prefersReducedMotion && typeof renderScene === 'function') renderScene(false);
       }
 
-      scaleTabs.forEach((tab) => {
-        tab.addEventListener('click', () => {
+      scaleTabs.forEach((tab, tabIndex) => {
+        listen(tab, 'click', () => {
           const s = parseInt(tab.dataset.scale || '0', 10);
+          // Browser focus/scroll can emit a scroll event immediately after a
+          // tab click. Give the explicit control selection a short priority
+          // window so the scrolly observer does not hide its panel mid-click.
+          tabSelectionLockUntil = performance.now() + 500;
           setScale(s);
+        });
+        listen(tab, 'keydown', (event) => {
+          const keyEvent = event as KeyboardEvent;
+          let nextIndex = tabIndex;
+          if (keyEvent.key === 'ArrowRight' || keyEvent.key === 'ArrowDown') nextIndex = (tabIndex + 1) % scaleTabs.length;
+          else if (keyEvent.key === 'ArrowLeft' || keyEvent.key === 'ArrowUp') nextIndex = (tabIndex - 1 + scaleTabs.length) % scaleTabs.length;
+          else if (keyEvent.key === 'Home') nextIndex = 0;
+          else if (keyEvent.key === 'End') nextIndex = scaleTabs.length - 1;
+          else return;
+          keyEvent.preventDefault();
+          const nextTab = scaleTabs[nextIndex];
+          setScale(parseInt(nextTab.dataset.scale || String(nextIndex), 10));
+          nextTab.focus();
         });
       });
 
       // Button Handlers
       if (btnWrite1) {
-        btnWrite1.addEventListener('click', () => {
+        listen(btnWrite1, 'click', () => {
           gateVoltage = 1.2;
+          storedElectrons = 42;
           if (gateSlider) gateSlider.value = '1.2';
-          if (vValText) vValText.textContent = '1.2V';
           capPointLight.intensity = 4.0;
           chanMesh.visible = true;
+          gatePointLight.intensity = 2.5;
+          updateHud();
+          updateElectronVisuals();
+          announce('Memory cell written to 1: 42 electrons stored.');
         });
       }
 
       if (btnWrite0) {
-        btnWrite0.addEventListener('click', () => {
+        listen(btnWrite0, 'click', () => {
           gateVoltage = 1.2;
+          storedElectrons = 0;
           if (gateSlider) gateSlider.value = '1.2';
-          if (vValText) vValText.textContent = '1.2V';
           capPointLight.intensity = 0.2;
           chanMesh.visible = true;
+          updateHud();
+          updateElectronVisuals();
+          announce('Memory cell written to 0: capacitor discharged.');
         });
       }
 
       if (btnRead) {
-        btnRead.addEventListener('click', () => {
+        listen(btnRead, 'click', () => {
           gateVoltage = 1.2;
           capPointLight.intensity = 5.0;
-          setTimeout(() => (capPointLight.intensity = 4.0), 600);
+          updateHud();
+          announce(`Sense amplifier read ${storedElectrons > 0 ? '1' : '0'} from the memory cell.`);
+          readFlashTimeout = window.setTimeout(() => {
+            if (!destroyed) capPointLight.intensity = storedElectrons > 0 ? 4.0 : 0.2;
+          }, 600);
         });
       }
 
       if (btnLeak) {
-        btnLeak.addEventListener('click', () => {
+        listen(btnLeak, 'click', () => {
           gateVoltage = 0.0;
+          storedElectrons = Math.max(0, storedElectrons - 8);
           if (gateSlider) gateSlider.value = '0.0';
-          if (vValText) vValText.textContent = '0.0V';
-          capPointLight.intensity = Math.max(0.2, capPointLight.intensity - 1.2);
+          capPointLight.intensity = storedElectrons > 0 ? Math.max(0.2, capPointLight.intensity - 1.2) : 0.2;
           chanMesh.visible = false;
+          gatePointLight.intensity = 0.2;
+          updateHud();
+          updateElectronVisuals();
+          announce(`Charge leaked: ${storedElectrons} electrons remain.`);
         });
       }
 
       if (gateSlider) {
-        gateSlider.addEventListener('input', (e) => {
+        listen(gateSlider, 'input', (e) => {
           gateVoltage = parseFloat((e.target as HTMLInputElement).value);
-          if (vValText) vValText.textContent = `${gateVoltage.toFixed(2)}V`;
           chanMesh.visible = gateVoltage > 0.4;
           gateMesh.position.y = 2.2 - (1.2 - gateVoltage) * 0.3;
+          gatePointLight.intensity = gateVoltage > 0.4 ? 2.5 : 0.2;
+          updateHud();
+          announce(`Wordline gate voltage set to ${gateVoltage.toFixed(2)} volts.`);
         });
       }
 
+      function selectNextRow() {
+        selectedRow = (selectedRow + 1) % 8;
+        if (matrixAddrText) matrixAddrText.textContent = `WORDLINE #${selectedRow} (ADDR 0x${(selectedRow * 8).toString(16).padStart(2, '0').toUpperCase()})`;
+        matrixWordlines.forEach((wl, idx) => {
+          (wl.material as THREE.MeshStandardMaterial).color.setHex(idx === selectedRow ? 0x2857d9 : 0xb87333);
+        });
+        announce(`Wordline ${selectedRow} selected at address 0x${(selectedRow * 8).toString(16).padStart(2, '0').toUpperCase()}.`);
+      }
+
       if (btnStrobe) {
-        btnStrobe.addEventListener('click', () => {
-          selectedRow = (selectedRow + 1) % 8;
-          if (matrixAddrText) matrixAddrText.textContent = `WORDLINE #${selectedRow} (ADDR 0x${(selectedRow * 8).toString(16).padStart(2, '0').toUpperCase()})`;
-          matrixWordlines.forEach((wl, idx) => {
-            (wl.material as THREE.MeshStandardMaterial).color.setHex(idx === selectedRow ? 0x2857d9 : 0xb87333);
-          });
+        listen(btnStrobe, 'click', () => {
+          selectNextRow();
+          announce(`Strobed wordline ${selectedRow}; eight cells sensed in parallel.`);
         });
       }
 
       if (btnNextAddr) {
-        btnNextAddr.addEventListener('click', () => {
-          selectedRow = (selectedRow + 1) % 8;
-          if (matrixAddrText) matrixAddrText.textContent = `WORDLINE #${selectedRow} (ADDR 0x${(selectedRow * 8).toString(16).padStart(2, '0').toUpperCase()})`;
-          matrixWordlines.forEach((wl, idx) => {
-            (wl.material as THREE.MeshStandardMaterial).color.setHex(idx === selectedRow ? 0x2857d9 : 0xb87333);
-          });
+        listen(btnNextAddr, 'click', () => {
+          selectNextRow();
         });
+      }
+
+      function updatePagedModeLabel() {
+        if (pagedModeText) {
+          const mode = isPagedMode ? 'PagedAttention (Virtual Paging)' : 'Naive Contiguous Pre-Reservation';
+          pagedModeText.textContent = `${mode} · ${tokenBatch} tokens staged`;
+          pagedModeText.style.color = isPagedMode ? 'var(--ie-blue)' : 'var(--ie-rust)';
+        }
+        btnTogglePaged?.setAttribute('aria-pressed', String(isPagedMode));
       }
 
       if (btnTogglePaged) {
-        btnTogglePaged.addEventListener('click', () => {
+        listen(btnTogglePaged, 'click', () => {
           isPagedMode = !isPagedMode;
-          if (pagedModeText) {
-            pagedModeText.textContent = isPagedMode ? 'PagedAttention (Virtual Paging)' : 'Naive Contiguous Pre-Reservation';
-            pagedModeText.style.color = isPagedMode ? 'var(--ie-blue)' : 'var(--ie-rust)';
-          }
+          updatePagedModeLabel();
           updateScale3Colors();
+          announce(`${isPagedMode ? 'PagedAttention virtual paging' : 'Naive contiguous allocation'} selected.`);
+          if (prefersReducedMotion) renderScene(false);
         });
       }
 
+      if (btnStepTokens) {
+        listen(btnStepTokens, 'click', () => {
+          tokenBatch += 16;
+          updatePagedModeLabel();
+          announce(`Added 16 tokens. ${tokenBatch} tokens staged in the ${isPagedMode ? 'paged' : 'contiguous'} cache.`);
+          if (prefersReducedMotion) renderScene(false);
+        });
+      }
+
+      updatePagedModeLabel();
+
       // Scroll Observer
       function onScroll() {
+        if (performance.now() < tabSelectionLockUntil) return;
         const sectionRect = root.getBoundingClientRect();
         const windowHeight = window.innerHeight;
         const totalDist = sectionRect.height - windowHeight;
@@ -799,28 +950,27 @@
           if (targetScale !== 2) setScale(2);
         }
 
-        chapters.forEach((ch, idx) => {
+        chapters.forEach((ch) => {
           const chRect = ch.getBoundingClientRect();
           const isCurrent = chRect.top <= windowHeight * 0.5 && chRect.bottom >= windowHeight * 0.2;
           ch.classList.toggle('active', isCurrent);
         });
+        if (prefersReducedMotion) renderScene(false);
       }
 
-      window.addEventListener('scroll', onScroll, { passive: true });
+      listen(window, 'scroll', onScroll, { passive: true });
 
       // Resize Handler
-      window.addEventListener('resize', () => {
+      listen(window, 'resize', () => {
         camera.aspect = mount.clientWidth / mount.clientHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(mount.clientWidth, mount.clientHeight);
+        if (prefersReducedMotion) renderScene(false);
       });
 
-      // 60 FPS Render Loop
-      function animate() {
-        requestAnimationFrame(animate);
-
+      function renderScene(animateDynamics = true, delta = 0.016) {
         // Interpolate camera zoom transition
-        currentScale += (targetScale - currentScale) * 0.08;
+        currentScale = prefersReducedMotion ? targetScale : currentScale + (targetScale - currentScale) * 0.08;
         const basePos = cameraPositions[Math.min(2, Math.floor(currentScale))];
         const nextPos = cameraPositions[Math.min(2, Math.ceil(currentScale))];
         const t = currentScale % 1;
@@ -838,15 +988,15 @@
 
         // Transition Group Visibilities across scales
         group1T1C.visible = currentScale < 0.8;
-        groupMatrix.visible = currentScale >= 0.5 && currentScale < 1.6;
-        groupScale3.visible = currentScale >= 1.4;
+        groupMatrix.visible = currentScale >= 0.8 && currentScale < 1.8;
+        groupScale3.visible = currentScale >= 1.8;
 
-        if (group1T1C.visible) {
+        if (animateDynamics && group1T1C.visible) {
           // Animate 3D Electrons
           electronSpheres.forEach((e) => {
-            e.mesh.position.x += e.vx;
-            e.mesh.position.y += e.vy;
-            e.mesh.position.z += e.vz;
+            e.mesh.position.x += e.vx * delta * 60;
+            e.mesh.position.y += e.vy * delta * 60;
+            e.mesh.position.z += e.vz * delta * 60;
 
             // Bounce within 3D capacitor cylinder
             if (e.mesh.position.x < 3.5 || e.mesh.position.x > 5.5) e.vx *= -1;
@@ -855,25 +1005,97 @@
           });
         }
 
-        if (groupMatrix.visible) {
+        if (animateDynamics && groupMatrix.visible) {
           // Slow subtle rotation for 3D matrix die
-          groupMatrix.rotation.y += 0.003;
+          groupMatrix.rotation.y += 0.003 * delta * 60;
         }
 
-        if (groupScale3.visible) {
+        if (animateDynamics && groupScale3.visible) {
           // Slow subtle rotation for 3D GPU stack
-          groupScale3.rotation.y += 0.003;
+          groupScale3.rotation.y += 0.003 * delta * 60;
         }
 
         renderer.render(scene, camera);
       }
 
-      animate();
+      let previousTime = 0;
+      function animate(time: number) {
+        if (destroyed || !isVisible || prefersReducedMotion) {
+          animationFrameId = 0;
+          return;
+        }
+        const delta = previousTime ? Math.min(0.05, (time - previousTime) / 1000) : 0.016;
+        previousTime = time;
+        renderScene(true, delta);
+        animationFrameId = window.requestAnimationFrame(animate);
+      }
+
+      function startAnimation() {
+        if (!destroyed && isVisible && !prefersReducedMotion && !animationFrameId) {
+          previousTime = 0;
+          animationFrameId = window.requestAnimationFrame(animate);
+        }
+      }
+
+      function stopAnimation() {
+        if (animationFrameId) window.cancelAnimationFrame(animationFrameId);
+        animationFrameId = 0;
+      }
+
+      const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      listen(motionQuery, 'change', (event) => {
+        prefersReducedMotion = (event as MediaQueryListEvent).matches;
+        if (prefersReducedMotion) {
+          stopAnimation();
+          renderScene(false);
+        } else {
+          startAnimation();
+        }
+      });
+
+      const visibilityObserver = typeof IntersectionObserver !== 'undefined'
+        ? new IntersectionObserver((entries) => {
+            isVisible = entries[0]?.isIntersecting ?? true;
+            if (isVisible) startAnimation();
+            else stopAnimation();
+          }, { threshold: 0.01 })
+        : null;
+      visibilityObserver?.observe(root);
+
+      renderScene(false);
+      startAnimation();
+
+      const cleanup = () => {
+        if (destroyed) return;
+        destroyed = true;
+        stopAnimation();
+        if (readFlashTimeout) window.clearTimeout(readFlashTimeout);
+        visibilityObserver?.disconnect();
+        removeListeners.splice(0).forEach((remove) => remove());
+        scene.traverse((object) => {
+          const mesh = object as THREE.Mesh;
+          if (mesh.geometry) mesh.geometry.dispose();
+          if (Array.isArray(mesh.material)) mesh.material.forEach((material) => material.dispose());
+          else if (mesh.material) mesh.material.dispose();
+        });
+        renderer.dispose();
+        renderer.domElement.remove();
+        branchCleanups.delete(root);
+      };
+      branchCleanups.set(root, cleanup);
     });
   }
 
+  function cleanupBranch3D() {
+    document.querySelectorAll<HTMLElement>('[data-branch-3d]').forEach((root) => branchCleanups.get(root)?.());
+  }
+
   initBranch3D();
-  document.addEventListener('astro:page-load', initBranch3D);
+  if (!branchLifecycleBound) {
+    document.addEventListener('astro:page-load', initBranch3D);
+    document.addEventListener('astro:before-swap', cleanupBranch3D);
+    branchLifecycleBound = true;
+  }
 </script>
 
 <style>
@@ -1042,6 +1264,42 @@
     height: 520px;
     background: radial-gradient(circle at center, rgba(40, 87, 217, 0.04) 0%, transparent 70%);
     cursor: grab;
+    touch-action: none;
+    outline: none;
+  }
+
+  .three-mount-area:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--ie-blue);
+  }
+
+  .three-mount-area canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .webgl-fallback {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    background: var(--ie-surface);
+    color: var(--ie-ink);
+  }
+
+  .webgl-fallback[hidden] {
+    display: none;
+  }
+
+  .webgl-fallback p {
+    max-width: 42ch;
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--ie-ink-secondary);
   }
 
   .three-mount-area:active {
@@ -1143,11 +1401,21 @@
     line-height: 1.4;
   }
 
+  .canvas-status {
+    min-height: 1.1em;
+    margin: 0.65rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--ie-muted);
+  }
+
   /* Narrative Scrolling Column */
   .scrolly-narrative-track {
     display: flex;
     flex-direction: column;
-    gap: 22rem;
+    /* Keep enough runway for each scale transition without leaving a full
+       viewport of empty paper between explanatory chapters. */
+    gap: 14rem;
     padding-block: 2rem 14rem;
   }
 
@@ -1245,7 +1513,29 @@
     .narrative-chapter {
       opacity: 1;
     }
+
+    .three-mount-area {
+      height: min(520px, 72vw);
+      min-height: 320px;
+    }
+
+    .canvas-hud-bar {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .hud-left, .hud-right {
+      flex-wrap: wrap;
+      gap: 0.5rem 0.85rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scale-tab,
+    .narrative-chapter,
+    .sim-btn {
+      transition: none;
+    }
   }
 </style>
-
-

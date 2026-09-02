@@ -42,7 +42,6 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
       ? new URL(post.data.image, Astro.site).toString()
       : undefined
   }
-  variant="instrumented"
 >
   <main class="container post-layout instrumented-essay">
     <article class="post-content">
@@ -105,6 +104,8 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
               <img
                 src={post.data.image}
                 alt={post.data.heroCaption || post.data.title}
+                width="1920"
+                height="1072"
                 class="post-hero-img"
                 loading="eager"
                 decoding="async"

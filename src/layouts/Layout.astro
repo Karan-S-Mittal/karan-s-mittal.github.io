@@ -13,7 +13,6 @@ interface Props {
   type?: string;
   pubDate?: Date;
   robots?: string;
-  variant?: 'default' | 'instrumented';
 }
 const {
   title,
@@ -22,20 +21,18 @@ const {
   type = "website",
   pubDate,
   robots,
-  variant = 'instrumented',
 } = Astro.props;
-
-const isInstrumented = variant === 'instrumented';
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const rssUrl = new URL('/rss.xml', Astro.site).toString();
 ---
 <!DOCTYPE html>
-<html lang="en" class:list={{ instrumented: isInstrumented }}>
+<html lang="en" class="instrumented">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content={isInstrumented ? '#F7F5EF' : '#f8f9fc'} />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#F7F5EF" />
   <title>{title}</title>
   <meta name="description" content={description} />
   {robots && <meta name="robots" content={robots} />}
@@ -57,7 +54,8 @@ const rssUrl = new URL('/rss.xml', Astro.site).toString();
   <!-- Instant Theme Initializer (No Flash) -->
   <script is:inline>
     (function () {
-      const stored = localStorage.getItem('theme');
+      let stored = null;
+      try { stored = localStorage.getItem('theme'); } catch (_) { /* storage may be blocked */ }
       if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
       } else {
@@ -66,51 +64,57 @@ const rssUrl = new URL('/rss.xml', Astro.site).toString();
     })();
   </script>
 </head>
-<body class:list={{ instrumented: isInstrumented }}>
+<body class="instrumented">
   <a class="skip-link" href="#main-content">Skip to content</a>
-  <Header variant={variant} />
+  <Header />
   <div id="main-content">
     <slot />
   </div>
-  <Footer variant={variant} />
+  <Footer />
 
   <script>
-    // Copy code buttons
-    document.querySelectorAll('pre').forEach((pre) => {
-      const button = document.createElement('button');
-      button.className = 'copy-code';
-      button.textContent = 'Copy';
-      pre.appendChild(button);
+    let headerScrollCleanup = null;
 
-      button.addEventListener('click', async () => {
-        const code = pre.querySelector('code');
-        const text = code ? code.textContent : pre.textContent;
-        try {
-          await navigator.clipboard.writeText(text);
-          button.textContent = 'Copied';
-          button.classList.add('copied');
-          setTimeout(() => {
-            button.textContent = 'Copy';
-            button.classList.remove('copied');
-          }, 2000);
-        } catch (err) {
-          button.textContent = 'Failed';
-          setTimeout(() => { button.textContent = 'Copy'; }, 2000);
-        }
-      });
-    });
+    function setupPageEnhancements() {
+      // Astro client navigation can replace page content without reloading
+      // this module. Make enhancement setup idempotent for each new document.
+      document.querySelectorAll('pre').forEach((pre) => {
+        if (pre.querySelector('.copy-code')) return;
+        const button = document.createElement('button');
+        button.className = 'copy-code';
+        button.type = 'button';
+        button.textContent = 'Copy';
+        pre.appendChild(button);
 
-    // Header scroll hairline
-    const header = document.querySelector('header');
-    if (header) {
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 10) {
-          header.classList.add('scrolled');
-        } else {
-          header.classList.remove('scrolled');
-        }
+        button.addEventListener('click', async () => {
+          const code = pre.querySelector('code');
+          const text = code ? code.textContent : pre.textContent;
+          try {
+            await navigator.clipboard.writeText(text || '');
+            button.textContent = 'Copied';
+            button.classList.add('copied');
+            setTimeout(() => {
+              button.textContent = 'Copy';
+              button.classList.remove('copied');
+            }, 2000);
+          } catch (_) {
+            button.textContent = 'Failed';
+            setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+          }
+        });
       });
+
+      headerScrollCleanup?.();
+      const header = document.querySelector('header');
+      if (!header) return;
+      const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 10);
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+      headerScrollCleanup = () => window.removeEventListener('scroll', onScroll);
     }
+
+    setupPageEnhancements();
+    document.addEventListener('astro:page-load', setupPageEnhancements);
   </script>
 </body>
 </html>

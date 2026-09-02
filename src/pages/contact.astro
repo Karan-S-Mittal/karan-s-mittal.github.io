@@ -79,7 +79,16 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&tra
             marginwidth="0"
             title="Start an engineering conversation with Karan Mittal"
             onload="document.getElementById('form-skeleton')?.classList.add('loaded')"
+            onerror="document.getElementById('form-skeleton')?.classList.add('loaded'); document.getElementById('form-error')?.removeAttribute('hidden')"
           ></iframe>
+          <p id="form-error" class="form-error" role="alert" hidden>
+            The intake form could not be loaded. <a href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>Send the project brief by email instead</a>.
+          </p>
+          <noscript>
+            <p class="form-fallback">
+              This form needs JavaScript to load. <a href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>Send the project brief by email instead</a>.
+            </p>
+          </noscript>
         </div>
       </section>
     </div>
@@ -341,6 +350,23 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&tra
     width: 100%;
     border: 0;
     border-radius: var(--radius, 6px);
+  }
+
+  .form-error,
+  .form-fallback {
+    margin: 1rem 0 0;
+    padding: 0.8rem 1rem;
+    border-left: 2px solid var(--ie-rust);
+    background: var(--ie-rust-soft);
+    color: var(--ie-ink-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .form-error a,
+  .form-fallback a {
+    color: var(--ie-blue);
+    font-weight: 600;
   }
 
   @media (max-width: 840px) {

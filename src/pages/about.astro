@@ -78,7 +78,7 @@ const { communities } = communitiesData;
       <div class="community-list">
         {communities.map((c) => (
           <div class="community-row">
-            <img src={c.logo} alt={c.name} class="community-logo" />
+            <img src={c.logo} alt={c.name} class="community-logo" loading="lazy" decoding="async" />
             <div class="community-info">
               <p class="community-name">{c.name}</p>
               <p class="community-desc">{c.description}</p>

@@ -16,12 +16,21 @@ html.instrumented {
   --ie-rust-soft: #f8e9df;
   --ie-code: #15181d;
 
-  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
   --font-serif: 'IBM Plex Serif', Georgia, serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --ie-type-label: 0.8125rem;
-  --ie-type-small: 0.9375rem;
-  --ie-type-body: 1.125rem;
+
+  /* Standardized Typography Scale (12px minimum, 13px standard metadata) */
+  --ie-type-micro: 0.75rem;    /* 12px: badges, live indicator dots only */
+  --ie-type-label: 0.8125rem;  /* 13px: metadata, tags, registers, table dates */
+  --ie-type-ui: 0.875rem;      /* 14px: buttons, navigation links, controls */
+  --ie-type-small: 0.96875rem; /* 15.5px: card descriptions, captions, secondary copy */
+  --ie-type-base: 1rem;        /* 16px: standard base copy */
+  --ie-type-body: 1.125rem;    /* 18px: essay reading prose & hero lead */
+  --ie-type-h4: 1.1875rem;     /* 19px: sub-headers */
+  --ie-type-h3: 1.35rem;       /* 21.6px: card and panel titles */
+  --ie-type-h2: clamp(2.2rem, 4.2vw, 3.6rem); /* major section titles */
+  --ie-type-h1: clamp(2.8rem, 5.5vw, 4.8rem); /* page display titles */
 
   --bg: var(--ie-canvas);
   --bg-elevated: var(--ie-surface);
@@ -143,5 +152,30 @@ html.instrumented .copy-code {
 @media (max-width: 720px) {
   html.instrumented body {
     font-size: 17px;
+  }
+}
+
+/* Essay pacing: preserve the instrumented header hierarchy while reducing the
+   amount of setup before the first figure on small screens. */
+html.instrumented .instrumented-essay .post-header {
+  margin-bottom: 3.5rem;
+}
+
+html.instrumented .instrumented-essay .post-content > h2 {
+  margin-top: 4.5rem;
+}
+
+@media (max-width: 640px) {
+  html.instrumented .instrumented-essay .post-header {
+    margin-bottom: 2rem;
+    padding-top: 1.25rem;
+  }
+
+  html.instrumented .instrumented-essay .post-hero-figure {
+    margin-top: 1.75rem;
+  }
+
+  html.instrumented .instrumented-essay .post-content > h2 {
+    margin-top: 3.75rem;
   }
 }

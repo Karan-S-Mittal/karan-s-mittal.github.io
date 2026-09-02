@@ -28,10 +28,25 @@ export abstract class BaseThreeElement extends HTMLElement {
   private intersectionObserver: IntersectionObserver | null = null;
   private unsubscribeTheme: (() => void) | null = null;
   private prefersReducedMotion: boolean = false;
+  private reducedMotionQuery: MediaQueryList | null = null;
+  private readonly reducedMotionListener = (event: MediaQueryListEvent) => {
+    this.prefersReducedMotion = event.matches;
+    if (event.matches) {
+      this.stopAnimation();
+    } else if (this.isVisible && this.shouldAnimate()) {
+      this.startAnimation();
+    }
+  };
 
   connectedCallback() {
     this.container = this.querySelector('.three-canvas-container') || this;
     this.themeColors = ThemeBridge.getColors();
+
+    // Resolve this before initScene: child scenes may call startAnimation() while
+    // they are being constructed. Reduced-motion must be respected from frame 1.
+    this.reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)') || null;
+    this.prefersReducedMotion = this.reducedMotionQuery?.matches || false;
+    this.reducedMotionQuery?.addEventListener('change', this.reducedMotionListener);
 
     this.initThree();
     this.initScene();
@@ -41,8 +56,6 @@ export abstract class BaseThreeElement extends HTMLElement {
       this.onThemeChange(colors);
       this.renderFrame(performance.now());
     });
-
-    this.prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches || false;
 
     this.initObservers();
     this.handleResize();
@@ -63,6 +76,8 @@ export abstract class BaseThreeElement extends HTMLElement {
       this.unsubscribeTheme();
       this.unsubscribeTheme = null;
     }
+    this.reducedMotionQuery?.removeEventListener('change', this.reducedMotionListener);
+    this.reducedMotionQuery = null;
 
     this.controls?.dispose();
     this.disposeThree();
@@ -202,10 +217,12 @@ export abstract class BaseThreeElement extends HTMLElement {
       }
     });
 
-    this.renderer.dispose();
-    this.renderer.forceContextLoss();
-    if (this.renderer.domElement.parentElement) {
-      this.renderer.domElement.parentElement.removeChild(this.renderer.domElement);
+    if (this.renderer) {
+      this.renderer.dispose();
+      this.renderer.forceContextLoss();
+      if (this.renderer.domElement.parentElement) {
+        this.renderer.domElement.parentElement.removeChild(this.renderer.domElement);
+      }
     }
   }
 

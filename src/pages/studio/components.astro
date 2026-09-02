@@ -368,7 +368,7 @@ const palette = [
                 <div class="utility-row icon-row"><span><Icon name="briefcase" />Work</span><span><Icon name="wrench" />Build</span><span><Icon name="book-open" />Learn</span><span><Icon name="users" />Community</span></div>
 
                 <p class="sample-label">Evidence table</p>
-                <div class="table-wrap"><table><thead><tr><th>State</th><th>Meaning</th><th>Token</th></tr></thead><tbody><tr><td>Structure</td><td>Nodes, links, primary action</td><td><code>--blue-500</code></td></tr><tr><td>Attention</td><td>Bottleneck, decision, constraint</td><td><code>--pink-400</code></td></tr><tr><td>Secondary</td><td>Async / inferred edges, metadata</td><td><code>--lavender-400</code></td></tr></tbody></table></div>
+                <div class="table-wrap"><table><thead><tr><th>State</th><th>Meaning</th><th>Token</th></tr></thead><tbody><tr><td>Structure</td><td>Nodes, links, primary action</td><td><code>--ie-blue</code></td></tr><tr><td>Attention</td><td>Bottleneck, decision, constraint</td><td><code>--ie-rust</code></td></tr><tr><td>Secondary</td><td>Async / inferred edges, metadata</td><td><code>--ie-muted</code></td></tr></tbody></table></div>
               </div>
             </article>
           </ComponentSpecimen>
@@ -377,7 +377,7 @@ const palette = [
             id="meta-label"
             index="11"
             title="Meta label"
-            description="Canonical editorial index: number in blue, separator in lavender, category in secondary ink. Mono, uppercase, 0.05em tracking."
+            description="Canonical editorial index: number in blue, separator in muted rule, category in secondary ink. Mono, uppercase, 0.05em tracking."
             source="MetaLabel.astro"
           >
             <div class="metalabel-row">
@@ -453,7 +453,7 @@ const palette = [
             id="dark-plane"
             index="16"
             title="Dark plane"
-            description="Darkness is semantic: conclusion, decision, final CTA. Ink surface with a soft radial blue glow — never a pink primary action here."
+            description="Darkness is semantic: conclusion, decision, final CTA. Ink surface with a soft radial blue glow — never a colour accent for the primary action here."
             source="DarkPlane.astro"
           >
             <DarkPlane>
@@ -516,6 +516,15 @@ const palette = [
     </div>
   </main>
 </Layout>
+
+<style>
+  /* On narrow screens, let the showroom explain itself before presenting its
+     long navigation index. The index remains available below the content. */
+  @media (max-width: 980px) {
+    #showroom-page .catalog-main { order: 1; }
+    #showroom-page .catalog-sidebar { order: 2; }
+  }
+</style>
 
 <script>
   function initComponentShowroom() {

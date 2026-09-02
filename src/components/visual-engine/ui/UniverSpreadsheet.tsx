@@ -409,7 +409,7 @@ export const UniverSpreadsheet: React.FC<UniverSpreadsheetProps> = ({
                       aria-label={`Point ${p.id} Y value`}
                     />
                     {activeCell?.row === idx && activeCell.col === 'y' && (
-                      <span className="cell-fill-handle fill-handle-purple" title="Drag to fill"></span>
+                      <span className="cell-fill-handle fill-handle-secondary" title="Drag to fill"></span>
                     )}
                   </td>
 
@@ -636,15 +636,15 @@ export const UniverSpreadsheet: React.FC<UniverSpreadsheetProps> = ({
         }
 
         .tool-btn.heatmap-toggle {
-          background: #fdf2f8;
-          border-color: #fbcfe8;
-          color: #9d174d;
+          background: var(--signal-emphasis, var(--ie-rust-soft, #f8e9df));
+          border-color: var(--ie-rust, #a63d17);
+          color: var(--ie-rust, #a63d17);
           font-weight: 600;
         }
 
         .tool-btn.heatmap-toggle.tool-active {
-          background: #ec4899;
-          border-color: #db2777;
+          background: var(--ie-rust, #a63d17);
+          border-color: var(--ie-rust, #a63d17);
           color: #ffffff;
         }
 
@@ -677,9 +677,9 @@ export const UniverSpreadsheet: React.FC<UniverSpreadsheetProps> = ({
         }
 
         .pill-intercept {
-          background: #f5f3ff;
-          border-color: #ddd6fe;
-          color: #6d28d9;
+          background: var(--surface-subtle, var(--ie-surface-raised, #fbfaf6));
+          border-color: var(--border-muted, var(--ie-rule-strong, #b9bdc4));
+          color: var(--ie-muted, #5b6470);
         }
 
         .pill-ssr {
@@ -752,8 +752,8 @@ export const UniverSpreadsheet: React.FC<UniverSpreadsheetProps> = ({
         }
 
         .token-ref-y {
-          color: #7c3aed;
-          background: #f5f3ff;
+          color: var(--ie-muted, #5b6470);
+          background: var(--surface-subtle, var(--ie-surface-raised, #fbfaf6));
         }
 
         .token-ref-x {
@@ -767,7 +767,7 @@ export const UniverSpreadsheet: React.FC<UniverSpreadsheetProps> = ({
         }
 
         .token-ref-b {
-          color: #9333ea;
+          color: var(--ie-muted, #5b6470);
           font-weight: 700;
         }
 
@@ -867,8 +867,8 @@ export const UniverSpreadsheet: React.FC<UniverSpreadsheetProps> = ({
         }
 
         .tag-x { background: #dbeafe; color: #1e40af; }
-        .tag-y { background: #f3e8ff; color: #6b21a8; }
-        .tag-res { background: #ffe4e6; color: #9f1239; }
+        .tag-y { background: var(--surface-subtle, var(--ie-surface-raised, #fbfaf6)); color: var(--ie-muted, #5b6470); }
+        .tag-res { background: var(--signal-emphasis, var(--ie-rust-soft, #f8e9df)); color: var(--ie-rust, #a63d17); }
 
         /* Row Headers & Cells */
         .row-num-hdr {
@@ -916,7 +916,7 @@ export const UniverSpreadsheet: React.FC<UniverSpreadsheetProps> = ({
         }
 
         .input-x { color: #1d4ed8; }
-        .input-y { color: #7e22ce; }
+        .input-y { color: var(--ie-muted, #5b6470); }
 
         /* Focus & Selection Frame with Corner Fill-Handle */
         .cell-focused {
@@ -931,7 +931,7 @@ export const UniverSpreadsheet: React.FC<UniverSpreadsheetProps> = ({
         }
 
         .cell-focused-y {
-          outline: 2px solid #9333ea !important;
+          outline: 2px solid var(--ie-muted, #5b6470) !important;
         }
 
         .cell-fill-handle {
@@ -947,14 +947,14 @@ export const UniverSpreadsheet: React.FC<UniverSpreadsheetProps> = ({
         }
 
         .fill-handle-blue { background: #2563eb; }
-        .fill-handle-purple { background: #9333ea; }
+        .fill-handle-secondary { background: var(--ie-muted, #5b6470); }
 
         .row-drag-selected {
           background: #e0f2fe !important;
         }
 
         .res-pos { color: #0284c7; font-weight: 600; }
-        .res-neg { color: #e11d48; font-weight: 600; }
+        .res-neg { color: var(--ie-rust, #a63d17); font-weight: 600; }
         .sq-val { color: #b45309; font-weight: 600; }
 
         .del-col-hdr { width: 30px; text-align: center; }

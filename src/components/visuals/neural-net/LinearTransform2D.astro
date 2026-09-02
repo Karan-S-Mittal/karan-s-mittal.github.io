@@ -13,7 +13,7 @@ interface Props {
 }
 
 const {
-  caption = '2D linear transformation visualizer demonstrating how matrix multiplication T(v) = Av bends the coordinate grid, scales area by the determinant det(A), and maps basis vectors î (blue) and ĵ (coral).',
+  caption = '2D linear transformation visualizer demonstrating how matrix multiplication T(v) = Av bends the coordinate grid, scales area by the determinant det(A), and maps basis vectors î (blue) and ĵ (rust).',
   exhibit = '02',
   title = '2D Linear Transformation & Coordinate Grid Warping Engine',
 } = Astro.props;
@@ -325,7 +325,7 @@ const {
       const det = a * d - b * c;
       if (this.detVal) {
         this.detVal.textContent = `det(A) = ${det.toFixed(2)}`;
-        this.detVal.style.color = Math.abs(det) < 0.001 ? 'var(--pink-400)' : 'var(--accent)';
+        this.detVal.style.color = Math.abs(det) < 0.001 ? 'var(--ie-rust)' : 'var(--ie-blue)';
       }
     }
 
@@ -441,7 +441,7 @@ const {
       // 4. Draw Basis Vector î (Anchor Blue #2676AA)
       this.drawVector(ctx, p0, pI, this.themeColors.accent, 'î');
 
-      // 5. Draw Basis Vector ĵ (Signal Warm Coral #FFAFCC)
+      // 5. Draw Basis Vector ĵ (Constraint Rust)
       this.drawVector(ctx, p0, pJ, this.themeColors.signalWarm, 'ĵ');
 
       // 6. Draw Origin Dot

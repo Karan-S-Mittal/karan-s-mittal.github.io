@@ -28,8 +28,8 @@ const {
         <marker id="csc-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
           <path d="M 0 0 L 8 3 L 0 6 Z" fill="#2563EB" />
         </marker>
-        <marker id="csc-arrow-purple" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-          <path d="M 0 0 L 8 3 L 0 6 Z" fill="#7C3AED" />
+        <marker id="csc-arrow-secondary" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <path d="M 0 0 L 8 3 L 0 6 Z" fill="var(--ie-muted, #5B6470)" />
         </marker>
       </defs>
 
@@ -42,32 +42,32 @@ const {
         <text x="14" y="19" font-family="var(--font-mono, monospace)" font-size="11" font-weight="700" fill="#1E293B">
           DMatrix CSC In-Memory Block (Contiguous 64-bit Aligned Allocation)
         </text>
-        <text x="678" y="19" text-anchor="end" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#059669">
+        <text x="678" y="19" text-anchor="end" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-blue, #2857D9)">
           ✓ Pre-Sorted Once at Ingestion
         </text>
 
         <!-- Array 1: colPtr[] -->
         <g transform="translate(16, 42)">
-          <rect x="0" y="0" width="76" height="26" rx="4" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1" />
-          <text x="38" y="17" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10.5" font-weight="700" fill="#6D28D9">colPtr[]</text>
+          <rect x="0" y="0" width="76" height="26" rx="4" fill="var(--ie-surface-raised, #FBFAF6)" stroke="var(--ie-rule-strong, #B9BDC4)" stroke-width="1" />
+          <text x="38" y="17" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10.5" font-weight="700" fill="var(--ie-muted, #5B6470)">colPtr[]</text>
 
           <g transform="translate(86, 0)">
-            <rect x="0" y="0" width="48" height="26" rx="3" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="1.2" />
-            <text x="24" y="17" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="11" font-weight="700" fill="#5B21B6">0</text>
+            <rect x="0" y="0" width="48" height="26" rx="3" fill="var(--ie-blue-soft, #E8EEFF)" stroke="var(--ie-blue, #2857D9)" stroke-width="1.2" />
+            <text x="24" y="17" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="11" font-weight="700" fill="var(--ie-blue, #2857D9)">0</text>
 
-            <rect x="54" y="0" width="48" height="26" rx="3" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="1.2" />
-            <text x="78" y="17" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="11" font-weight="700" fill="#5B21B6">3</text>
+            <rect x="54" y="0" width="48" height="26" rx="3" fill="var(--ie-blue-soft, #E8EEFF)" stroke="var(--ie-blue, #2857D9)" stroke-width="1.2" />
+            <text x="78" y="17" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="11" font-weight="700" fill="var(--ie-blue, #2857D9)">3</text>
 
-            <rect x="108" y="0" width="48" height="26" rx="3" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="1.2" />
-            <text x="132" y="17" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="11" font-weight="700" fill="#5B21B6">5</text>
+            <rect x="108" y="0" width="48" height="26" rx="3" fill="var(--ie-blue-soft, #E8EEFF)" stroke="var(--ie-blue, #2857D9)" stroke-width="1.2" />
+            <text x="132" y="17" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="11" font-weight="700" fill="var(--ie-blue, #2857D9)">5</text>
 
-            <rect x="162" y="0" width="48" height="26" rx="3" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="1.2" />
-            <text x="186" y="17" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="11" font-weight="700" fill="#5B21B6">8</text>
+            <rect x="162" y="0" width="48" height="26" rx="3" fill="var(--ie-blue-soft, #E8EEFF)" stroke="var(--ie-blue, #2857D9)" stroke-width="1.2" />
+            <text x="186" y="17" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="11" font-weight="700" fill="var(--ie-blue, #2857D9)">8</text>
 
             <!-- Pointer Lines to Feature Blocks -->
-            <path d="M 24 28 L 24 46" stroke="#7C3AED" stroke-width="1.5" marker-end="url(#csc-arrow-purple)" />
-            <path d="M 78 28 L 160 46" stroke="#7C3AED" stroke-width="1.5" marker-end="url(#csc-arrow-purple)" />
-            <path d="M 132 28 L 265 46" stroke="#7C3AED" stroke-width="1.5" marker-end="url(#csc-arrow-purple)" />
+            <path d="M 24 28 L 24 46" stroke="var(--ie-muted, #5B6470)" stroke-width="1.5" marker-end="url(#csc-arrow-secondary)" />
+            <path d="M 78 28 L 160 46" stroke="var(--ie-muted, #5B6470)" stroke-width="1.5" marker-end="url(#csc-arrow-secondary)" />
+            <path d="M 132 28 L 265 46" stroke="var(--ie-muted, #5B6470)" stroke-width="1.5" marker-end="url(#csc-arrow-secondary)" />
 
             <text x="225" y="17" font-family="var(--font-mono, monospace)" font-size="9.5" fill="#64748B">
               ← Feature Slices (0..3 = Feat 0, 3..5 = Feat 1, 5..8 = Feat 2)
@@ -92,21 +92,21 @@ const {
             <text x="125" y="18" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#1E40AF">0.89</text>
 
             <!-- Col 1 range (Green) -->
-            <rect x="158" y="0" width="46" height="28" rx="3" fill="#DCFCE7" stroke="#10B981" stroke-width="1.2" />
-            <text x="181" y="18" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#065F46">1.20</text>
+            <rect x="158" y="0" width="46" height="28" rx="3" fill="var(--ie-surface-raised, #FBFAF6)" stroke="var(--ie-rule-strong, #B9BDC4)" stroke-width="1.2" />
+            <text x="181" y="18" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-muted, #5B6470)">1.20</text>
 
-            <rect x="209" y="0" width="46" height="28" rx="3" fill="#DCFCE7" stroke="#10B981" stroke-width="1.2" />
-            <text x="232" y="18" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#065F46">4.50</text>
+            <rect x="209" y="0" width="46" height="28" rx="3" fill="var(--ie-surface-raised, #FBFAF6)" stroke="var(--ie-rule-strong, #B9BDC4)" stroke-width="1.2" />
+            <text x="232" y="18" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-muted, #5B6470)">4.50</text>
 
             <!-- Col 2 range (Amber) -->
-            <rect x="265" y="0" width="46" height="28" rx="3" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.2" />
-            <text x="288" y="18" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#92400E">10.1</text>
+            <rect x="265" y="0" width="46" height="28" rx="3" fill="var(--ie-rust-soft, #F8E9DF)" stroke="var(--ie-rust, #A63D17)" stroke-width="1.2" />
+            <text x="288" y="18" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-rust, #A63D17)">10.1</text>
 
-            <rect x="316" y="0" width="46" height="28" rx="3" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.2" />
-            <text x="339" y="18" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#92400E">15.4</text>
+            <rect x="316" y="0" width="46" height="28" rx="3" fill="var(--ie-rust-soft, #F8E9DF)" stroke="var(--ie-rust, #A63D17)" stroke-width="1.2" />
+            <text x="339" y="18" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-rust, #A63D17)">15.4</text>
 
-            <rect x="367" y="0" width="46" height="28" rx="3" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.2" />
-            <text x="390" y="18" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#92400E">22.0</text>
+            <rect x="367" y="0" width="46" height="28" rx="3" fill="var(--ie-rust-soft, #F8E9DF)" stroke="var(--ie-rust, #A63D17)" stroke-width="1.2" />
+            <text x="390" y="18" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-rust, #A63D17)">22.0</text>
 
             <text x="430" y="18" font-family="var(--font-mono, monospace)" font-size="9.5" fill="#475569">
               ← Pre-Sorted Float32 Values
@@ -167,18 +167,18 @@ const {
 
           <!-- Thread 1 -->
           <g transform="translate(225, 28)">
-            <rect x="0" y="0" width="195" height="52" rx="4" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1" />
-            <text x="10" y="16" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#065F46">WORKER THREAD 1</text>
-            <text x="10" y="32" font-family="var(--font-mono, monospace)" font-size="9" fill="#047857">Scans Feature 1 (vals 3..5)</text>
-            <text x="10" y="44" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="700" fill="#059669">✓ Linear L1 Streaming</text>
+            <rect x="0" y="0" width="195" height="52" rx="4" fill="var(--ie-surface-raised, #FBFAF6)" stroke="var(--ie-rule-strong, #B9BDC4)" stroke-width="1" />
+            <text x="10" y="16" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-ink, #171A1F)">WORKER THREAD 1</text>
+            <text x="10" y="32" font-family="var(--font-mono, monospace)" font-size="9" fill="var(--ie-muted, #5B6470)">Scans Feature 1 (vals 3..5)</text>
+            <text x="10" y="44" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="700" fill="var(--ie-blue, #2857D9)">✓ Linear L1 Streaming</text>
           </g>
 
           <!-- Thread 2 -->
           <g transform="translate(436, 28)">
-            <rect x="0" y="0" width="210" height="52" rx="4" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1" />
-            <text x="10" y="16" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#92400E">WORKER THREAD 2</text>
-            <text x="10" y="32" font-family="var(--font-mono, monospace)" font-size="9" fill="#B45309">Scans Feature 2 (vals 5..8)</text>
-            <text x="10" y="44" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="700" fill="#D97706">✓ Independent Best Split</text>
+            <rect x="0" y="0" width="210" height="52" rx="4" fill="var(--ie-rust-soft, #F8E9DF)" stroke="var(--ie-rust, #A63D17)" stroke-width="1" />
+            <text x="10" y="16" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-rust, #A63D17)">WORKER THREAD 2</text>
+            <text x="10" y="32" font-family="var(--font-mono, monospace)" font-size="9" fill="var(--ie-rust, #A63D17)">Scans Feature 2 (vals 5..8)</text>
+            <text x="10" y="44" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="700" fill="var(--ie-rust, #A63D17)">✓ Independent Best Split</text>
           </g>
         </g>
       </g>
@@ -189,10 +189,10 @@ const {
 <style>
   .csc-diagram-wrap {
     width: 100%;
-    background: #FFFFFF;
+    background: var(--ie-surface, #FFFFFF);
     border-radius: var(--radius-card, 10px);
     overflow: hidden;
-    box-shadow: 0 4px 16px rgba(162, 210, 255, 0.12);
+    box-shadow: none;
   }
 
   .csc-svg {

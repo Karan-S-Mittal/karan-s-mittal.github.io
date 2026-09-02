@@ -1,8 +1,9 @@
 ---
 /**
  * NeuralNet3D.astro
- * 3Blue1Brown-inspired 3D Interactive Neural Network & Signal Flow Visualizer.
- * Built on BaseThreeElement with forward activation pulses and backprop gradient waves.
+ * 3Blue1Brown-grade Guided 3D Neural Storyline Engine.
+ * Built on BaseThreeElement with episodic mathematical narrative progression,
+ * forward inference activation pulses, backpropagation gradient waves, and dynamic sparse subnetting.
  */
 import Exhibit from '../../editorial/Exhibit.astro';
 
@@ -10,18 +11,14 @@ interface Props {
   caption?: string;
   exhibit?: string;
   layers?: number[] | string | number;
-  mode?: 'forward' | 'backward';
-  pruning?: number;
   speed?: number;
   title?: string;
 }
 
 const {
-  caption = '3D interactive neural network visualization with dynamic activation signal flow, positive/negative synaptic weight polarity, and reversible backward propagation gradient waves.',
+  caption = '3D interactive neural network visualization with guided step-by-step narrative chapters, dynamic forward activation flow, and backpropagation gradient waves.',
   exhibit = '01',
   layers = [4, 7, 7, 3],
-  mode = 'forward',
-  pruning = 0.15,
   speed = 1.0,
   title = '3D Neural Network Signal & Gradient Propagation Engine',
 } = Astro.props;
@@ -48,238 +45,371 @@ if (!parsedLayers.length) parsedLayers = [4, 7, 7, 3];
 const layersJson = JSON.stringify(parsedLayers);
 ---
 
-<Exhibit exhibit={exhibit} title={title} badge="3D NEURAL VISUAL ENGINE" caption={caption} wide>
+<Exhibit exhibit={exhibit} title={title} badge="3D STORYLINE ENGINE" caption={caption} wide>
   <neural-net-3d
-    class="nn3d-root"
+    class="nn3d-story-root"
+    aria-label={title}
     data-layers={layersJson}
-    data-mode={mode}
-    data-pruning={pruning.toString()}
     data-speed={speed.toString()}
   >
-    <!-- Canvas Surface -->
-    <div class="three-canvas-container" data-canvas-container>
-      <div class="touch-overlay" data-touch-overlay>
-        <span>Tap to orbit 3D ↺</span>
+    <!-- TOP STORY CHAPTER BAR -->
+    <div class="story-chapter-bar" role="tablist" aria-label="3D Neural Story Chapters">
+      <div class="chapter-tabs">
+        <button type="button" role="tab" class="chapter-tab active" data-chapter="0" id="nn-tab-0" aria-selected="true">
+          <span class="ch-num">01</span>
+          <span class="ch-title">Input Vector</span>
+        </button>
+        <button type="button" role="tab" class="chapter-tab" data-chapter="1" id="nn-tab-1" aria-selected="false">
+          <span class="ch-num">02</span>
+          <span class="ch-title">Forward Pulses</span>
+        </button>
+        <button type="button" role="tab" class="chapter-tab" data-chapter="2" id="nn-tab-2" aria-selected="false">
+          <span class="ch-num">03</span>
+          <span class="ch-title">Gradient Wave</span>
+        </button>
+        <button type="button" role="tab" class="chapter-tab" data-chapter="3" id="nn-tab-3" aria-selected="false">
+          <span class="ch-num">04</span>
+          <span class="ch-title">Sparse Subnet</span>
+        </button>
+      </div>
+
+      <div class="story-playback-controls">
+        <button type="button" class="story-play-btn" data-story-play aria-label="Play animated story progression" aria-pressed="false">
+          <span class="play-icon" aria-hidden="true">▶</span>
+          <span class="play-label">Play Story</span>
+        </button>
       </div>
     </div>
 
-    <!-- Interactive 3B1B Control Deck -->
-    <div class="nn3d-deck">
-      <div class="deck-row">
-        <!-- Propagation Mode Toggle -->
-        <div class="control-group">
-          <span class="ctrl-label">MODE:</span>
-          <div class="btn-group">
-            <button type="button" class={`mode-btn ${mode === 'forward' ? 'active' : ''}`} data-mode="forward">Forward (Activations)</button>
-            <button type="button" class={`mode-btn ${mode === 'backward' ? 'active' : ''}`} data-mode="backward">Backward (Gradients)</button>
-          </div>
-        </div>
+    <!-- 3D WEBGL VIEWPORT -->
+    <div class="three-canvas-container" data-canvas-container tabindex="0" aria-label="Interactive 3D neural network manifold">
+      <div class="webgl-fallback" data-webgl-fallback role="img">
+        <strong>3D view unavailable</strong>
+        <span>Use the chapter buttons below to step through the neural network explanation.</span>
+      </div>
+      <div class="orbit-hint-badge">
+        <span>↺ Drag to orbit in 3D</span>
+      </div>
+    </div>
 
-        <!-- Animation Play / Pause -->
-        <div class="control-group">
-          <button type="button" class="play-btn" aria-label="Toggle Animation">
-            <span class="play-icon">&rtrif;</span>
-            <span class="play-text">Pulse Stream</span>
-          </button>
-        </div>
-
-        <!-- Weight Threshold Filter -->
-        <div class="control-group slider-group">
-          <span class="ctrl-label">WEIGHT PRUNING:</span>
-          <input type="range" class="weight-slider" min="0" max="0.8" step="0.05" value={pruning} aria-label="Weight pruning threshold" />
-          <span class="weight-val">&gt; {pruning.toFixed(2)}</span>
+    <!-- SYNCHRONIZED STORYLINE INSIGHT CARD -->
+    <div class="storyline-card" data-storyline-card aria-live="polite">
+      <div class="storyline-meta">
+        <span class="storyline-kicker" data-story-kicker>Chapter 01 / Input Manifold</span>
+        <div class="storyline-step-nav">
+          <button type="button" class="step-nav-btn" data-step-prev aria-label="Previous Chapter" disabled>← Prev</button>
+          <span class="step-indicator" data-step-indicator>1 of 4</span>
+          <button type="button" class="step-nav-btn" data-step-next aria-label="Next Chapter">Next →</button>
         </div>
       </div>
-
-      <!-- Scrubber Timeline -->
-      <div class="timeline-row">
-        <span class="ctrl-label">STEP SCRUBBER:</span>
-        <input type="range" class="step-scrubber" min="0" max="3" step="0.01" value="0" aria-label="Network propagation step" />
-        <span class="step-val">Layer 0 &rarr; 1</span>
+      <h3 class="storyline-title" data-story-title>Input Vector &amp; Feature Space (x)</h3>
+      <p class="storyline-body" data-story-body>
+        The network receives a 4-dimensional input feature vector. Each node activation reflects an incoming signal intensity (such as token embedding coordinates or pixel luminance).
+      </p>
+      <div class="storyline-formula-bar" data-story-formula>
+        <code data-formula-code>a_i^(0) = x_i ∈ [0, 1]</code>
+        <span class="formula-note" data-formula-note>← Initial node activation intensities</span>
       </div>
     </div>
   </neural-net-3d>
 </Exhibit>
 
 <style>
-  .nn3d-root {
+  .nn3d-story-root {
     display: flex;
     flex-direction: column;
     width: 100%;
-    background: var(--surface-card);
-    border-radius: var(--radius-card);
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
     overflow: hidden;
     position: relative;
   }
 
+  /* Chapter Navigation Bar */
+  .story-chapter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--ie-rule);
+    background: var(--ie-surface-raised);
+    flex-wrap: wrap;
+  }
+
+  .chapter-tabs {
+    display: inline-flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .chapter-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.75rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm, 4px);
+    background: transparent;
+    color: var(--ie-muted);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui, 0.875rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 120ms ease;
+  }
+
+  .chapter-tab:hover {
+    color: var(--ie-ink);
+    background: var(--ie-surface);
+  }
+
+  .chapter-tab.active {
+    background: var(--ie-surface);
+    border-color: var(--ie-rule);
+    color: var(--ie-blue);
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .ch-num {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label, 0.8125rem);
+    font-weight: 600;
+    color: var(--ie-blue);
+  }
+
+  .story-playback-controls {
+    display: flex;
+    align-items: center;
+  }
+
+  .story-play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.95rem;
+    border: 1px solid var(--ie-rule-strong);
+    border-radius: var(--radius-sm, 4px);
+    background: var(--ie-surface);
+    color: var(--ie-ink);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-ui, 0.875rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 120ms ease;
+  }
+
+  .story-play-btn:hover {
+    border-color: var(--ie-blue);
+    color: var(--ie-blue);
+    background: var(--ie-surface-raised);
+  }
+
+  .story-play-btn.playing {
+    background: var(--ie-blue-soft);
+    border-color: var(--ie-blue);
+    color: var(--ie-blue);
+  }
+
+  .play-icon {
+    font-size: 0.8rem;
+  }
+
+  /* 3D Canvas Viewport */
   .three-canvas-container {
     width: 100%;
-    height: 420px;
+    height: 400px;
     position: relative;
     cursor: grab;
+    outline: none;
+    background: var(--ie-canvas);
   }
 
   .three-canvas-container:active {
     cursor: grabbing;
   }
 
-  .nn3d-deck {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-3) var(--space-4);
-    background: color-mix(in srgb, var(--surface-card) 85%, var(--bg));
-    border-top: 1px solid var(--border-default);
+  .three-canvas-container:focus-visible {
+    outline: 2px solid var(--ie-blue);
+    outline-offset: -2px;
   }
 
-  .deck-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-  }
-
-  .timeline-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    padding-top: var(--space-2);
-    border-top: 1px dashed var(--border-default);
-  }
-
-  .control-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .ctrl-label {
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .btn-group {
-    display: inline-flex;
-    background: var(--surface);
-    border: 1px solid var(--border-default);
-    border-radius: 6px;
-    padding: 2px;
-  }
-
-  .mode-btn {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 10px;
-    background: transparent;
-    border: none;
-    border-radius: 4px;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  .mode-btn.active {
-    background: var(--accent);
-    color: #ffffff;
-  }
-
-  .play-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 5px 12px;
-    background: var(--surface);
-    border: 1px solid var(--border-default);
-    border-radius: 6px;
-    color: var(--text);
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  .play-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  .play-btn.playing {
-    background: color-mix(in srgb, var(--accent) 15%, var(--surface));
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  .slider-group {
-    flex: 1;
-    min-width: 180px;
-    max-width: 280px;
-  }
-
-  .weight-slider, .step-scrubber {
-    flex: 1;
-    accent-color: var(--accent);
-    cursor: pointer;
-  }
-
-  .weight-val, .step-val {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--accent);
-    min-width: 80px;
-    text-align: right;
-  }
-
-  .touch-overlay {
+  .webgl-fallback {
     display: none;
+    min-height: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
+  }
+
+  .webgl-fallback strong {
+    color: var(--ie-ink);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-base);
+  }
+
+  .orbit-hint-badge {
     position: absolute;
     bottom: 12px;
     right: 12px;
     z-index: 10;
-    pointer-events: auto;
-    cursor: pointer;
+    pointer-events: none;
   }
 
-  .touch-overlay span {
+  .orbit-hint-badge span {
     display: inline-flex;
     align-items: center;
     gap: 5px;
     padding: 0.35rem 0.75rem;
     border-radius: var(--radius-pill, 999px);
-    background: var(--ie-surface);
-    border: 1px solid var(--ie-rule);
+    background: rgba(23, 26, 31, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: var(--ie-type-micro, 0.75rem);
     font-weight: 500;
+  }
+
+  /* Storyline Card */
+  .storyline-card {
+    padding: 1.5rem 1.75rem;
+    background: var(--ie-surface);
+    border-top: 1px solid var(--ie-rule);
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .storyline-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid var(--ie-rule);
+    padding-bottom: 0.6rem;
+  }
+
+  .storyline-kicker {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label, 0.8125rem);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: var(--ie-blue);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
-  @media (hover: none) and (pointer: coarse) {
-    .three-canvas-container {
-      touch-action: pan-y;
-    }
-    .touch-overlay {
-      display: block;
-    }
-    .three-canvas-container.touch-active {
-      touch-action: none;
-    }
-    .three-canvas-container.touch-active .touch-overlay {
-      display: none;
-    }
+  .storyline-step-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
   }
 
-  @media (max-width: 640px) {
+  .step-nav-btn {
+    padding: 0.25rem 0.65rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-sm, 4px);
+    background: var(--ie-surface-raised);
+    color: var(--ie-ink);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label, 0.8125rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 120ms ease;
+  }
+
+  .step-nav-btn:hover:not(:disabled) {
+    border-color: var(--ie-blue);
+    color: var(--ie-blue);
+    background: var(--ie-surface);
+  }
+
+  .step-nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .step-indicator {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label, 0.8125rem);
+    color: var(--ie-muted);
+  }
+
+  .storyline-title {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-h3, 1.35rem);
+    font-weight: 600;
+    color: var(--ie-ink);
+    line-height: 1.25;
+  }
+
+  .storyline-body {
+    margin: 0;
+    font-size: var(--ie-type-small, 0.96875rem);
+    line-height: 1.65;
+    color: var(--ie-ink-secondary);
+  }
+
+  .storyline-formula-bar {
+    margin-top: 0.35rem;
+    padding: 0.65rem 0.95rem;
+    background: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
+    border-left: 3px solid var(--ie-blue);
+    border-radius: var(--radius-sm, 4px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .storyline-formula-bar code {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-ui, 0.875rem);
+    font-weight: 600;
+    color: var(--ie-ink);
+  }
+
+  .formula-note {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label, 0.8125rem);
+    color: var(--ie-muted);
+  }
+
+  @media (max-width: 720px) {
+    .story-chapter-bar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .chapter-tabs {
+      width: 100%;
+    }
+    .chapter-tab {
+      flex: 1 1 calc(50% - 0.5rem);
+      justify-content: center;
+    }
+    .story-playback-controls {
+      width: 100%;
+    }
+    .story-play-btn {
+      width: 100%;
+      justify-content: center;
+    }
     .three-canvas-container {
       height: 320px;
+    }
+    .storyline-card {
+      padding: 1.25rem 1.25rem;
     }
   }
 </style>
@@ -287,8 +417,7 @@ const layersJson = JSON.stringify(parsedLayers);
 <script>
   import * as THREE from 'three';
   import { BaseThreeElement } from '../../visual-engine/core/BaseThreeElement';
-  import { smoothstep, clamp, lerp } from '../../visual-engine/math/interpolations';
-  import type { ThemeColors } from '../../visual-engine/core/ThemeBridge';
+  import { lerp } from '../../visual-engine/math/interpolations';
 
   interface Synapse {
     source: THREE.Vector3;
@@ -296,15 +425,74 @@ const layersJson = JSON.stringify(parsedLayers);
     sourceNodeIndex: number;
     targetNodeIndex: number;
     layerIndex: number;
-    weight: number; // -1 to 1
+    weight: number;
     lineMesh: THREE.Line;
   }
 
   interface PulseParticle {
     synapseIndex: number;
-    progress: number; // 0 to 1
+    progress: number;
     speed: number;
   }
+
+  interface Chapter {
+    id: number;
+    kicker: string;
+    title: string;
+    mode: 'forward' | 'backward';
+    pruning: number;
+    cameraAngle: { x: number; y: number; z: number };
+    body: string;
+    formula: string;
+    note: string;
+  }
+
+  const CHAPTERS: Chapter[] = [
+    {
+      id: 0,
+      kicker: 'Chapter 01 / Input Manifold',
+      title: 'Input Vector & Feature Activation Space (x)',
+      mode: 'forward',
+      pruning: 0.05,
+      cameraAngle: { x: -2.5, y: 1.2, z: 13.5 },
+      body: 'The network receives a 4-dimensional input feature vector. Each node activation reflects an incoming signal intensity (such as token embedding coordinates, sensory measurements, or image pixel luminance).',
+      formula: 'a_i^(0) = x_i ∈ [0, 1]',
+      note: '← Initial feature activations at layer 0',
+    },
+    {
+      id: 1,
+      kicker: 'Chapter 02 / Synaptic Flow',
+      title: 'Linear Transform & Forward Signal Pulses (Wx + b)',
+      mode: 'forward',
+      pruning: 0.15,
+      cameraAngle: { x: 0, y: 1.5, z: 14 },
+      body: 'Signals propagate left-to-right across hidden layers. Each downstream neuron computes a weighted sum followed by non-linear gating. Excitatory weights (instrument blue) amplify salient signals, while inhibitory weights (rust) suppress noise.',
+      formula: 'z_j^(l) = ∑ w_ji a_i^(l-1) + b_j',
+      note: '← Forward activation pulses cross synaptic paths',
+    },
+    {
+      id: 2,
+      kicker: 'Chapter 03 / Error Propagation',
+      title: 'Backpropagation & Loss Gradients (∇_W L)',
+      mode: 'backward',
+      pruning: 0.15,
+      cameraAngle: { x: 2.5, y: 1.8, z: 13.5 },
+      body: 'The chain rule in reverse: output prediction error propagates backwards through the network. Amber gradient waves compute parameter sensitivities ∂L/∂W to steer the weights toward lower empirical risk.',
+      formula: '∂L/∂w_ji = (∂L/∂a_j) · σ\'(z_j) · a_i',
+      note: '← Reverse gradient wave computes exact weight updates',
+    },
+    {
+      id: 3,
+      kicker: 'Chapter 04 / Sparse Geometry',
+      title: 'Magnitude Pruning & Optimal Sparse Subnet',
+      mode: 'forward',
+      pruning: 0.55,
+      cameraAngle: { x: 0, y: 2.2, z: 12.5 },
+      body: 'Connections with near-zero synaptic influence are pruned. Over 40% of redundant weights fade away without degrading inference quality—drastically bounding memory bandwidth and latency.',
+      formula: '|w_ji| ≥ τ  (Sparse Matrix Optimization)',
+      note: '← Subnet sparsity eliminates memory & compute waste',
+    },
+  ];
 
   class NeuralNet3DElement extends BaseThreeElement {
     private layers: number[] = [4, 7, 7, 3];
@@ -316,16 +504,28 @@ const layersJson = JSON.stringify(parsedLayers);
     private pulsePositions!: Float32Array;
     private pulseColors!: Float32Array;
 
+    private currentChapter: number = 0;
+    private isPlaying: boolean = false;
+    private playTimer: ReturnType<typeof setInterval> | null = null;
+
     private mode: 'forward' | 'backward' = 'forward';
-    private isStreaming: boolean = true;
-    private weightThreshold: number = 0.15;
-    private scrubberStep: number = 0;
-    private isScrubbing: boolean = false;
+    private weightThreshold: number = 0.05;
+    private targetCameraPos = new THREE.Vector3(0, 1.5, 14);
 
     private nodeGeometry = new THREE.SphereGeometry(0.35, 24, 24);
     private positiveLineMaterial!: THREE.LineBasicMaterial;
     private negativeLineMaterial!: THREE.LineBasicMaterial;
     private nodeMaterial!: THREE.MeshStandardMaterial;
+    private controlsAbortController: AbortController | null = null;
+
+    public override connectedCallback(): void {
+      try {
+        super.connectedCallback();
+      } catch (error) {
+        console.warn('Neural network WebGL view unavailable', error);
+        this.classList.add('webgl-unavailable');
+      }
+    }
 
     protected initScene(): void {
       const rawLayers = this.getAttribute('data-layers');
@@ -337,17 +537,8 @@ const layersJson = JSON.stringify(parsedLayers);
         }
       }
 
-      const rawMode = this.getAttribute('data-mode') as 'forward' | 'backward';
-      if (rawMode === 'forward' || rawMode === 'backward') {
-        this.mode = rawMode;
-      }
-
-      const rawPruning = parseFloat(this.getAttribute('data-pruning') || '');
-      if (!isNaN(rawPruning)) {
-        this.weightThreshold = rawPruning;
-      }
-
-      this.camera.position.set(0, 1.5, 14);
+      this.camera.position.set(CHAPTERS[0].cameraAngle.x, CHAPTERS[0].cameraAngle.y, CHAPTERS[0].cameraAngle.z);
+      this.targetCameraPos.copy(this.camera.position);
 
       // Lighting
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
@@ -357,15 +548,16 @@ const layersJson = JSON.stringify(parsedLayers);
       dirLight.position.set(10, 20, 15);
       this.scene.add(dirLight);
 
-      const pointLight = new THREE.PointLight(0x2676aa, 2, 50);
+      const pointLight = new THREE.PointLight(0x2857d9, 2, 50);
       pointLight.position.set(0, 0, 8);
       this.scene.add(pointLight);
 
       this.buildMaterials();
       this.buildNetwork();
       this.buildPulseParticles();
-      this.initControls();
+      this.initStoryControls();
 
+      this.setChapter(0, false);
       this.startAnimation();
     }
 
@@ -377,19 +569,46 @@ const layersJson = JSON.stringify(parsedLayers);
         roughness: 0.2,
         metalness: 0.1,
         emissive: new THREE.Color(this.themeColors.accent),
-        emissiveIntensity: isDark ? 0.35 : 0.15,
+        emissiveIntensity: isDark ? 0.4 : 0.18,
       });
 
       this.positiveLineMaterial = new THREE.LineBasicMaterial({
         color: new THREE.Color(this.themeColors.accent),
         transparent: true,
-        opacity: 0.35,
+        opacity: 0.38,
       });
 
       this.negativeLineMaterial = new THREE.LineBasicMaterial({
         color: new THREE.Color(this.themeColors.signalWarm),
         transparent: true,
-        opacity: 0.35,
+        opacity: 0.38,
+      });
+    }
+
+    private updateThemeMaterials(): void {
+      const isDark = this.themeColors.isDark;
+      const surface = new THREE.Color(this.themeColors.surfaceCard);
+      const accent = new THREE.Color(this.themeColors.accent);
+      const warm = new THREE.Color(this.themeColors.signalWarm);
+
+      this.nodeMaterial?.color.copy(surface);
+      this.nodeMaterial?.emissive.copy(accent);
+      if (this.nodeMaterial) this.nodeMaterial.emissiveIntensity = isDark ? 0.4 : 0.18;
+      this.positiveLineMaterial?.color.copy(accent);
+      this.negativeLineMaterial?.color.copy(warm);
+
+      this.nodeMeshes.forEach((layer) => layer.forEach((mesh) => {
+        const material = mesh.material as THREE.MeshStandardMaterial;
+        material.color.copy(surface);
+        material.emissive.copy(accent);
+        material.emissiveIntensity = isDark ? 0.4 : 0.18;
+        material.needsUpdate = true;
+      }));
+
+      this.synapses.forEach((synapse) => {
+        const material = synapse.lineMesh.material as THREE.LineBasicMaterial;
+        material.color.copy(synapse.weight >= 0 ? accent : warm);
+        material.needsUpdate = true;
       });
     }
 
@@ -402,7 +621,6 @@ const layersJson = JSON.stringify(parsedLayers);
       this.nodePositions = [];
       this.synapses = [];
 
-      // 1. Build Nodes
       this.layers.forEach((nodeCount, lIdx) => {
         const x = startX + lIdx * layerSpacing;
         const nodeSpacing = 1.4;
@@ -414,7 +632,6 @@ const layersJson = JSON.stringify(parsedLayers);
 
         for (let i = 0; i < nodeCount; i++) {
           const y = startY - i * nodeSpacing;
-          // Slight 3D depth curvature
           const z = Math.sin((i / (nodeCount - 1 || 1)) * Math.PI) * 0.8 - 0.4;
           const pos = new THREE.Vector3(x, y, z);
           layerPositions.push(pos);
@@ -429,14 +646,12 @@ const layersJson = JSON.stringify(parsedLayers);
         this.nodePositions.push(layerPositions);
       });
 
-      // 2. Build Synapses (Connections)
       for (let l = 0; l < this.layers.length - 1; l++) {
         const fromNodes = this.nodePositions[l];
         const toNodes = this.nodePositions[l + 1];
 
         fromNodes.forEach((fromPos, srcIdx) => {
           toNodes.forEach((toPos, tgtIdx) => {
-            // Pseudo-random deterministic weight between -1 and 1
             const seed = srcIdx * 17 + tgtIdx * 31 + l * 101;
             const weight = Math.sin(seed);
 
@@ -444,7 +659,7 @@ const layersJson = JSON.stringify(parsedLayers);
             const geom = new THREE.BufferGeometry().setFromPoints(points);
             const isPos = weight >= 0;
             const mat = (isPos ? this.positiveLineMaterial : this.negativeLineMaterial).clone();
-            mat.opacity = Math.max(0.05, Math.abs(weight) * 0.45);
+            mat.opacity = Math.max(0.06, Math.abs(weight) * 0.45);
 
             const lineMesh = new THREE.Line(geom, mat);
             this.scene.add(lineMesh);
@@ -466,7 +681,7 @@ const layersJson = JSON.stringify(parsedLayers);
     }
 
     private buildPulseParticles(): void {
-      const maxParticles = 300;
+      const maxParticles = 320;
       this.pulses = [];
       this.pulsePositions = new Float32Array(maxParticles * 3);
       this.pulseColors = new Float32Array(maxParticles * 3);
@@ -476,7 +691,7 @@ const layersJson = JSON.stringify(parsedLayers);
         this.pulses.push({
           synapseIndex: synIdx,
           progress: Math.random(),
-          speed: 0.008 + Math.random() * 0.008,
+          speed: 0.007 + Math.random() * 0.007,
         });
       }
 
@@ -485,10 +700,10 @@ const layersJson = JSON.stringify(parsedLayers);
       geom.setAttribute('color', new THREE.BufferAttribute(this.pulseColors, 3));
 
       const mat = new THREE.PointsMaterial({
-        size: 0.22,
+        size: 0.24,
         vertexColors: true,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.92,
         blending: THREE.AdditiveBlending,
       });
 
@@ -503,91 +718,140 @@ const layersJson = JSON.stringify(parsedLayers);
       });
     }
 
-    private initControls(): void {
-      // 1. Mode buttons
-      const modeBtns = this.querySelectorAll('.mode-btn');
-      modeBtns.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-          modeBtns.forEach((b) => b.classList.remove('active'));
+    private setChapter(chapterIndex: number, pausePlay: boolean = true): void {
+      if (chapterIndex < 0 || chapterIndex >= CHAPTERS.length) return;
+      this.currentChapter = chapterIndex;
+      const chapter = CHAPTERS[chapterIndex];
+
+      if (pausePlay && this.isPlaying) {
+        this.stopAutoPlay();
+      }
+
+      this.mode = chapter.mode;
+      this.weightThreshold = chapter.pruning;
+      this.targetCameraPos.set(chapter.cameraAngle.x, chapter.cameraAngle.y, chapter.cameraAngle.z);
+      this.updateWeightVisibility();
+
+      const tabs = this.querySelectorAll('.chapter-tab');
+      tabs.forEach((tab, idx) => {
+        const isActive = idx === chapterIndex;
+        tab.classList.toggle('active', isActive);
+        tab.setAttribute('aria-selected', String(isActive));
+      });
+
+      const kicker = this.querySelector('[data-story-kicker]');
+      const title = this.querySelector('[data-story-title]');
+      const body = this.querySelector('[data-story-body]');
+      const formulaCode = this.querySelector('[data-formula-code]');
+      const formulaNote = this.querySelector('[data-formula-note]');
+      const indicator = this.querySelector('[data-step-indicator]');
+      const prevBtn = this.querySelector('[data-step-prev]') as HTMLButtonElement;
+      const nextBtn = this.querySelector('[data-step-next]') as HTMLButtonElement;
+
+      if (kicker) kicker.textContent = chapter.kicker;
+      if (title) title.textContent = chapter.title;
+      if (body) body.textContent = chapter.body;
+      if (formulaCode) formulaCode.textContent = chapter.formula;
+      if (formulaNote) formulaNote.textContent = chapter.note;
+      if (indicator) indicator.textContent = `${chapterIndex + 1} of ${CHAPTERS.length}`;
+      if (prevBtn) prevBtn.disabled = chapterIndex === 0;
+      if (nextBtn) nextBtn.disabled = chapterIndex === CHAPTERS.length - 1;
+    }
+
+    private toggleAutoPlay(): void {
+      if (this.isPlaying) {
+        this.stopAutoPlay();
+      } else {
+        this.startAutoPlay();
+      }
+    }
+
+    private startAutoPlay(): void {
+      this.isPlaying = true;
+      const playBtn = this.querySelector('[data-story-play]') as HTMLElement;
+      if (playBtn) {
+        playBtn.classList.add('playing');
+        playBtn.setAttribute('aria-pressed', 'true');
+        const label = playBtn.querySelector('.play-label');
+        const icon = playBtn.querySelector('.play-icon');
+        if (label) label.textContent = 'Pause Story';
+        if (icon) icon.textContent = '⏸';
+      }
+
+      if (this.playTimer) clearInterval(this.playTimer);
+      this.playTimer = setInterval(() => {
+        const nextIdx = (this.currentChapter + 1) % CHAPTERS.length;
+        this.setChapter(nextIdx, false);
+      }, 5200);
+    }
+
+    private stopAutoPlay(): void {
+      this.isPlaying = false;
+      if (this.playTimer) {
+        clearInterval(this.playTimer);
+        this.playTimer = null;
+      }
+      const playBtn = this.querySelector('[data-story-play]') as HTMLElement;
+      if (playBtn) {
+        playBtn.classList.remove('playing');
+        playBtn.setAttribute('aria-pressed', 'false');
+        const label = playBtn.querySelector('.play-label');
+        const icon = playBtn.querySelector('.play-icon');
+        if (label) label.textContent = 'Play Story';
+        if (icon) icon.textContent = '▶';
+      }
+    }
+
+    private initStoryControls(): void {
+      this.controlsAbortController?.abort();
+      this.controlsAbortController = new AbortController();
+      const { signal } = this.controlsAbortController;
+
+      const tabs = this.querySelectorAll('.chapter-tab');
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', (e) => {
           const target = e.currentTarget as HTMLElement;
-          target.classList.add('active');
-          this.mode = target.dataset.mode as 'forward' | 'backward';
-        });
+          const chIdx = parseInt(target.dataset.chapter || '0', 10);
+          this.setChapter(chIdx);
+        }, { signal });
       });
 
-      // 2. Play / Pause
-      const playBtn = this.querySelector('.play-btn') as HTMLElement;
+      const playBtn = this.querySelector('[data-story-play]');
       playBtn?.addEventListener('click', () => {
-        this.isStreaming = !this.isStreaming;
-        playBtn.classList.toggle('playing', this.isStreaming);
-        const icon = playBtn.querySelector('.play-icon') as HTMLElement;
-        const text = playBtn.querySelector('.play-text') as HTMLElement;
-        if (icon && text) {
-          icon.innerHTML = this.isStreaming ? '&rtrif;' : '&block;';
-          text.textContent = this.isStreaming ? 'Pulse Stream' : 'Paused';
-        }
-      });
-      playBtn?.classList.add('playing');
+        this.toggleAutoPlay();
+      }, { signal });
 
-      // 3. Weight slider
-      const weightSlider = this.querySelector('.weight-slider') as HTMLInputElement;
-      const weightVal = this.querySelector('.weight-val') as HTMLElement;
-      weightSlider?.addEventListener('input', (e) => {
-        const val = parseFloat((e.target as HTMLInputElement).value);
-        this.weightThreshold = val;
-        if (weightVal) weightVal.textContent = `> ${val.toFixed(2)}`;
-        this.updateWeightVisibility();
-        this.renderFrame(performance.now());
-      });
+      const prevBtn = this.querySelector('[data-step-prev]');
+      prevBtn?.addEventListener('click', () => {
+        this.setChapter(this.currentChapter - 1);
+      }, { signal });
 
-      // 4. Scrubber
-      const scrubber = this.querySelector('.step-scrubber') as HTMLInputElement;
-      const stepVal = this.querySelector('.step-val') as HTMLElement;
-      scrubber?.setAttribute('max', String(this.layers.length - 1));
+      const nextBtn = this.querySelector('[data-step-next]');
+      nextBtn?.addEventListener('click', () => {
+        this.setChapter(this.currentChapter + 1);
+      }, { signal });
 
-      scrubber?.addEventListener('input', (e) => {
-        this.isScrubbing = true;
-        this.scrubberStep = parseFloat((e.target as HTMLInputElement).value);
-        const lIdx = Math.floor(this.scrubberStep);
-        if (stepVal) {
-          stepVal.textContent = lIdx >= this.layers.length - 1 ? `Output Layer` : `Layer ${lIdx} → ${lIdx + 1}`;
-        }
-        this.renderFrame(performance.now());
-      });
-
-      scrubber?.addEventListener('change', () => {
-        this.isScrubbing = false;
-      });
-
-      // 5. Touch guard activation
       const canvasContainer = this.querySelector('[data-canvas-container]') as HTMLElement;
-      const touchOverlay = this.querySelector('[data-touch-overlay]') as HTMLElement;
-      let touchTimer: ReturnType<typeof setTimeout> | null = null;
-
-      const deactivateTouch = () => {
-        canvasContainer?.classList.remove('touch-active');
-      };
-
-      touchOverlay?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        canvasContainer?.classList.add('touch-active');
-        if (touchTimer) clearTimeout(touchTimer);
-        touchTimer = setTimeout(deactivateTouch, 6000);
-      });
-
-      canvasContainer?.addEventListener('pointerdown', () => {
-        if (touchTimer) clearTimeout(touchTimer);
-        touchTimer = setTimeout(deactivateTouch, 6000);
-      });
-
-      document.addEventListener('pointerdown', (e) => {
-        if (!canvasContainer?.contains(e.target as Node)) {
-          deactivateTouch();
+      canvasContainer?.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
+        event.preventDefault();
+        const target = this.controls?.target || new THREE.Vector3();
+        const offset = this.camera.position.clone().sub(target);
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+          offset.applyAxisAngle(new THREE.Vector3(0, 1, 0), event.key === 'ArrowLeft' ? 0.12 : -0.12);
+        } else {
+          offset.y += event.key === 'ArrowUp' ? 0.35 : -0.35;
         }
-      });
+        this.camera.position.copy(target).add(offset);
+        this.camera.lookAt(target);
+        this.renderFrame(performance.now());
+      }, { signal });
     }
 
     protected render(time: number): void {
+      this.camera.position.lerp(this.targetCameraPos, 0.04);
+      this.camera.lookAt(0, 0, 0);
+
       const isForward = this.mode === 'forward';
       const posAttr = this.pulsePoints.geometry.getAttribute('position') as THREE.BufferAttribute;
       const colAttr = this.pulsePoints.geometry.getAttribute('color') as THREE.BufferAttribute;
@@ -595,7 +859,6 @@ const layersJson = JSON.stringify(parsedLayers);
       const accentColor = new THREE.Color(this.themeColors.accent);
       const signalColor = new THREE.Color(this.themeColors.signalWarm);
 
-      // Animate Pulses along visible synapses
       this.pulses.forEach((pulse, i) => {
         const syn = this.synapses[pulse.synapseIndex];
         if (!syn || !syn.lineMesh.visible) {
@@ -603,12 +866,10 @@ const layersJson = JSON.stringify(parsedLayers);
           return;
         }
 
-        if (this.isStreaming) {
-          pulse.progress += pulse.speed;
-          if (pulse.progress > 1) {
-            pulse.progress = 0;
-            pulse.synapseIndex = Math.floor(Math.random() * this.synapses.length);
-          }
+        pulse.progress += pulse.speed;
+        if (pulse.progress > 1) {
+          pulse.progress = 0;
+          pulse.synapseIndex = Math.floor(Math.random() * this.synapses.length);
         }
 
         const t = isForward ? pulse.progress : 1 - pulse.progress;
@@ -617,7 +878,6 @@ const layersJson = JSON.stringify(parsedLayers);
         const z = lerp(syn.source.z, syn.target.z, t);
 
         posAttr.setXYZ(i, x, y, z);
-
         const particleColor = isForward ? (syn.weight >= 0 ? accentColor : signalColor) : signalColor;
         colAttr.setXYZ(i, particleColor.r, particleColor.g, particleColor.b);
       });
@@ -625,10 +885,9 @@ const layersJson = JSON.stringify(parsedLayers);
       posAttr.needsUpdate = true;
       colAttr.needsUpdate = true;
 
-      // Animate node pulse intensities
       this.nodeMeshes.forEach((layerMeshes, lIdx) => {
         layerMeshes.forEach((mesh, nIdx) => {
-          const wavePhase = (time * 0.003) - lIdx * 1.2;
+          const wavePhase = (time * 0.003) - (isForward ? lIdx : (this.layers.length - 1 - lIdx)) * 1.2;
           const pulse = (Math.sin(wavePhase) + 1) * 0.5;
           const scale = 1 + pulse * 0.15;
           mesh.scale.set(scale, scale, scale);
@@ -642,7 +901,17 @@ const layersJson = JSON.stringify(parsedLayers);
     protected onResize(): void {}
 
     protected onThemeChange(): void {
-      this.buildMaterials();
+      this.updateThemeMaterials();
+    }
+
+    protected onDestroy(): void {
+      this.stopAutoPlay();
+      this.controlsAbortController?.abort();
+      this.controlsAbortController = null;
+      this.nodeGeometry.dispose();
+      this.nodeMaterial?.dispose();
+      this.positiveLineMaterial?.dispose();
+      this.negativeLineMaterial?.dispose();
     }
   }
 

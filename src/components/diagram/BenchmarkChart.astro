@@ -136,8 +136,8 @@ const yTicks = generateTicks(minY, maxY, 5);
       >
         <defs>
           <linearGradient id="chart-glow-gradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="var(--accent, #2676AA)" stop-opacity="0.18" />
-            <stop offset="100%" stop-color="var(--accent, #2676AA)" stop-opacity="0.0" />
+            <stop offset="0%" stop-color="var(--ie-blue, var(--accent))" stop-opacity="0.18" />
+            <stop offset="100%" stop-color="var(--ie-blue, var(--accent))" stop-opacity="0.0" />
           </linearGradient>
         </defs>
 
@@ -359,9 +359,9 @@ const yTicks = generateTicks(minY, maxY, 5);
 <style>
   .benchmark-chart-container {
     width: 100%;
-    background: var(--surface-card, #ffffff);
+    background: var(--ie-surface, var(--surface-card, #ffffff));
     border-radius: var(--radius-card, 10px);
-    border: 1px solid var(--border-default, #e2e8f0);
+    border: 1px solid var(--ie-rule, var(--border-default, #e2e8f0));
     padding: var(--space-4, 16px);
     overflow: hidden;
   }
@@ -390,17 +390,17 @@ const yTicks = generateTicks(minY, maxY, 5);
 
   .legend-label {
     font-weight: 600;
-    color: var(--text, #1a1a2e);
+    color: var(--ie-ink, var(--text, #1a1a2e));
   }
 
   .chart-annotation-badge {
     margin-left: auto;
     font-size: 10px;
     font-weight: 700;
-    color: var(--text-muted, #68768b);
+    color: var(--ie-muted, var(--text-muted, #68768b));
     padding: 2px 6px;
-    background: color-mix(in srgb, var(--surface-card, #ffffff) 70%, var(--bg, #f8f9fc));
-    border: 1px solid var(--border-default, #e2e8f0);
+    background: color-mix(in srgb, var(--ie-surface, var(--surface-card, #ffffff)) 70%, var(--ie-canvas, var(--bg, #f8f9fc)));
+    border: 1px solid var(--ie-rule, var(--border-default, #e2e8f0));
     border-radius: 3px;
     letter-spacing: 0.05em;
   }
@@ -418,7 +418,7 @@ const yTicks = generateTicks(minY, maxY, 5);
   }
 
   .grid-line, .grid-line-vertical {
-    stroke: var(--border-default, #e2e8f0);
+    stroke: var(--ie-rule, var(--border-default, #e2e8f0));
     stroke-width: 1;
     stroke-dasharray: 2 2;
     opacity: 0.8;
@@ -427,14 +427,14 @@ const yTicks = generateTicks(minY, maxY, 5);
   .axis-tick-text {
     font-family: var(--font-mono, monospace);
     font-size: 10px;
-    fill: var(--text-muted, #68768b);
+    fill: var(--ie-muted, var(--text-muted, #68768b));
   }
 
   .axis-title-x, .axis-title-y {
     font-family: var(--font-mono, monospace);
     font-size: 10.5px;
     font-weight: 700;
-    fill: var(--text-muted, #68768b);
+    fill: var(--ie-muted, var(--text-muted, #68768b));
     letter-spacing: 0.03em;
   }
 
