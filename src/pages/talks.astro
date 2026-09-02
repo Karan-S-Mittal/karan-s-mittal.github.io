@@ -1,9 +1,9 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import PageHeader from '../components/portfolio/PageHeader.astro';
-import YearGroup from '../components/portfolio/YearGroup.astro';
-import TalkCard from '../components/portfolio/TalkCard.astro';
-import talksData from '../data/talks.json';
+import Layout from '@layouts/Layout.astro';
+import PageHeader from '@components/content/PageHeader.astro';
+import YearGroup from '@components/content/YearGroup.astro';
+import TalkCard from '@components/content/TalkCard.astro';
+import talksData from '@data/talks.json';
 import type { Talk } from '../types/talks';
 
 const talks: Talk[] = talksData.talks;

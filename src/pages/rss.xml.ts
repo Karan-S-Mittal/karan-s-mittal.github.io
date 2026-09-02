@@ -1,7 +1,8 @@
 import rss from '@astrojs/rss';
+import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
 
-export async function GET(context) {
+export async function GET(context: APIContext) {
   const posts = await getCollection('blog');
   return rss({
     title: 'Karan Mittal | Blog',

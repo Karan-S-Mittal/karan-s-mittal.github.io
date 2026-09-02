@@ -1,9 +1,9 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import PageHeader from '../components/portfolio/PageHeader.astro';
-import Icon from '../components/chrome/Icon.astro';
+import Layout from '@layouts/Layout.astro';
+import PageHeader from '@components/content/PageHeader.astro';
+import Icon from '@components/layout/Icon.astro';
 import { SITE, SOCIALS } from '../config';
-import communitiesData from '../data/communities.json';
+import communitiesData from '@data/communities.json';
 
 const { communities } = communitiesData;
 const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https://www.linkedin.com/in/karansmittal/';

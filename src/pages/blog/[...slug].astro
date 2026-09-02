@@ -1,9 +1,9 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import TableOfContents from '../../components/chrome/TableOfContents.astro';
-import { getReadingTime } from '../../utils/readingTime';
-import { tagSlug } from '../../utils/tags.js';
+import Layout from '@layouts/Layout.astro';
+import TableOfContents from '@components/layout/TableOfContents.astro';
+import { getReadingTime } from '@utils/readingTime';
+import { tagSlug } from '@utils/tags.js';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');

@@ -1,9 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import PageHeader from '../../components/portfolio/PageHeader.astro';
-import BlogPostCard from '../../components/portfolio/BlogPostCard.astro';
-import { normalizeTag, tagSlug } from '../../utils/tags.js';
+import Layout from '@layouts/Layout.astro';
+import PageHeader from '@components/content/PageHeader.astro';
+import BlogPostCard from '@components/content/BlogPostCard.astro';
+import { normalizeTag, tagSlug } from '@utils/tags.js';
 
 export async function getStaticPaths() {
   const allPosts = await getCollection('blog');
