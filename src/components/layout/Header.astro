@@ -1,5 +1,5 @@
 ---
-const currentPath = Astro.url.pathname;
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 const nav = [
   { href: '/blog', label: 'Writing' },
@@ -10,14 +10,9 @@ const nav = [
 ];
 
 function isActive(href: string) {
-  if (href.includes('#')) return false;
-  if (href === '/blog') return currentPath.startsWith('/blog');
-  if (href === '/work') return currentPath.startsWith('/work');
-  if (href === '/talks') return currentPath.startsWith('/talks');
-  if (href === '/now') return currentPath === '/now';
-  if (href === '/about') return currentPath === '/about';
-  if (href === '/contact') return currentPath === '/contact';
-  return currentPath === href;
+  const cleanHref = href.replace(/\/$/, '') || '/';
+  if (cleanHref === '/') return pathname === '/';
+  return pathname === cleanHref || pathname.startsWith(cleanHref + '/');
 }
 ---
 
@@ -26,7 +21,7 @@ function isActive(href: string) {
     <div class="header-left">
       <a href="/" class="brand" aria-label="Karan Mittal Home">
         <span class="brand-name">Karan Mittal</span>
-        <span class="brand-role">Explanatory Systems Studio</span>
+        <span class="brand-role">AI Systems Architect</span>
       </a>
     </div>
 
@@ -72,7 +67,7 @@ function isActive(href: string) {
         </svg>
       </button>
 
-      <a href="/contact" class="consult-cta">
+      <a href="/contact" class:list={['consult-cta', { active: isActive('/contact') }]}>
         <span>Contact</span>
       </a>
     </div>
@@ -208,13 +203,18 @@ function isActive(href: string) {
     letter-spacing: 0.02em;
     text-decoration: none;
     padding: 0.25rem 0;
-    transition: color 120ms ease;
+    border-bottom: 2px solid transparent;
+    transition: all 120ms ease;
   }
 
-  .main-nav a:hover,
-  .main-nav a.active {
+  .main-nav a:hover {
     color: var(--ie-ink);
+  }
+
+  .main-nav a.active {
+    color: var(--ie-blue);
     font-weight: 600;
+    border-bottom-color: var(--ie-blue);
   }
 
   .header-right {
@@ -266,7 +266,8 @@ function isActive(href: string) {
     transition: all 120ms ease;
   }
 
-  .consult-cta:hover {
+  .consult-cta:hover,
+  .consult-cta.active {
     border-color: var(--ie-blue);
     background: var(--ie-blue);
     color: #ffffff;
