@@ -41,22 +41,22 @@ The visual system combines the authority of an editorial publication with the pr
 
 | Role | Light | Dark | Meaning |
 | --- | --- | --- | --- |
-| Canvas | `#F7F5EF` | `#111318` | Page field |
+| Canvas | `#F8F9FC` | `#0C0A09` | Page field |
 | Surface | `#FFFFFF` | `#181C22` | Exhibit and code-adjacent plane |
-| Ink | `#171A1F` | `#F3F4F6` | Text and direct structure |
-| Secondary ink | `#3F4752` | `#D5D9DF` | Body and supporting explanation |
+| Ink | `#1A1A2E` | `#F3F4F6` | Text and direct structure |
+| Secondary ink | `#4A4A6A` | `#D5D9DF` | Body and supporting explanation |
 | Muted | `#5B6470` | `#AEB6C2` | Metadata, dimensions, inferred state |
-| Rule | `#D8D6CF` | `#2B3038` | Dividers and boundaries |
-| Instrument blue | `#2857D9` | `#8DAAFF` | Links, active state, direct flow |
+| Rule | `#E8ECF4` | `#27272A` | Dividers and boundaries |
+| Anchor blue | `#2676AA` | `#8DAAFF` | Links, active state, direct flow |
 | Constraint rust | `#A63D17` | `#FFB36B` | Bottleneck, caveat, failure, decision |
 
-Use `--ie-*` or mapped semantic tokens. Rust is never a generic decoration or default CTA. Do not carry old pink/lavender palette values into new work.
+Use `--ie-*` or mapped semantic tokens.
 
 ## Layout contract
 
-- **700px:** reading and argumentative prose.
-- **1040px:** diagrams, evidence, tables, and interactive inspection exhibits.
-- **1280px:** outer page shell and two-column article-with-contents layout.
+- **680px:** reading and argumentative prose.
+- **960px:** governing central spine across Header, Pages (Home, About, Work, Blog, Talks, Contact), and Footer.
+- **1200px:** wide interactive inspection exhibits and system maps.
 - No permanent background grid. Use local axes or measurement marks only inside exhibits.
 - Prefer ruled registers, ledgers, and editorial lists to arrays of independent cards.
 

@@ -24,7 +24,7 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
 <Layout title="Essays & Systems Notes | Karan Mittal">
   <main class="container blog-page">
     <PageHeader
-      label="Essays"
+      label="Field Notes"
       title="Writing & Systems Notes."
       description="First-principles explanations of AI inference, deterministic retrieval, distributed systems, and low-level optimization."
     />
@@ -38,20 +38,16 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
         <input
           type="search"
           id="blog-search"
-          placeholder="Search essays, tags, or mechanisms..."
-          aria-label="Search essays"
+          placeholder="Search field notes, tags, or mechanisms..."
+          aria-label="Search field notes"
           autocomplete="off"
         />
       </div>
 
       <div class="blog-quick-links">
-        <a href="/studio/visuals" class="quick-link-pill pill-accent">
-          <span class="pill-dot"></span>
-          <span>Visuals Lab</span>
-          <span class="pill-arrow" aria-hidden="true">↗</span>
-        </a>
         <a href="/tags" class="quick-link-pill">
           <span>Topics Index</span>
+          <span class="pill-arrow" aria-hidden="true">&rarr;</span>
         </a>
       </div>
     </div>

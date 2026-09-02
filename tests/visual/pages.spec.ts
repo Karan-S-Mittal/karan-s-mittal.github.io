@@ -168,15 +168,15 @@ test('runtime smoke: homepage boots and theme switches between explicit light/da
   await expect(page.locator('#home-title')).toBeVisible();
   await expect(page.locator('.hero-portrait')).toBeVisible();
   await expect(page.locator('#theme-toggle')).toBeVisible();
-  await expect(page.locator('.note-row')).toHaveCount(5);
+  await expect(page.locator('.note-row')).toHaveCount(6);
 
   const lightCanvas = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ie-canvas').trim());
-  expect(lightCanvas.toLowerCase()).toBe('#f7f5ef');
+  expect(lightCanvas.toLowerCase()).toBe('#f8f9fc');
 
   await page.locator('#theme-toggle').click();
   await expect.poll(() => page.locator('html').evaluate((element) => element.classList.contains('dark'))).toBe(true);
   const darkCanvas = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ie-canvas').trim());
-  expect(darkCanvas.toLowerCase()).toBe('#111318');
+  expect(darkCanvas.toLowerCase()).toBe('#0c0a09');
 
   await page.locator('#theme-toggle').click();
   await expect.poll(() => page.locator('html').evaluate((element) => element.classList.contains('dark'))).toBe(false);

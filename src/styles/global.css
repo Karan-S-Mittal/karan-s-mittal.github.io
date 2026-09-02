@@ -156,13 +156,13 @@
   --font-mono: 'IBM Plex Mono', ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
   /* Layout — canonical widths */
-  --width-reading: 740px;
-  --width-content: 1040px;
+  --width-reading: 680px;
+  --width-content: 960px;
   --width-architecture: 1200px;
   --width-wide: 1440px;
-  --page-max-width: 1140px;
+  --page-max-width: 960px;
   --prose-max-width: var(--width-reading);
-  --max-width: var(--prose-max-width);
+  --max-width: 960px;
 
   /* Shared content geometry */
   --exhibit-pad-block: 1.25rem;

@@ -2,13 +2,11 @@
 const currentPath = Astro.url.pathname;
 
 const nav = [
-  { href: '/blog', label: 'Essays' },
+  { href: '/blog', label: 'Writing' },
   { href: '/work', label: 'Work' },
+  { href: '/about', label: 'About' },
   { href: '/talks', label: 'Talks' },
   { href: '/now', label: 'Now' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
-  { href: '/studio/visuals', label: 'Studio' },
 ];
 
 function isActive(href: string) {
@@ -19,7 +17,6 @@ function isActive(href: string) {
   if (href === '/now') return currentPath === '/now';
   if (href === '/about') return currentPath === '/about';
   if (href === '/contact') return currentPath === '/contact';
-  if (href.startsWith('/studio')) return currentPath.startsWith('/studio');
   return currentPath === href;
 }
 ---
@@ -76,7 +73,7 @@ function isActive(href: string) {
       </button>
 
       <a href="/contact" class="consult-cta">
-        <span>Project brief</span>
+        <span>Contact</span>
       </a>
     </div>
   </div>
@@ -154,7 +151,7 @@ function isActive(href: string) {
   }
 
   .header-inner {
-    max-width: 1280px;
+    max-width: 960px;
     min-height: 64px;
     margin: 0 auto;
     padding: 0 var(--space-5, 1.5rem);

@@ -2,16 +2,16 @@
 
 html.instrumented {
   color-scheme: light;
-  --ie-canvas: #f7f5ef;
+  --ie-canvas: #f8f9fc;
   --ie-surface: #ffffff;
-  --ie-surface-raised: #fbfaf6;
-  --ie-ink: #171a1f;
-  --ie-ink-secondary: #3f4752;
+  --ie-surface-raised: #f1f5f9;
+  --ie-ink: #1a1a2e;
+  --ie-ink-secondary: #4a4a6a;
   --ie-muted: #5b6470;
-  --ie-rule: #d8d6cf;
-  --ie-rule-strong: #b9bdc4;
-  --ie-blue: #2857d9;
-  --ie-blue-soft: #e8eeff;
+  --ie-rule: #e8ecf4;
+  --ie-rule-strong: #cbd5e1;
+  --ie-blue: #2676aa;
+  --ie-blue-soft: #dceeff;
   --ie-rust: #a63d17;
   --ie-rust-soft: #f8e9df;
   --ie-code: #15181d;
@@ -45,12 +45,17 @@ html.instrumented {
   --text-muted: var(--ie-muted);
   --muted: var(--ie-muted);
   --accent: var(--ie-blue);
-  --accent-hover: #1f46b7;
+  --accent-hover: #246fa0;
   --accent-subtle: var(--ie-blue-soft);
   --link: var(--ie-blue);
-  --link-hover: #1f46b7;
+  --link-hover: #246fa0;
+  --border: var(--ie-rule);
+  --border-subtle: var(--ie-rule);
+  --border-default: var(--ie-rule);
+  --border-accent: var(--ie-blue);
+  --border-muted: var(--ie-rule);
   --interactive-primary: var(--ie-blue);
-  --interactive-primary-hover: #1f46b7;
+  --interactive-primary-hover: #246fa0;
   --interactive-focus: var(--ie-blue);
   --signal-warm: var(--ie-rust);
   --signal-emphasis: var(--ie-rust-soft);
@@ -60,33 +65,29 @@ html.instrumented {
   --diagram-edge-primary: var(--ie-ink);
   --diagram-edge-secondary: var(--ie-muted);
   --diagram-plane: var(--ie-surface-raised);
-  --border: var(--ie-rule);
-  --border-default: var(--ie-rule);
-  --border-muted: var(--ie-rule-strong);
-  --border-accent: var(--ie-blue);
   --ex-bg: var(--ie-surface);
-  --radius: 6px;
   --radius-sm: 4px;
+  --radius: 6px;
   --radius-card: 8px;
   --radius-lg: 8px;
   --radius-pill: 999px;
   --shadow-card: none;
   --shadow-card-hover: none;
-  --page-max-width: 1280px;
-  --width-content: 1040px;
-  --prose-max-width: 700px;
+  --page-max-width: 960px;
+  --width-content: 960px;
+  --prose-max-width: 680px;
 }
 
 html.instrumented.dark {
   color-scheme: dark;
-  --ie-canvas: #111318;
-  --ie-surface: #181c22;
-  --ie-surface-raised: #1d222a;
+  --ie-canvas: #0c0a09;
+  --ie-surface: #18181b;
+  --ie-surface-raised: #27272a;
   --ie-ink: #f3f4f6;
   --ie-ink-secondary: #d5d9df;
   --ie-muted: #aeb6c2;
-  --ie-rule: #2b3038;
-  --ie-rule-strong: #49515e;
+  --ie-rule: #27272a;
+  --ie-rule-strong: #3f3f46;
   --ie-blue: #8daaff;
   --ie-blue-soft: #202c4f;
   --ie-rust: #ffb36b;
