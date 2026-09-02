@@ -6,7 +6,7 @@ import { SITE, SOCIALS } from '../config';
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const featuredPosts = publishedPosts.slice(0, 6);
+const featuredPosts = publishedPosts.slice(0, 3);
 const totalNotes = publishedPosts.length;
 
 function formatDate(date: Date | string) {
