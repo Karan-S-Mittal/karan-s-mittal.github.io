@@ -54,12 +54,18 @@ const {
   wide = false,
 } = Astro.props;
 
-// Fixed crisp chart geometry (matches 720px container)
-const width = 720;
+// Fixed crisp chart geometry (SVG user-unit canvas, scaled to the container via viewBox)
+// NOTE: `width` and `margin.right` were both grown by the same 40 units (720->760,
+// 180->220) to reserve more room for the direct end-of-line series labels. This is a
+// pure right-side canvas extension: margin.left and innerWidth are unchanged, so
+// scaleX/scaleY — and therefore every curve, gridline, and tick position — are
+// identical to before. Only the empty label gutter on the right got bigger.
+const width = 760;
 const height = 370;
-const margin = { top: 35, right: 180, bottom: 50, left: 65 };
+const margin = { top: 35, right: 220, bottom: 50, left: 65 };
 const innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
+const plotRight = margin.left + innerWidth; // right edge of the plotted data area
 
 // Compute data bounds dynamically if not provided
 const allPoints = series.flatMap((s) => s.data);
@@ -113,10 +119,46 @@ function generateTicks(min: number, max: number, count = 5): number[] {
 
 const xTicks = generateTicks(minX, maxX, 6);
 const yTicks = generateTicks(minY, maxY, 5);
+
+// Direct end-of-line labels live in the right-margin gutter (plotRight -> width).
+// Long series names (this component is shared across posts with very different
+// label lengths) must never run past the viewBox edge, so truncate to a measured
+// character budget instead of letting the SVG silently clip mid-word. The legend
+// above the chart already carries every series' full name, so truncation here is
+// a labeling nicety, not a loss of information.
+const LABEL_FONT_SIZE = 10.5; // matches .direct-series-label font-size
+const LABEL_CHAR_WIDTH = LABEL_FONT_SIZE * 0.62; // conservative monospace advance estimate
+const LABEL_START_OFFSET = 16; // dot (8) + text x-offset (8) from the last data point
+const LABEL_RIGHT_PADDING = 6; // breathing room before the viewBox edge
+const labelBudgetChars = Math.max(
+  8,
+  Math.floor((width - LABEL_RIGHT_PADDING - plotRight - LABEL_START_OFFSET) / LABEL_CHAR_WIDTH)
+);
+
+function truncateLabel(text: string): string {
+  if (text.length <= labelBudgetChars) return text;
+  const sliceLen = Math.max(1, labelBudgetChars - 1); // reserve a char for the ellipsis
+  const cut = text.slice(0, sliceLen);
+  const lastSpace = cut.lastIndexOf(' ');
+  // Break on a word boundary unless that would throw away too much of the budget
+  const clean = lastSpace > sliceLen * 0.6 ? cut.slice(0, lastSpace) : cut;
+  return `${clean.trimEnd()}…`;
+}
+
+const seriesLabels = series.map((s) => {
+  const full = `${s.name}${s.labelSuffix ? ` (${s.labelSuffix})` : ''}`;
+  return { full, display: truncateLabel(full) };
+});
 ---
 
 <Exhibit exhibit={exhibit} title={title} badge={badge} caption={caption} wide={wide}>
-  <div class="benchmark-chart-container" data-chart-root>
+  <div
+    class="benchmark-chart-container"
+    data-chart-root
+    data-chart-width={width}
+    data-chart-margin-left={margin.left}
+    data-chart-plot-right={plotRight}
+  >
     <div class="chart-legend">
       {series.map((s) => (
         <div class="legend-item">
@@ -237,9 +279,12 @@ const yTicks = generateTicks(minY, maxY, 5);
                 />
               ))}
 
-              <!-- Direct End-of-Line Series Label -->
+              <!-- Direct End-of-Line Series Label (truncated to fit the label gutter; full name is in the legend and this title) -->
               {lastPoint && (
                 <g transform={`translate(${lastX + 8}, ${lastY})`}>
+                  {seriesLabels[sIndex].display !== seriesLabels[sIndex].full && (
+                    <title>{seriesLabels[sIndex].full}</title>
+                  )}
                   <circle cx="0" cy="0" r="3" fill={s.color} />
                   <text
                     x="8"
@@ -249,7 +294,7 @@ const yTicks = generateTicks(minY, maxY, 5);
                     font-weight={isPrimary ? '600' : '500'}
                     dominant-baseline="central"
                   >
-                    {s.name} {s.labelSuffix ? `(${s.labelSuffix})` : ''}
+                    {seriesLabels[sIndex].display}
                   </text>
                 </g>
               )}
@@ -279,6 +324,12 @@ const yTicks = generateTicks(minY, maxY, 5);
   function initBenchmarkCharts() {
     const roots = document.querySelectorAll('[data-chart-root]');
     roots.forEach((root) => {
+      // Geometry is emitted by the component so the interaction maths can
+      // never drift from the rendered chart.
+      const chartWidth = Number(root.dataset.chartWidth);
+      const chartMarginLeft = Number(root.dataset.chartMarginLeft);
+      const chartPlotRight = Number(root.dataset.chartPlotRight);
+
       const svg = root.querySelector('.benchmark-svg') as SVGSVGElement;
       const crosshair = root.querySelector('.hover-crosshair') as SVGLineElement;
       const tooltip = root.querySelector('[data-chart-tooltip]') as HTMLElement;
@@ -290,9 +341,9 @@ const yTicks = generateTicks(minY, maxY, 5);
 
       svg.addEventListener('mousemove', (e) => {
         const rect = svg.getBoundingClientRect();
-        const mouseX = ((e.clientX - rect.left) / rect.width) * 720;
+        const mouseX = ((e.clientX - rect.left) / rect.width) * chartWidth;
 
-        if (mouseX < 65 || mouseX > 720 - 180) {
+        if (mouseX < chartMarginLeft || mouseX > chartPlotRight) {
           crosshair.style.opacity = '0';
           tooltip.style.opacity = '0';
           return;
@@ -339,7 +390,7 @@ const yTicks = generateTicks(minY, maxY, 5);
             .join('');
 
           tooltip.style.opacity = '1';
-          const tooltipX = Math.min(rect.width - 150, Math.max(10, ((mouseX) / 720) * rect.width));
+          const tooltipX = Math.min(rect.width - 150, Math.max(10, ((mouseX) / chartWidth) * rect.width));
           tooltip.style.left = `${tooltipX}px`;
           tooltip.style.top = `20px`;
         }
