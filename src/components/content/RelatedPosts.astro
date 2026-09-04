@@ -1,0 +1,91 @@
+---
+/**
+ * RelatedPosts.astro
+ * Surfaces 2-3 other posts at the end of an essay so a reader who finishes
+ * has a path deeper into the site.
+ *
+ * Ranking: most shared tags first (compared via normalizeTag, since tags in
+ * this repo have inconsistent casing/formatting), tie-broken by recency.
+ * Because the sort key is (sharedTagCount desc, pubDate desc), posts that
+ * share nothing with the current one naturally fall back to "most recent
+ * first" without any special-casing. Always excludes the current post and
+ * any draft: true post.
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { normalizeTag } from '@utils/tags.js';
+import BlogPostCard from './BlogPostCard.astro';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  limit?: number;
+}
+
+const { post, limit = 3 } = Astro.props;
+
+const currentTags = new Set(post.data.tags.map(normalizeTag));
+
+const candidates = await getCollection(
+  'blog',
+  ({ id, data }) => id !== post.id && !data.draft
+);
+
+const related = candidates
+  .map((candidate) => {
+    const candidateTags = candidate.data.tags.map(normalizeTag);
+    const sharedTagCount = candidateTags.filter((tag) => currentTags.has(tag)).length;
+    return { candidate, sharedTagCount };
+  })
+  .sort((a, b) => {
+    if (b.sharedTagCount !== a.sharedTagCount) return b.sharedTagCount - a.sharedTagCount;
+    return b.candidate.data.pubDate.valueOf() - a.candidate.data.pubDate.valueOf();
+  })
+  .slice(0, limit)
+  .map((entry) => entry.candidate);
+---
+
+{
+  related.length > 0 && (
+    <section class="related-posts" aria-labelledby="related-posts-heading">
+      <p class="related-posts-eyebrow">Continue reading</p>
+      <h2 id="related-posts-heading">Related field notes</h2>
+      <div class="related-posts-list">
+        {related.map((relatedPost) => (
+          <BlogPostCard post={relatedPost} />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .related-posts {
+    max-width: var(--prose-max-width);
+    margin-top: var(--space-8, 4rem);
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--ie-rule-strong);
+  }
+
+  .related-posts-eyebrow {
+    margin: 0 0 0.6rem;
+    color: var(--ie-blue);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .related-posts h2 {
+    margin: 0 0 1.25rem;
+    color: var(--ie-ink);
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 2.8vw, 2.1rem);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .related-posts-list {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

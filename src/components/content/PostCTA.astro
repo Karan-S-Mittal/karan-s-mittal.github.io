@@ -1,0 +1,112 @@
+---
+/**
+ * PostCTA.astro
+ * End-of-essay consultation call to action, rendered automatically by the
+ * post layout so it can never again be forgotten on an individual post.
+ * Primary action routes to /contact; secondary action to LinkedIn (from
+ * SOCIALS in src/config.ts).
+ */
+import Button from '@components/editorial/Button.astro';
+import { SOCIALS } from '../../config';
+
+interface Props {
+  /** Overrides the default prompt line. Keep it in the engineer-scientist register. */
+  prompt?: string;
+  /** Overrides the default heading. */
+  heading?: string;
+}
+
+const {
+  heading = 'Working on a system like this?',
+  prompt = 'If the mechanism above resembles a problem on your stack — deterministic retrieval, inference infrastructure, or another dependability-critical pipeline — I take on a limited number of architecture reviews and advisory engagements each quarter.',
+} = Astro.props;
+
+const linkedin = SOCIALS.find((s) => s.label === 'LinkedIn');
+if (!linkedin) throw new Error('SOCIALS is missing a "LinkedIn" entry');
+---
+
+<section class="post-cta" aria-labelledby="post-cta-heading">
+  <div class="post-cta-inner">
+    <p class="post-cta-eyebrow">Advisory</p>
+    <h2 id="post-cta-heading">{heading}</h2>
+    <p class="post-cta-prompt">{prompt}</p>
+
+    <div class="post-cta-actions">
+      <Button href="/contact">Start a conversation &rarr;</Button>
+      <Button href={linkedin.href} target="_blank" rel="noopener" variant="secondary">
+        Connect on LinkedIn &nearr;
+      </Button>
+    </div>
+  </div>
+
+  {
+    Astro.slots.has('default') && (
+      /*
+        Reserved slot for a future email-subscribe form. The site owner has
+        not yet chosen an email provider (e.g. Buttondown, ConvertKit); once
+        one is picked, pass a <SubscribeForm /> (or similar) as a child of
+        <PostCTA> and it will render here without any redesign of this
+        component. Deliberately empty until then — no placeholder input.
+      */
+      <div class="post-cta-subscribe">
+        <slot />
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .post-cta {
+    max-width: var(--prose-max-width);
+    margin-top: var(--space-8, 4rem);
+    padding-top: 2.5rem;
+    border-top: 2px solid var(--ie-rust);
+  }
+
+  .post-cta-inner {
+    max-width: 62ch;
+  }
+
+  .post-cta-eyebrow {
+    margin: 0 0 0.6rem;
+    color: var(--ie-rust);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .post-cta h2 {
+    margin: 0 0 0.85rem;
+    color: var(--ie-ink);
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 2.8vw, 2.1rem);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .post-cta-prompt {
+    margin: 0 0 1.75rem;
+    color: var(--ie-ink-secondary);
+    font-size: var(--ie-type-body);
+    line-height: 1.68;
+  }
+
+  .post-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .post-cta-subscribe:empty {
+    display: none;
+  }
+
+  .post-cta-subscribe:not(:empty) {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--ie-rule);
+  }
+</style>

@@ -2,6 +2,8 @@
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import Layout from '@layouts/Layout.astro';
 import TableOfContents from '@components/layout/TableOfContents.astro';
+import RelatedPosts from '@components/content/RelatedPosts.astro';
+import PostCTA from '@components/content/PostCTA.astro';
 import { getReadingTime } from '@utils/readingTime';
 import { tagSlug } from '@utils/tags.js';
 
@@ -135,6 +137,9 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
 
       <Content />
 
+      <RelatedPosts post={post} />
+      <PostCTA />
+
       <footer class="post-footer">
         <p class="back-link">
           <a href="/blog">← All posts</a>
@@ -184,11 +189,11 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     position: relative;
     padding: clamp(2.5rem, 7vw, 5.5rem) 0 2.5rem;
     margin-bottom: 3.5rem;
-    border-bottom: 1px solid color-mix(in srgb, var(--blue-300) 40%, var(--neutral-150));
+    border-bottom: 1px solid color-mix(in srgb, var(--ie-blue) 40%, var(--ie-rule-strong));
     /* Faint canvas-blue ambience behind the title block */
     background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--blue-100) 40%, transparent),
+      color-mix(in srgb, var(--ie-blue-soft) 40%, transparent),
       transparent 80%
     );
   }
@@ -266,7 +271,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     margin: 0;
   }
   .back-link a {
-    font-size: var(--text-sm);
+    font-size: var(--ie-type-ui);
     font-weight: 600;
   }
 
@@ -409,7 +414,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
       padding: var(--space-3) var(--space-4);
       color: var(--text);
       font-family: var(--font-mono);
-      font-size: var(--text-xs);
+      font-size: var(--ie-type-micro);
       font-weight: 600;
       letter-spacing: 0.06em;
       text-transform: uppercase;
@@ -420,7 +425,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     .post-mobile-toc summary::after {
       content: '+';
       color: var(--accent);
-      font-size: var(--text-base);
+      font-size: var(--ie-type-base);
     }
     .post-mobile-toc[open] summary::after { content: '\2212'; }
     .post-mobile-toc-count {
@@ -574,7 +579,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     padding-left: var(--space-3);
     border-left: 1px solid var(--border);
     color: var(--muted);
-    font-size: var(--text-sm);
+    font-size: var(--ie-type-ui);
     line-height: 1.6;
   }
   .post-layout .tag:hover,
