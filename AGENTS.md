@@ -1,4 +1,4 @@
-# Agent Instructions: Explanatory Systems Studio
+# Agent Instructions: Soft Architecture
 
 Welcome to Karan Mittal's personal engineering studio repository (`karan-s-mittal.github.io`).
 
@@ -28,14 +28,19 @@ When assisting Karan with content creation, architectural diagrams, technical wr
 
 ## 3. Visual & Diagram Grammar
 
-All pages and diagrams must adhere to the **Instrumented Editorial** visual language ([`docs/design-language.md`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/design-language.md); full specification in [`docs/instrumented-editorial.md`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/instrumented-editorial.md)):
+All pages and diagrams must adhere to the **Soft Architecture** visual language ([`docs/design-language.md`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/design-language.md); full specification in [`docs/instrumented-editorial.md`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/instrumented-editorial.md)):
 
 ### Semantic Palette:
-- **Paper / Surface**: `#F7F5EF` / `#FFFFFF`; dark `#111318` / `#181C22`.
-- **Ink / Structure**: `#171A1F`; dark `#F3F4F6`.
-- **Instrument blue (`#2857D9`)**: Links, active state, direct flow, selected controls.
-- **Constraint rust (`#A63D17`)**: Bottlenecks, failures, caveats, and editorial callouts only.
-- **Muted (`#5B6470`)**: Dimensions, byte offsets, metadata, secondary annotations.
+Every value below is a CSS custom property in `src/styles/global.css` — light, then dark.
+- **Canvas** (`--ie-canvas`): `#F8F9FC`; dark `#0C0A09`. Page field.
+- **Surface** (`--ie-surface`): `#FFFFFF`; dark `#18181B`. Exhibit / card plane.
+- **Ink** (`--ie-ink`): `#1A1A2E`; dark `#F3F4F6`. Text, direct structure.
+- **Secondary ink** (`--ie-ink-secondary`): `#4A4A6A`; dark `#D5D9DF`. Body, supporting explanation.
+- **Muted** (`--ie-muted`): `#5B6470`; dark `#AEB6C2`. Dimensions, byte offsets, metadata, inferred state.
+- **Rule** (`--ie-rule`): `#E8ECF4`; dark `#27272A`. Dividers, boundaries.
+- **Anchor blue** (`--ie-blue`): `#2676AA`; dark `#8DAAFF`. Links, active state, direct/synchronous flow, selected controls.
+- **Constraint rust** (`--ie-rust`): `#A63D17`; dark `#FFB36B`. Bottlenecks, caveats, constraints, **and failures** — there is deliberately no separate failure red; rust covers both.
+- **Verified green** (`--ie-verified`): `#157F5F`; dark `#5FD3A6`. Confirmed/validated state, success path.
 - Use rules and spatial grouping before cards, radii, tint, or shadows. Dark mode is supported and must preserve the same hierarchy.
 
 ### Standard Visual Archetypes:
@@ -45,6 +50,8 @@ All pages and diagrams must adhere to the **Instrumented Editorial** visual lang
 4. **Trade-Off Curves**: Multi-axis latency vs. memory vs. cost comparisons.
 
 ### Diagram Rules:
+- **Never write a raw hex color in a diagram component.** Every color in `src/components/diagram/**` must be a `var(--ie-*)` token so light and dark mode both work. A build check enforces this and will fail on raw hex. If you need a color that no token provides, add the token to `src/styles/global.css` for BOTH light and dark first — do not inline a value.
+- Tailwind default palette values (`#2563EB`, `#059669`, `#E11D48`, the `slate-*` ramp, etc.) are forbidden. They are not part of this system.
 - 1.5px stroke weight, solid edges = direct/synchronous, dashed muted edges = async/inferred, one rust constraint node max per diagram.
 - Fonts: IBM Plex Sans (labels) + IBM Plex Mono (metrics/code); IBM Plex Serif is reserved for editorial headings.
 - Use leader line callouts for unexpected behavior: `"← notice zero allocation here"`.
