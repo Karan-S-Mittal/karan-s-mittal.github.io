@@ -49,8 +49,11 @@ The visual system combines the authority of an editorial publication with the pr
 | Rule | `#E8ECF4` | `#27272A` | Dividers and boundaries |
 | Anchor blue | `#2676AA` | `#8DAAFF` | Links, active state, direct flow |
 | Constraint rust | `#A63D17` | `#FFB36B` | Bottleneck, caveat, failure, decision |
+| Verified green | `#157F5F` | `#5FD3A6` | Confirmed/validated state, success path, evidence-supported node |
 
 Use `--ie-*` or mapped semantic tokens.
+
+There is intentionally no separate failure color: constraint rust covers constraint, caveat, **and** failure. Do not add a fifth hue for failure/error states — route them through `--ie-rust` / `--ie-rust-soft`.
 
 ## Layout contract
 

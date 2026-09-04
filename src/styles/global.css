@@ -30,7 +30,11 @@
   --ie-blue-soft: #dceeff;
   --ie-rust: #a63d17;
   --ie-rust-soft: #f8e9df;
+  --ie-verified: #157F5F;
+  --ie-verified-soft: #E1F2EA;
   --ie-code: #15181d;
+  /* Code chrome is fixed near-black in BOTH modes, so its text stays fixed light. */
+  --ie-code-text: #f3f4f6;
 
   /* Typography Families */
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
@@ -82,6 +86,7 @@
   --signal-secondary: var(--ie-muted);
   --diagram-node-primary: var(--ie-blue);
   --diagram-node-attention: var(--ie-rust);
+  --diagram-node-verified: var(--ie-verified);
   --diagram-edge-primary: var(--ie-ink);
   --diagram-edge-secondary: var(--ie-muted);
   --diagram-plane: var(--ie-surface-raised);
@@ -148,6 +153,8 @@ html.dark {
   --ie-blue-soft: #202c4f;
   --ie-rust: #ffb36b;
   --ie-rust-soft: #3a281e;
+  --ie-verified: #5FD3A6;
+  --ie-verified-soft: #1B3A30;
   --ie-code: #0b0d10;
 
   --accent-hover: #b2c4ff;
@@ -315,7 +322,7 @@ pre {
   font-family: var(--font-mono);
   font-size: var(--ie-type-label);
   background: var(--ie-code);
-  color: #f3f4f6;
+  color: var(--ie-code-text);
   padding: var(--space-4);
   border-radius: var(--radius-card);
   border-left: 3px solid var(--ie-blue);
