@@ -288,6 +288,11 @@ const citations = rawCitations.map((c) => ({
 
   .citation-anchor-row {
     display: flex;
+    /* Source anchors are arbitrary-length paths like
+       `faiss/IndexIVFPQ.cpp:search_preassigned()`. On a 375px viewport this row
+       has only ~75px of slack, so it must be allowed to wrap rather than push
+       the page into horizontal overflow. */
+    flex-wrap: wrap;
     min-width: 0;
     align-items: center;
     gap: 6px;
