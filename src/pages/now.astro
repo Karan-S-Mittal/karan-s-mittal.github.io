@@ -1,6 +1,10 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import PageHeader from '@components/content/PageHeader.astro';
+import { formatTalkDate } from '@utils/date';
+
+// Bump this date whenever this page's content is edited.
+const lastUpdated = new Date('2026-09-05');
 
 const focusAreas = [
   {
@@ -101,7 +105,7 @@ const focusAreas = [
 
     <footer class="now-meta-footer">
       <p>
-        Updated periodically · Based on the <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now page movement</a> by Derek Sivers.
+        Updated <time datetime={lastUpdated.toISOString()}>{formatTalkDate(lastUpdated.toISOString().slice(0, 10))}</time> · Based on the <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now page movement</a> by Derek Sivers.
       </p>
     </footer>
   </main>

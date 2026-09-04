@@ -31,7 +31,12 @@ const rssUrl = new URL('/rss.xml', Astro.site).toString();
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="light dark" />
-  <meta name="theme-color" content="#F8F9FC" />
+  <!-- theme-color tracks --ie-canvas per color scheme (from src/styles/global.css). Note: the
+       site's dark mode is also toggleable via a `.dark` class on <html> with a localStorage
+       preference, which `prefers-color-scheme` cannot see — an explicit user override won't be
+       reflected in the browser chrome color. Not scriptable; accepted limitation. -->
+  <meta name="theme-color" content="#F8F9FC" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0C0A09" media="(prefers-color-scheme: dark)" />
   <title>{title}</title>
   <meta name="description" content={description} />
   {robots && <meta name="robots" content={robots} />}
