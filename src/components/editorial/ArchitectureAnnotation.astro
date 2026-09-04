@@ -40,7 +40,7 @@ const { index, label, consequence } = Astro.props;
   .aa-head {
     margin: 0 0 var(--space-2);
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--ie-type-micro);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -55,7 +55,7 @@ const { index, label, consequence } = Astro.props;
   }
 
   .aa-body {
-    font-size: var(--text-base);
+    font-size: var(--ie-type-base);
     line-height: 1.7;
     color: var(--text);
   }
@@ -74,9 +74,9 @@ const { index, label, consequence } = Astro.props;
     gap: var(--space-2);
     margin: var(--space-3) 0 0;
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--ie-type-micro);
     letter-spacing: 0.02em;
     /* Warm attention tone, darkened for AA contrast on light surfaces */
-    color: color-mix(in srgb, var(--signal-warm) 55%, var(--ink-900));
+    color: color-mix(in srgb, var(--signal-warm) 55%, var(--ie-ink));
   }
 </style>

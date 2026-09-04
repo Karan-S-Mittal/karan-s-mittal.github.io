@@ -47,11 +47,11 @@ const { id, label, motif = true } = Astro.props;
     background:
       linear-gradient(
         135deg,
-        var(--blue-100) 0%,
-        color-mix(in srgb, var(--blue-100) 40%, var(--neutral-050)) 55%,
-        var(--neutral-050) 100%
+        var(--ie-blue-soft) 0%,
+        color-mix(in srgb, var(--ie-blue-soft) 40%, var(--ie-surface-raised)) 55%,
+        var(--ie-surface-raised) 100%
       );
-    border: 1px solid color-mix(in srgb, var(--blue-300) 55%, var(--neutral-150));
+    border: 1px solid color-mix(in srgb, var(--ie-blue) 55%, var(--ie-rule-strong));
   }
 
   .tp-motif {
@@ -64,16 +64,16 @@ const { id, label, motif = true } = Astro.props;
   }
 
   .tp-motif circle {
-    fill: var(--blue-400);
+    fill: var(--ie-blue);
   }
 
   .tp-motif .tp-solid {
-    stroke: var(--blue-400);
+    stroke: var(--ie-blue);
     stroke-width: 1.5;
   }
 
   .tp-motif .tp-dashed {
-    stroke: var(--blue-400);
+    stroke: var(--ie-blue);
     stroke-width: 1.5;
     stroke-dasharray: 4 6;
   }
@@ -87,7 +87,7 @@ const { id, label, motif = true } = Astro.props;
   .tp-label {
     margin: 0 0 var(--space-4);
     font-family: var(--font-mono);
-    font-size: var(--text-sm);
+    font-size: var(--ie-type-ui);
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.12em;

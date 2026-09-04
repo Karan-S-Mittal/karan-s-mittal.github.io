@@ -82,7 +82,7 @@ const hasFooter = await Astro.slots.has('footer');
   /* State lights — Soft Architecture grammar: blue = structure/validated,
      pink = constraint/failure/attention, lavender = secondary/inferred */
   .state-signal::before { background: var(--interactive-primary); }
-  .state-verified::before { background: var(--blue-500); }
+  .state-verified::before { background: var(--ie-blue); }
   .state-constraint::before { background: var(--signal-warm); }
   .state-failure::before { background: var(--signal-warm); }
   .state-model::before { background: var(--diagram-node-primary); }

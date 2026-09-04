@@ -102,6 +102,51 @@
   --ex-gray-stroke: var(--ie-rule-strong);
   --ex-gray-text: var(--ie-muted);
 
+  /* ---- Recovered token subsystems -------------------------------------
+     The CSS consolidation in d65c1b1 renamed the palette to --ie-* but left
+     42 references to the old names dangling. A bare var() of an undefined
+     property makes the whole declaration invalid, so those styles were being
+     silently dropped. These map the still-referenced subsystems onto the
+     semantic palette so they inherit light/dark correctly.
+     Values are pinned to preserve current rendering; tune deliberately. */
+
+  /* Exhibit colour families used by MDX diagrams, matching --ex-blue-*. */
+  --ex-green-bg: var(--ie-verified-soft);
+  --ex-green-stroke: var(--ie-verified);
+  --ex-green-text: var(--ie-verified);
+  --ex-rose-bg: var(--ie-rust-soft);
+  --ex-rose-stroke: var(--ie-rust);
+  --ex-rose-text: var(--ie-rust);
+  --ex-amber-bg: var(--ie-rust-soft);
+  --ex-amber-stroke: var(--ie-rust);
+  --ex-amber-text: var(--ie-rust);
+  --ex-purple-bg: var(--ie-blue-soft);
+  --ex-purple-stroke: var(--ie-blue);
+  --ex-purple-text: var(--ie-blue);
+  --ex-indigo-bg: var(--ie-blue-soft);
+  --ex-indigo-stroke: var(--ie-blue);
+  --ex-indigo-text: var(--ie-blue);
+
+  /* Studio panel chrome. Intended values recovered from the fallbacks that
+     AlgorithmFlow.astro still carries; StudioPanel.astro used them bare. */
+  --panel-bg: var(--ie-surface);
+  --panel-border: var(--ie-rule);
+  --panel-border-strong: var(--ie-rule-strong);
+  --panel-header-bg: var(--ie-surface-raised);
+  --panel-header-height: 2.75rem;
+  --panel-property-bg: var(--ie-surface-raised);
+  --panel-radius: var(--radius);
+  --panel-shadow: none;
+
+  /* The design language prefers rules and spatial grouping over shadows, and
+     these were rendering as no-shadow anyway. Pinned to that, not invented. */
+  --shadow-sm: none;
+  --shadow-card: none;
+
+  /* Prose table cells. Previously invalid, so cells had no padding at all. */
+  --table-cell-pad-block: 0.6rem;
+  --table-cell-pad-inline: 0.85rem;
+
   /* Spacing Scale */
   --space-1: 0.25rem;   /* 4px */
   --space-2: 0.5rem;    /* 8px */

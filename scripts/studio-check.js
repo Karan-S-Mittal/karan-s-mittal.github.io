@@ -10,6 +10,9 @@ const sourcePatterns = [
   'src/**/*.css',
   'src/**/*.md',
   'src/**/*.mdx',
+  // .tsx both defines (--mafs-bg) and consumes tokens; excluding it would
+  // make the undefined-token pass report false positives.
+  'src/**/*.tsx',
 ];
 
 const errors = [];
@@ -97,6 +100,40 @@ function findRawHexInDiagrams(file, source) {
   );
 }
 
+/**
+ * A bare var() of an undefined custom property makes the WHOLE declaration
+ * invalid, so the style silently does nothing. The d65c1b1 CSS consolidation
+ * renamed tokens to --ie-* and left 42 such references behind, which is how
+ * `font-size: var(--text-xs)` ended up doing nothing on live pages.
+ * Usages that supply a fallback are fine and are not reported.
+ */
+function findUndefinedTokens(files, sources) {
+  const defined = new Set();
+  for (const source of sources.values()) {
+    for (const match of source.matchAll(/(--[a-zA-Z0-9-]+)\s*:/g)) defined.add(match[1]);
+  }
+
+  for (const file of files) {
+    const source = sources.get(file);
+    const seen = new Set();
+    for (const match of source.matchAll(/var\(\s*(--[a-zA-Z0-9-]+)\s*(,)?/g)) {
+      const [, name, hasFallback] = match;
+      if (hasFallback || defined.has(name) || seen.has(name)) continue;
+      seen.add(name);
+
+      // `var(--good, var(--dead))` never evaluates the inner one, so the
+      // declaration still works. That is stale naming, not a broken style.
+      const isFallback = /,\s*$/.test(source.slice(0, match.index));
+      if (isFallback) {
+        report(warnings, file, `var(${name}) sits in fallback position but ${name} is defined nowhere; dead naming, harmless at runtime`);
+      } else {
+        report(errors, file, `uses var(${name}) with no fallback, but ${name} is defined nowhere; the whole declaration is dropped`);
+      }
+    }
+  }
+}
+
+
 async function main() {
   const files = await fg(sourcePatterns, {
     cwd: root,
@@ -105,13 +142,17 @@ async function main() {
     ignore: ['src/content/blog/_template.mdx'],
   });
 
+  const sources = new Map();
   for (const file of files) {
     const source = await readFile(file, 'utf8');
+    sources.set(file, source);
     findInlineSvgProblems(file, source);
     findLegacyLanguage(file, source);
     findIncompleteExhibits(file, source);
     findRawHexInDiagrams(file, source);
   }
+
+  findUndefinedTokens(files, sources);
 
   console.log(`Studio preflight scanned ${files.length} source files.`);
 
