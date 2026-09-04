@@ -26,10 +26,10 @@ const {
     <svg class="sketch-svg" viewBox="0 0 720 320" role="img" aria-label="Exact sorting vs weighted quantile sketch">
       <defs>
         <marker id="sketch-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-          <path d="M 0 0 L 8 3 L 0 6 Z" fill="#1E293B" />
+          <path d="M 0 0 L 8 3 L 0 6 Z" fill="var(--ie-ink)" />
         </marker>
         <marker id="sketch-arrow-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-          <path d="M 0 0 L 8 3 L 0 6 Z" fill="#2563EB" />
+          <path d="M 0 0 L 8 3 L 0 6 Z" fill="var(--ie-blue)" />
         </marker>
       </defs>
 
@@ -37,58 +37,58 @@ const {
       <!-- ROW 1: NAIVE EXACT GREEDY SPLIT SCAN -->
       <!-- ========================================================================= -->
       <g transform="translate(14, 14)">
-        <rect x="0" y="0" width="692" height="120" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" />
+        <rect x="0" y="0" width="692" height="120" rx="8" fill="var(--ie-surface)" stroke="var(--ie-rule)" stroke-width="1.5" />
         
         <!-- Header -->
-        <rect x="0" y="0" width="692" height="26" rx="8 8 0 0" fill="#F8FAFC" />
-        <text x="14" y="18" font-family="var(--font-mono, monospace)" font-size="11" font-weight="700" fill="#334155">
+        <rect x="0" y="0" width="692" height="26" rx="8 8 0 0" fill="var(--ie-surface-raised)" />
+        <text x="14" y="18" font-family="var(--font-mono, monospace)" font-size="11" font-weight="700" fill="var(--ie-ink)">
           1. EXACT GREEDY SPLITTING (Exhaustive Scan Over All Data Points)
         </text>
-        <text x="678" y="18" text-anchor="end" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#E11D48">
+        <text x="678" y="18" text-anchor="end" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-rust)">
           Complexity: O(n × d) per level
         </text>
 
         <!-- Continuous Axis Line -->
         <g transform="translate(20, 48)">
-          <line x1="0" y1="20" x2="650" y2="20" stroke="#94A3B8" stroke-width="2" marker-end="url(#sketch-arrow)" />
-          <text x="650" y="38" text-anchor="end" font-family="var(--font-mono, monospace)" font-size="9" fill="#64748B">Feature Value xₖ →</text>
+          <line x1="0" y1="20" x2="650" y2="20" stroke="var(--ie-muted)" stroke-width="2" marker-end="url(#sketch-arrow)" />
+          <text x="650" y="38" text-anchor="end" font-family="var(--font-mono, monospace)" font-size="9" fill="var(--ie-muted)">Feature Value xₖ →</text>
 
           <!-- Individual Point Markers -->
-          <circle cx="30" cy="20" r="5" fill="#2563EB" />
-          <text x="30" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="#1E293B">x₁</text>
+          <circle cx="30" cy="20" r="5" fill="var(--ie-blue)" />
+          <text x="30" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="var(--ie-ink)">x₁</text>
 
-          <circle cx="80" cy="20" r="5" fill="#2563EB" />
-          <text x="80" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="#1E293B">x₂</text>
+          <circle cx="80" cy="20" r="5" fill="var(--ie-blue)" />
+          <text x="80" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="var(--ie-ink)">x₂</text>
 
-          <circle cx="130" cy="20" r="5" fill="#2563EB" />
-          <text x="130" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="#1E293B">x₃</text>
+          <circle cx="130" cy="20" r="5" fill="var(--ie-blue)" />
+          <text x="130" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="var(--ie-ink)">x₃</text>
 
-          <circle cx="170" cy="20" r="5" fill="#2563EB" />
-          <text x="170" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="#1E293B">x₄</text>
+          <circle cx="170" cy="20" r="5" fill="var(--ie-blue)" />
+          <text x="170" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="var(--ie-ink)">x₄</text>
 
-          <circle cx="210" cy="20" r="5" fill="#2563EB" />
-          <text x="210" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="#1E293B">x₅</text>
+          <circle cx="210" cy="20" r="5" fill="var(--ie-blue)" />
+          <text x="210" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="var(--ie-ink)">x₅</text>
 
-          <text x="310" y="24" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="12" fill="#94A3B8">· · · · · · · · · · · · · · ·</text>
+          <text x="310" y="24" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="12" fill="var(--ie-muted)">· · · · · · · · · · · · · · ·</text>
 
-          <circle cx="430" cy="20" r="5" fill="#2563EB" />
-          <text x="430" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="#1E293B">xₙ₋₂</text>
+          <circle cx="430" cy="20" r="5" fill="var(--ie-blue)" />
+          <text x="430" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="var(--ie-ink)">xₙ₋₂</text>
 
-          <circle cx="510" cy="20" r="5" fill="#2563EB" />
-          <text x="510" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="#1E293B">xₙ₋₁</text>
+          <circle cx="510" cy="20" r="5" fill="var(--ie-blue)" />
+          <text x="510" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="var(--ie-ink)">xₙ₋₁</text>
 
-          <circle cx="580" cy="20" r="5" fill="#2563EB" />
-          <text x="580" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="#1E293B">xₙ</text>
+          <circle cx="580" cy="20" r="5" fill="var(--ie-blue)" />
+          <text x="580" y="10" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" font-weight="600" fill="var(--ie-ink)">xₙ</text>
 
           <!-- Split Tick Lines -->
-          <line x1="55" y1="12" x2="55" y2="28" stroke="#E11D48" stroke-width="1.5" stroke-dasharray="2 2" />
-          <line x1="105" y1="12" x2="105" y2="28" stroke="#E11D48" stroke-width="1.5" stroke-dasharray="2 2" />
-          <line x1="150" y1="12" x2="150" y2="28" stroke="#E11D48" stroke-width="1.5" stroke-dasharray="2 2" />
-          <line x1="190" y1="12" x2="190" y2="28" stroke="#E11D48" stroke-width="1.5" stroke-dasharray="2 2" />
-          <line x1="470" y1="12" x2="470" y2="28" stroke="#E11D48" stroke-width="1.5" stroke-dasharray="2 2" />
-          <line x1="545" y1="12" x2="545" y2="28" stroke="#E11D48" stroke-width="1.5" stroke-dasharray="2 2" />
+          <line x1="55" y1="12" x2="55" y2="28" stroke="var(--ie-rust)" stroke-width="1.5" stroke-dasharray="2 2" />
+          <line x1="105" y1="12" x2="105" y2="28" stroke="var(--ie-rust)" stroke-width="1.5" stroke-dasharray="2 2" />
+          <line x1="150" y1="12" x2="150" y2="28" stroke="var(--ie-rust)" stroke-width="1.5" stroke-dasharray="2 2" />
+          <line x1="190" y1="12" x2="190" y2="28" stroke="var(--ie-rust)" stroke-width="1.5" stroke-dasharray="2 2" />
+          <line x1="470" y1="12" x2="470" y2="28" stroke="var(--ie-rust)" stroke-width="1.5" stroke-dasharray="2 2" />
+          <line x1="545" y1="12" x2="545" y2="28" stroke="var(--ie-rust)" stroke-width="1.5" stroke-dasharray="2 2" />
 
-          <text x="325" y="52" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9" font-weight="600" fill="#E11D48">
+          <text x="325" y="52" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9" font-weight="600" fill="var(--ie-rust)">
             ⚠️ Every unique mid-point must be tested sequentially (prohibitive on out-of-core data)
           </text>
         </g>
@@ -98,63 +98,63 @@ const {
       <!-- ROW 2: WEIGHTED QUANTILE SKETCH -->
       <!-- ========================================================================= -->
       <g transform="translate(14, 146)">
-        <rect x="0" y="0" width="692" height="158" rx="8" fill="#FFFFFF" stroke="#3B82F6" stroke-width="1.5" />
+        <rect x="0" y="0" width="692" height="158" rx="8" fill="var(--ie-surface)" stroke="var(--ie-blue)" stroke-width="1.5" />
         
         <!-- Header -->
-        <rect x="0" y="0" width="692" height="26" rx="8 8 0 0" fill="#EFF6FF" />
-        <text x="14" y="18" font-family="var(--font-mono, monospace)" font-size="11" font-weight="700" fill="#1E40AF">
+        <rect x="0" y="0" width="692" height="26" rx="8 8 0 0" fill="var(--ie-blue-soft)" />
+        <text x="14" y="18" font-family="var(--font-mono, monospace)" font-size="11" font-weight="700" fill="var(--ie-blue)">
           2. WEIGHTED QUANTILE SKETCH (Hessian Curvature Mass Partitioning)
         </text>
-        <text x="678" y="18" text-anchor="end" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#059669">
+        <text x="678" y="18" text-anchor="end" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-verified)">
           Bound: |rₖ(sⱼ) − rₖ(sⱼ₊₁)| &lt; ε
         </text>
 
         <!-- Sketch Buckets Container -->
         <g transform="translate(16, 38)">
           <!-- Bucket 1 (Wide low-curvature) -->
-          <rect x="0" y="0" width="190" height="52" rx="4" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.2" />
-          <text x="95" y="20" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#1E40AF">BUCKET 1 (Mass ≈ 1/ε)</text>
-          <text x="95" y="36" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9" fill="#2563EB">Low Hessian (h ≈ 0.2)</text>
-          <text x="95" y="46" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" fill="#64748B">Wide interval [x₁..x₄]</text>
+          <rect x="0" y="0" width="190" height="52" rx="4" fill="var(--ie-blue-soft)" stroke="var(--ie-blue)" stroke-width="1.2" />
+          <text x="95" y="20" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-blue)">BUCKET 1 (Mass ≈ 1/ε)</text>
+          <text x="95" y="36" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9" fill="var(--ie-blue)">Low Hessian (h ≈ 0.2)</text>
+          <text x="95" y="46" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" fill="var(--ie-muted)">Wide interval [x₁..x₄]</text>
 
           <!-- Laser Split Cut s₁ -->
           <g transform="translate(195, -6)">
-            <line x1="0" y1="0" x2="0" y2="70" stroke="#EC4899" stroke-width="2.5" stroke-dasharray="4 2" />
-            <rect x="-22" y="74" width="44" height="20" rx="4" fill="#FDF2F8" stroke="#DB2777" stroke-width="1" />
-            <text x="0" y="88" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9.5" font-weight="800" fill="#BE185D">Split s₁</text>
+            <line x1="0" y1="0" x2="0" y2="70" stroke="var(--ie-verified)" stroke-width="2.5" stroke-dasharray="4 2" />
+            <rect x="-22" y="74" width="44" height="20" rx="4" fill="var(--ie-verified-soft)" stroke="var(--ie-verified)" stroke-width="1" />
+            <text x="0" y="88" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9.5" font-weight="800" fill="var(--ie-verified)">Split s₁</text>
           </g>
 
           <!-- Bucket 2 (Narrow high-curvature) -->
-          <rect x="200" y="0" width="130" height="52" rx="4" fill="#FEF3C7" stroke="#FCD34D" stroke-width="1.2" />
-          <text x="265" y="20" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#92400E">BUCKET 2</text>
-          <text x="265" y="36" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9" font-weight="700" fill="#B45309">High Hessian (h ≈ 4.8)</text>
-          <text x="265" y="46" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" fill="#78350F">Dense samples</text>
+          <rect x="200" y="0" width="130" height="52" rx="4" fill="var(--ie-rust-soft)" stroke="var(--ie-rust)" stroke-width="1.2" />
+          <text x="265" y="20" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-rust)">BUCKET 2</text>
+          <text x="265" y="36" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9" font-weight="700" fill="var(--ie-rust)">High Hessian (h ≈ 4.8)</text>
+          <text x="265" y="46" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" fill="var(--ie-rust)">Dense samples</text>
 
           <!-- Laser Split Cut s₂ -->
           <g transform="translate(335, -6)">
-            <line x1="0" y1="0" x2="0" y2="70" stroke="#EC4899" stroke-width="2.5" stroke-dasharray="4 2" />
-            <rect x="-22" y="74" width="44" height="20" rx="4" fill="#FDF2F8" stroke="#DB2777" stroke-width="1" />
-            <text x="0" y="88" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9.5" font-weight="800" fill="#BE185D">Split s₂</text>
+            <line x1="0" y1="0" x2="0" y2="70" stroke="var(--ie-verified)" stroke-width="2.5" stroke-dasharray="4 2" />
+            <rect x="-22" y="74" width="44" height="20" rx="4" fill="var(--ie-verified-soft)" stroke="var(--ie-verified)" stroke-width="1" />
+            <text x="0" y="88" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9.5" font-weight="800" fill="var(--ie-verified)">Split s₂</text>
           </g>
 
           <!-- Bucket 3 (Medium) -->
-          <rect x="340" y="0" width="150" height="52" rx="4" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.2" />
-          <text x="415" y="20" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#1E40AF">BUCKET 3</text>
-          <text x="415" y="36" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9" fill="#2563EB">Σh ≈ 1/ε</text>
-          <text x="415" y="46" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" fill="#64748B">Medium interval</text>
+          <rect x="340" y="0" width="150" height="52" rx="4" fill="var(--ie-blue-soft)" stroke="var(--ie-blue)" stroke-width="1.2" />
+          <text x="415" y="20" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-blue)">BUCKET 3</text>
+          <text x="415" y="36" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9" fill="var(--ie-blue)">Σh ≈ 1/ε</text>
+          <text x="415" y="46" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" fill="var(--ie-muted)">Medium interval</text>
 
           <!-- Laser Split Cut s₃ -->
           <g transform="translate(495, -6)">
-            <line x1="0" y1="0" x2="0" y2="70" stroke="#EC4899" stroke-width="2.5" stroke-dasharray="4 2" />
-            <rect x="-22" y="74" width="44" height="20" rx="4" fill="#FDF2F8" stroke="#DB2777" stroke-width="1" />
-            <text x="0" y="88" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9.5" font-weight="800" fill="#BE185D">Split s₃</text>
+            <line x1="0" y1="0" x2="0" y2="70" stroke="var(--ie-verified)" stroke-width="2.5" stroke-dasharray="4 2" />
+            <rect x="-22" y="74" width="44" height="20" rx="4" fill="var(--ie-verified-soft)" stroke="var(--ie-verified)" stroke-width="1" />
+            <text x="0" y="88" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9.5" font-weight="800" fill="var(--ie-verified)">Split s₃</text>
           </g>
 
           <!-- Bucket 4 -->
-          <rect x="500" y="0" width="160" height="52" rx="4" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.2" />
-          <text x="580" y="20" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="#065F46">BUCKET 4 (Mass ≈ 1/ε)</text>
-          <text x="580" y="36" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9" fill="#047857">Remaining instances</text>
-          <text x="580" y="46" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" fill="#065F46">Top quantile [xₖ..xₙ]</text>
+          <rect x="500" y="0" width="160" height="52" rx="4" fill="var(--ie-verified-soft)" stroke="var(--ie-verified)" stroke-width="1.2" />
+          <text x="580" y="20" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="10" font-weight="700" fill="var(--ie-verified)">BUCKET 4 (Mass ≈ 1/ε)</text>
+          <text x="580" y="36" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="9" fill="var(--ie-verified)">Remaining instances</text>
+          <text x="580" y="46" text-anchor="middle" font-family="var(--font-mono, monospace)" font-size="8.5" fill="var(--ie-verified)">Top quantile [xₖ..xₙ]</text>
         </g>
       </g>
     </svg>
@@ -164,7 +164,7 @@ const {
 <style>
   .sketch-diagram-wrap {
     width: 100%;
-    background: #FFFFFF;
+    background: var(--ie-surface);
     border-radius: var(--radius-card, 10px);
     overflow: hidden;
     box-shadow: 0 4px 16px rgba(162, 210, 255, 0.12);
@@ -180,45 +180,45 @@ const {
   .row-header-accent {
     font-family: var(--font-sans, sans-serif);
     font-size: 12.5px;
-    fill: var(--accent, #2676AA);
+    fill: var(--ie-blue);
   }
 
   .row-meta {
     font-family: var(--font-mono, monospace);
     font-size: 10.5px;
-    fill: var(--text-muted, #68768B);
+    fill: var(--ie-muted);
   }
 
   .cell-val {
     font-family: var(--font-mono, monospace);
     font-size: 10.5px;
     font-weight: 600;
-    fill: var(--text, #1A1A2E);
+    fill: var(--ie-ink);
   }
 
   .cell-dots {
     font-family: var(--font-mono, monospace);
     font-size: 14px;
     font-weight: 700;
-    fill: var(--text-muted, #68768B);
+    fill: var(--ie-muted);
   }
 
   .bucket-title {
     font-family: var(--font-mono, monospace);
     font-size: 10px;
     font-weight: 700;
-    fill: var(--accent, #2676AA);
+    fill: var(--ie-blue);
   }
 
   .bucket-sub {
     font-family: var(--font-mono, monospace);
     font-size: 8.5px;
-    fill: var(--text-muted, #68768B);
+    fill: var(--ie-muted);
   }
 
   .split-marker {
     font-family: var(--font-mono, monospace);
     font-size: 9.5px;
-    fill: #E11D48;
+    fill: var(--ie-rust);
   }
 </style>

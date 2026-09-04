@@ -228,7 +228,7 @@ const yTicks = generateTicks(minY, maxY, 5);
                   cy={scaleY(p.y)}
                   r={isPrimary ? 4 : 3}
                   fill={s.color}
-                  stroke="var(--surface-card, #ffffff)"
+                  stroke="var(--ie-surface)"
                   stroke-width="1.5"
                   class="series-point"
                   data-x={p.x}
@@ -352,16 +352,15 @@ const yTicks = generateTicks(minY, maxY, 5);
     });
   }
 
-  document.addEventListener('astro:page-load', initBenchmarkCharts);
   initBenchmarkCharts();
 </script>
 
 <style>
   .benchmark-chart-container {
     width: 100%;
-    background: var(--ie-surface, var(--surface-card, #ffffff));
+    background: var(--ie-surface);
     border-radius: var(--radius-card, 10px);
-    border: 1px solid var(--ie-rule, var(--border-default, #e2e8f0));
+    border: 1px solid var(--ie-rule);
     padding: var(--space-4, 16px);
     overflow: hidden;
   }
@@ -390,17 +389,17 @@ const yTicks = generateTicks(minY, maxY, 5);
 
   .legend-label {
     font-weight: 600;
-    color: var(--ie-ink, var(--text, #1a1a2e));
+    color: var(--ie-ink);
   }
 
   .chart-annotation-badge {
     margin-left: auto;
     font-size: 10px;
     font-weight: 700;
-    color: var(--ie-muted, var(--text-muted, #68768b));
+    color: var(--ie-muted);
     padding: 2px 6px;
-    background: color-mix(in srgb, var(--ie-surface, var(--surface-card, #ffffff)) 70%, var(--ie-canvas, var(--bg, #f8f9fc)));
-    border: 1px solid var(--ie-rule, var(--border-default, #e2e8f0));
+    background: color-mix(in srgb, var(--ie-surface) 70%, var(--ie-canvas));
+    border: 1px solid var(--ie-rule);
     border-radius: 3px;
     letter-spacing: 0.05em;
   }
@@ -418,7 +417,7 @@ const yTicks = generateTicks(minY, maxY, 5);
   }
 
   .grid-line, .grid-line-vertical {
-    stroke: var(--ie-rule, var(--border-default, #e2e8f0));
+    stroke: var(--ie-rule);
     stroke-width: 1;
     stroke-dasharray: 2 2;
     opacity: 0.8;
@@ -427,14 +426,14 @@ const yTicks = generateTicks(minY, maxY, 5);
   .axis-tick-text {
     font-family: var(--font-mono, monospace);
     font-size: 10px;
-    fill: var(--ie-muted, var(--text-muted, #68768b));
+    fill: var(--ie-muted);
   }
 
   .axis-title-x, .axis-title-y {
     font-family: var(--font-mono, monospace);
     font-size: 10.5px;
     font-weight: 700;
-    fill: var(--ie-muted, var(--text-muted, #68768b));
+    fill: var(--ie-muted);
     letter-spacing: 0.03em;
   }
 
@@ -447,12 +446,12 @@ const yTicks = generateTicks(minY, maxY, 5);
     font-family: var(--font-mono, monospace);
     font-size: 9.5px;
     font-weight: 700;
-    fill: var(--text-muted, #68768b);
+    fill: var(--ie-muted);
     letter-spacing: 0.04em;
   }
 
   .hover-crosshair {
-    stroke: var(--accent, #2676aa);
+    stroke: var(--ie-blue);
     stroke-width: 1.2;
     stroke-dasharray: 3 3;
     opacity: 0;
@@ -463,8 +462,8 @@ const yTicks = generateTicks(minY, maxY, 5);
   .chart-tooltip {
     position: absolute;
     pointer-events: none;
-    background: var(--ink-900, #1a1a2e);
-    color: #ffffff;
+    background: var(--ie-ink);
+    color: var(--ie-surface);
     padding: 6px 10px;
     border-radius: 4px;
     font-family: var(--font-mono, monospace);
@@ -480,6 +479,6 @@ const yTicks = generateTicks(minY, maxY, 5);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding-bottom: 3px;
     margin-bottom: 3px;
-    color: var(--accent, #38bdf8);
+    color: var(--ie-blue);
   }
 </style>

@@ -64,6 +64,39 @@ function findIncompleteExhibits(file, source) {
   }
 }
 
+/**
+ * Diagram components must express every colour as a `var(--ie-*)` token so that
+ * light and dark mode both work. Raw hex is how the xgboost family drifted onto
+ * the Tailwind default palette and stopped rendering in dark mode.
+ */
+function findRawHexInDiagrams(file, source) {
+  if (!/src\/components\/diagram\//.test(relative(root, file).replace(/\\/g, '/'))) return;
+
+  // Only colour-bearing places count. Prose text nodes legitimately contain
+  // things like "Doc #104", and fragment refs like url(#arrow) are not colours.
+  const colourAttr = /\b(?:fill|stroke|stop-color|flood-color|lighting-color|color|style)\s*=\s*(["'])([\s\S]*?)\1/g;
+  const styleBlock = /<style\b[^>]*>([\s\S]*?)<\/style>/g;
+
+  const haystacks = [];
+  for (const m of source.matchAll(colourAttr)) haystacks.push(m[2]);
+  for (const m of source.matchAll(styleBlock)) haystacks.push(m[1]);
+
+  const hex = haystacks
+    .join('\n')
+    .replace(/url\(\s*#[^)]*\)/g, '')
+    .match(/#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3}(?:[0-9a-fA-F]{2})?)?\b/g);
+  if (!hex) return;
+
+  const unique = [...new Set(hex.map((value) => value.toLowerCase()))];
+  report(
+    errors,
+    file,
+    `contains ${hex.length} raw hex colour(s) (${unique.slice(0, 6).join(', ')}${unique.length > 6 ? ', …' : ''}); ` +
+      'diagram colours must be var(--ie-*) tokens so dark mode works. ' +
+      'If no token fits, add one to src/styles/global.css for BOTH light and dark first.',
+  );
+}
+
 async function main() {
   const files = await fg(sourcePatterns, {
     cwd: root,
@@ -77,6 +110,7 @@ async function main() {
     findInlineSvgProblems(file, source);
     findLegacyLanguage(file, source);
     findIncompleteExhibits(file, source);
+    findRawHexInDiagrams(file, source);
   }
 
   console.log(`Studio preflight scanned ${files.length} source files.`);

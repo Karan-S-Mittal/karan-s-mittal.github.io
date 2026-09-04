@@ -44,10 +44,9 @@ const { caption, badge, exhibit, title } = Astro.props;
     margin: 0 auto;
   }
 
-  /* Node styling in Light Mode */
   .sys-diagram .node {
-    fill: #ffffff;
-    stroke: var(--ink-900);
+    fill: var(--ex-card-bg);
+    stroke: var(--ex-text-main);
     stroke-width: 1.5;
   }
 
@@ -63,40 +62,17 @@ const { caption, badge, exhibit, title } = Astro.props;
     stroke-width: 1.5;
   }
 
-  /* Node styling in Dark Mode */
-  :global(html.dark) .sys-diagram .node {
-    fill: #1e1e23;
-    stroke: rgba(255, 255, 255, 0.22);
-    stroke-width: 1.5;
-  }
-
-  :global(html.dark) .sys-diagram .node-muted {
-    fill: #151518;
-    stroke: rgba(255, 255, 255, 0.12);
-    stroke-width: 1.2;
-  }
-
-  :global(html.dark) .sys-diagram .node-signal {
-    fill: rgba(41, 151, 255, 0.14);
-    stroke: var(--blue-400);
-    stroke-width: 1.5;
-  }
-
   .sys-diagram .rule {
-    stroke: var(--border-default);
+    stroke: var(--ex-border);
     stroke-width: 1;
   }
 
   .sys-diagram .flow {
     fill: none;
-    stroke: var(--ink-700);
+    stroke: var(--ex-text-main);
     stroke-width: 1.8;
     stroke-linecap: round;
     stroke-linejoin: round;
-  }
-
-  :global(html.dark) .sys-diagram .flow {
-    stroke: rgba(255, 255, 255, 0.6);
   }
 
   .sys-diagram .flow-signal {
