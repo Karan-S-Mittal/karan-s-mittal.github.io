@@ -6,6 +6,9 @@ const blog = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
     title: z.string(),
+    /** Display-only variant of `title` that may contain `<wbr>` for line-break control.
+     *  `title` stays the plain-text value used for SEO/meta/RSS. */
+    titleHtml: z.string().optional(),
     description: z.string(),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),

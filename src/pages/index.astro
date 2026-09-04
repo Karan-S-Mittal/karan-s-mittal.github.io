@@ -15,8 +15,14 @@ function formatDate(date: Date | string) {
   return value.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
 }
 
-const linkedinSocial = SOCIALS.find((s) => s.name === 'LinkedIn')?.url || 'https://www.linkedin.com/in/karansmittal/';
-const githubSocial = SOCIALS.find((s) => s.name === 'GitHub')?.url || 'https://github.com/karan-s-mittal';
+function getSocial(label: (typeof SOCIALS)[number]['label']) {
+  const social = SOCIALS.find((s) => s.label === label);
+  if (!social) throw new Error(`SOCIALS is missing a "${label}" entry`);
+  return social.href;
+}
+
+const linkedinSocial = getSocial('LinkedIn');
+const githubSocial = getSocial('GitHub');
 ---
 
 <Layout

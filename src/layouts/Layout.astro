@@ -72,11 +72,7 @@ const rssUrl = new URL('/rss.xml', Astro.site).toString();
   <Footer />
 
   <script>
-    let headerScrollCleanup = null;
-
     function setupPageEnhancements() {
-      // Astro client navigation can replace page content without reloading
-      // this module. Make enhancement setup idempotent for each new document.
       document.querySelectorAll('pre').forEach((pre) => {
         if (pre.querySelector('.copy-code')) return;
         const button = document.createElement('button');
@@ -103,17 +99,14 @@ const rssUrl = new URL('/rss.xml', Astro.site).toString();
         });
       });
 
-      headerScrollCleanup?.();
       const header = document.querySelector('header');
       if (!header) return;
       const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 10);
       window.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
-      headerScrollCleanup = () => window.removeEventListener('scroll', onScroll);
     }
 
     setupPageEnhancements();
-    document.addEventListener('astro:page-load', setupPageEnhancements);
   </script>
 </body>
 </html>

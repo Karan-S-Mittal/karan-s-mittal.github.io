@@ -23,7 +23,6 @@ const tocHeadings = headings
 const showToc = tocHeadings.length > 2;
 
 const readingTime = getReadingTime(post.body);
-const isPagedAttention = post.id === 'paged-attention-kv-cache';
 
 const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -75,11 +74,11 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
             )}
           </div>
 
-          <h1>
-            {isPagedAttention ? (
-              <>Paged<wbr />Attention: How Virtual Memory Manages the KV Cache</>
-            ) : post.data.title}
-          </h1>
+          {post.data.titleHtml ? (
+            <h1 set:html={post.data.titleHtml} />
+          ) : (
+            <h1>{post.data.title}</h1>
+          )}
 
           {post.data.description && <p class="post-standfirst">{post.data.description}</p>}
 
