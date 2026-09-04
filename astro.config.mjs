@@ -40,9 +40,9 @@ export default defineConfig({
   prefetch: { defaultStrategy: 'viewport', prefetchAll: false },
   vite: {
     build: {
-      // The two route-scoped visual-engine bundles include Three.js/Mafs and
-      // remain lazy-loaded. Their measured ceiling is ~532 kB minified.
-      chunkSizeWarningLimit: 600,
+      // The linear-regression post's visual-engine bundle (Mafs + Observable
+      // Plot, lazy-loaded) is the largest remaining chunk at roughly 500 kB.
+      chunkSizeWarningLimit: 550,
     },
   },
   integrations: [

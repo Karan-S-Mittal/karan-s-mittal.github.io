@@ -39,7 +39,6 @@ const ROUTES = [
   '/now/',
   '/studio/',
   '/studio/components/',
-  '/studio/visuals/',
   '/tags/',
   ...[
     'ai-architecture',
