@@ -1,9 +1,8 @@
 # Studio Engine
 
-**Status:** Working foundation  
-**Control room:** `/studio/`  
-**Component showroom:** `/studio/components/`  
-**Purpose:** Make the Explanatory Systems Studio fast to inspect, repair, verify, and publish without allowing each essay to invent a new visual system.
+**Status:** Retired internal routes; verification script and tokens retained  
+**Visuals Directory:** `/visuals/`  
+**Purpose:** Make the visual system fast to inspect, repair, verify, and publish without allowing each essay to invent a new visual system.
 
 ## The operating decision
 
@@ -27,8 +26,7 @@ A local patch is incomplete when the same failure can still be produced elsewher
 | Runtime tokens | `src/styles/global.css` | The values actually used by pages and components |
 | Reusable primitives | `src/components/` | Tool panels, exhibit frames, flows, charts, walkthroughs, and article chrome |
 | Diagram geometry | `src/lib/diagram-routing/` | Deterministic connector paths and clearance rules |
-| Visual control room | `src/pages/studio.astro` | Live inspection at multiple reading widths and structured issue capture |
-| Component showroom | `src/pages/studio/components.astro` | Approval surface for foundations, controls, production components, and container-responsive behaviour. Showroom chrome (ink-first headers, macOS-style sidebar, quiet toolbar, colour chips) lives in `src/styles/component-showroom.css`; the canvas is an `inline-size` container so specimens respond to the width simulator, not just the viewport. |
+| Visuals gallery | `src/pages/visuals/index.astro` | Public gallery of architecture diagrams and standalone download pages |
 | Automated preflight | `scripts/studio-check.js` | Detect invalid SVG markup, legacy language, and incomplete exhibit metadata |
 | Production renderer | `scripts/render-exhibits.js` | Convert editable SVG sources into light/dark high-resolution WebP assets |
 

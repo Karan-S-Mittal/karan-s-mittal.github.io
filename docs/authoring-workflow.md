@@ -4,6 +4,8 @@ This guide is the master reference for writing, illustrating, verifying, and pub
 
 ---
 
+For a standalone diagram, use the short [diagram-craft skill](../.agents/skills/diagram-craft/SKILL.md): provide a sketch or flow, get a reusable visual component and compact download page. Blog embeds import that same component. Separate preview pages and showroom registration are not part of this workflow.
+
 ## 1. Quickstart: Writing a New Post
 
 ### Option A: Using the CLI (Recommended)
@@ -67,21 +69,26 @@ Mathematical equations are rendered statically with KaTeX:
 
 ---
 
-## 4. Drawing Diagrams with the Studio Palette
+## 4. Authoring Diagrams & Architectural Exhibits
+
+See [**`docs/diagram-framework.md`**](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/diagram-framework.md) for full guidelines and the `.agents/skills/diagram-craft/SKILL.md` skill.
 
 To ensure all diagrams look authored by the same studio:
 
-1. In Obsidian, create an Excalidraw drawing in your post's directory or `public/diagrams/`:
-   `public/diagrams/<post-slug>/my-diagram.excalidraw.md` (or `.svg`).
-2. Open [`public/templates/studio-starter.excalidraw`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/public/templates/studio-starter.excalidraw) in Obsidian Excalidraw.
-3. Copy-paste pre-styled elements:
-   - **Signal Blue (`#1F66E5`)**: Active step, highlighted flow, key bottleneck.
-   - **Verified Green (`#168663`)**: Checked state, deterministic result, cache hit.
-   - **Constraint Amber (`#D97706`)**: Memory limit, lock contention, latency ceiling.
-   - **Failure Red (`#D64545`)**: OOM, cache miss, dropped packet.
-   - **Ink Navy (`#13213A`)**: Structural boxes, labels, and text.
-   - **Canvas Surface (`#F4F7FB`)**: Background.
-4. **Auto-Export:** With the Obsidian Excalidraw plugin set to **Auto-export SVG**, saving your drawing automatically generates `my-diagram.svg`.
+### Option A: Declarative Exhibits (Recommended)
+1. Provide your concept, ASCII tree, or specification to the AI agent using the `diagram-craft` skill.
+2. The agent produces an Astro exhibit component in `src/components/diagram/<Name>.astro` wrapped in `<Exhibit />`.
+3. The component uses:
+   - `Inter` typography for crisp UI and labels.
+   - Precision blueprint stealth arrows and circular junction pins.
+   - Vector brand and tech logos via `<BrandIcon name="..." />` (`claude`, `gemini`, `openai`, `mcp`, `git`, `docker`, `vscode`, etc.).
+   - 100% token-based colors (`var(--ie-*)` and `var(--brand-*)`) with automatic Light and Dark mode adaptation.
+4. Preflight test via `npm run studio:check`.
+
+### Option B: Obsidian Excalidraw
+1. In Obsidian, create an Excalidraw drawing: `public/diagrams/<post-slug>/my-diagram.excalidraw.md`.
+2. Use the semantic tokens: Anchor Blue (`--ie-blue`), Constraint Rust (`--ie-rust`), Verified Green (`--ie-verified`), Ink (`--ie-ink`), Muted (`--ie-muted`).
+3. Set Obsidian Excalidraw plugin to **Auto-export SVG** to generate `my-diagram.svg`.
 
 ---
 
@@ -91,7 +98,7 @@ To ensure all diagrams look authored by the same studio:
 The `<Exhibit />` component handles inline SVG diagrams, standard markdown image slots, and dual light/dark raster WebP images:
 
 ```mdx
-import Exhibit from '../../components/Exhibit.astro';
+import Exhibit from '../../components/editorial/Exhibit.astro';
 
 <Exhibit 
   exhibit="01" 

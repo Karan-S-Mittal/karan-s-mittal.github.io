@@ -16,8 +16,13 @@ pnpm-debug.log*
 .env
 .env.production
 
+# Test outputs & temporary exports
+test-results/
+output/
+
 # macOS
 .DS_Store
+**/.DS_Store
 
 # Local editor state
 .obsidian/
