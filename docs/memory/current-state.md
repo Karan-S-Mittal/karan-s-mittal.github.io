@@ -27,7 +27,8 @@ Last reviewed: 2026-09-08
 
 - The ordinary site is static HTML and small route CSS. The largest global stylesheet emitted in the last build was about 49 KB.
 - The linear-regression React island emitted a roughly 549 KB client chunk because Mafs, Observable Plot, and the spreadsheet explorer share one interactive boundary.
-- KaTeX CSS is imported from `src/layouts/Layout.astro`, so its full stylesheet is currently part of the global layout path even on pages without equations.
+- As of 2026-09-11, KaTeX CSS is scoped strictly to `src/pages/blog/[...slug].astro`, removing math stylesheet and font payload from all non-mathematical pages.
+- Closed-form OLS regression calculations are centralized in `src/utils/ols.ts` and verified by `tests/ols.test.mjs` (`npm test`).
 
 ## Correctness note
 
