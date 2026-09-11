@@ -1,0 +1,927 @@
+---
+/**
+ * CodingTimelineComparison.astro
+ * Publication-grade dual-track architectural timeline comparing Claude Code (Anthropic)
+ * and OpenAI Codex evolution across 18 months (Feb 2025 – Jul 2026).
+ *
+ * Adheres strictly to the Studio Diagramming Framework:
+ * - Zero Raw Hex: 100% token-based (--ie-* and --brand-*) supporting light/dark seamlessly.
+ * - Zero Text Collision: Discrete vertical slots with strict padding preventing overlay defects.
+ * - Website Typographic Scale: Inter font, 14px headings, 12px IBM Plex Mono tags/dates, 12px body.
+ * - Logo Sizing: +3–4px vector icons relative to text (16px icons vs 12-13px text).
+ * - Interactive Toggles: Dual Swimlanes vs Alternating Spine, plus Track Filtering.
+ */
+import BrandIcon from './icons/BrandIcon.astro';
+import VisualAttribution from './VisualAttribution.astro';
+import CodingEvolutionTree from './CodingEvolutionTree.astro';
+
+interface Props {
+  exhibit?: string;
+  title?: string;
+  badge?: string;
+  caption?: string;
+  wide?: boolean;
+}
+
+const {
+  exhibit = '02',
+  title = 'Agentic Coding Evolution: Claude Code vs. OpenAI Codex',
+  badge = 'CHRONOLOGY',
+  caption = 'An 18-month comparative trajectory from early terminal research previews to autonomous multi-agent orchestration and enterprise-scale workflows (Feb 2025 – Jul 2026).',
+  wide = true,
+} = Astro.props;
+
+interface Milestone {
+  id: number;
+  date: string;
+  track: 'claude' | 'codex';
+  title: string;
+  desc: string;
+  tag: string;
+}
+
+const milestones: Milestone[] = [
+  {
+    id: 1,
+    date: 'Feb 2025',
+    track: 'claude',
+    title: 'Claude Code launches in research preview',
+    desc: "Bundled with Claude 3.7 Sonnet. Anthropic's first agentic coding tool, terminal only.",
+    tag: 'RESEARCH PREVIEW',
+  },
+  {
+    id: 2,
+    date: 'Apr 2025',
+    track: 'codex',
+    title: 'Codex CLI launches',
+    desc: 'Open source, runs locally in the terminal, paired with o3 and o4-mini.',
+    tag: 'CLI LAUNCH',
+  },
+  {
+    id: 3,
+    date: 'May 2025',
+    track: 'codex',
+    title: 'Codex cloud agent, research preview',
+    desc: 'Cloud based, parallel tasks, powered by codex-1. Delegation first from day one.',
+    tag: 'CLOUD AGENT',
+  },
+  {
+    id: 4,
+    date: 'May 2025',
+    track: 'claude',
+    title: 'Claude Code reaches GA',
+    desc: 'Ships alongside Claude 4 (Opus 4, Sonnet 4). Adds VS Code and JetBrains extensions plus an SDK.',
+    tag: 'GENERAL AVAILABILITY',
+  },
+  {
+    id: 5,
+    date: 'Sep 2025',
+    track: 'codex',
+    title: 'GPT-5-Codex released',
+    desc: 'Tuned for agentic coding, can run independently for 7+ hours on complex tasks.',
+    tag: 'FRONTIER MODEL',
+  },
+  {
+    id: 6,
+    date: 'Sep 2025',
+    track: 'claude',
+    title: 'Sonnet 4.5 becomes default',
+    desc: 'Brings checkpoints, a native VS Code extension, subagents, hooks, background tasks.',
+    tag: 'CORE RUNTIME',
+  },
+  {
+    id: 7,
+    date: 'Oct 2025',
+    track: 'codex',
+    title: 'Codex reaches GA',
+    desc: 'Announced at OpenAI DevDay. Adds Slack integration, an SDK, admin controls.',
+    tag: 'GENERAL AVAILABILITY',
+  },
+  {
+    id: 8,
+    date: 'Nov 2025',
+    track: 'claude',
+    title: 'Opus 4.5 launches',
+    desc: 'First Claude model to cross 80% on SWE-bench Verified.',
+    tag: 'SWE-BENCH 80%+',
+  },
+  {
+    id: 9,
+    date: 'Dec 2025',
+    track: 'codex',
+    title: 'GPT-5.2-Codex released',
+    desc: 'Context compaction for long-horizon work, stronger on large refactors.',
+    tag: 'CONTEXT COMPACTION',
+  },
+  {
+    id: 10,
+    date: 'Feb 2026',
+    track: 'codex',
+    title: 'Codex desktop app + GPT-5.3-Codex',
+    desc: "A 'command center' for managing multiple agents; pushes toward general computer-use work.",
+    tag: 'DESKTOP APP',
+  },
+  {
+    id: 11,
+    date: 'Feb 2026',
+    track: 'claude',
+    title: 'Opus 4.6 launches',
+    desc: '1M-token context (beta), Agent Teams, adaptive thinking. Released the same week as GPT-5.3-Codex.',
+    tag: 'AGENT TEAMS',
+  },
+  {
+    id: 12,
+    date: 'Mar 2026',
+    track: 'codex',
+    title: 'GPT-5.4 for Codex',
+    desc: 'Continued monthly-cadence model iteration and benchmark refinement.',
+    tag: 'MODEL ITERATION',
+  },
+  {
+    id: 13,
+    date: 'May 2026',
+    track: 'claude',
+    title: 'Opus 4.8 + Dynamic Workflows',
+    desc: 'Claude writes its own orchestration scripts, coordinating up to roughly 1,000 parallel subagents.',
+    tag: '1000x SUBAGENTS',
+  },
+  {
+    id: 14,
+    date: 'Jun 2026',
+    track: 'codex',
+    title: 'Codex for every role, tool, and workflow',
+    desc: 'Six role-specific plugins; roughly 20% of Codex users are now non-developers.',
+    tag: 'ENTERPRISE EXPANSION',
+  },
+  {
+    id: 15,
+    date: 'Jun 2026',
+    track: 'claude',
+    title: 'Sonnet 5 launches',
+    desc: 'Native 1M-token context, agentic depth approaching Opus 4.8 at a fraction of the cost.',
+    tag: '1M CONTEXT',
+  },
+  {
+    id: 16,
+    date: 'Jul 2026',
+    track: 'claude',
+    title: 'Opus 5 launches',
+    desc: "Succeeds Opus 4.8 as Anthropic's flagship coding and reasoning model.",
+    tag: 'FLAGSHIP REASONING',
+  },
+];
+
+const claudeMilestones = milestones.filter((m) => m.track === 'claude');
+const codexMilestones = milestones.filter((m) => m.track === 'codex');
+---
+
+<div class="timeline-widget-root" id="coding-timeline-diagram" data-component="coding-timeline">
+  <!-- Header -->
+  <header class="timeline-header">
+    {badge && <div class="header-badge">{badge}</div>}
+    <h2 class="timeline-title">{title}</h2>
+    {caption && <p class="timeline-caption">{caption}</p>}
+  </header>
+    <!-- Toolbar Controls: Layout Switcher & Track Filter -->
+    <div class="timeline-toolbar" data-export-ignore>
+      <div class="toolbar-group">
+        <span class="toolbar-label">Layout</span>
+        <div class="toggle-pill-group" role="radiogroup" aria-label="Timeline layout style">
+          <button type="button" class="toggle-pill active" data-layout-mode="tree" aria-checked="true">
+            Branching Tree
+          </button>
+          <button type="button" class="toggle-pill" data-layout-mode="dual" aria-checked="false">
+            Dual Swimlanes
+          </button>
+          <button type="button" class="toggle-pill" data-layout-mode="spine" aria-checked="false">
+            Alternating Spine
+          </button>
+        </div>
+      </div>
+
+      <div class="toolbar-group">
+        <span class="toolbar-label">Track</span>
+        <div class="toggle-pill-group" role="radiogroup" aria-label="Filter timeline tracks">
+          <button type="button" class="toggle-pill active" data-track-filter="all" aria-checked="true">
+            All (16)
+          </button>
+          <button type="button" class="toggle-pill" data-track-filter="claude" aria-checked="false">
+            <BrandIcon name="claude" size={13} />
+            <span>Claude (8)</span>
+          </button>
+          <button type="button" class="toggle-pill" data-track-filter="codex" aria-checked="false">
+            <BrandIcon name="openai" size={13} />
+            <span>Codex (8)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 0: BRANCHING TREE (Default Squarish View) -->
+    <div class="timeline-view view-tree active" id="view-tree">
+      <CodingEvolutionTree showHeader={false} showAttribution={false} bordered={false} />
+    </div>
+
+    <!-- VIEW 1: DUAL SWIMLANES -->
+    <div class="timeline-view view-dual" id="view-dual" aria-hidden="true">
+      <!-- Left Track: Claude Code -->
+      <section class="swimlane-column track-claude" aria-label="Claude Code Anthropic Timeline">
+        <header class="track-header header-claude">
+          <BrandIcon name="claude" size={16} />
+          <div class="track-title-block">
+            <span class="track-name">Claude Code</span>
+            <span class="track-org">Anthropic</span>
+          </div>
+          <span class="track-count">{claudeMilestones.length} releases</span>
+        </header>
+
+        <div class="milestones-rail">
+          {claudeMilestones.map((m) => (
+            <article class="milestone-card card-claude" data-milestone-id={m.id}>
+              <span class="rail-pin" aria-hidden="true" />
+              <div class="milestone-meta">
+                <time class="milestone-date">{m.date}</time>
+                <span class="milestone-tag">{m.tag}</span>
+              </div>
+              <h4 class="milestone-title">{m.title}</h4>
+              <p class="milestone-desc">{m.desc}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <!-- Right Track: OpenAI Codex -->
+      <section class="swimlane-column track-codex" aria-label="OpenAI Codex Timeline">
+        <header class="track-header header-codex">
+          <BrandIcon name="openai" size={16} />
+          <div class="track-title-block">
+            <span class="track-name">OpenAI Codex</span>
+            <span class="track-org">OpenAI</span>
+          </div>
+          <span class="track-count">{codexMilestones.length} releases</span>
+        </header>
+
+        <div class="milestones-rail">
+          {codexMilestones.map((m) => (
+            <article class="milestone-card card-codex" data-milestone-id={m.id}>
+              <span class="rail-pin" aria-hidden="true" />
+              <div class="milestone-meta">
+                <time class="milestone-date">{m.date}</time>
+                <span class="milestone-tag">{m.tag}</span>
+              </div>
+              <h4 class="milestone-title">{m.title}</h4>
+              <p class="milestone-desc">{m.desc}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+
+    <!-- VIEW 2: ALTERNATING SPINE -->
+    <div class="timeline-view view-spine" id="view-spine" aria-hidden="true">
+      <div class="spine-container">
+        <div class="spine-wire" aria-hidden="true" />
+
+        <div class="spine-events-list">
+          {milestones.map((m, index) => {
+            const isLeft = index % 2 === 0;
+            const isClaude = m.track === 'claude';
+            return (
+              <div
+                class:list={[
+                  'spine-event-row',
+                  isLeft ? 'row-left' : 'row-right',
+                  isClaude ? 'track-claude' : 'track-codex',
+                ]}
+                data-track={m.track}
+                data-milestone-id={m.id}
+              >
+                <div class="spine-card-slot">
+                  <article class:list={['milestone-card', isClaude ? 'card-claude' : 'card-codex']}>
+                    <div class="milestone-meta">
+                      <div class="meta-brand">
+                        <BrandIcon name={isClaude ? 'claude' : 'openai'} size={14} />
+                        <time class="milestone-date">{m.date}</time>
+                      </div>
+                      <span class="milestone-tag">{m.tag}</span>
+                    </div>
+                    <h4 class="milestone-title">{m.title}</h4>
+                    <p class="milestone-desc">{m.desc}</p>
+                  </article>
+                </div>
+
+                <div class="spine-center-pin" aria-hidden="true">
+                  <span class="pin-outer" />
+                  <span class="pin-inner" />
+                </div>
+
+                <div class="spine-spacer-slot" aria-hidden="true" />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+
+    <!-- Accessible summary for screen readers & Architect Attribution -->
+    <footer class="timeline-summary-bar">
+      <div class="summary-left">
+        <span class="summary-caption">Chronological range: Feb 2025 to Jul 2026</span>
+        <span class="summary-legend">
+          <span class="dot dot-claude" aria-hidden="true" /> Anthropic
+          <span class="dot dot-codex" aria-hidden="true" /> OpenAI
+        </span>
+      </div>
+      <VisualAttribution />
+    </footer>
+  </div>
+
+<script>
+  function initCodingTimeline() {
+    const widgets = document.querySelectorAll<HTMLElement>('[data-component="coding-timeline"]');
+    widgets.forEach((widget) => {
+      if (widget.dataset.initialized === 'true') return;
+      widget.dataset.initialized = 'true';
+
+      const layoutButtons = widget.querySelectorAll<HTMLButtonElement>('[data-layout-mode]');
+      const filterButtons = widget.querySelectorAll<HTMLButtonElement>('[data-track-filter]');
+      const viewTree = widget.querySelector<HTMLElement>('#view-tree');
+      const viewDual = widget.querySelector<HTMLElement>('#view-dual');
+      const viewSpine = widget.querySelector<HTMLElement>('#view-spine');
+
+      // Layout Switcher
+      layoutButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const mode = btn.dataset.layoutMode;
+          layoutButtons.forEach((b) => {
+            b.classList.remove('active');
+            b.setAttribute('aria-checked', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-checked', 'true');
+
+          if (mode === 'tree') {
+            viewTree?.classList.add('active');
+            viewTree?.removeAttribute('aria-hidden');
+            viewDual?.classList.remove('active');
+            viewDual?.setAttribute('aria-hidden', 'true');
+            viewSpine?.classList.remove('active');
+            viewSpine?.setAttribute('aria-hidden', 'true');
+          } else if (mode === 'dual') {
+            viewDual?.classList.add('active');
+            viewDual?.removeAttribute('aria-hidden');
+            viewTree?.classList.remove('active');
+            viewTree?.setAttribute('aria-hidden', 'true');
+            viewSpine?.classList.remove('active');
+            viewSpine?.setAttribute('aria-hidden', 'true');
+          } else {
+            viewSpine?.classList.add('active');
+            viewSpine?.removeAttribute('aria-hidden');
+            viewTree?.classList.remove('active');
+            viewTree?.setAttribute('aria-hidden', 'true');
+            viewDual?.classList.remove('active');
+            viewDual?.setAttribute('aria-hidden', 'true');
+          }
+        });
+      });
+
+      // Filter Switcher
+      filterButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const filter = btn.dataset.trackFilter;
+          filterButtons.forEach((b) => {
+            b.classList.remove('active');
+            b.setAttribute('aria-checked', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-checked', 'true');
+
+          // Filter swimlanes
+          const swimlaneClaude = widget.querySelector<HTMLElement>('.track-claude.swimlane-column');
+          const swimlaneCodex = widget.querySelector<HTMLElement>('.track-codex.swimlane-column');
+          if (swimlaneClaude && swimlaneCodex) {
+            if (filter === 'claude') {
+              swimlaneClaude.style.display = 'block';
+              swimlaneCodex.style.display = 'none';
+            } else if (filter === 'codex') {
+              swimlaneClaude.style.display = 'none';
+              swimlaneCodex.style.display = 'block';
+            } else {
+              swimlaneClaude.style.display = 'block';
+              swimlaneCodex.style.display = 'block';
+            }
+          }
+
+          // Filter alternating rows
+          const spineRows = widget.querySelectorAll<HTMLElement>('.spine-event-row');
+          spineRows.forEach((row) => {
+            const track = row.dataset.track;
+            if (filter === 'all' || track === filter) {
+              row.style.display = 'flex';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        });
+      });
+    });
+  }
+
+  // Initialize on load and on Astro view transitions
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCodingTimeline);
+  } else {
+    initCodingTimeline();
+  }
+  document.addEventListener('astro:page-load', initCodingTimeline);
+</script>
+
+<style>
+  .timeline-widget-root {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    font-family: var(--font-diagram);
+    color: var(--ie-ink);
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    box-sizing: border-box;
+  }
+
+  .timeline-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .header-badge {
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ie-blue);
+    text-transform: uppercase;
+  }
+
+  .timeline-title {
+    margin: 0;
+    font-family: var(--font-diagram);
+    font-size: var(--ie-type-h3);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ie-ink);
+  }
+
+  .timeline-caption {
+    margin: 0;
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+    line-height: 1.4;
+  }
+
+  /* Toolbar */
+  .timeline-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-bottom: 0.875rem;
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .toolbar-label {
+    font-size: var(--ie-type-micro);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ie-muted);
+  }
+
+  .toggle-pill-group {
+    display: inline-flex;
+    align-items: center;
+    background: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius);
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .toggle-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    font-size: var(--ie-type-micro);
+    font-weight: 500;
+    font-family: var(--font-diagram);
+    color: var(--ie-ink-secondary);
+    background: transparent;
+    border: none;
+    border-radius: calc(var(--radius) - 2px);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+  }
+
+  .toggle-pill:hover {
+    color: var(--ie-ink);
+  }
+
+  .toggle-pill.active {
+    background: var(--ie-surface);
+    color: var(--ie-ink);
+    font-weight: 600;
+  }
+
+  /* Views Container */
+  .timeline-view {
+    display: none;
+    animation: fadeIn 150ms ease;
+  }
+
+  .timeline-view.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(2px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ================= VIEW 1: DUAL SWIMLANES ================= */
+  .view-dual.active {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .view-dual.active {
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .swimlane-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .track-header {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--ie-rule);
+  }
+
+  .header-claude {
+    background: var(--brand-anthropic-soft);
+    border-color: var(--brand-anthropic-border);
+  }
+
+  .header-codex {
+    background: var(--brand-openai-soft);
+    border-color: var(--brand-openai-border);
+  }
+
+  .track-title-block {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .track-name {
+    font-size: var(--ie-type-ui);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .header-claude .track-name {
+    color: var(--brand-anthropic-ink);
+  }
+
+  .header-codex .track-name {
+    color: var(--brand-openai-ink);
+  }
+
+  .track-org {
+    font-size: var(--ie-type-micro);
+    font-family: var(--font-mono);
+    color: var(--ie-muted);
+  }
+
+  .track-count {
+    font-size: var(--ie-type-micro);
+    font-family: var(--font-mono);
+    color: var(--ie-muted);
+  }
+
+  /* Rail of milestones */
+  .milestones-rail {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    padding-left: 1.25rem;
+    border-left: 2px solid var(--ie-rule);
+    margin-left: 0.5rem;
+  }
+
+  .track-claude .milestones-rail {
+    border-left-color: var(--brand-anthropic-border);
+  }
+
+  .track-codex .milestones-rail {
+    border-left-color: var(--brand-openai-border);
+  }
+
+  .milestone-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.875rem 1rem;
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card);
+    transition: border-color var(--transition-fast);
+  }
+
+  .milestone-card:hover {
+    border-color: var(--ie-rule-strong);
+  }
+
+  .card-claude:hover {
+    border-color: var(--brand-anthropic);
+  }
+
+  .card-codex:hover {
+    border-color: var(--brand-openai);
+  }
+
+  .rail-pin {
+    position: absolute;
+    left: calc(-1.25rem - 6px);
+    top: 1.125rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--ie-surface);
+    border: 2px solid var(--ie-rule-strong);
+  }
+
+  .track-claude .rail-pin {
+    border-color: var(--brand-anthropic);
+  }
+
+  .track-codex .rail-pin {
+    border-color: var(--brand-openai);
+  }
+
+  .milestone-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .meta-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .milestone-date {
+    font-size: var(--ie-type-micro);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--ie-ink-secondary);
+  }
+
+  .card-claude .milestone-date {
+    color: var(--brand-anthropic);
+  }
+
+  .card-codex .milestone-date {
+    color: var(--brand-openai);
+  }
+
+  .milestone-tag {
+    font-size: 0.6875rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--ie-rule);
+    background: var(--ie-surface-raised);
+    color: var(--ie-ink-secondary);
+  }
+
+  .card-claude .milestone-tag {
+    background: var(--brand-anthropic-soft);
+    border-color: var(--brand-anthropic-border);
+    color: var(--brand-anthropic-ink);
+  }
+
+  .card-codex .milestone-tag {
+    background: var(--brand-openai-soft);
+    border-color: var(--brand-openai-border);
+    color: var(--brand-openai-ink);
+  }
+
+  .milestone-title {
+    font-size: var(--ie-type-ui);
+    font-weight: 600;
+    color: var(--ie-ink);
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .milestone-desc {
+    font-size: var(--ie-type-micro);
+    line-height: 1.45;
+    color: var(--ie-ink-secondary);
+    margin: 0;
+  }
+
+  /* ================= VIEW 2: ALTERNATING SPINE ================= */
+  .spine-container {
+    position: relative;
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 1rem 0;
+  }
+
+  .spine-wire {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 1.25rem;
+    width: 2px;
+    background: var(--ie-rule);
+    transform: translateX(-50%);
+  }
+
+  @media (min-width: 640px) {
+    .spine-wire {
+      left: 50%;
+    }
+  }
+
+  .spine-events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    position: relative;
+  }
+
+  .spine-event-row {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .spine-event-row {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+
+    .spine-event-row.row-left {
+      flex-direction: row-reverse;
+    }
+  }
+
+  .spine-card-slot {
+    width: 100%;
+    padding-left: 2.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .spine-card-slot {
+      width: calc(50% - 1.5rem);
+      padding-left: 0;
+    }
+  }
+
+  .spine-spacer-slot {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .spine-spacer-slot {
+      display: block;
+      width: calc(50% - 1.5rem);
+    }
+  }
+
+  .spine-center-pin {
+    position: absolute;
+    left: 1.25rem;
+    top: 1.25rem;
+    transform: translate(-50%, 0);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--ie-surface);
+    border: 2px solid var(--ie-rule-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  @media (min-width: 640px) {
+    .spine-center-pin {
+      left: 50%;
+    }
+  }
+
+  .spine-event-row.track-claude .spine-center-pin {
+    border-color: var(--brand-anthropic);
+  }
+
+  .spine-event-row.track-codex .spine-center-pin {
+    border-color: var(--brand-openai);
+  }
+
+  .pin-inner {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ie-rule-strong);
+  }
+
+  .spine-event-row.track-claude .pin-inner {
+    background: var(--brand-anthropic);
+  }
+
+  .spine-event-row.track-codex .pin-inner {
+    background: var(--brand-openai);
+  }
+
+  /* Summary Bar */
+  .timeline-summary-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--ie-rule);
+    font-size: var(--ie-type-micro);
+    font-family: var(--font-mono);
+    color: var(--ie-muted);
+  }
+
+  .summary-left {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.875rem;
+  }
+
+  .summary-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .dot-claude {
+    background: var(--brand-anthropic);
+  }
+
+  .dot-codex {
+    background: var(--brand-openai);
+  }
+</style>

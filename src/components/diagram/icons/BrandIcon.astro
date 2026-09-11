@@ -1,0 +1,206 @@
+---
+/**
+ * BrandIcon.astro
+ * Token-calibrated vector icons for architectural diagrams.
+ * Adheres strictly to the studio standard: zero raw hex, 100% token compliant.
+ */
+import {
+  siNvidia,
+  siPytorch,
+  siKubernetes,
+  siRust,
+  siPython,
+  siGo,
+  siPostgresql,
+  siRedis,
+  siLinux,
+} from 'simple-icons';
+
+interface Props {
+  name:
+    | 'anthropic'
+    | 'claude'
+    | 'gemini'
+    | 'openai'
+    | 'mcp'
+    | 'git'
+    | 'github'
+    | 'terminal'
+    | 'shell'
+    | 'docker'
+    | 'vscode'
+    | 'browser'
+    | 'shield'
+    | 'security'
+    | 'database'
+    | 'memory'
+    | 'loop'
+    | 'diff'
+    | 'nvidia'
+    | 'pytorch'
+    | 'kubernetes'
+    | 'rust'
+    | 'python'
+    | 'go'
+    | 'postgres'
+    | 'postgresql'
+    | 'redis'
+    | 'linux';
+  size?: number;
+  class?: string;
+}
+
+const { name, size = 16, class: className = '' } = Astro.props;
+---
+
+{name === 'anthropic' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="var(--brand-anthropic)" aria-hidden="true">
+    <path d="M17.3041 3.541h-3.6718l6.696 16.918H24Zm-10.6082 0L0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.541Zm-.1742 4.4533 2.2987 5.9688H4.223Z" />
+  </svg>
+) : null}
+
+{name === 'claude' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="var(--brand-anthropic)" aria-hidden="true">
+    <path d="M4.5 10.5C3.7 10.5 3 11.2 3 12s.7 1.5 1.5 1.5h3.1l-2.2 2.2c-.6.6-.6 1.5 0 2.1s1.5.6 2.1 0l2.2-2.2v3.1c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5v-3.1l2.2 2.2c.6.6 1.5.6 2.1 0s.6-1.5 0-2.1l-2.2-2.2h3.1c.8 0 1.5-.7 1.5-1.5s-.7-1.5-1.5-1.5h-3.1l2.2-2.2c.6-.6.6-1.5 0-2.1s-1.5-.6-2.1 0l-2.2 2.2V4.5C13.5 3.7 12.8 3 12 3s-1.5.7-1.5 1.5v3.1L8.3 5.4c-.6-.6-1.5-.6-2.1 0s-.6 1.5 0 2.1l2.2 2.2H4.5z" />
+  </svg>
+) : null}
+
+{name === 'gemini' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="var(--brand-gemini)" aria-hidden="true">
+    <path d="M12 2C12 7.52 7.52 12 2 12C7.52 12 12 16.48 12 22C12 16.48 16.48 12 22 12C16.48 12 12 7.52 12 2Z" />
+  </svg>
+) : null}
+
+{name === 'openai' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="var(--brand-openai, currentColor)" aria-hidden="true">
+    <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1683a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4947zm-9.66-4.1354a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1401-1.6564zm-1.145-9.6741a4.4755 4.4755 0 0 1 2.3418-1.9729v5.6725a.7712.7712 0 0 0 .3879.6765l5.8144 3.3543-2.02 1.1683a.0757.0757 0 0 1-.071 0l-4.8303-2.7866a4.4992 4.4992 0 0 1-1.6228-6.1121zm16.597 3.8558L13.2091 9.107l2.02-1.1636a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.3879-.6765l-5.8144-3.3543zm2.0105-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.9797V7.6474a.0851.0851 0 0 1 .0332-.0615l4.9822-2.8717a4.5135 4.5135 0 0 1 6.3578 2.0526l-.001.0001a4.4992 4.4992 0 0 1 .2303 3.4283zm-11.4553 4.8878l-2.02-1.1636a.071.071 0 0 1-.038-.052V6.7214a4.504 4.504 0 0 1 7.371-3.4539l-.142.0805-4.7783 2.7582a.7948.7948 0 0 0-.3927.6813v6.7369zm1.196-1.5791l2.459-1.4208 2.459 1.4208v2.8415l-2.459 1.4208-2.459-1.4208z" />
+  </svg>
+) : null}
+
+{name === 'mcp' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="var(--ie-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="3" y="7" width="7" height="10" rx="2" />
+    <rect x="14" y="7" width="7" height="10" rx="2" />
+    <path d="M10 12h4m-2-2l2 2-2 2" />
+  </svg>
+) : null}
+
+{name === 'git' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="var(--brand-git)" aria-hidden="true">
+    <path d="M23.54 11.45L12.55.46a1.5 1.5 0 0 0-2.12 0L.46 10.43a1.5 1.5 0 0 0 0 2.12l10.99 10.99c.59.58 1.53.58 2.12 0l10.97-10.97a1.5 1.5 0 0 0 0-2.12zM13.4 14.86v-3.1a2.1 2.1 0 0 0-1.05-1.82l-2.07-1.2a1.8 1.8 0 1 0-1.27.73l1.89 1.1a.9.9 0 0 1 .45.78v3.51a1.8 1.8 0 1 0 2.05 0z" />
+  </svg>
+) : null}
+
+{name === 'github' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z" />
+  </svg>
+) : null}
+
+{name === 'terminal' || name === 'shell' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <polyline points="4 17 10 11 4 5" />
+    <line x1="12" y1="19" x2="20" y2="19" />
+  </svg>
+) : null}
+
+{name === 'docker' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="var(--brand-docker)" aria-hidden="true">
+    <path d="M13 8h2v2h-2zm-3 0h2v2h-2zm-3 0h2v2H7zm6-3h2v2h-2zm-3 0h2v2h-2zm9 8.5c-.5-.3-1.6-.4-2.5.1-.3-.9-1-1.6-1.9-1.9L17 11.5v2.5H2c0 4.5 3.5 8 8 8 5.3 0 9.8-3.6 10.7-8.8.7.2 1.3.1 1.3.1V13.5z" />
+  </svg>
+) : null}
+
+{name === 'vscode' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="var(--brand-vscode)" aria-hidden="true">
+    <path d="M17.5 2.5L8.2 9.8 4.2 6.6 2 7.7l3.8 4.3L2 16.3l2.2 1.1 4-3.2 9.3 7.3 4.5-2.2V4.7zM17.5 18l-6.8-6 6.8-6v12z" />
+  </svg>
+) : null}
+
+{name === 'browser' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="10" />
+    <line x1="2" y1="12" x2="22" y2="12" />
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+  </svg>
+) : null}
+
+{name === 'shield' || name === 'security' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="var(--ie-rust)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+  </svg>
+) : null}
+
+{name === 'database' || name === 'memory' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="var(--ie-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <ellipse cx="12" cy="5" rx="9" ry="3" />
+    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+  </svg>
+) : null}
+
+{name === 'loop' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="var(--ie-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+  </svg>
+) : null}
+
+{name === 'diff' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="var(--ie-verified)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <line x1="12" y1="5" x2="12" y2="19" />
+    <line x1="5" y1="12" x2="19" y2="12" />
+  </svg>
+) : null}
+
+{name === 'nvidia' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d={siNvidia.path} />
+  </svg>
+) : null}
+
+{name === 'pytorch' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d={siPytorch.path} />
+  </svg>
+) : null}
+
+{name === 'kubernetes' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d={siKubernetes.path} />
+  </svg>
+) : null}
+
+{name === 'rust' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d={siRust.path} />
+  </svg>
+) : null}
+
+{name === 'python' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d={siPython.path} />
+  </svg>
+) : null}
+
+{name === 'go' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d={siGo.path} />
+  </svg>
+) : null}
+
+{name === 'postgres' || name === 'postgresql' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d={siPostgresql.path} />
+  </svg>
+) : null}
+
+{name === 'redis' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d={siRedis.path} />
+  </svg>
+) : null}
+
+{name === 'linux' ? (
+  <svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d={siLinux.path} />
+  </svg>
+) : null}

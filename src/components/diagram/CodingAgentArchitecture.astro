@@ -1,0 +1,534 @@
+---
+/**
+ * CodingAgentArchitecture.astro
+ * Publication-grade architecture diagram of an Autonomous Coding Agent.
+ * Standardized to Studio UI Guidelines:
+ * - Pointer Circle Rule: Junction pins strictly at true T-junction trunk splits/merges (2 total).
+ * - Logo Sizing Rule: Icons are strictly 3–4px larger than accompanying text (15-18px).
+ * - Website Typography Scale: Strict adherence to --ie-type-ui (14px), --ie-type-label (13px), and --ie-type-micro (12px).
+ */
+import BrandIcon from './icons/BrandIcon.astro';
+import VisualAttribution from './VisualAttribution.astro';
+
+interface Props {
+  exhibit?: string;
+  title?: string;
+  badge?: string;
+  caption?: string;
+  wide?: boolean;
+}
+
+const {
+  exhibit = '01',
+  title = 'Autonomous Coding Agent Architectural Flow',
+  badge = 'SYSTEM TOPOLOGY',
+  caption = 'Hierarchical flow from the cognitive model orchestrator through context discovery, agent loop, and tool invocation, converging into state memory and sandboxed execution before developer review.',
+  wide = true,
+} = Astro.props;
+---
+
+<div class="coding-agent-diagram-root" id="coding-agent-diagram">
+  <div class="diagram-canvas">
+    <!-- Header -->
+    <header class="diagram-header">
+      {badge && <div class="header-badge">{badge}</div>}
+      <h2 class="diagram-title">{title}</h2>
+    </header>
+
+      <!-- ================= LEVEL 0: CODING AGENT MODEL ================= -->
+      <div class="tier tier-center">
+        <div class="node-root">
+          <span class="node-root-title">Coding Agent Model</span>
+          <div class="node-root-sub">
+            <span class="sub-item">
+              <BrandIcon name="claude" size={15} />
+              <span>Claude</span>
+            </span>
+            <span class="sub-sep">·</span>
+            <span class="sub-item">
+              <BrandIcon name="gemini" size={15} />
+              <span>Gemini</span>
+            </span>
+            <span class="sub-sep">·</span>
+            <span class="sub-item">
+              <BrandIcon name="openai" size={15} />
+              <span>OpenAI</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SVG CONNECTOR 1: 1 -> 3 SPLIT ================= -->
+      <!-- RULE: ONLY ONE JUNCTION PIN (at the true T-junction where trunk splits). Corners have NO circles. -->
+      <div class="connector-wrap">
+        <svg class="flow-svg" viewBox="0 0 760 48" preserveAspectRatio="none" aria-hidden="true">
+          <!-- Trunk from Model down to horizontal branch -->
+          <path d="M 380 0 L 380 24" class="wire" />
+          <!-- Horizontal crossbar -->
+          <path d="M 126 24 L 634 24" class="wire" />
+          <!-- Downward drops into the 3 columns -->
+          <path d="M 126 24 L 126 48" class="wire" />
+          <path d="M 380 24 L 380 48" class="wire" />
+          <path d="M 634 24 L 634 48" class="wire" />
+
+          <!-- EXACTLY ONE JUNCTION PIN: At the true T-junction trunk split only! -->
+          <circle cx="380" cy="24" r="3" class="pin" />
+
+          <!-- Stealth Arrowheads entering the 3 columns -->
+          <polygon points="126,48 122.5,41 129.5,41" class="arrow" />
+          <polygon points="380,48 376.5,41 383.5,41" class="arrow" />
+          <polygon points="634,48 630.5,41 637.5,41" class="arrow" />
+        </svg>
+      </div>
+
+      <!-- ================= LEVEL 1: THE 3 CORE PILLARS ================= -->
+      <div class="tier tier-three-col">
+
+        <!-- Column 1: Context -->
+        <div class="pillar-card pillar-context">
+          <div class="pillar-header header-context">
+            <span>Context</span>
+          </div>
+          <div class="pillar-body">
+            <span class="body-primary">Repository discovery</span>
+            <span class="body-secondary">Files · AST · Git index</span>
+          </div>
+        </div>
+
+        <!-- Column 2: Agent Loop -->
+        <div class="pillar-card pillar-loop">
+          <div class="pillar-header header-loop">
+            <span>Agent Loop</span>
+          </div>
+          <div class="pillar-body">
+            <span class="body-primary">Plan / Act</span>
+            <span class="body-secondary">Observe / Fix</span>
+          </div>
+        </div>
+
+        <!-- Column 3: Tools -->
+        <div class="pillar-card pillar-tools">
+          <div class="pillar-header header-tools">
+            <span>Tools</span>
+          </div>
+          <div class="pillar-body">
+            <!-- 16px Icons (+3px larger than 13px font) -->
+            <div class="tools-row">
+              <span class="tool-item">
+                <BrandIcon name="terminal" size={16} />
+                <span>Shell</span>
+              </span>
+              <span class="sub-sep">·</span>
+              <span class="tool-item">
+                <BrandIcon name="mcp" size={16} />
+                <span class="font-mono text-[12px] font-semibold">MCP</span>
+              </span>
+            </div>
+            <div class="tools-row">
+              <span class="tool-item">
+                <BrandIcon name="browser" size={16} />
+                <span>Browser</span>
+              </span>
+              <span class="sub-sep">·</span>
+              <span class="tool-item">
+                <BrandIcon name="git" size={16} />
+                <span>Git</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= SVG CONNECTOR 2: 3 -> 2 CONVERGENCE ================= -->
+      <!-- RULE: ZERO SUPERFLUOUS CIRCLES. Clean orthogonal bus convergence directly entering Memory & Execution. -->
+      <div class="connector-wrap">
+        <svg class="flow-svg" viewBox="0 0 760 48" preserveAspectRatio="none" aria-hidden="true">
+          <!-- Upward lines from 3 columns into horizontal crossbar -->
+          <path d="M 126 0 L 126 24" class="wire" />
+          <path d="M 380 0 L 380 24" class="wire" />
+          <path d="M 634 0 L 634 24" class="wire" />
+          <!-- Horizontal crossbar -->
+          <path d="M 126 24 L 634 24" class="wire" />
+          <!-- Drops to 2 lower nodes (Memory at 253px, Execution at 507px) -->
+          <path d="M 253 24 L 253 48" class="wire" />
+          <path d="M 507 24 L 507 48" class="wire" />
+
+          <!-- Stealth Arrowheads entering Memory & Execution -->
+          <polygon points="253,48 249.5,41 256.5,41" class="arrow" />
+          <polygon points="507,48 503.5,41 510.5,41" class="arrow" />
+        </svg>
+      </div>
+
+      <!-- ================= LEVEL 2: MEMORY & EXECUTION ================= -->
+      <div class="tier tier-two-col">
+
+        <!-- Memory Card -->
+        <div class="node-lower node-memory">
+          <!-- 18px Icon (+4px larger than 14px font) -->
+          <div class="node-lower-title">
+            <BrandIcon name="database" size={18} />
+            <span>Memory</span>
+          </div>
+          <span class="node-lower-sub">Short-term KV · Long-term Docs</span>
+        </div>
+
+        <!-- Execution + Security Card -->
+        <div class="node-lower node-exec">
+          <!-- 18px Icon (+4px larger than 14px font) -->
+          <div class="node-lower-title">
+            <BrandIcon name="shield" size={18} />
+            <span>Execution + Security</span>
+          </div>
+          <span class="node-lower-sub">Sandboxed Runtime · Policy Gate</span>
+        </div>
+
+      </div>
+
+      <!-- ================= SVG CONNECTOR 3: 2 -> 1 CONVERGENCE ================= -->
+      <!-- RULE: EXACTLY ONE JUNCTION PIN (at the true convergence T-junction into Developer UX trunk). -->
+      <div class="connector-wrap">
+        <svg class="flow-svg" viewBox="0 0 760 48" preserveAspectRatio="none" aria-hidden="true">
+          <!-- Upward lines from Memory & Execution -->
+          <path d="M 253 0 L 253 24" class="wire" />
+          <path d="M 507 0 L 507 24" class="wire" />
+          <!-- Horizontal crossbar -->
+          <path d="M 253 24 L 507 24" class="wire" />
+          <!-- Drop trunk to Developer UX -->
+          <path d="M 380 24 L 380 48" class="wire" />
+
+          <!-- EXACTLY ONE JUNCTION PIN: At the center convergence T-junction only! -->
+          <circle cx="380" cy="24" r="3" class="pin" />
+
+          <!-- Stealth Arrowhead into Developer UX -->
+          <polygon points="380,48 376.5,41 383.5,41" class="arrow" />
+        </svg>
+      </div>
+
+      <!-- ================= LEVEL 3: DEVELOPER UX ================= -->
+      <div class="tier tier-center">
+        <div class="node-root">
+          <span class="node-root-title">Developer UX</span>
+          <div class="node-root-sub">
+            <span class="sub-item">
+              <BrandIcon name="terminal" size={15} />
+              <span>CLI & Terminal</span>
+            </span>
+            <span class="sub-sep">·</span>
+            <span class="sub-item">
+              <BrandIcon name="vscode" size={15} />
+              <span>IDE & Diff Review</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Attribution Bar -->
+      <footer class="diagram-footer-bar">
+        {caption && <p class="diagram-caption">{caption}</p>}
+        <VisualAttribution />
+      </footer>
+
+    </div>
+  </div>
+
+<style>
+  .coding-agent-diagram-root {
+    width: 100%;
+    font-family: var(--font-diagram);
+    color: var(--ie-ink);
+  }
+
+  .diagram-canvas {
+    max-width: 760px;
+    margin: 0 auto;
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .diagram-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 2rem;
+  }
+
+  .header-badge {
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ie-blue);
+    text-transform: uppercase;
+  }
+
+  .diagram-title {
+    margin: 0;
+    font-family: var(--font-diagram);
+    font-size: var(--ie-type-h3);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ie-ink);
+  }
+
+  /* Tiers */
+  .tier {
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .tier-center {
+    display: flex;
+    justify-content: center;
+  }
+
+  .tier-three-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4, 1.25rem);
+  }
+
+  .tier-two-col {
+    max-width: 540px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6, 1.75rem);
+  }
+
+  /* Root / Terminal Nodes (Coding Agent Model & Developer UX) */
+  .node-root {
+    background-color: var(--ie-ink);
+    color: var(--ie-canvas);
+    padding: 0.875rem 2rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid var(--ie-ink);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .node-root-title {
+    font-size: var(--ie-type-ui, 0.875rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .node-root-sub {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: var(--ie-type-micro, 0.75rem);
+    opacity: 0.9;
+    margin-top: 0.25rem;
+  }
+
+  .sub-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 400;
+  }
+
+  .sub-sep {
+    opacity: 0.4;
+  }
+
+  /* Wires and Connectors */
+  .connector-wrap {
+    width: 100%;
+    height: 48px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .flow-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .wire {
+    stroke: var(--ie-muted);
+    stroke-width: 1.5;
+    fill: none;
+    opacity: 0.6;
+  }
+
+  .pin {
+    fill: var(--ie-surface);
+    stroke: var(--ie-muted);
+    stroke-width: 1.5;
+    opacity: 0.8;
+  }
+
+  .arrow {
+    fill: var(--ie-muted);
+    opacity: 0.8;
+  }
+
+  /* Pillar Cards (Context, Loop, Tools) */
+  .pillar-card {
+    background-color: var(--ie-surface);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--ie-rule);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  }
+
+  .pillar-header {
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+    font-size: var(--ie-type-ui, 0.875rem);
+    font-weight: 600;
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .pillar-body {
+    padding: 0.875rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 68px;
+    gap: 0.25rem;
+  }
+
+  .body-primary {
+    font-size: var(--ie-type-label, 0.8125rem);
+    font-weight: 500;
+    color: var(--ie-ink);
+  }
+
+  .body-secondary {
+    font-size: var(--ie-type-micro, 0.75rem);
+    color: var(--ie-muted);
+  }
+
+  /* Soft Tint Headers for Pillars */
+  .header-context {
+    background-color: var(--ie-blue-soft);
+    color: var(--ie-blue);
+    border-bottom-color: var(--ie-rule);
+  }
+
+  .pillar-context {
+    border-color: var(--ie-rule);
+  }
+
+  .header-loop {
+    background-color: var(--ie-rust-soft);
+    color: var(--ie-rust);
+    border-bottom-color: var(--ie-rule);
+  }
+
+  .pillar-loop {
+    border-color: var(--ie-rule);
+  }
+
+  .header-tools {
+    background-color: var(--ie-verified-soft);
+    color: var(--ie-verified);
+    border-bottom-color: var(--ie-rule);
+  }
+
+  .pillar-tools {
+    border-color: var(--ie-rule);
+  }
+
+  .tools-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    font-size: var(--ie-type-label, 0.8125rem);
+    color: var(--ie-ink);
+    font-weight: 500;
+  }
+
+  .tool-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  /* Lower Tier Nodes: Memory & Execution */
+  .node-lower {
+    background-color: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
+    border-radius: 12px;
+    padding: 0.875rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 68px;
+    gap: 0.25rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  }
+
+  .node-lower-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--ie-type-ui, 0.875rem);
+    font-weight: 600;
+    color: var(--ie-ink);
+  }
+
+  .node-lower-sub {
+    font-size: var(--ie-type-micro, 0.75rem);
+    color: var(--ie-muted);
+  }
+
+  /* Responsive Stacking */
+  @media (max-width: 640px) {
+    .tier-three-col,
+    .tier-two-col {
+      grid-template-columns: 1fr;
+      gap: var(--space-3, 0.75rem);
+    }
+    .connector-wrap {
+      display: none;
+    }
+  }
+
+  /* Footer Attribution Bar */
+  .diagram-footer-bar {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--ie-rule);
+  }
+
+  .diagram-caption {
+    margin: 0;
+    font-size: var(--ie-type-micro);
+    font-family: var(--font-diagram);
+    color: var(--ie-muted);
+    line-height: 1.4;
+    flex: 1;
+    min-width: 240px;
+  }
+
+</style>

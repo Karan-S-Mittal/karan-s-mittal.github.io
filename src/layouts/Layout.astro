@@ -12,6 +12,7 @@ interface Props {
   type?: string;
   pubDate?: Date;
   robots?: string;
+  chrome?: boolean;
 }
 const {
   title,
@@ -20,6 +21,7 @@ const {
   type = "website",
   pubDate,
   robots,
+  chrome = true,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -70,11 +72,11 @@ const rssUrl = new URL('/rss.xml', Astro.site).toString();
 </head>
 <body class="instrumented">
   <a class="skip-link" href="#main-content">Skip to content</a>
-  <Header />
+  {chrome && <Header />}
   <div id="main-content">
     <slot />
   </div>
-  <Footer />
+  {chrome && <Footer />}
 
   <script>
     function setupPageEnhancements() {

@@ -1,0 +1,314 @@
+---
+import Layout from '@layouts/Layout.astro';
+import PageHeader from '@components/content/PageHeader.astro';
+
+interface VisualItem {
+  id: string;
+  title: string;
+  desc: string;
+  href: string;
+}
+
+// Auto-discover all visual pages in this directory
+const rawPages = import.meta.glob<string>('./*.astro', { query: '?raw', import: 'default', eager: true });
+
+// Optional curated title/description mappings for established visuals
+const curatedMeta: Record<string, { title?: string; desc?: string }> = {
+  'claude-code-loop': {
+    title: 'Claude Code Local Agent Loop',
+    desc: 'Interactive CLI orchestrator, context state compaction, ReAct execution cycle, and native primitives.',
+  },
+  'codex-vs-claude-code': {
+    title: 'Claude Code vs. OpenAI Codex Hero Visual',
+    desc: 'Publication hero graphic and runtime architecture comparison between Anthropic Claude Code and OpenAI Codex.',
+  },
+  'coding-agent': {
+    title: 'Autonomous Coding Agent Cognitive Architecture',
+    desc: 'Hierarchical flow from cognitive model orchestrator through context discovery, ReAct loops, and MCP dispatch into execution sandboxes.',
+  },
+  'coding-timeline': {
+    title: 'Agentic Coding Evolution: Claude Code vs. OpenAI Codex',
+    desc: 'Comparative timeline tracking 16 major releases from terminal research previews to dynamic multi-agent orchestration.',
+  },
+  'agent-context': {
+    title: 'Coding Agent Topology: CLI to Multi-Agent Swarm',
+    desc: 'Coding agents progressing from a local terminal to repository context, cloud environments, and coordinated agents.',
+  },
+  'agent-progression': {
+    title: 'Coding Agent Context Horizons & State Span',
+    desc: 'Context perimeter expansion from ~8KB shell buffers to ~100MB AST graphs, cloud containers, and distributed swarm buses.',
+  },
+  'paged-attention': {
+    title: 'PagedAttention KV Cache Page Translation',
+    desc: 'Physical page frame allocations and logical block tables modeling non-contiguous KV cache pooling to eliminate memory fragmentation.',
+  },
+  'deterministic-rag': {
+    title: '3-Plane Deterministic RAG Replay Architecture',
+    desc: 'Three execution planes compiling immutable corpus artifacts, deterministic hybrid retrieval, and auditable evidence bundles.',
+  },
+  'codex-cloud-sandbox-loop': {
+    title: 'OpenAI Codex Cloud Sandbox Loop',
+    desc: 'Autonomous cloud daemon lifecycle: task dispatch, workspace provisioning, context traversal, test suite mutation, self-correction loop, and PR packaging.',
+  },
+  'claude-code-harness': {
+    title: 'Claude Code Harness Architecture',
+    desc: 'Local execution harness lifecycle: CLI prompt dispatch, model reasoning, PreToolUse permission evaluation, sandboxed tool runner, and closed-loop context compaction.',
+  },
+};
+
+const preferredOrder = [
+  'claude-code-loop',
+  'claude-code-harness',
+  'codex-cloud-sandbox-loop',
+  'codex-vs-claude-code',
+  'coding-agent',
+  'coding-timeline',
+  'agent-context',
+  'agent-progression',
+  'deterministic-rag',
+  'paged-attention',
+];
+
+const visuals: VisualItem[] = Object.entries(rawPages)
+  .filter(([path]) => !path.endsWith('index.astro'))
+  .map(([path, rawContent]) => {
+    const slug = path.replace(/^\.\//, '').replace(/\.astro$/, '');
+    const curated = curatedMeta[slug] || {};
+
+    const titleMatch = rawContent.match(/const\s+title\s*=\s*['"`]([^'"`]+)['"`]/);
+    const descMatch = rawContent.match(/const\s+(?:caption|description)\s*=\s*['"`]([^'"`]+)['"`]/);
+
+    const title = curated.title || (titleMatch ? titleMatch[1] : slug.replace(/-/g, ' '));
+    const desc = curated.desc || (descMatch ? descMatch[1] : '');
+
+    return {
+      id: slug,
+      title,
+      desc,
+      href: `/visuals/${slug}/`,
+    };
+  })
+  .sort((a, b) => {
+    const idxA = preferredOrder.indexOf(a.id);
+    const idxB = preferredOrder.indexOf(b.id);
+    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+    if (idxA !== -1) return -1;
+    if (idxB !== -1) return 1;
+    return a.title.localeCompare(b.title);
+  });
+---
+
+<Layout
+  title="Visuals & Systems Blueprints | Karan Mittal"
+  description="A catalog of systems architecture diagrams, comparative chronologies, and memory models. Inspect and download each visual as an image."
+>
+  <main class="visuals-page">
+    <div class="container page-shell">
+      <PageHeader
+        label="Visual Library"
+        title="Visuals & Systems Blueprints."
+        description="A collection of systems architecture diagrams, comparative chronologies, and memory models. Every visual can be inspected in full and exported as a 3× high-resolution PNG."
+        count={visuals.length}
+        countLabel="systems visuals"
+      />
+
+      <div class="search-bar-wrap">
+        <input
+          type="search"
+          id="visual-search"
+          placeholder="Filter visuals by keyword, topic, or technology..."
+          aria-label="Filter visuals"
+        />
+      </div>
+
+      <ul class="visuals-list" id="visuals-list">
+        {visuals.map((v) => (
+          <li class="visual-item" data-search={`${v.title} ${v.desc}`.toLowerCase()}>
+            <a href={v.href} class="visual-link">
+              <div class="visual-info">
+                <h2 class="visual-title">{v.title}</h2>
+                {v.desc && <p class="visual-desc">{v.desc}</p>}
+              </div>
+
+              <div class="visual-action">
+                <span class="action-tag">3× PNG</span>
+                <span class="action-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <p id="no-results" class="no-results" style="display: none;">
+        No visuals match your filter.
+      </p>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const searchInput = document.getElementById('visual-search') as HTMLInputElement | null;
+  const items = document.querySelectorAll<HTMLElement>('.visual-item');
+  const noResults = document.getElementById('no-results');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      items.forEach((item) => {
+        const text = item.dataset.search || '';
+        const match = query === '' || text.includes(query);
+        item.style.display = match ? 'block' : 'none';
+        if (match) visibleCount++;
+      });
+
+      if (noResults) {
+        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
+    });
+  }
+</script>
+
+<style>
+  .visuals-page {
+    padding-bottom: clamp(3rem, 6vw, 6rem);
+  }
+
+  .page-shell {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 var(--space-5, 1.5rem);
+  }
+
+  .search-bar-wrap {
+    margin: 1.5rem 0 2rem;
+  }
+
+  .search-bar-wrap input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-family: var(--font-diagram);
+    font-size: var(--ie-type-ui);
+    color: var(--ie-ink);
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius);
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease;
+  }
+
+  .search-bar-wrap input:focus {
+    border-color: var(--ie-blue);
+  }
+
+  /* Simpler List Layout */
+  .visuals-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--ie-rule);
+  }
+
+  .visual-item {
+    border-bottom: 1px solid var(--ie-rule);
+    transition: background 0.15s ease;
+  }
+
+  .visual-item:hover {
+    background: var(--ie-surface-raised);
+  }
+
+  .visual-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.25rem 0.5rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .visual-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .visual-title {
+    margin: 0;
+    font-family: var(--font-diagram);
+    font-size: var(--ie-type-body);
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--ie-ink);
+    transition: color 0.15s ease;
+  }
+
+  .visual-item:hover .visual-title {
+    color: var(--ie-blue);
+  }
+
+  .visual-desc {
+    margin: 0;
+    font-family: var(--font-diagram);
+    font-size: var(--ie-type-ui);
+    color: var(--ie-ink-secondary);
+    line-height: 1.45;
+  }
+
+  .visual-action {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .action-tag {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    color: var(--ie-muted);
+  }
+
+  .action-arrow {
+    font-family: var(--font-diagram);
+    font-size: 1.1rem;
+    color: var(--ie-muted);
+    transition: transform 0.15s ease, color 0.15s ease;
+  }
+
+  .visual-item:hover .action-arrow {
+    color: var(--ie-blue);
+    transform: translateX(3px);
+  }
+
+  .no-results {
+    padding: 3rem 0;
+    text-align: center;
+    color: var(--ie-muted);
+    font-family: var(--font-diagram);
+    font-size: var(--ie-type-body);
+  }
+
+  @media (max-width: 640px) {
+    .visual-link {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem 0.25rem;
+    }
+
+    .visual-action {
+      align-self: flex-end;
+    }
+  }
+</style>

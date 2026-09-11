@@ -1,0 +1,10 @@
+---
+import VisualPage from '@layouts/VisualPage.astro';
+import Diagram from '@components/diagram/CodingAgentArchitecture.astro';
+const title = 'Coding agent architecture';
+const caption = 'Context, agent loop, tools, memory, and execution leading to developer review.';
+---
+
+<VisualPage title={title} description={caption} targetId="coding-agent-diagram" filename="karansmittal-coding-agent-architecture">
+  <Diagram title={title} caption={caption} />
+</VisualPage>

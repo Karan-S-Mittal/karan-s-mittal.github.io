@@ -3,7 +3,7 @@
  * DeterministicRAGArchitecture.astro
  * HTML/CSS-native 3-plane systems architecture diagram for Deterministic RAG & Replay Contracts.
  */
-import Exhibit from '../../editorial/Exhibit.astro';
+import VisualAttribution from '../VisualAttribution.astro';
 
 interface Props {
   caption?: string;
@@ -18,8 +18,11 @@ const {
 } = Astro.props;
 ---
 
-<Exhibit exhibit={exhibit} title={title} badge="RETRIEVAL ARCHITECTURE" caption={caption} wide>
-  <div class="rag-root">
+<div class="rag-root" id="deterministic-rag-diagram">
+  <header class="rag-header">
+    <div class="header-badge">RETRIEVAL ARCHITECTURE</div>
+    <h2 class="diagram-title">{title}</h2>
+  </header>
     <!-- PLANE 1: IMMUTABLE ARTIFACT LAYER -->
     <div class="rag-plane plane-artifacts">
       <div class="rplane-header">
@@ -121,17 +124,71 @@ const {
       <span class="notice-arrow">&larr;</span>
       <span>Notice how versioning the index artifact and enforcing a deterministic tie-breaking policy turns probabilistic retrieval into an auditable evidence contract.</span>
     </div>
+
+    <footer class="diagram-footer-bar">
+      {caption && <p class="diagram-caption">{caption}</p>}
+      <VisualAttribution author="karansmittal" />
+    </footer>
   </div>
-</Exhibit>
 
 <style>
   .rag-root {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    padding: var(--space-4);
-    background: var(--surface-card);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
     border-radius: var(--radius-card);
+    box-sizing: border-box;
+    font-family: var(--font-diagram);
+    color: var(--ie-ink);
+  }
+
+  .rag-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .header-badge {
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ie-blue);
+    text-transform: uppercase;
+  }
+
+  .diagram-title {
+    margin: 0;
+    font-family: var(--font-diagram);
+    font-size: var(--ie-type-h3);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ie-ink);
+  }
+
+  .diagram-caption {
+    margin: 0;
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+    line-height: 1.4;
+    flex: 1;
+    min-width: 240px;
+  }
+
+  .diagram-footer-bar {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--ie-rule);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.5rem;
   }
 
   .rag-plane {

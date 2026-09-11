@@ -1,0 +1,10 @@
+---
+import VisualPage from '@layouts/VisualPage.astro';
+import Diagram from '@components/diagram/paged-attention/PagedAttentionStepsArchitecture.astro';
+const title = 'PagedAttention KV cache page translation';
+const caption = 'How logical token blocks reach non-contiguous GPU physical frames through virtual memory paging.';
+---
+
+<VisualPage title={title} description={caption} targetId="paged-attention-diagram" filename="karansmittal-paged-attention-kv-cache">
+  <Diagram title={title} caption={caption} />
+</VisualPage>

@@ -1,0 +1,16 @@
+---
+import VisualPage from '@layouts/VisualPage.astro';
+import Diagram from '@components/diagram/CodingEvolutionTree.astro';
+
+const title = 'Claude Code & Codex evolution tree';
+const description = 'Squarish architectural branching timeline comparing Claude Code and OpenAI Codex releases across 2025 and 2026.';
+---
+
+<VisualPage
+  title={title}
+  description={description}
+  targetId="coding-evolution-diagram"
+  filename="karansmittal-coding-evolution"
+>
+  <Diagram />
+</VisualPage>

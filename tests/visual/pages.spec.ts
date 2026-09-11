@@ -19,7 +19,7 @@ const PAGES = [
   { path: '/about/', name: 'about' },
   { path: '/tags/', name: 'tags' },
   { path: '/case-studies/soft-architecture/', name: 'archive' },
-  { path: '/studio/components/', name: 'specimen' },
+  { path: '/visuals/', name: 'visuals' },
 ] as const;
 
 const ROUTES = [
@@ -35,10 +35,13 @@ const ROUTES = [
   '/blog/xgboost-part-2-mathematical-engine/',
   '/blog/xgboost-part-3-systems-microarchitecture/',
   '/case-studies/soft-architecture/',
+  '/case-studies/explanatory-studio/',
   '/contact/',
   '/now/',
-  '/studio/',
-  '/studio/components/',
+  '/visuals/',
+  '/visuals/coding-agent/',
+  '/visuals/coding-timeline/',
+  '/visuals/agent-context/',
   '/tags/',
   ...[
     'ai-architecture',
@@ -119,7 +122,7 @@ for (const vp of VIEWPORTS) {
     });
   }
 
-  test(`all 50 generated pages satisfy the layout contract @ ${vp.name}`, async ({ page: p }) => {
+  test(`all ${ROUTES.length} generated pages satisfy the layout contract @ ${vp.name}`, async ({ page: p }) => {
     test.setTimeout(120_000);
     await p.setViewportSize({ width: vp.width, height: vp.height });
     const pageErrors: string[] = [];

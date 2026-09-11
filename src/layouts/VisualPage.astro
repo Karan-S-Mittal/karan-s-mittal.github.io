@@ -1,0 +1,50 @@
+---
+import Layout from './Layout.astro';
+import DiagramExportBar from '@components/diagram/DiagramExportBar.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  targetId: string;
+  filename: string;
+}
+const { title, description, targetId, filename } = Astro.props;
+---
+
+<Layout title={`${title} | Karan Mittal`} description={description} chrome={false}>
+  <main class="visual-page" aria-label={title}>
+    <nav aria-label="Visual controls">
+      <a href="/visuals/">← Visuals</a>
+      <button type="button" data-visual-theme aria-pressed="false">Dark theme</button>
+    </nav>
+    <h1 class="sr-only">{title}</h1>
+    <div id={targetId} class="visual-capture-target"><slot /></div>
+    <DiagramExportBar targetId={targetId} filename={filename} caption="" />
+  </main>
+</Layout>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('[data-visual-theme]');
+  if (button) {
+    const sync = () => button.setAttribute('aria-pressed', String(document.documentElement.classList.contains('dark')));
+    button.addEventListener('click', () => {
+      const dark = document.documentElement.classList.toggle('dark');
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch { /* Theme still works without storage. */ }
+      sync();
+    });
+    sync();
+  }
+</script>
+
+<style>
+  .visual-page { max-width: 960px; margin: 0 auto; padding: 1rem; color: var(--ie-ink); }
+  nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-family: var(--font-diagram); font-size: var(--ie-type-label); }
+  nav a { color: var(--ie-blue); text-decoration: none; }
+  button { padding: 0.3rem 0.6rem; border: 1px solid var(--ie-rule); border-radius: var(--radius); background: var(--ie-surface); color: var(--ie-ink); font: inherit; cursor: pointer; }
+  button[aria-pressed='true'] { border-color: var(--ie-blue); }
+  .visual-capture-target { display: flow-root; padding: 1rem; background: var(--ie-surface); }
+  .visual-page .visual-capture-target :global(figure.exhibit) { margin: 0; }
+  .visual-page .visual-capture-target :global(.exhibit-frame) { padding: 1rem 0; border: 0; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  @media (max-width: 640px) { .visual-page { padding: 0.75rem; } .visual-capture-target { padding: 0.75rem; } }
+</style>

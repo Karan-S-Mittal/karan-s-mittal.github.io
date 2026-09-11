@@ -1,5 +1,5 @@
 ---
-import Exhibit from '../../editorial/Exhibit.astro';
+import VisualAttribution from '../VisualAttribution.astro';
 
 interface Props { caption?: string; exhibit?: string; title?: string; }
 
@@ -10,8 +10,11 @@ const {
 } = Astro.props;
 ---
 
-<Exhibit exhibit={exhibit} title={title} badge="PAGE TRANSLATION" caption={caption} wide>
-  <div class="paging-path">
+<div class="paging-path" id="paged-attention-diagram">
+  <header class="paging-header">
+    <div class="header-badge">PAGE TRANSLATION</div>
+    <h2 class="diagram-title">{title}</h2>
+  </header>
     <header class="path-question">
       <span>Question</span>
       <strong>How can one logical sequence use physical frames 12 and 7 without first copying them together?</strong>
@@ -65,11 +68,70 @@ const {
       <span>What to notice</span>
       <p><strong>Logical order and physical location are separate.</strong> The block table preserves sequence order; the allocator is free to place each block wherever capacity exists.</p>
     </aside>
+
+    <footer class="diagram-footer-bar">
+      {caption && <p class="diagram-caption">{caption}</p>}
+      <VisualAttribution author="karansmittal" />
+    </footer>
   </div>
-</Exhibit>
 
 <style>
-  .paging-path { width: 100%; }
+  .paging-path {
+    width: 100%;
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    box-sizing: border-box;
+    font-family: var(--font-diagram);
+    color: var(--ie-ink);
+  }
+
+  .paging-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .header-badge {
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ie-blue);
+    text-transform: uppercase;
+  }
+
+  .diagram-title {
+    margin: 0;
+    font-family: var(--font-diagram);
+    font-size: var(--ie-type-h3);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ie-ink);
+  }
+
+  .diagram-caption {
+    margin: 0;
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+    line-height: 1.4;
+    flex: 1;
+    min-width: 240px;
+  }
+
+  .diagram-footer-bar {
+    margin-top: 1.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--ie-rule);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
 
   .path-question,
   .path-takeaway {
