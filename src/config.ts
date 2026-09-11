@@ -4,9 +4,9 @@
  */
 export const SITE = {
   name: 'Karan Mittal',
-  title: 'Karan Mittal | Deterministic Engineering',
+  title: 'Karan Mittal | Engineering Systems That Last',
   description:
-    'Karan Mittal turns ambiguous AI problems into deterministic systems — knowledge architecture, inference engineering, and technical leadership.',
+    'Karan Mittal is an engineer-scientist helping organisations solve data, AI, and software problems through system reviews, implementation, and technical advisory.',
   url: 'https://karan-s-mittal.github.io',
   author: 'Karan Mittal',
   email: 'karanshyammittal@gmail.com',

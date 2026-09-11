@@ -16,7 +16,7 @@ import SectionBreak from '@components/editorial/SectionBreak.astro';
     <aside class="archive-notice" aria-label="Design system architectural record">
       <span>Architectural Record</span>
       <p>This case study documents the foundational design contract of the Soft Architecture system, establishing the 960px central column, restrained palette, and semantic typography that powers this site.</p>
-      <a href="/studio/components/">Inspect the current component system →</a>
+      <a href="/visuals/">Inspect the visuals gallery →</a>
     </aside>
     <PageHeader
       label="Case study"
@@ -87,7 +87,7 @@ import SectionBreak from '@components/editorial/SectionBreak.astro';
           <li>A semantic token layer (<code>--blue-500</code>, <code>--signal-warm</code>, <code>--lavender-400</code>, spacing, radii, shadows) with zero raw hex values outside the token definitions.</li>
           <li>A component kit in four folders: <code>editorial/</code> (Exhibit, MetaLabel, EvidenceObject, Annotation, DarkPlane, TintedPlane), <code>chrome/</code>, <code>diagram/</code>, <code>portfolio/</code>.</li>
           <li>An exhibit render pipeline that re-skins Excalidraw exports into the Soft Architecture palette at build time &mdash; light-only exports, because darkness is semantic (§21).</li>
-          <li>A specimen page (<a href="/studio/components/">/studio/components</a>) that exercises every primitive before pages multiply.</li>
+          <li>A component test suite that exercised every primitive before pages multiplied.</li>
           <li>This case-study spine, applied to itself.</li>
         </ul>
       </section>
@@ -142,8 +142,7 @@ import SectionBreak from '@components/editorial/SectionBreak.astro';
           />
         </div>
         <p>
-          Primary sources: the migration commit chain in this repository's history, the
-          <a href="/studio/">studio control room</a>, the preflight script
+          Primary sources: the migration commit chain in this repository's history, the preflight script
           (<code>scripts/studio-check.js</code>), and the visual baselines under
           <code>tests/visual/__screenshots__/</code>.
         </p>

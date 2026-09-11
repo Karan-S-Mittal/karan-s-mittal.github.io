@@ -3,11 +3,9 @@
  * PostCTA.astro
  * End-of-essay consultation call to action, rendered automatically by the
  * post layout so it can never again be forgotten on an individual post.
- * Primary action routes to /contact; secondary action to LinkedIn (from
- * SOCIALS in src/config.ts).
+ * Primary action routes to /contact; secondary action explains engagement options.
  */
 import Button from '@components/editorial/Button.astro';
-import { SOCIALS } from '../../config';
 
 interface Props {
   /** Overrides the default prompt line. Keep it in the engineer-scientist register. */
@@ -18,23 +16,21 @@ interface Props {
 
 const {
   heading = 'Working on a system like this?',
-  prompt = 'If the mechanism above resembles a problem on your stack — deterministic retrieval, inference infrastructure, or another dependability-critical pipeline — I take on a limited number of architecture reviews and advisory engagements each quarter.',
+  prompt = 'If this resembles a problem your team is facing, I can help investigate what is happening, work through the options, and build a solution the team can run.',
 } = Astro.props;
 
-const linkedin = SOCIALS.find((s) => s.label === 'LinkedIn');
-if (!linkedin) throw new Error('SOCIALS is missing a "LinkedIn" entry');
 ---
 
 <section class="post-cta" aria-labelledby="post-cta-heading">
   <div class="post-cta-inner">
-    <p class="post-cta-eyebrow">Advisory</p>
+    <p class="post-cta-eyebrow">Work together</p>
     <h2 id="post-cta-heading">{heading}</h2>
     <p class="post-cta-prompt">{prompt}</p>
 
     <div class="post-cta-actions">
       <Button href="/contact">Start a conversation &rarr;</Button>
-      <Button href={linkedin.href} target="_blank" rel="noopener" variant="secondary">
-        Connect on LinkedIn &nearr;
+      <Button href="/work#engagements" variant="secondary">
+        Ways to work together &rarr;
       </Button>
     </div>
   </div>

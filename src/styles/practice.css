@@ -1,0 +1,55 @@
+/* Shared editorial layout for the commercial and public-work pages. */
+.practice-page { max-width: 960px; margin-inline: auto; padding: clamp(2rem, 5vw, 3.5rem) var(--space-5, 1.5rem) 4rem; }
+.practice-page .register { display: block; font-family: var(--font-mono); font-size: var(--ie-type-label); color: var(--ie-blue); line-height: 1.6; margin-bottom: .65rem; }
+.practice-page h1, .practice-page h2, .practice-page h3 { font-family: var(--font-serif); color: var(--ie-ink); font-weight: 500; letter-spacing: -.025em; }
+.practice-page h1 { font-size: clamp(2.2rem, 4.3vw, 3.3rem); line-height: 1.12; margin: 0 0 1.2rem; max-width: 760px; }
+.practice-page h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); line-height: 1.2; margin: 0 0 .8rem; }
+.practice-page h3 { font-size: 1.25rem; line-height: 1.35; margin: 0 0 .6rem; }
+.practice-page p { color: var(--ie-ink-secondary); font-size: 1rem; line-height: 1.65; margin: 0 0 1rem; }
+.practice-page .lead { font-size: var(--ie-type-body); max-width: 680px; }
+.practice-page a { text-underline-offset: 4px; }
+.practice-page .actions { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.2rem; margin-top: 1.5rem; }
+.practice-page .action { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: .6rem 1rem; border: 1px solid var(--ie-ink); border-radius: 4px; background: var(--ie-ink); color: var(--ie-canvas); font-size: .9375rem; text-decoration: none; }
+.practice-page .action:hover { background: var(--ie-blue); border-color: var(--ie-blue); color: var(--ie-canvas); }
+.practice-page .action.secondary { background: transparent; color: var(--ie-ink); border-color: var(--ie-rule-strong); }
+.practice-page .action.secondary:hover { color: var(--ie-blue); border-color: var(--ie-blue); }
+.practice-page .section { margin-top: clamp(2.5rem, 6vw, 4rem); padding-top: 1.5rem; border-top: 1px solid var(--ie-rule-strong); scroll-margin-top: 5rem; }
+.practice-page .section-head { display: flex; align-items: end; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.5rem; }
+.practice-page .section-head h2 { margin-bottom: 0; }
+.practice-page .section-head > a { flex-shrink: 0; font-size: .9375rem; }
+.practice-page .hero { display: grid; grid-template-columns: minmax(0, 1fr) 180px; align-items: start; gap: 2.5rem; }
+.practice-page .hero-portrait { width: 180px; height: 216px; object-fit: cover; object-position: top; border: 1px solid var(--ie-rule); border-radius: 4px; }
+.practice-page .portrait-caption { display: block; font-family: var(--font-mono); font-size: var(--ie-type-label); color: var(--ie-muted); line-height: 1.5; margin-top: .6rem; }
+.practice-page .problem-list { padding: 0; margin: 1.5rem 0 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1.5rem; }
+.practice-page .problem-list li { border-top: 2px solid var(--ie-blue); padding-top: .9rem; color: var(--ie-ink-secondary); font-size: .9375rem; line-height: 1.6; }
+.practice-page .problem-list strong { display: block; color: var(--ie-ink); margin-bottom: .4rem; font-weight: 600; }
+.practice-page .evidence-feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; padding: 1.5rem; background: var(--ie-surface); border: 1px solid var(--ie-rule); }
+.practice-page .evidence-details { margin: 0; }
+.practice-page .evidence-details dt { color: var(--ie-ink); font-weight: 600; font-size: .9375rem; margin-bottom: .25rem; }
+.practice-page .evidence-details dd { margin: 0 0 1rem; color: var(--ie-ink-secondary); font-size: .9375rem; line-height: 1.6; }
+.practice-page .evidence-details dd:last-child { margin-bottom: 0; }
+.practice-page .engagement-row { display: grid; grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr); gap: 2rem; padding: 1.5rem 0; border-bottom: 1px solid var(--ie-rule); scroll-margin-top: 5rem; }
+.practice-page .engagement-row:first-child { padding-top: .5rem; }
+.practice-page .deliverable { margin-bottom: 0; }
+.practice-page .deliverable strong { display: block; color: var(--ie-ink); }
+.practice-page .note-row, .practice-page .event-row { display: grid; grid-template-columns: 7rem minmax(0,1fr); gap: 1.5rem; padding: 1.3rem 0; border-bottom: 1px solid var(--ie-rule); }
+.practice-page .note-row { text-decoration: none; }
+.practice-page .note-row:hover h3 { color: var(--ie-blue); }
+.practice-page .note-row p, .practice-page .event-row p { margin-bottom: .5rem; }
+.practice-page time, .practice-page .event-meta { font-family: var(--font-mono); font-size: var(--ie-type-label); color: var(--ie-muted); line-height: 1.6; }
+.practice-page .event-meta { display: block; margin-bottom: .5rem; }
+.practice-page .closing { border-top: 2px solid var(--ie-blue); }
+.practice-page .reading { max-width: 680px; }
+.practice-page .reading section { margin-top: 2.5rem; }
+.practice-page .reading li { color: var(--ie-ink-secondary); line-height: 1.7; margin-bottom: .6rem; }
+@media (max-width: 680px) {
+  .practice-page { padding-inline: 1.25rem; }
+  .practice-page .hero { grid-template-columns: 1fr; gap: 1.5rem; }
+  .practice-page .hero-aside { display: flex; align-items: center; gap: 1rem; }
+  .practice-page .hero-portrait { width: 80px; height: 96px; }
+  .practice-page .portrait-caption { margin: 0; max-width: 200px; }
+  .practice-page .problem-list, .practice-page .evidence-feature, .practice-page .engagement-row { grid-template-columns: 1fr; gap: 1rem; }
+  .practice-page .section-head { align-items: start; flex-direction: column; gap: .8rem; }
+  .practice-page .note-row, .practice-page .event-row { grid-template-columns: 1fr; gap: .5rem; }
+  .practice-page .actions { align-items: stretch; }
+}

@@ -2,8 +2,9 @@
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 const nav = [
-  { href: '/blog', label: 'Writing' },
   { href: '/work', label: 'Work' },
+  { href: '/blog', label: 'Writing' },
+  { href: '/visuals', label: 'Visuals' },
   { href: '/about', label: 'About' },
   { href: '/talks', label: 'Talks' },
   { href: '/now', label: 'Now' },
@@ -21,7 +22,7 @@ function isActive(href: string) {
     <div class="header-left">
       <a href="/" class="brand" aria-label="Karan Mittal Home">
         <span class="brand-name">Karan Mittal</span>
-        <span class="brand-role">AI Systems Architect</span>
+        <span class="brand-role">Engineer-scientist</span>
       </a>
     </div>
 
@@ -44,7 +45,7 @@ function isActive(href: string) {
             </a>
           ))}
           <a href="/contact" class="mobile-nav-contact">
-            <span>Project brief / Contact</span>
+            <span>Discuss your problem</span>
             <span aria-hidden="true">→</span>
           </a>
         </nav>

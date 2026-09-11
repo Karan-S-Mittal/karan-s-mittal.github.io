@@ -1,0 +1,11 @@
+---
+import { engagements } from '../../data/practice';
+---
+<div class="engagement-list">
+  {engagements.map((item, index) => (
+    <article class="engagement-row" id={item.id}>
+      <div><span class="register">{String(index + 1).padStart(2, '0')} / {item.label}</span><h3>{item.title}</h3></div>
+      <div><p>{item.situation}</p><p>{item.approach}</p><p class="deliverable"><strong>What you leave with</strong> {item.deliverable}</p></div>
+    </article>
+  ))}
+</div>

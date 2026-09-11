@@ -3,7 +3,7 @@ import Layout from '@layouts/Layout.astro';
 import PageHeader from '@components/content/PageHeader.astro';
 import { SITE } from '../config';
 
-const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1';
+const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dynamicHeight=1';
 ---
 
 <Layout
@@ -13,35 +13,46 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&tra
   <main class="container contact-page">
     <PageHeader
       label="Contact"
-      title="Bring the difficult system question."
-      description="Tell me what needs to be dependable, where the uncertainty is, and what constraints matter."
+      title="What needs to work better?"
+      description="Tell me about the problem, who it affects, and what a useful outcome would look like. A few sentences are enough to start."
     />
+
+    <div class="contact-actions">
+      <a class="email-action" href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>Email me →</a>
+      <a href="#tally-container">Use the contact form ↓</a>
+    </div>
 
     <div class="contact-layout">
       <aside class="contact-aside" aria-label="Consulting guidance">
         <div class="aside-block">
           <p class="aside-label">A useful first note</p>
-          <p>There is no need for a formal brief. A few honest sentences about the system, the friction, and the stakes are enough to start.</p>
+          <p>Describe what is happening, its impact on the team or organisation, and any timing or constraints that matter. You do not need a finished brief or a chosen technology.</p>
         </div>
 
         <div class="aside-block">
           <p class="aside-label">What this is for</p>
           <ul class="aside-list">
-            <li><span>→</span> Consulting on complex data and AI systems</li>
-            <li><span>→</span> Architecture, reliability, and latency/memory bottlenecks</li>
-            <li><span>→</span> Technical collaboration and advisory opportunities</li>
+            <li><span>→</span> System reviews and problem diagnosis</li>
+            <li><span>→</span> Design, implementation, and handover</li>
+            <li><span>→</span> Technical advisory, speaking, and workshops</li>
           </ul>
         </div>
 
+        <div class="aside-block">
+          <p class="aside-label">What happens next</p>
+          <p>I’ll review your note and reply to clarify the problem and whether I can help. If there is a fit, we’ll discuss the scope, useful outcomes, and next steps before agreeing on an engagement.</p>
+          <a class="engagement-link" href="/work#engagements">Explore ways to work together →</a>
+        </div>
+
         <div class="aside-block quiet-route">
-          <p class="aside-label">Direct alternative routes</p>
+          <p class="aside-label">Email or connect directly</p>
           <div class="route-links">
             <a href="https://www.linkedin.com/in/karansmittal/" target="_blank" rel="noopener" class="route-link">
-              <span>LinkedIn connection</span>
+              <span>Connect on LinkedIn</span>
               <span class="arrow" aria-hidden="true">↗</span>
             </a>
             <a href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`} class="route-link">
-              <span>Direct email ({SITE.email})</span>
+              <span>{SITE.email}</span>
               <span class="arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -51,17 +62,16 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&tra
       <section class="form-panel" aria-label="Engineering conversation form">
         <div class="form-panel-head">
           <div class="form-badge-row">
-            <span class="pill-badge">Project Brief</span>
-            <span class="security-note">Encrypted transmission</span>
+            <span class="pill-badge">Start a conversation</span>
           </div>
-          <p>Submitted briefs arrive directly in my private inbox. Please do not include credentials, production secrets, or confidential data.</p>
+          <p>Use the form below or send an email. A high-level description is enough for the first conversation.</p>
         </div>
 
         <div class="iframe-container" id="tally-container">
           <div class="form-skeleton" id="form-skeleton" aria-hidden="true">
             <div class="skeleton-header">
               <span class="skeleton-pill"></span>
-              <span class="skeleton-status">INITIALIZING INTAKE FORM...</span>
+              <span class="skeleton-status">Loading contact form…</span>
             </div>
             <div class="skeleton-line full"></div>
             <div class="skeleton-line half"></div>
@@ -124,6 +134,11 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&tra
     padding-bottom: clamp(3rem, 6vw, 6rem);
   }
 
+  .contact-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+  .email-action { display: inline-flex; align-items: center; min-height: 44px; padding: .6rem 1rem; background: var(--ie-ink); color: var(--ie-canvas); border-radius: 4px; text-decoration: none; }
+  .email-action:hover { background: var(--ie-blue); color: var(--ie-canvas); }
+  #tally-container { scroll-margin-top: 5rem; }
+
   .contact-layout {
     display: grid;
     grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
@@ -143,6 +158,8 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&tra
     border-radius: var(--radius-card, 8px);
     background: var(--ie-surface);
   }
+
+  .engagement-link { display: inline-block; margin-top: .8rem; font-size: .9375rem; }
 
   .aside-label {
     margin: 0 0 0.65rem;
@@ -194,6 +211,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&tra
     justify-content: space-between;
     gap: 0.5rem;
     padding: 0.5rem 0.75rem;
+    overflow-wrap: anywhere;
     border: 1px solid var(--ie-rule);
     border-radius: var(--radius, 6px);
     background: var(--ie-surface-raised);
@@ -264,6 +282,8 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&tra
   }
 
   .iframe-container {
+    background: var(--ie-embed-surface);
+    border-radius: var(--radius, 6px);
     position: relative;
     width: 100%;
     min-height: 380px;
@@ -346,6 +366,8 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&tra
   }
 
   .iframe-container iframe {
+    background: var(--ie-embed-surface);
+    color-scheme: light;
     display: block;
     width: 100%;
     border: 0;

@@ -8,6 +8,10 @@
 @import '@fontsource/ibm-plex-mono/latin-400.css';
 @import '@fontsource/ibm-plex-mono/latin-500.css';
 @import '@fontsource/ibm-plex-mono/latin-600.css';
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-500.css';
+@import '@fontsource/inter/latin-600.css';
+@import '@fontsource/inter/latin-700.css';
 
 /* ================================================================
    Design Tokens — Soft Architecture v1
@@ -20,6 +24,8 @@
   /* Semantic Color Palette */
   --ie-canvas: #f8f9fc;
   --ie-surface: #ffffff;
+  /* Third-party Tally form supplies dark text independently of the site theme. */
+  --ie-embed-surface: #ffffff;
   --ie-surface-raised: #f1f5f9;
   --ie-ink: #1a1a2e;
   --ie-ink-secondary: #4a4a6a;
@@ -36,8 +42,38 @@
   /* Code chrome is fixed near-black in BOTH modes, so its text stays fixed light. */
   --ie-code-text: #f3f4f6;
 
+  /* Brand & Technology Tokens for System Diagrams */
+  --brand-anthropic: #d97706;
+  --brand-anthropic-soft: #fdf4e7;
+  --brand-anthropic-border: #f7d7a4;
+  --brand-anthropic-ink: #853a04;
+  --brand-openai: #10a37f;
+  --brand-openai-soft: #e8f7f0;
+  --brand-openai-border: #a3e2c4;
+  --brand-openai-ink: #064e3b;
+  --brand-gemini: #2563eb;
+  --brand-git: #f05032;
+  --brand-vscode: #007acc;
+  --brand-docker: #2496ed;
+
+  /* Hero Visual & Comparison Tokens */
+  --ie-hero-bg: #eceafd;
+  --ie-hero-dot: #c4b5fd;
+  --ie-hero-pill-bg: #15181d;
+  --ie-hero-pill-text: #f0abfc;
+  --ie-hero-pill-border: #2e3440;
+  --ie-hero-card-bg: #15181d;
+  --ie-hero-card-border: #2a2e39;
+  --ie-hero-operator: #8b80b6;
+  --ie-hero-icon-white: #ffffff;
+  --ie-hero-sub-ink: #2a293d;
+  --ie-hero-sub-muted: #5e5c78;
+  --ie-hero-spec-text: #f3f4f6;
+  --ie-hero-spec-sub: #9da3af;
+
   /* Typography Families */
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --font-diagram: 'Inter', system-ui, -apple-system, sans-serif;
   --font-serif: 'IBM Plex Serif', Georgia, serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
@@ -188,6 +224,7 @@ html.dark {
   color-scheme: dark;
   --ie-canvas: #0c0a09;
   --ie-surface: #18181b;
+  --ie-embed-surface: #ffffff;
   --ie-surface-raised: #27272a;
   --ie-ink: #f3f4f6;
   --ie-ink-secondary: #d5d9df;
@@ -201,6 +238,35 @@ html.dark {
   --ie-verified: #5FD3A6;
   --ie-verified-soft: #1B3A30;
   --ie-code: #0b0d10;
+
+  /* Brand & Technology Tokens for System Diagrams */
+  --brand-anthropic: #f59e0b;
+  --brand-anthropic-soft: #2b1805;
+  --brand-anthropic-border: #593108;
+  --brand-anthropic-ink: #fde68a;
+  --brand-openai: #34d399;
+  --brand-openai-soft: #062316;
+  --brand-openai-border: #0d4e32;
+  --brand-openai-ink: #a7f3d0;
+  --brand-gemini: #60a5fa;
+  --brand-git: #fb7185;
+  --brand-vscode: #38bdf8;
+  --brand-docker: #38bdf8;
+
+  /* Hero Visual & Comparison Tokens */
+  --ie-hero-bg: #0f0d1a;
+  --ie-hero-dot: #2a2444;
+  --ie-hero-pill-bg: #15181d;
+  --ie-hero-pill-text: #f0abfc;
+  --ie-hero-pill-border: #2e3440;
+  --ie-hero-card-bg: #15181d;
+  --ie-hero-card-border: #2a2e39;
+  --ie-hero-operator: #7b71a2;
+  --ie-hero-icon-white: #ffffff;
+  --ie-hero-sub-ink: #f0edf8;
+  --ie-hero-sub-muted: #a4a0be;
+  --ie-hero-spec-text: #f3f4f6;
+  --ie-hero-spec-sub: #aeb6c2;
 
   --accent-hover: #b2c4ff;
   --link-hover: #b2c4ff;
