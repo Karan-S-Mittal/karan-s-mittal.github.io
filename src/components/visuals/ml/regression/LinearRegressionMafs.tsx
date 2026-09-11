@@ -16,6 +16,7 @@ import 'mafs/font.css';
 import { UniverSpreadsheet, type SpreadsheetPoint } from '../../../visual-engine/ui/UniverSpreadsheet';
 import { LossParabolaObservable } from './LossParabolaObservable';
 import { AudioChime } from '../../../visual-engine/core/AudioChime';
+import { calculateOLS, calculateRegressionStats } from '@utils/ols';
 
 export const LinearRegressionMafs: React.FC = () => {
   // Data Points in Cartesian [0..10] x [0..10]
@@ -34,41 +35,11 @@ export const LinearRegressionMafs: React.FC = () => {
   const [showSquares, setShowSquares] = useState<boolean>(false);
   const [hoveredPointId, setHoveredPointId] = useState<number | null>(null);
 
-  // Compute Closed-Form OLS Parameters
+  // Compute Closed-Form OLS Parameters & current stats
   const { optM, optB, ssr, r2 } = useMemo(() => {
-    const n = points.length;
-    if (n < 2) return { optM: slope, optB: intercept, ssr: 0, r2: 1 };
-
-    let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
-    for (const p of points) {
-      sumX += p.x;
-      sumY += p.y;
-      sumXY += p.x * p.y;
-      sumX2 += p.x * p.x;
-    }
-
-    const meanX = sumX / n;
-    const meanY = sumY / n;
-
-    const num = sumXY - n * meanX * meanY;
-    const den = sumX2 - n * meanX * meanX;
-
-    const calculatedM = Math.abs(den) > 0.0001 ? num / den : 0.85;
-    const calculatedB = meanY - calculatedM * meanX;
-
-    // Current SSR with user slope & intercept
-    let currentSSR = 0;
-    let sst = 0;
-    for (const p of points) {
-      const pred = slope * p.x + intercept;
-      const res = p.y - pred;
-      currentSSR += res * res;
-      sst += (p.y - meanY) * (p.y - meanY);
-    }
-
-    const calculatedR2 = sst > 0 ? Math.max(0, 1 - currentSSR / sst) : 1;
-
-    return { optM: calculatedM, optB: calculatedB, ssr: currentSSR, r2: calculatedR2 };
+    const { optM, optB } = calculateOLS(points, slope, intercept);
+    const { ssr, r2 } = calculateRegressionStats(points, slope, intercept);
+    return { optM, optB, ssr, r2 };
   }, [points, slope, intercept]);
 
   // Solve OLS (BAM!)

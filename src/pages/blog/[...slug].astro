@@ -6,6 +6,7 @@ import RelatedPosts from '@components/content/RelatedPosts.astro';
 import PostCTA from '@components/content/PostCTA.astro';
 import { getReadingTime } from '@utils/readingTime';
 import { tagSlug } from '@utils/tags.js';
+import 'katex/dist/katex.min.css';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');

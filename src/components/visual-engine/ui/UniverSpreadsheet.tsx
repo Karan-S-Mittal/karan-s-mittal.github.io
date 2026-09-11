@@ -12,6 +12,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { AudioChime } from '../core/AudioChime';
+import { calculateRegressionStats } from '@utils/ols';
 
 export interface SpreadsheetPoint {
   id: number;
@@ -58,22 +59,14 @@ export const UniverSpreadsheet: React.FC<UniverSpreadsheetProps> = ({
 
   // Compute stats
   const stats = useMemo(() => {
-    const n = points.length;
-    if (n === 0) return { sumX: 0, avgX: 0, sumY: 0, avgY: 0, sumSq: 0, count: 0 };
-    const sumX = points.reduce((acc, p) => acc + p.x, 0);
-    const sumY = points.reduce((acc, p) => acc + p.y, 0);
-    const sumSq = points.reduce((acc, p) => {
-      const pred = slope * p.x + intercept;
-      const res = p.y - pred;
-      return acc + res * res;
-    }, 0);
+    const s = calculateRegressionStats(points, slope, intercept);
     return {
-      sumX: +sumX.toFixed(2),
-      avgX: +(sumX / n).toFixed(2),
-      sumY: +sumY.toFixed(2),
-      avgY: +(sumY / n).toFixed(2),
-      sumSq: +sumSq.toFixed(3),
-      count: n,
+      sumX: +s.sumX.toFixed(2),
+      avgX: +s.avgX.toFixed(2),
+      sumY: +s.sumY.toFixed(2),
+      avgY: +s.avgY.toFixed(2),
+      sumSq: +s.ssr.toFixed(3),
+      count: s.count,
     };
   }, [points, slope, intercept]);
 

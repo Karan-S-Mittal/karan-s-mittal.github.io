@@ -19,6 +19,8 @@
     "new": "node scripts/new-post.js",
     "icon": "node scripts/find-icon.js",
     "visual:capture": "node scripts/capture-visual.js",
+    "test:unit": "node --test tests/ols.test.mjs",
+    "test": "node --test tests/ols.test.mjs",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots"
   },

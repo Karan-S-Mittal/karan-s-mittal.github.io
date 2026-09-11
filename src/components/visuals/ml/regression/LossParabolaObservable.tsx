@@ -6,6 +6,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import * as Plot from '@observablehq/plot';
+import { sampleLossCurve, calculateSSR } from '@utils/ols';
 
 interface LossParabolaProps {
   slope: number;
@@ -24,28 +25,12 @@ export const LossParabolaObservable: React.FC<LossParabolaProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const calculateSSR = (mVal: number, bVal: number) => {
-    let sum = 0;
-    for (const p of points) {
-      const pred = mVal * p.x + bVal;
-      const res = p.y - pred;
-      sum += res * res;
-    }
-    return sum;
-  };
-
   useEffect(() => {
     if (!containerRef.current) return;
 
     // Generate sampled loss curve points for m in [-1.0 .. 2.5]
-    const samples = 80;
-    const curveData: { m: number; ssr: number }[] = [];
-    for (let i = 0; i <= samples; i++) {
-      const mVal = -1.0 + (i / samples) * 3.5;
-      curveData.push({ m: mVal, ssr: calculateSSR(mVal, intercept) });
-    }
-
-    const currentSSR = calculateSSR(slope, intercept);
+    const curveData = sampleLossCurve(points, intercept, -1.0, 2.5, 80);
+    const currentSSR = calculateSSR(points, slope, intercept);
     const activePoint = [{ m: slope, ssr: currentSSR }];
 
     // Build Observable Plot
@@ -78,15 +63,15 @@ export const LossParabolaObservable: React.FC<LossParabolaProps> = ({
         Plot.line(curveData, {
           x: 'm',
           y: 'ssr',
-          stroke: '#2676AA',
+          stroke: 'var(--ie-blue, #2676AA)',
           strokeWidth: 2.2,
         }),
         // Active Position Marker
         Plot.dot(activePoint, {
           x: 'm',
           y: 'ssr',
-          fill: '#2676AA',
-          stroke: '#ffffff',
+          fill: 'var(--ie-blue, #2676AA)',
+          stroke: 'var(--ie-surface, #ffffff)',
           strokeWidth: 2,
           r: 6,
         }),
@@ -94,7 +79,7 @@ export const LossParabolaObservable: React.FC<LossParabolaProps> = ({
         Plot.ruleX(activePoint, {
           x: 'm',
           y: 'ssr',
-          stroke: '#68768B',
+          stroke: 'var(--ie-muted, #5B6470)',
           strokeDasharray: '3,3',
           strokeWidth: 1.2,
         }),

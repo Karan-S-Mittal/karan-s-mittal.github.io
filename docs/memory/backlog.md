@@ -21,12 +21,10 @@ Status values: `open`, `in progress`, `blocked`, `done`. Do not delete an artifa
 - Start with an aggregate monthly record of relevant enquiries, how people found the site, the problem they brought, and whether a useful conversation or engagement followed. Keep personal lead details outside repository memory.
 - No tracking service is configured by this positioning change. Add analytics only for a defined measurement question and an agreed service.
 
-## P1 — open: move KaTeX out of the global layout path
+## P1 — done: move KaTeX out of the global layout path
 
 - Location: `src/layouts/Layout.astro`, `src/pages/blog/[...slug].astro`.
-- Opportunity: the full KaTeX stylesheet is inherited by pages that contain no equations.
-- Desired invariant: equation styling loads on equation-bearing article routes while ordinary pages keep only the site shell CSS.
-- Verification: compare route stylesheet links and visual output for a normal page and a mathematical essay.
+- Verified on 2026-09-11: KaTeX CSS removed from `Layout.astro` and scoped specifically to `src/pages/blog/[...slug].astro`. Non-math landing pages no longer load KaTeX stylesheets.
 
 ## P1 — open: prune repository test and draft weight
 
@@ -48,11 +46,10 @@ Status values: `open`, `in progress`, `blocked`, `done`. Do not delete an artifa
 - Sequence: measure real interaction cost first; then consider separating the spreadsheet, lazy-loading the plot, reducing plot dependencies, or updating an existing plot instead of recreating it.
 - Desired invariant: the first meaningful interaction stays immediate and the three views remain synchronized.
 
-## P2 — open: consolidate repeated OLS calculations
-
-- Locations: `LinearRegressionMafs.tsx`, `UniverSpreadsheet.tsx`, `LossParabolaObservable.tsx`.
-- Opportunity: SSR and prediction calculations are duplicated across three components.
-- Desired invariant: one tested pure calculation module owns the math, reducing correctness drift more than bundle size.
+## P2 — done: consolidate repeated OLS calculations
+ 
+- Locations: `LinearRegressionMafs.tsx`, `UniverSpreadsheet.tsx`, `LossParabolaObservable.tsx`, `src/utils/ols.ts`.
+- Verified on 2026-09-11: Consolidated into pure, unit-tested module `src/utils/ols.ts` (`tests/ols.test.mjs`). All three components consume shared OLS and regression statistics.
 
 ## P3 — open: reconcile documentation and dead assets
 
