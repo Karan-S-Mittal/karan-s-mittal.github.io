@@ -18,6 +18,11 @@
 .practice-page .section-head h2 { margin-bottom: 0; }
 .practice-page .section-head > a { flex-shrink: 0; font-size: .9375rem; }
 .practice-page .hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: center; gap: 3rem; padding-bottom: 1.5rem; }
+.practice-page .hero.hero-centric { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 860px; margin: 0 auto; padding-bottom: 2rem; }
+.practice-page .hero-centric .hero-content { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 740px; }
+.practice-page .hero-centric h1 { max-width: 720px; margin: 0 0 1.25rem; }
+.practice-page .hero-centric .lead { max-width: 640px; margin: 0 auto 1.5rem; text-align: center; font-size: 1.125rem; line-height: 1.65; }
+.practice-page .hero-centric .actions { justify-content: center; margin-top: 0.5rem; }
 .practice-page .hero-content { display: flex; flex-direction: column; }
 .practice-page .hero-portrait { width: 180px; height: 216px; object-fit: cover; object-position: top; border: 1px solid var(--ie-rule); border-radius: 4px; }
 .practice-page .portrait-caption { display: block; font-family: var(--font-mono); font-size: var(--ie-type-label); color: var(--ie-muted); line-height: 1.5; margin-top: .6rem; }
@@ -45,6 +50,17 @@
 .practice-page .note-row p, .practice-page .event-row p { margin-bottom: .5rem; }
 .practice-page time, .practice-page .event-meta { font-family: var(--font-mono); font-size: var(--ie-type-label); color: var(--ie-muted); line-height: 1.6; }
 .practice-page .event-meta { display: block; margin-bottom: .5rem; }
+.practice-page .featured-blueprints-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+.practice-page .blueprint-showcase-card { display: flex; flex-direction: column; background: var(--ie-surface); border: 1px solid var(--ie-rule); border-radius: var(--radius-sm, 4px); overflow: hidden; text-decoration: none; transition: transform var(--transition-fast), border-color var(--transition-fast); }
+.practice-page .blueprint-showcase-card:hover { transform: translateY(-2px); border-color: var(--ie-blue); }
+.practice-page .blueprint-showcase-card:hover h3 { color: var(--ie-blue); }
+.practice-page .blueprint-card-info { padding: 1rem 1.1rem; display: flex; flex-direction: column; flex: 1; }
+.practice-page .blueprint-card-info h3 { font-size: 1rem; margin: 0 0 .35rem; }
+.practice-page .blueprint-card-info p { font-size: .875rem; color: var(--ie-ink-secondary); line-height: 1.5; margin: 0 0 .75rem; }
+.practice-page .blueprint-card-cta { font-family: var(--font-diagram); font-size: var(--ie-type-ui); font-weight: 600; color: var(--ie-blue); margin-top: auto; }
+.practice-page .closing.centered-closing { text-align: center; max-width: 680px; margin: 4rem auto 0; padding-top: 3rem; border-top: 1px solid var(--ie-rule); }
+.practice-page .closing.centered-closing .actions { justify-content: center; }
+.practice-page .closing.centered-closing .lead { margin-inline: auto; }
 .practice-page .closing { border-top: 2px solid var(--ie-blue); }
 .practice-page .reading { max-width: 680px; }
 .practice-page .reading section { margin-top: 2.5rem; }
@@ -55,7 +71,7 @@
   .practice-page .hero-aside { display: flex; align-items: center; gap: 1rem; }
   .practice-page .hero-portrait { width: 80px; height: 96px; }
   .practice-page .portrait-caption { margin: 0; max-width: 200px; }
-  .practice-page .problem-list, .practice-page .evidence-feature, .practice-page .engagement-row { grid-template-columns: 1fr; gap: 1rem; }
+  .practice-page .problem-list, .practice-page .evidence-feature, .practice-page .engagement-row, .practice-page .featured-blueprints-grid { grid-template-columns: 1fr; gap: 1rem; }
   .practice-page .section-head { align-items: start; flex-direction: column; gap: .8rem; }
   .practice-page .note-row, .practice-page .event-row { grid-template-columns: 1fr; gap: .5rem; }
   .practice-page .actions { align-items: stretch; }

@@ -1,96 +1,128 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import EngagementList from '@components/content/EngagementList.astro';
 import { getCollection } from 'astro:content';
-import { SITE, SOCIALS } from '../config';
-import talksData from '@data/talks.json';
+import { SITE } from '../config';
 import VisualMicroSchematic from '@components/visuals/VisualMicroSchematic.astro';
-import HeroSpatialGraph from '@components/visuals/HeroSpatialGraph.astro';
+import HeroWorkflowGraph from '@components/visuals/HeroWorkflowGraph.astro';
 import '@styles/practice.css';
+
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 const featuredPosts = [...publishedPosts.filter(p => p.data.featured), ...publishedPosts.filter(p => !p.data.featured)].slice(0, 3);
-const selectedTalks = [...talksData.talks].sort((a,b) => b.date.localeCompare(a.date)).slice(0, 3);
-const linkedin = SOCIALS.find(s => s.label === 'LinkedIn')!;
 const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'});
+
+const featuredBlueprints = [
+  {
+    slug: 'claude-code-loop',
+    title: 'Agent Execution Loop',
+    desc: 'Interactive CLI shell, tool dispatch, and permission gates that keep agents deterministic.',
+    badge: 'AGENT WORKFLOW'
+  },
+  {
+    slug: 'deterministic-rag',
+    title: 'Zero-Hallucination Retrieval',
+    desc: 'Hybrid dense/sparse search, immutable hashes, and deterministic replay audit bundles.',
+    badge: 'VERIFIED DATA'
+  },
+  {
+    slug: 'coding-agent',
+    title: 'Cognitive Router & Tools',
+    desc: '3-tier orchestration: planner decomposition, tool routing, and sandboxed bash execution.',
+    badge: 'MLOPS ARCHITECTURE'
+  }
+];
 ---
+
 <Layout title={SITE.title} description={SITE.description}>
   <main class="practice-page">
-    <section class="hero" aria-labelledby="home-title">
+    <!-- Centered Hero -->
+    <section class="hero hero-centric" aria-labelledby="home-title">
       <div class="hero-content">
-        <span class="register">Karan Mittal / Systems Engineer-Scientist · Co-founder, Dextar</span>
+        <span class="register">Karan Mittal &bull; Systems Engineering &amp; MLOps</span>
         <h1 id="home-title">Solve the real problem.<br />Build a system that lasts.</h1>
-        <p class="lead">I help organisations turn difficult AI inference, distributed data, and runtime bottlenecks into deterministic systems people can rely on—from root-cause microarchitecture to verified production software.</p>
+        <p class="lead">
+          I help engineering teams turn unpredictable LLM prototypes into reliable, cost-efficient production systems—through state-graph workflows, smart model routing, and automated evaluation.
+        </p>
         <div class="actions">
-          <a class="action" href="/contact">Discuss your problem →</a>
-          <a class="action secondary" href="/visuals">Explore systems blueprints →</a>
+          <a class="action" href="/contact">Discuss your system →</a>
+          <a class="action secondary" href="/visuals">Explore architecture blueprints →</a>
         </div>
       </div>
-      <HeroSpatialGraph />
+      <HeroWorkflowGraph />
     </section>
 
+    <!-- 3 Core Pillars -->
     <ul class="problem-list" aria-label="Problems I help solve">
       <li>
-        <span class="problem-num">01 / PRODUCTION HARDENING</span>
-        <strong>The prototype needs to work in practice.</strong>
-        Turn promising AI behaviour into a verified system with explicit resource bounds, evaluation harness, and operational ownership.
+        <span class="problem-num">01 / AGENT WORKFLOWS &amp; STATE GRAPHS</span>
+        <strong>Get models to follow instructions.</strong>
+        Replace fragile single-prompt chains with structured state graphs, tool sandboxes, and schema validation. Ensure agents reliably complete multi-step tasks without getting stuck in infinite loops.
       </li>
       <li>
-        <span class="problem-num">02 / DETERMINISTIC RETRIEVAL</span>
-        <strong>The information is there. Trust is missing.</strong>
-        Make enterprise knowledge verifiable, trace data lineages back to raw sources, and eliminate hallucination risk from critical workflows.
+        <span class="problem-num">02 / MLOPS &amp; COST OPTIMIZATION</span>
+        <strong>Stop overpaying for tokens.</strong>
+        Architect tiered model routing, semantic caching, and prompt compaction. Run 90% of routine traffic on fast, inexpensive models to cut monthly API spend by up to 70%.
       </li>
       <li>
-        <span class="problem-num">03 / ARCHITECTURE BOTTLENECKS</span>
-        <strong>The system is holding the team back.</strong>
-        Pinpoint memory, latency, and cost bottlenecks at the hardware and kernel level, then engineer clean interventions that scale.
+        <span class="problem-num">03 / CONTINUOUS EVAL HARNESS</span>
+        <strong>Ship model updates safely.</strong>
+        Build automated regression test suites and policy gates into CI/CD. Test prompt adjustments and new model releases against benchmark datasets before they touch customers.
       </li>
     </ul>
 
-    <section class="section" aria-labelledby="work-heading">
+    <!-- Section 01: Featured Architecture Blueprints -->
+    <section class="section" aria-labelledby="blueprints-heading">
       <div class="section-head">
         <div>
-          <span class="register">01 / Selected work</span>
-          <h2 id="work-heading">An implementation you can inspect.</h2>
+          <span class="register">01 / Verified blueprints</span>
+          <h2 id="blueprints-heading">Architectures you can inspect.</h2>
         </div>
-        <a href="/work">Work &amp; contributions →</a>
+        <a href="/visuals">View all 11 blueprints →</a>
       </div>
-      <article class="evidence-feature">
-        <div class="evidence-copy">
-          <span class="register">Independent project / Explanatory Systems Studio</span>
-          <h3>Making technical explanations testable.</h3>
-          <p>This site is also a working engineering project: interactive explanations, verified visual blueprints, and memory layouts that keep published technical material consistent and mechanistically rigorous.</p>
-          <p class="evidence-summary">
-            Instead of hand-wavy architecture slides, each schematic maps exact frame strides, data plane boundaries, and kernel control flows directly to primary papers and source implementations.
-          </p>
-          <div class="evidence-links">
-            <a href="/visuals/">Explore systems blueprints &rarr;</a>
-            <a href="/case-studies/explanatory-studio/" class="secondary-link">Read case study &rarr;</a>
-          </div>
-        </div>
-        <div class="evidence-preview-wrap">
-          <div class="evidence-blueprint-frame">
-            <VisualMicroSchematic slug="paged-attention" />
-            <div class="evidence-blueprint-bar">
-              <span class="blueprint-label">EXHIBIT &bull; PAGEDATTENTION TRANSLATION</span>
-              <a href="/visuals/paged-attention/" class="blueprint-link">Inspect blueprint &rarr;</a>
+      <div class="featured-blueprints-grid">
+        {featuredBlueprints.map(bp => (
+          <a href={`/visuals/${bp.slug}/`} class="blueprint-showcase-card">
+            <VisualMicroSchematic slug={bp.slug} />
+            <div class="blueprint-card-info">
+              <span class="register">{bp.badge}</span>
+              <h3>{bp.title}</h3>
+              <p>{bp.desc}</p>
+              <span class="blueprint-card-cta">Inspect blueprint &rarr;</span>
             </div>
-          </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Section 02: Selected Writing -->
+    <section class="section" aria-labelledby="writing-heading">
+      <div class="section-head">
+        <div>
+          <span class="register">02 / Selected writing</span>
+          <h2 id="writing-heading">How I work through complex systems.</h2>
         </div>
-      </article>
+        <a href="/blog">All {publishedPosts.length} essays →</a>
+      </div>
+      {featuredPosts.map(post => (
+        <a class="note-row" href={`/blog/${post.id}/`}>
+          <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+          <div>
+            <h3>{post.data.title}</h3>
+            <p>{post.data.description}</p>
+          </div>
+        </a>
+      ))}
     </section>
 
-    <section class="section" aria-labelledby="engagement-heading"><div class="section-head"><div><span class="register">02 / Working together</span><h2 id="engagement-heading">Start where the problem is.</h2></div></div><EngagementList /><div class="actions"><a href="/work#engagements">Explore engagement options →</a></div></section>
-
-    <section class="section" aria-labelledby="writing-heading"><div class="section-head"><div><span class="register">03 / Selected writing</span><h2 id="writing-heading">How I work through a system.</h2></div><a href="/blog">All {publishedPosts.length} essays →</a></div>
-      {featuredPosts.map(post => <a class="note-row" href={`/blog/${post.id}/`}><time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time><div><h3>{post.data.title}</h3><p>{post.data.description}</p></div></a>)}
+    <!-- Centered Closing -->
+    <section class="closing centered-closing" aria-labelledby="closing-heading">
+      <span class="register">03 / Start a conversation</span>
+      <h2 id="closing-heading">Have an AI system that needs to work better?</h2>
+      <p class="lead">Whether you are struggling with agent reliability, runaway API bills, or scaling your evaluation pipeline, let’s talk through the engineering.</p>
+      <div class="actions">
+        <a href="/contact" class="action">Tell me what needs to work better →</a>
+        <a href="/work" class="action secondary">Explore advisory &amp; build options →</a>
+      </div>
     </section>
-
-    <section class="section" aria-labelledby="community-heading"><div class="section-head"><div><span class="register">04 / Teaching & community</span><h2 id="community-heading">Build understanding. Help others build.</h2></div><a href="/talks">Talks & workshops →</a></div><p class="lead">I speak, organise, and mentor through MLIndore, GDG Cloud Indore, and CodeVipassana. These are selected events from that work.</p>
-      {selectedTalks.map(talk => <article class="event-row"><time datetime={talk.date}>{formatDate(talk.date)}</time><div><span class="event-meta">{talk.role} / {talk.org}</span><h3>{talk.title}</h3><p>{talk.description}</p><a href={talk.links[0].url} target="_blank" rel="noopener">Event details ↗</a></div></article>)}
-      <div class="actions"><a href="/about#community">Meet the communities →</a><a href={linkedin.href} target="_blank" rel="noopener">More activity on LinkedIn ↗</a></div>
-    </section>
-
-    <section class="section closing" aria-labelledby="about-heading"><span class="register">05 / The person behind the work</span><h2 id="about-heading">An engineer-scientist, invested in the outcome.</h2><p class="lead">I’m Karan, co-founder of Dextar. I care about understanding why something fails, finding a useful solution, and leaving people with a system they can operate and improve. Building, teaching, and working with teams are all part of that practice.</p><a href="/about">More about me →</a><div class="actions"><a href="/contact" class="action">Tell me what needs to work better →</a></div></section>
   </main>
 </Layout>

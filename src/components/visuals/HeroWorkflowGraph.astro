@@ -1,0 +1,297 @@
+---
+/**
+ * HeroWorkflowGraph.astro
+ *
+ * A centered, highly legible systems architecture workflow:
+ * - 01 / Intelligent Cost & Model Router (Saves money, cuts API bills)
+ * - 02 / Agent State-Graph Engine (Gets models to obey, structured execution)
+ * - 03 / CI/CD Eval & Safety Gate (MLOps, regression testing, safe deployment)
+ *
+ * Built with:
+ * - Large, crisp typography (11px-14px) for effortless legibility.
+ * - Blueprint drafting aesthetic: technical grid, crosshairs, clean arrows.
+ * - 100% semantic tokens (var(--ie-*)), zero raw hex colors.
+ */
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class:list={['hero-workflow-wrapper', className]} aria-label="Production LLM & MLOps Architecture Diagram">
+  <svg
+    class="workflow-svg"
+    viewBox="0 0 740 370"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <!-- Blueprint Grid Pattern -->
+      <pattern id="wf-grid" width="16" height="16" patternUnits="userSpaceOnUse">
+        <path d="M 16 0 L 0 0 0 16" fill="none" stroke="var(--ie-rule)" stroke-width="0.5" stroke-opacity="0.6" />
+        <circle cx="16" cy="16" r="0.75" fill="var(--ie-rule-strong)" />
+      </pattern>
+
+      <!-- Blueprint Arrowhead (Active Blue) -->
+      <marker id="wf-arr-blue" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+        <path d="M 1 1 L 5 3 L 1 5" fill="none" stroke="var(--ie-blue)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+      </marker>
+
+      <!-- Blueprint Arrowhead (Verified Green) -->
+      <marker id="wf-arr-green" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+        <path d="M 1 1 L 5 3 L 1 5" fill="none" stroke="var(--ie-verified)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+      </marker>
+
+      <!-- Blueprint Arrowhead (Constraint Rust) -->
+      <marker id="wf-arr-rust" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+        <path d="M 1 1 L 5 3 L 1 5" fill="none" stroke="var(--ie-rust)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+      </marker>
+    </defs>
+
+    <!-- Canvas Frame & Background Grid -->
+    <rect x="0.5" y="0.5" width="739" height="369" rx="8" fill="var(--ie-surface-raised)" stroke="var(--ie-rule)" />
+    <rect x="0.5" y="0.5" width="739" height="369" rx="8" fill="url(#wf-grid)" />
+
+    <!-- Corner Alignment Registration Marks -->
+    <path d="M 12 20 L 12 12 L 20 12" stroke="var(--ie-muted)" stroke-width="1.2" fill="none" opacity="0.6" />
+    <path d="M 728 20 L 728 12 L 720 12" stroke="var(--ie-muted)" stroke-width="1.2" fill="none" opacity="0.6" />
+    <path d="M 12 350 L 12 358 L 20 358" stroke="var(--ie-muted)" stroke-width="1.2" fill="none" opacity="0.6" />
+    <path d="M 728 350 L 728 358 L 720 358" stroke="var(--ie-muted)" stroke-width="1.2" fill="none" opacity="0.6" />
+
+    <!-- Header Drafting Stamp -->
+    <g transform="translate(24, 28)">
+      <text x="0" y="0" class="wf-stamp-title">ARCHITECTURE SPEC &bull; PRODUCTION LLM WORKFLOW &amp; MLOPS RUNTIME</text>
+    </g>
+    <g transform="translate(560, 28)">
+      <text x="156" y="0" class="wf-stamp-meta" text-anchor="end">STATUS: VERIFIED IN PROD &bull; 1:1</text>
+    </g>
+
+    <!-- Top Input Stream Node -->
+    <g transform="translate(270, 36)">
+      <rect x="0" y="0" width="200" height="28" rx="4" fill="var(--ie-surface)" stroke="var(--ie-rule-strong)" stroke-width="1.2" />
+      <circle cx="14" cy="14" r="4" fill="var(--ie-blue)" />
+      <text x="26" y="18" class="wf-node-title">Prompt / User Request Stream</text>
+    </g>
+
+    <!-- Connector: Input to Router -->
+    <path d="M 370 64 L 370 78 L 135 78 L 135 90" stroke="var(--ie-blue)" stroke-width="1.4" fill="none" marker-end="url(#wf-arr-blue)" />
+    <circle cx="370" cy="78" r="2.5" fill="var(--ie-blue)" />
+
+    <!-- ============================================================
+         STAGE 01: INTELLIGENT MODEL & COST ROUTER (Saves Money)
+         ============================================================ -->
+    <g class="wf-stage stage-1">
+      <!-- Main Stage Container -->
+      <rect x="25" y="90" width="220" height="205" rx="6" fill="var(--ie-surface)" stroke="var(--ie-blue)" stroke-width="1.5" />
+
+      <!-- Stage Header -->
+      <path d="M 25 96 A 6 6 0 0 1 31 90 L 239 90 A 6 6 0 0 1 245 96 L 245 124 L 25 124 Z" fill="var(--ie-blue-soft)" opacity="0.4" />
+      <text x="37" y="112" class="wf-stage-heading">01 / MODEL &amp; COST ROUTER</text>
+
+      <!-- Sub-Block A: Fast / Cheap Model -->
+      <g transform="translate(37, 134)">
+        <rect x="0" y="0" width="196" height="42" rx="4" fill="var(--ie-surface-raised)" stroke="var(--ie-rule)" stroke-width="1" />
+        <text x="10" y="18" class="wf-sub-title">Tier 1 &bull; Small Language Model</text>
+        <text x="10" y="32" class="wf-sub-desc">Routine queries &bull; 90% traffic &bull; 10x cheaper</text>
+      </g>
+
+      <!-- Sub-Block B: Heavy Reasoning Model -->
+      <g transform="translate(37, 184)">
+        <rect x="0" y="0" width="196" height="42" rx="4" fill="var(--ie-surface-raised)" stroke="var(--ie-rule)" stroke-width="1" />
+        <text x="10" y="18" class="wf-sub-title">Tier 2 &bull; Frontier Reasoning Model</text>
+        <text x="10" y="32" class="wf-sub-desc">Multi-step synthesis &bull; Edge cases only</text>
+      </g>
+
+      <!-- Impact Badge -->
+      <g transform="translate(37, 238)">
+        <rect x="0" y="0" width="196" height="42" rx="4" fill="var(--ie-verified-soft)" stroke="var(--ie-verified)" stroke-width="1.2" />
+        <text x="98" y="19" class="wf-metric-pill green" text-anchor="middle">&darr; 70% API BILL REDUCTION</text>
+        <text x="98" y="33" class="wf-metric-sub" text-anchor="middle">Semantic Caching &bull; Prompt Compaction</text>
+      </g>
+    </g>
+
+    <!-- Connector: Router to State Graph -->
+    <path d="M 245 192 L 258 192" stroke="var(--ie-blue)" stroke-width="1.6" fill="none" marker-end="url(#wf-arr-blue)" />
+
+    <!-- ============================================================
+         STAGE 02: AGENT STATE-GRAPH ENGINE (Gets Models to Obey)
+         ============================================================ -->
+    <g class="wf-stage stage-2">
+      <!-- Main Stage Container -->
+      <rect x="260" y="90" width="220" height="205" rx="6" fill="var(--ie-surface)" stroke="var(--ie-blue)" stroke-width="1.5" />
+
+      <!-- Stage Header -->
+      <path d="M 260 96 A 6 6 0 0 1 266 90 L 474 90 A 6 6 0 0 1 480 96 L 480 124 L 260 124 Z" fill="var(--ie-blue-soft)" opacity="0.4" />
+      <text x="272" y="112" class="wf-stage-heading">02 / AGENT STATE GRAPH</text>
+
+      <!-- Sub-Block A: Structured Task Decomposition -->
+      <g transform="translate(272, 134)">
+        <rect x="0" y="0" width="196" height="42" rx="4" fill="var(--ie-surface-raised)" stroke="var(--ie-rule)" stroke-width="1" />
+        <text x="10" y="18" class="wf-sub-title">Structured Execution Plan</text>
+        <text x="10" y="32" class="wf-sub-desc">Schema validation &bull; Typed state transitions</text>
+      </g>
+
+      <!-- Sub-Block B: Tool & Code Execution Sandbox -->
+      <g transform="translate(272, 184)">
+        <rect x="0" y="0" width="196" height="42" rx="4" fill="var(--ie-surface-raised)" stroke="var(--ie-rule)" stroke-width="1" />
+        <text x="10" y="18" class="wf-sub-title">Sandboxed Tool Harness</text>
+        <text x="10" y="32" class="wf-sub-desc">Policy gates &bull; SQL/Bash/API permissions</text>
+      </g>
+
+      <!-- Reliability Badge -->
+      <g transform="translate(272, 238)">
+        <rect x="0" y="0" width="196" height="42" rx="4" fill="var(--ie-surface-raised)" stroke="var(--ie-rule-strong)" stroke-width="1.2" />
+        <text x="98" y="19" class="wf-metric-pill blue" text-anchor="middle">CLOSED-LOOP SELF-CORRECTION</text>
+        <text x="98" y="33" class="wf-metric-sub" text-anchor="middle">Zero Runaway Loops &bull; Output Validation</text>
+      </g>
+    </g>
+
+    <!-- Connector: State Graph to CI/CD Eval -->
+    <path d="M 480 192 L 493 192" stroke="var(--ie-blue)" stroke-width="1.6" fill="none" marker-end="url(#wf-arr-blue)" />
+
+    <!-- ============================================================
+         STAGE 03: CI/CD & EVALUATION HARNESS (MLOps / DevOps)
+         ============================================================ -->
+    <g class="wf-stage stage-3">
+      <!-- Main Stage Container -->
+      <rect x="495" y="90" width="220" height="205" rx="6" fill="var(--ie-surface)" stroke="var(--ie-verified)" stroke-width="1.5" />
+
+      <!-- Stage Header -->
+      <path d="M 495 96 A 6 6 0 0 1 501 90 L 709 90 A 6 6 0 0 1 715 96 L 715 124 L 495 124 Z" fill="var(--ie-verified-soft)" opacity="0.5" />
+      <text x="507" y="112" class="wf-stage-heading green">03 / MLOPS EVAL HARNESS</text>
+
+      <!-- Sub-Block A: Automated Regression Suite -->
+      <g transform="translate(507, 134)">
+        <rect x="0" y="0" width="196" height="42" rx="4" fill="var(--ie-surface-raised)" stroke="var(--ie-rule)" stroke-width="1" />
+        <text x="10" y="18" class="wf-sub-title">Continuous Regression Evals</text>
+        <text x="10" y="32" class="wf-sub-desc">Gold-set benchmarks &bull; CI/CD pipeline tests</text>
+      </g>
+
+      <!-- Sub-Block B: Telemetry & Quality Guardrails -->
+      <g transform="translate(507, 184)">
+        <rect x="0" y="0" width="196" height="42" rx="4" fill="var(--ie-surface-raised)" stroke="var(--ie-rule)" stroke-width="1" />
+        <text x="10" y="18" class="wf-sub-title">Live Production Telemetry</text>
+        <text x="10" y="32" class="wf-sub-desc">Latency p99 &bull; Hallucination detector &bull; Drift</text>
+      </g>
+
+      <!-- Production Quality Badge -->
+      <g transform="translate(507, 238)">
+        <rect x="0" y="0" width="196" height="42" rx="4" fill="var(--ie-verified-soft)" stroke="var(--ie-verified)" stroke-width="1.2" />
+        <text x="98" y="19" class="wf-metric-pill green" text-anchor="middle">&check; PRODUCTION AUDIT GATE</text>
+        <text x="98" y="33" class="wf-metric-sub" text-anchor="middle">Ship Model Upgrades With Zero Outages</text>
+      </g>
+    </g>
+
+    <!-- Connector: CI/CD Eval to Final Production Delivery -->
+    <path d="M 605 295 L 605 315 L 370 315 L 370 326" stroke="var(--ie-verified)" stroke-width="1.6" fill="none" marker-end="url(#wf-arr-green)" />
+    <circle cx="605" cy="315" r="2.5" fill="var(--ie-verified)" />
+
+    <!-- Bottom Destination: Deterministic Production Output -->
+    <g transform="translate(195, 328)">
+      <rect x="0" y="0" width="350" height="30" rx="5" fill="var(--ie-surface)" stroke="var(--ie-verified)" stroke-width="1.5" />
+      <circle cx="16" cy="15" r="4" fill="var(--ie-verified)" />
+      <text x="32" y="20" class="wf-destination-title">RELIABLE PRODUCTION DELIVERY &bull; CONTROLLED SPEND</text>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .hero-workflow-wrapper {
+    width: 100%;
+    max-width: 820px;
+    margin: 2.5rem auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    user-select: none;
+  }
+
+  .workflow-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.03));
+  }
+
+  /* Typography within SVG */
+  .wf-stamp-title {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    fill: var(--ie-muted);
+  }
+
+  .wf-stamp-meta {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    fill: var(--ie-muted);
+  }
+
+  .wf-node-title {
+    font-family: var(--font-diagram);
+    font-size: 11.5px;
+    font-weight: 600;
+    fill: var(--ie-ink);
+  }
+
+  .wf-stage-heading {
+    font-family: var(--font-display);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    fill: var(--ie-blue);
+  }
+
+  .wf-stage-heading.green {
+    fill: var(--ie-verified);
+  }
+
+  .wf-sub-title {
+    font-family: var(--font-display);
+    font-size: 11.5px;
+    font-weight: 600;
+    fill: var(--ie-ink);
+  }
+
+  .wf-sub-desc {
+    font-family: var(--font-diagram);
+    font-size: 9.5px;
+    fill: var(--ie-ink-secondary);
+  }
+
+  .wf-metric-pill {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .wf-metric-pill.green {
+    fill: var(--ie-verified);
+  }
+
+  .wf-metric-pill.blue {
+    fill: var(--ie-blue);
+  }
+
+  .wf-metric-sub {
+    font-family: var(--font-diagram);
+    font-size: 8.5px;
+    font-weight: 500;
+    fill: var(--ie-muted);
+  }
+
+  .wf-destination-title {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    fill: var(--ie-verified);
+  }
+</style>
