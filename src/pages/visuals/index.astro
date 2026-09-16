@@ -153,6 +153,15 @@ const visuals: VisualItem[] = Object.entries(rawPages)
           placeholder="Filter visuals by keyword, topic, or technology..."
           aria-label="Filter visuals"
         />
+
+        <div class="archetype-filter-bar" role="tablist" aria-label="Filter by system archetype">
+          <button type="button" class="filter-pill active" data-filter="all" role="tab" aria-selected="true">All (11)</button>
+          <button type="button" class="filter-pill" data-filter="loop" role="tab" aria-selected="false">Loops & Harnesses</button>
+          <button type="button" class="filter-pill" data-filter="memory" role="tab" aria-selected="false">Memory & Paging</button>
+          <button type="button" class="filter-pill" data-filter="hierarchy" role="tab" aria-selected="false">Topologies & Swarms</button>
+          <button type="button" class="filter-pill" data-filter="comparison" role="tab" aria-selected="false">Comparisons</button>
+          <button type="button" class="filter-pill" data-filter="tree" role="tab" aria-selected="false">Evolution Trees</button>
+        </div>
       </div>
 
       <div class="visuals-grid" id="visuals-grid">
@@ -178,26 +187,52 @@ const visuals: VisualItem[] = Object.entries(rawPages)
 
 <script>
   const searchInput = document.getElementById('visual-search') as HTMLInputElement | null;
+  const filterPills = document.querySelectorAll<HTMLButtonElement>('.filter-pill');
   const cards = document.querySelectorAll<HTMLElement>('.visual-card');
   const noResults = document.getElementById('no-results');
 
+  let currentArchetype = 'all';
+  let currentSearch = '';
+
+  function applyFilters() {
+    let visibleCount = 0;
+
+    cards.forEach((card) => {
+      const text = card.dataset.search || '';
+      const archetype = card.dataset.archetype || '';
+
+      const matchesSearch = !currentSearch || text.includes(currentSearch);
+      const matchesArchetype = currentArchetype === 'all' || archetype === currentArchetype || (currentArchetype === 'loop' && (archetype === 'pipeline' || archetype === 'loop'));
+
+      const isVisible = matchesSearch && matchesArchetype;
+      card.style.display = isVisible ? 'flex' : 'none';
+      if (isVisible) visibleCount++;
+    });
+
+    if (noResults) {
+      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+  }
+
   if (searchInput) {
     searchInput.addEventListener('input', () => {
-      const query = searchInput.value.trim().toLowerCase();
-      let visibleCount = 0;
-
-      cards.forEach((card) => {
-        const text = card.dataset.search || '';
-        const match = query === '' || text.includes(query);
-        card.style.display = match ? 'flex' : 'none';
-        if (match) visibleCount++;
-      });
-
-      if (noResults) {
-        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
-      }
+      currentSearch = searchInput.value.trim().toLowerCase();
+      applyFilters();
     });
   }
+
+  filterPills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      filterPills.forEach((p) => {
+        p.classList.remove('active');
+        p.setAttribute('aria-selected', 'false');
+      });
+      pill.classList.add('active');
+      pill.setAttribute('aria-selected', 'true');
+      currentArchetype = pill.dataset.filter || 'all';
+      applyFilters();
+    });
+  });
 </script>
 
 <style>
@@ -231,6 +266,38 @@ const visuals: VisualItem[] = Object.entries(rawPages)
 
   .search-bar-wrap input:focus {
     border-color: var(--ie-blue);
+  }
+
+  .archetype-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+  }
+
+  .filter-pill {
+    padding: 0.35rem 0.75rem;
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-sm, 4px);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    font-weight: 500;
+    color: var(--ie-muted);
+    cursor: pointer;
+    transition: all var(--transition-fast, 150ms ease);
+  }
+
+  .filter-pill:hover {
+    border-color: var(--ie-blue);
+    color: var(--ie-ink);
+  }
+
+  .filter-pill.active {
+    background: var(--ie-blue);
+    border-color: var(--ie-blue);
+    color: var(--ie-canvas);
+    font-weight: 600;
   }
 
   /* Responsive Visual Blueprint Grid */

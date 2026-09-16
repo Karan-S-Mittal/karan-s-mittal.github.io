@@ -17,7 +17,7 @@
 .practice-page .section-head { display: flex; align-items: end; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.5rem; }
 .practice-page .section-head h2 { margin-bottom: 0; }
 .practice-page .section-head > a { flex-shrink: 0; font-size: .9375rem; }
-.practice-page .hero { display: grid; grid-template-columns: minmax(0, 1fr) 180px; align-items: start; gap: 2.5rem; }
+.practice-page .hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); align-items: start; gap: 2.5rem; }
 .practice-page .hero-portrait { width: 180px; height: 216px; object-fit: cover; object-position: top; border: 1px solid var(--ie-rule); border-radius: 4px; }
 .practice-page .portrait-caption { display: block; font-family: var(--font-mono); font-size: var(--ie-type-label); color: var(--ie-muted); line-height: 1.5; margin-top: .6rem; }
 .practice-page .problem-list { padding: 0; margin: 1.5rem 0 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1.5rem; }

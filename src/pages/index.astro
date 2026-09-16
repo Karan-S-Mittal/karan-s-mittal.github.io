@@ -5,6 +5,7 @@ import { getCollection } from 'astro:content';
 import { SITE, SOCIALS } from '../config';
 import talksData from '@data/talks.json';
 import VisualMicroSchematic from '@components/visuals/VisualMicroSchematic.astro';
+import HeroTelemetryWorkbench from '@components/content/HeroTelemetryWorkbench.astro';
 import '@styles/practice.css';
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -22,7 +23,7 @@ const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('e
         <p class="lead">I help organisations turn difficult data, AI, and software problems into systems people can rely on—from understanding what is wrong to building a solution the team can run.</p>
         <div class="actions"><a class="action" href="/contact">Discuss your problem →</a><a class="action secondary" href="/work">Explore my work →</a></div>
       </div>
-      <div class="hero-aside"><img class="hero-portrait" src="/profile-400.jpg" alt="Karan Mittal speaking at a technical event" width="180" height="216" loading="eager" /><span class="portrait-caption">Engineering, explaining, and building with teams.</span></div>
+      <HeroTelemetryWorkbench />
     </section>
     <ul class="problem-list" aria-label="Problems I help solve">
       <li><strong>The prototype needs to work in practice.</strong>Turn promising AI behaviour into a system with clear requirements, evaluation, and operational ownership.</li>

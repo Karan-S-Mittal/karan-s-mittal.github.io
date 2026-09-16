@@ -33,7 +33,7 @@ const {
 const formattedIndex = typeof index === 'number' ? `ARC-${String(index).padStart(2, '0')}` : index;
 ---
 
-<article class="visual-card" data-search={`${title} ${desc} ${category}`.toLowerCase()}>
+<article class="visual-card" data-search={`${title} ${desc} ${category}`.toLowerCase()} data-archetype={archetype || 'pipeline'}>
   <a href={href} class="card-link" aria-label={`Inspect ${title}`}>
     <!-- Micro-Blueprint Viewport -->
     <div class="card-viewport">

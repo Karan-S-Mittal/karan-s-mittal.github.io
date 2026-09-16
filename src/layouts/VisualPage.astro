@@ -7,19 +7,84 @@ interface Props {
   description: string;
   targetId: string;
   filename: string;
+  category?: string;
+  drawingNo?: string;
 }
-const { title, description, targetId, filename } = Astro.props;
+
+const {
+  title,
+  description,
+  targetId,
+  filename,
+  category = 'SYSTEMS BLUEPRINT',
+  drawingNo = 'SPEC-01',
+} = Astro.props;
 ---
 
 <Layout title={`${title} | Karan Mittal`} description={description} chrome={false}>
   <main class="visual-page" aria-label={title}>
-    <nav aria-label="Visual controls">
-      <a href="/visuals/">← Visuals</a>
-      <button type="button" data-visual-theme aria-pressed="false">Dark theme</button>
+    <!-- Navigation & Utility Controls -->
+    <nav class="visual-nav" aria-label="Visual controls">
+      <a href="/visuals/" class="back-link">
+        <span class="nav-arrow">&larr;</span> Visuals Library
+      </a>
+      <div class="nav-right">
+        <span class="blueprint-meta-tag">{category}</span>
+        <button type="button" data-visual-theme aria-pressed="false" class="theme-btn">Dark theme</button>
+      </div>
     </nav>
-    <h1 class="sr-only">{title}</h1>
-    <div id={targetId} class="visual-capture-target"><slot /></div>
-    <DiagramExportBar targetId={targetId} filename={filename} caption="" />
+
+    <!-- Visual Drafting Header -->
+    <header class="blueprint-page-head">
+      <div class="blueprint-meta-bar">
+        <span class="meta-item"><strong>CLASSIFICATION:</strong> OPEN ARCHITECTURE</span>
+        <span class="meta-sep">&bull;</span>
+        <span class="meta-item"><strong>VERIFICATION:</strong> PRIMARY SPECIFICATION</span>
+        <span class="meta-sep">&bull;</span>
+        <span class="meta-item"><strong>SCALE:</strong> 1:1 VECTOR</span>
+      </div>
+      <h1 class="blueprint-title">{title}</h1>
+      {description && <p class="blueprint-caption">{description}</p>}
+    </header>
+
+    <!-- The Blueprint Drafting Sheet (Capture Target) -->
+    <div id={targetId} class="blueprint-sheet visual-capture-target">
+      <!-- Blueprint Corner Registration Crosshairs -->
+      <div class="crosshair crosshair-tl" aria-hidden="true">+</div>
+      <div class="crosshair crosshair-tr" aria-hidden="true">+</div>
+      <div class="crosshair crosshair-bl" aria-hidden="true">+</div>
+      <div class="crosshair crosshair-br" aria-hidden="true">+</div>
+
+      <!-- Main Diagram Canvas Slot -->
+      <div class="blueprint-content">
+        <slot />
+      </div>
+
+      <!-- Technical Drawing Title Block -->
+      <footer class="drawing-title-block" aria-hidden="true">
+        <div class="block-col">
+          <span class="col-k">STUDIO</span>
+          <span class="col-v">KARAN MITTAL</span>
+        </div>
+        <div class="block-col">
+          <span class="col-k">SUBJECT</span>
+          <span class="col-v">{title}</span>
+        </div>
+        <div class="block-col">
+          <span class="col-k">STATUS</span>
+          <span class="col-v text-verified">CONFIRMED</span>
+        </div>
+        <div class="block-col">
+          <span class="col-k">DRAFTING</span>
+          <span class="col-v">VECTOR CAD</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Export Actions -->
+    <div class="export-wrap">
+      <DiagramExportBar targetId={targetId} filename={filename} caption={description} />
+    </div>
   </main>
 </Layout>
 
@@ -37,14 +102,214 @@ const { title, description, targetId, filename } = Astro.props;
 </script>
 
 <style>
-  .visual-page { max-width: 960px; margin: 0 auto; padding: 1rem; color: var(--ie-ink); }
-  nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-family: var(--font-diagram); font-size: var(--ie-type-label); }
-  nav a { color: var(--ie-blue); text-decoration: none; }
-  button { padding: 0.3rem 0.6rem; border: 1px solid var(--ie-rule); border-radius: var(--radius); background: var(--ie-surface); color: var(--ie-ink); font: inherit; cursor: pointer; }
-  button[aria-pressed='true'] { border-color: var(--ie-blue); }
-  .visual-capture-target { display: flow-root; padding: 1rem; background: var(--ie-surface); }
-  .visual-page .visual-capture-target :global(figure.exhibit) { margin: 0; }
-  .visual-page .visual-capture-target :global(.exhibit-frame) { padding: 1rem 0; border: 0; }
-  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  @media (max-width: 640px) { .visual-page { padding: 0.75rem; } .visual-capture-target { padding: 0.75rem; } }
+  .visual-page {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+    color: var(--ie-ink);
+    font-family: var(--font-diagram);
+  }
+
+  /* Nav Controls */
+  .visual-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-diagram);
+    font-size: var(--ie-type-label);
+  }
+
+  .back-link {
+    color: var(--ie-blue);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .blueprint-meta-tag {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ie-muted);
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-sm);
+    background: var(--ie-surface);
+  }
+
+  .theme-btn {
+    padding: 0.3rem 0.65rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-sm);
+    background: var(--ie-surface);
+    color: var(--ie-ink);
+    font-family: var(--font-diagram);
+    font-size: var(--ie-type-micro);
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+
+  .theme-btn:hover {
+    border-color: var(--ie-blue);
+  }
+
+  .theme-btn[aria-pressed='true'] {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue-soft);
+    color: var(--ie-blue);
+  }
+
+  /* Page Head */
+  .blueprint-page-head {
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .blueprint-meta-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .blueprint-meta-bar strong {
+    color: var(--ie-ink);
+    font-weight: 600;
+  }
+
+  .meta-sep {
+    color: var(--ie-rule-strong);
+  }
+
+  .blueprint-title {
+    margin: 0.25rem 0 0.5rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.2vw, 2.35rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    color: var(--ie-ink);
+  }
+
+  .blueprint-caption {
+    margin: 0;
+    max-width: 820px;
+    font-family: var(--font-diagram);
+    font-size: var(--ie-type-body);
+    color: var(--ie-ink-secondary);
+    line-height: 1.55;
+  }
+
+  /* Authentic Blueprint Sheet */
+  .blueprint-sheet {
+    position: relative;
+    padding: clamp(1.5rem, 3.5vw, 2.5rem);
+    background-color: var(--ie-surface);
+    background-image: 
+      radial-gradient(circle, var(--ie-rule-strong) 0.75px, transparent 0.75px);
+    background-size: 16px 16px;
+    border: 1px solid var(--ie-rule-strong);
+    border-radius: var(--radius-card);
+    box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+  }
+
+  /* Registration Crosshairs */
+  .crosshair {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1;
+    color: var(--ie-muted);
+    opacity: 0.6;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .crosshair-tl { top: 8px; left: 10px; }
+  .crosshair-tr { top: 8px; right: 10px; }
+  .crosshair-bl { bottom: 8px; left: 10px; }
+  .crosshair-br { bottom: 8px; right: 10px; }
+
+  .blueprint-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .blueprint-content :global(figure.exhibit) { margin: 0; }
+  .blueprint-content :global(.exhibit-frame) { padding: 0.5rem 0; border: 0; background: transparent; }
+
+  /* Technical Drawing Title Block */
+  .drawing-title-block {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--ie-rule);
+    background: var(--ie-rule);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+  }
+
+  .block-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.45rem 0.65rem;
+    background: var(--ie-surface);
+  }
+
+  .col-k {
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+    color: var(--ie-muted);
+    text-transform: uppercase;
+  }
+
+  .col-v {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ie-ink);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .col-v.text-verified {
+    color: var(--ie-verified);
+  }
+
+  .export-wrap {
+    margin-top: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .visual-page { padding: 1rem 0.75rem 2rem; }
+    .blueprint-sheet { padding: 1rem 0.75rem; }
+    .drawing-title-block { grid-template-columns: repeat(2, 1fr); }
+  }
 </style>
+
