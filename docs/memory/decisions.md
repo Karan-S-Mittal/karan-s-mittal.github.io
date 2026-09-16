@@ -55,4 +55,13 @@ Refined `diagram-craft` skill to enforce pure block-focused architectural diagra
 
 Standardized all display typography (`h1`, `h2`, `h3`, page display titles, and diagram exhibit titles) on Plus Jakarta Sans (`var(--font-display)`), while preserving IBM Plex Sans for body prose and IBM Plex Mono for metrics and code. Enforced strict single trunk (`main`) development, barring coding agents from creating side branches. Introduced Distill-inspired `<MemoryGrid />` for proportional memory strides and Ciechanowski-inspired `<StepScrubber />` for zero-overhead interactive algorithmic phase walkthroughs. Applied Tufte data-ink principles across exhibits and layouts by eliminating redundant card borders in favor of hairline rules and direct leader annotations.
 
+## 2026-09-17 — Centered Homepage, LLM & MLOps Commercial Proposition, and Arrowhead Standards
+
+- **Centered Editorial Flow**: Re-aligned the studio homepage (`src/pages/index.astro`) to a calm, centered aesthetic. Center-aligned hero title, lead, CTAs, and featured visuals, eliminating the sprawling 6-section consulting and event lists in favor of 3 core pillars (*Agent Workflows & State Graphs*, *MLOps & Cost Optimization*, *Continuous Eval Harness*), featured blueprints (`/visuals/`), and selected writing (`/blog/`).
+- **Commercial Clarity over Low-Level Microarchitecture**: Grounded the studio landing visual (`HeroWorkflowGraph.astro`) in what engineering leaders and founders need: getting models to obey through state graphs, slashing API bills by up to 70% with model routing, and automated regression testing in CI/CD.
+- **Unboxed Artwork & Standard Semantic Captions**: Stripped artificial grey container boxes, grid fills, corner ticks, and stamps from the homepage visual. Placed standardized semantic `<figcaption>` beneath the diagram.
+- **Precision Blueprint Arrowheads & Clean Flow**: Barred placing artificial box containers over connector arrows. Enforced continuous 1.8px blueprint connector lines with standardized 8×8/10×10 precision markers (`refX="7"–"8"`, `markerWidth="6"`, `stroke-width="1.6"–"1.8"` with rounded joins). Bridge labels in diagrams use high-contrast 11px text (`var(--ie-ink)`), never faint sub-10px muted text.
+- **Codified into Skills & Framework**: Upgraded `.agents/skills/diagram-craft/SKILL.md`, `docs/diagram-framework.md`, and diagram components (`ClaudeCodeLocalLoop`, `ClaudeCodeHarness`, `CodexCloudSandboxLoop`, `VisualMicroSchematic`, `HeroWorkflowGraph`).
+
+
 

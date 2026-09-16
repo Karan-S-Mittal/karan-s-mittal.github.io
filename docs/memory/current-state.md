@@ -10,6 +10,9 @@ Last reviewed: 2026-09-17
 - `src/styles/global.css` is the runtime token source of truth. Shared UI and exhibit primitives live under `src/components/`.
 - As of 2026-09-17:
   - **Single Trunk (`main`)**: The repository operates strictly on `main`. Autonomous coding agents must never spawn side branches.
+  - **Centered Homepage & High-Signal Culling**: The homepage is centered (`.hero.hero-centric`), focusing directly on client value (LLM agent reliability, MLOps cost cutting, automated CI/CD evaluation) and pruning low-signal consulting packages/event tables down to 3 core pillars, 3 featured blueprints, and selected writing.
+  - **Unboxed Systems Architecture Workflow**: `HeroWorkflowGraph.astro` provides an unboxed, transparent 3-stage LLM & MLOps production pipeline with standard `<figcaption>` below the artwork.
+  - **Precision Arrowheads & High-Contrast Connectors**: Standardized on 8×8/10×10 viewBox blueprint arrow markers (`stroke-width="1.5"–"1.8"`), continuous unobstructed flow lines (no boxes over arrows), and high-contrast 11px connector text in `var(--ie-ink)`.
   - **Display Typography**: Standardized on `@fontsource/plus-jakarta-sans` (`var(--font-display)`) across all display headings (`h1`, `h2`, `h3`), hero titles, and diagram headers, paired with `IBM Plex Sans` (body), `Inter` (diagram labels), and `IBM Plex Mono` (instrument readouts).
   - **Mechanistic Primitives**: Added `<MemoryGrid />` (Distill-style proportional memory frames and tensor strides) and `<StepScrubber />` (Ciechanowski-style zero-overhead step controller) under `src/components/diagram/primitives/`.
   - **Tufte Data-Ink Rule**: Pruned nested card borders in favor of hairline rules (`--ie-rule`) and direct leader annotations.
