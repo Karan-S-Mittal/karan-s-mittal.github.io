@@ -44,10 +44,12 @@ Preserve supplied nodes, relationships, direction, and meaning. Shorten labels w
   - Dominant Constraint: At most one constraint node highlighted in rust (`var(--ie-rust)`), e.g. human permission gate or budget threshold.
   - **Never write a raw hex color.** Every color must resolve through `var(--ie-*)` or `var(--brand-*)`. Both light and dark modes must remain legible.
 - **Connectors & Routing Geometry**:
-  - 1.5px stroke weight (`var(--ie-blue)`), stealth blueprint arrowheads, tidy bends.
-  - T-junction pins (`r="3"` dots) only at real splits/merges.
-  - Generous bridge column widths (minimum 70–80px) for bidirectional flow labels (e.g. `Prompt · Stream`) so labels are never clipped or crowded.
-  - Downward bus branches must visually align with the centers of target substrate columns below.
+  - **1.5px stroke weight** (`var(--ie-blue)` for active flow, `var(--ie-verified)` for confirmed success, `var(--ie-rust)` for constraints), stealth blueprint arrowheads, tidy bends.
+  - **Precision Arrowhead Specification**: Use 8×8 viewBox markers (`refX="7"` or `6.5`, `refY="4"`, `markerWidth="6"`, `markerHeight="6"`, `stroke-width="1.5"`, `stroke-linecap="round"`, `stroke-linejoin="round"`). Compute connector coordinates so arrow tips snap precisely to node borders without clipping or awkward gaps.
+  - **High-Contrast Connector Labels & Bridge Pills**: Labels on or along arrows must **never use faint muted text or sub-10px fonts**. Always enclose connector labels in an opaque surface pill (`background: var(--ie-surface); border: 1px solid var(--ie-rule-strong);`) with high-contrast text (`color: var(--ie-ink)` or `var(--ie-blue)`, `font-size: 10.5px–11.5px` / `0.6875rem`, `font-weight: 600`) so lines never collide with text and the label remains immediately legible.
+  - **T-junction pins** (`r="3"` dots) only at real splits/merges.
+  - **Bridge column widths**: Provide minimum 70–80px spacing for horizontal bridge labels (e.g. `Prompt · Stream`) so labels are never cramped.
+  - **Downward bus branches**: Must visually align with the exact centers of target columns below.
 - **Canvas & Attribution Standard**:
   - Keep canvas background-less (transparent) or on a clean white surface (`var(--ie-surface)`).
   - Do not wrap the visual in `<Exhibit />`.

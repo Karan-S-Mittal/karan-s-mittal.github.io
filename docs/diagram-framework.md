@@ -32,7 +32,10 @@ Runtime colors and type tokens come from [`global.css`](../src/styles/global.css
 
 ## Geometry that survives export
 
-Route connections around unrelated nodes and labels. Use 1.5px strokes, clear arrowheads, and rounded bends where useful. Put junction pins only at true splits or merges. Place explanatory callouts in available margin space.
+Route connections around unrelated nodes and labels. Use 1.5px strokes, clear arrowheads, and rounded bends where useful.
+- **Precision Arrowheads**: Standardize on 8×8 viewBox markers (`markerWidth="6"`, `markerHeight="6"`, `stroke-width="1.5"`, `stroke-linecap="round"`). Compute line endpoints so the arrow tip terminates cleanly against node boundaries without gap or intrusion.
+- **Bridge Pills & Labels**: Never place faint, unboxed text on raw connector lines. Use high-contrast text (`var(--ie-ink)` or `var(--ie-blue)`, `font-weight: 600`, 10.5px–11.5px) framed inside an opaque surface pill (`var(--ie-surface)` with `var(--ie-rule-strong)` border) to prevent lines from cutting through text.
+- Put junction pins (`r="3"` dots) only at true splits or merges. Place explanatory callouts in available margin space.
 
 Check label size after scaling, not only inside the source SVG. Inspect the actual exported image for clipping, missing paths, and the author signature. Attribution identifies the author; it is not tamper protection. Pixel resolution is not a print-DPI guarantee.
 
