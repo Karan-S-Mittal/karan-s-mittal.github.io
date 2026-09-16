@@ -5,7 +5,7 @@ import { getCollection } from 'astro:content';
 import { SITE, SOCIALS } from '../config';
 import talksData from '@data/talks.json';
 import VisualMicroSchematic from '@components/visuals/VisualMicroSchematic.astro';
-import HeroTelemetryWorkbench from '@components/content/HeroTelemetryWorkbench.astro';
+import HeroSpatialGraph from '@components/visuals/HeroSpatialGraph.astro';
 import '@styles/practice.css';
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -17,36 +17,55 @@ const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('e
 <Layout title={SITE.title} description={SITE.description}>
   <main class="practice-page">
     <section class="hero" aria-labelledby="home-title">
-      <div>
-        <span class="register">Karan Mittal / Engineer-scientist · Co-founder, Dextar</span>
+      <div class="hero-content">
+        <span class="register">Karan Mittal / Systems Engineer-Scientist · Co-founder, Dextar</span>
         <h1 id="home-title">Solve the real problem.<br />Build a system that lasts.</h1>
-        <p class="lead">I help organisations turn difficult data, AI, and software problems into systems people can rely on—from understanding what is wrong to building a solution the team can run.</p>
-        <div class="actions"><a class="action" href="/contact">Discuss your problem →</a><a class="action secondary" href="/work">Explore my work →</a></div>
+        <p class="lead">I help organisations turn difficult AI inference, distributed data, and runtime bottlenecks into deterministic systems people can rely on—from root-cause microarchitecture to verified production software.</p>
+        <div class="actions">
+          <a class="action" href="/contact">Discuss your problem →</a>
+          <a class="action secondary" href="/visuals">Explore systems blueprints →</a>
+        </div>
       </div>
-      <HeroTelemetryWorkbench />
+      <HeroSpatialGraph />
     </section>
+
     <ul class="problem-list" aria-label="Problems I help solve">
-      <li><strong>The prototype needs to work in practice.</strong>Turn promising AI behaviour into a system with clear requirements, evaluation, and operational ownership.</li>
-      <li><strong>The information is there. Trust is missing.</strong>Make knowledge easier to retrieve, trace to its sources, and use in everyday decisions.</li>
-      <li><strong>The system is holding the team back.</strong>Investigate performance, cost, and maintenance problems, then decide what is worth changing.</li>
+      <li>
+        <span class="problem-num">01 / PRODUCTION HARDENING</span>
+        <strong>The prototype needs to work in practice.</strong>
+        Turn promising AI behaviour into a verified system with explicit resource bounds, evaluation harness, and operational ownership.
+      </li>
+      <li>
+        <span class="problem-num">02 / DETERMINISTIC RETRIEVAL</span>
+        <strong>The information is there. Trust is missing.</strong>
+        Make enterprise knowledge verifiable, trace data lineages back to raw sources, and eliminate hallucination risk from critical workflows.
+      </li>
+      <li>
+        <span class="problem-num">03 / ARCHITECTURE BOTTLENECKS</span>
+        <strong>The system is holding the team back.</strong>
+        Pinpoint memory, latency, and cost bottlenecks at the hardware and kernel level, then engineer clean interventions that scale.
+      </li>
     </ul>
 
     <section class="section" aria-labelledby="work-heading">
-      <div class="section-head"><div><span class="register">01 / Selected work</span><h2 id="work-heading">An implementation you can inspect.</h2></div><a href="/work">Work & contributions →</a></div>
+      <div class="section-head">
+        <div>
+          <span class="register">01 / Selected work</span>
+          <h2 id="work-heading">An implementation you can inspect.</h2>
+        </div>
+        <a href="/work">Work &amp; contributions →</a>
+      </div>
       <article class="evidence-feature">
         <div class="evidence-copy">
           <span class="register">Independent project / Explanatory Systems Studio</span>
           <h3>Making technical explanations testable.</h3>
-          <p>This site is also a working engineering project: interactive explanations, verified visual blueprints, and memory layouts that keep published material consistent.</p>
-          <dl class="evidence-details">
-            <dt>The problem</dt>
-            <dd>Static prose makes it difficult to trace non-contiguous GPU allocations, loop gates, and data planes.</dd>
-            <dt>The implementation</dt>
-            <dd>Live vector schematics with exact memory strides, verified state tokens, and exportable high-resolution blueprints.</dd>
-          </dl>
+          <p>This site is also a working engineering project: interactive explanations, verified visual blueprints, and memory layouts that keep published technical material consistent and mechanistically rigorous.</p>
+          <p class="evidence-summary">
+            Instead of hand-wavy architecture slides, each schematic maps exact frame strides, data plane boundaries, and kernel control flows directly to primary papers and source implementations.
+          </p>
           <div class="evidence-links">
             <a href="/visuals/">Explore systems blueprints &rarr;</a>
-            <a href="/case-studies/explanatory-studio/" class="secondary-link">Read study &rarr;</a>
+            <a href="/case-studies/explanatory-studio/" class="secondary-link">Read case study &rarr;</a>
           </div>
         </div>
         <div class="evidence-preview-wrap">
@@ -54,7 +73,7 @@ const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('e
             <VisualMicroSchematic slug="paged-attention" />
             <div class="evidence-blueprint-bar">
               <span class="blueprint-label">EXHIBIT &bull; PAGEDATTENTION TRANSLATION</span>
-              <a href="/visuals/paged-attention/" class="blueprint-link">Inspect &rarr;</a>
+              <a href="/visuals/paged-attention/" class="blueprint-link">Inspect blueprint &rarr;</a>
             </div>
           </div>
         </div>
