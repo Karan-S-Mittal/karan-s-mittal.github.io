@@ -67,6 +67,7 @@ const { class: className = '' } = Astro.props;
             <span class="item-label">
               Permission gates <span class="tag-rust">APPROVAL</span>
             </span>
+            <span class="constraint-callout">&larr; human gate</span>
           </li>
           <li>
             <FileCode size={13} stroke-width={1.5} class="item-ico" />
@@ -462,6 +463,14 @@ const { class: className = '' } = Astro.props;
     padding: 0.05rem 0.28rem;
     border-radius: 3px;
     letter-spacing: 0.04em;
+  }
+
+  .constraint-callout {
+    font-family: var(--font-diagram);
+    font-size: 0.65rem;
+    color: var(--ie-rust);
+    white-space: nowrap;
+    margin-left: auto;
   }
 
   /* ReAct Cycle Bar */

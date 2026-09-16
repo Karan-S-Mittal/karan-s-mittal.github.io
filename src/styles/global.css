@@ -82,10 +82,10 @@
   --ie-type-small: 0.96875rem; /* 15.5px: card descriptions, captions */
   --ie-type-base: 1rem;        /* 16px: standard base */
   --ie-type-body: 1.125rem;    /* 18px: essay reading prose & hero lead */
-  --ie-type-h4: 1.1875rem;     /* 19px: sub-headers */
-  --ie-type-h3: 1.35rem;       /* 21.6px: card and panel titles */
-  --ie-type-h2: clamp(2.2rem, 4.2vw, 3.6rem); /* major section titles */
-  --ie-type-h1: clamp(2.8rem, 5.5vw, 4.8rem); /* page display titles */
+  --ie-type-h4: 1.0625rem;     /* 17px: sub-headers */
+  --ie-type-h3: 1.25rem;       /* 20px: card and panel titles */
+  --ie-type-h2: clamp(1.35rem, 2.2vw, 1.75rem); /* 21.6–28px: major section titles */
+  --ie-type-h1: clamp(1.85rem, 3.2vw, 2.5rem);  /* 29.6–40px: page display titles */
 
   /* Legacy & Semantic Mapping */
   --bg: var(--ie-canvas);

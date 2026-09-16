@@ -1,58 +1,87 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import PageHeader from '@components/content/PageHeader.astro';
+import VisualBlueprintCard from '@components/visuals/VisualBlueprintCard.astro';
 
 interface VisualItem {
   id: string;
   title: string;
   desc: string;
+  category: string;
+  archetype?: 'loop' | 'pipeline' | 'memory' | 'tree' | 'hierarchy' | 'comparison';
   href: string;
 }
 
 // Auto-discover all visual pages in this directory
 const rawPages = import.meta.glob<string>('./*.astro', { query: '?raw', import: 'default', eager: true });
 
-// Optional curated title/description mappings for established visuals
-const curatedMeta: Record<string, { title?: string; desc?: string }> = {
+// Curated metadata and archetype mapping for established visuals
+const curatedMeta: Record<string, { title?: string; desc?: string; category?: string; archetype?: 'loop' | 'pipeline' | 'memory' | 'tree' | 'hierarchy' | 'comparison' }> = {
   'claude-code-loop': {
     title: 'Claude Code Local Agent Loop',
     desc: 'Interactive CLI orchestrator, context state compaction, ReAct execution cycle, and native primitives.',
+    category: 'EXECUTION LOOP',
+    archetype: 'loop',
+  },
+  'claude-code-harness': {
+    title: 'Claude Code Harness Architecture',
+    desc: 'Local execution harness lifecycle: CLI prompt dispatch, model reasoning, PreToolUse permission evaluation, and closed-loop compaction.',
+    category: 'HARNESS PIPELINE',
+    archetype: 'pipeline',
+  },
+  'codex-cloud-sandbox-loop': {
+    title: 'OpenAI Codex Cloud Sandbox Loop',
+    desc: 'Autonomous cloud daemon lifecycle: task dispatch, ephemeral VM provisioning, mutation engine, and self-correcting PR packaging.',
+    category: 'CLOUD DAEMON',
+    archetype: 'loop',
   },
   'codex-vs-claude-code': {
     title: 'Claude Code vs. OpenAI Codex Hero Visual',
     desc: 'Publication hero graphic and runtime architecture comparison between Anthropic Claude Code and OpenAI Codex.',
+    category: 'RUNTIME COMPARISON',
+    archetype: 'comparison',
   },
   'coding-agent': {
     title: 'Autonomous Coding Agent Cognitive Architecture',
-    desc: 'Hierarchical flow from cognitive model orchestrator through context discovery, ReAct loops, and MCP dispatch into execution sandboxes.',
+    desc: 'Hierarchical flow from cognitive model orchestrator through context discovery, ReAct loops, and MCP dispatch into sandboxes.',
+    category: 'COGNITIVE ARCHITECTURE',
+    archetype: 'hierarchy',
   },
   'coding-timeline': {
     title: 'Agentic Coding Evolution: Claude Code vs. OpenAI Codex',
     desc: 'Comparative timeline tracking 16 major releases from terminal research previews to dynamic multi-agent orchestration.',
+    category: 'COMPARATIVE TIMELINE',
+    archetype: 'comparison',
   },
   'agent-context': {
     title: 'Coding Agent Topology: CLI to Multi-Agent Swarm',
     desc: 'Coding agents progressing from a local terminal to repository context, cloud environments, and coordinated agents.',
+    category: 'CONTEXT PERIMETER',
+    archetype: 'hierarchy',
   },
   'agent-progression': {
     title: 'Coding Agent Context Horizons & State Span',
     desc: 'Context perimeter expansion from ~8KB shell buffers to ~100MB AST graphs, cloud containers, and distributed swarm buses.',
+    category: 'HORIZON EXPANSION',
+    archetype: 'tree',
   },
   'paged-attention': {
     title: 'PagedAttention KV Cache Page Translation',
     desc: 'Physical page frame allocations and logical block tables modeling non-contiguous KV cache pooling to eliminate memory fragmentation.',
+    category: 'MEMORY ARCHITECTURE',
+    archetype: 'memory',
   },
   'deterministic-rag': {
     title: '3-Plane Deterministic RAG Replay Architecture',
     desc: 'Three execution planes compiling immutable corpus artifacts, deterministic hybrid retrieval, and auditable evidence bundles.',
+    category: 'REPLAY ARCHITECTURE',
+    archetype: 'hierarchy',
   },
-  'codex-cloud-sandbox-loop': {
-    title: 'OpenAI Codex Cloud Sandbox Loop',
-    desc: 'Autonomous cloud daemon lifecycle: task dispatch, workspace provisioning, context traversal, test suite mutation, self-correction loop, and PR packaging.',
-  },
-  'claude-code-harness': {
-    title: 'Claude Code Harness Architecture',
-    desc: 'Local execution harness lifecycle: CLI prompt dispatch, model reasoning, PreToolUse permission evaluation, sandboxed tool runner, and closed-loop context compaction.',
+  'coding-evolution': {
+    title: 'Agent Coding Evolution Tree',
+    desc: 'Evolution tree tracking the architectural branching of coding assistants from token completions to autonomous swarms.',
+    category: 'EVOLUTION TREE',
+    archetype: 'tree',
   },
 };
 
@@ -67,6 +96,7 @@ const preferredOrder = [
   'agent-progression',
   'deterministic-rag',
   'paged-attention',
+  'coding-evolution',
 ];
 
 const visuals: VisualItem[] = Object.entries(rawPages)
@@ -80,11 +110,15 @@ const visuals: VisualItem[] = Object.entries(rawPages)
 
     const title = curated.title || (titleMatch ? titleMatch[1] : slug.replace(/-/g, ' '));
     const desc = curated.desc || (descMatch ? descMatch[1] : '');
+    const category = curated.category || 'SYSTEMS ARCHITECTURE';
+    const archetype = curated.archetype || 'pipeline';
 
     return {
       id: slug,
       title,
       desc,
+      category,
+      archetype,
       href: `/visuals/${slug}/`,
     };
   })
@@ -121,23 +155,19 @@ const visuals: VisualItem[] = Object.entries(rawPages)
         />
       </div>
 
-      <ul class="visuals-list" id="visuals-list">
-        {visuals.map((v) => (
-          <li class="visual-item" data-search={`${v.title} ${v.desc}`.toLowerCase()}>
-            <a href={v.href} class="visual-link">
-              <div class="visual-info">
-                <h2 class="visual-title">{v.title}</h2>
-                {v.desc && <p class="visual-desc">{v.desc}</p>}
-              </div>
-
-              <div class="visual-action">
-                <span class="action-tag">3× PNG</span>
-                <span class="action-arrow" aria-hidden="true">→</span>
-              </div>
-            </a>
-          </li>
+      <div class="visuals-grid" id="visuals-grid">
+        {visuals.map((v, i) => (
+          <VisualBlueprintCard
+            slug={v.id}
+            index={i + 1}
+            title={v.title}
+            desc={v.desc}
+            category={v.category}
+            href={v.href}
+            archetype={v.archetype}
+          />
         ))}
-      </ul>
+      </div>
 
       <p id="no-results" class="no-results" style="display: none;">
         No visuals match your filter.
@@ -148,7 +178,7 @@ const visuals: VisualItem[] = Object.entries(rawPages)
 
 <script>
   const searchInput = document.getElementById('visual-search') as HTMLInputElement | null;
-  const items = document.querySelectorAll<HTMLElement>('.visual-item');
+  const cards = document.querySelectorAll<HTMLElement>('.visual-card');
   const noResults = document.getElementById('no-results');
 
   if (searchInput) {
@@ -156,10 +186,10 @@ const visuals: VisualItem[] = Object.entries(rawPages)
       const query = searchInput.value.trim().toLowerCase();
       let visibleCount = 0;
 
-      items.forEach((item) => {
-        const text = item.dataset.search || '';
+      cards.forEach((card) => {
+        const text = card.dataset.search || '';
         const match = query === '' || text.includes(query);
-        item.style.display = match ? 'block' : 'none';
+        card.style.display = match ? 'flex' : 'none';
         if (match) visibleCount++;
       });
 
@@ -176,7 +206,7 @@ const visuals: VisualItem[] = Object.entries(rawPages)
   }
 
   .page-shell {
-    max-width: 960px;
+    max-width: 1160px;
     margin: 0 auto;
     padding: 0 var(--space-5, 1.5rem);
   }
@@ -203,93 +233,11 @@ const visuals: VisualItem[] = Object.entries(rawPages)
     border-color: var(--ie-blue);
   }
 
-  /* Simpler List Layout */
-  .visuals-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border-top: 1px solid var(--ie-rule);
-  }
-
-  .visual-item {
-    border-bottom: 1px solid var(--ie-rule);
-    transition: background 0.15s ease;
-  }
-
-  .visual-item:hover {
-    background: var(--ie-surface-raised);
-  }
-
-  .visual-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  /* Responsive Visual Blueprint Grid */
+  .visuals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
-    padding: 1.25rem 0.5rem;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .visual-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .visual-title {
-    margin: 0;
-    font-family: var(--font-display);
-    font-size: var(--ie-type-body);
-    font-weight: 600;
-    letter-spacing: -0.015em;
-    line-height: 1.35;
-    color: var(--ie-ink);
-    transition: color 0.15s ease;
-  }
-
-  .visual-item:hover .visual-title {
-    color: var(--ie-blue);
-  }
-
-  .visual-desc {
-    margin: 0;
-    font-family: var(--font-diagram);
-    font-size: var(--ie-type-ui);
-    color: var(--ie-ink-secondary);
-    line-height: 1.45;
-  }
-
-  .visual-action {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-shrink: 0;
-  }
-
-  .action-tag {
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    padding: 0.2rem 0.5rem;
-    border-radius: var(--radius-sm);
-    background: var(--ie-surface);
-    border: 1px solid var(--ie-rule);
-    color: var(--ie-muted);
-  }
-
-  .action-arrow {
-    font-family: var(--font-diagram);
-    font-size: 1.1rem;
-    color: var(--ie-muted);
-    transition: transform 0.15s ease, color 0.15s ease;
-  }
-
-  .visual-item:hover .action-arrow {
-    color: var(--ie-blue);
-    transform: translateX(3px);
   }
 
   .no-results {
@@ -301,15 +249,9 @@ const visuals: VisualItem[] = Object.entries(rawPages)
   }
 
   @media (max-width: 640px) {
-    .visual-link {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.75rem;
-      padding: 1rem 0.25rem;
-    }
-
-    .visual-action {
-      align-self: flex-end;
+    .visuals-grid {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
     }
   }
 </style>

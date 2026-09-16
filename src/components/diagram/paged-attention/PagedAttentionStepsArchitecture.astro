@@ -1,5 +1,6 @@
 ---
 import VisualAttribution from '../VisualAttribution.astro';
+import MemoryGrid from '../primitives/MemoryGrid.astro';
 
 interface Props { caption?: string; exhibit?: string; title?: string; }
 
@@ -44,10 +45,20 @@ const {
       <section class="path-step">
         <span class="step-label">03 · Physical VRAM</span>
         <h4>Use any available frames</h4>
-        <div class="frame-pool">
-          <p><strong>Frame 07</strong><span>Request 1 · Block 1</span></p>
-          <p class="other"><strong>Frame 08</strong><span>Another request</span></p>
-          <p><strong>Frame 12</strong><span>Request 1 · Block 0</span></p>
+        <MemoryGrid
+          badge="16KB FRAMES"
+          columns={2}
+          showOffsets={false}
+          cells={[
+            { label: 'Frame 07', sub: 'Req 1 · Blk 1', state: 'allocated' },
+            { label: 'Frame 08', sub: 'Req 2 (Other)', state: 'cached' },
+            { label: 'Frame 12', sub: 'Req 1 · Blk 0', state: 'allocated' },
+            { label: 'Frame 13', sub: 'Free slot', state: 'free' },
+          ]}
+        />
+        <div class="scatter-callout">
+          <span class="callout-indicator" aria-hidden="true">&larr;</span>
+          <span>Frames 07 and 12 are non-contiguous in physical VRAM</span>
         </div>
       </section>
 
@@ -57,10 +68,10 @@ const {
         <span class="step-label">04 · Attention kernel</span>
         <h4>Follow the table while computing</h4>
         <div class="kernel-read">
-          <code>block 0 → frame 12</code>
-          <code>block 1 → frame 07</code>
+          <code>block 0 &rarr; frame 12</code>
+          <code>block 1 &rarr; frame 07</code>
         </div>
-        <p class="step-note">No contiguous intermediate copy is required.</p>
+        <p class="step-note">Zero contiguous copying required. The scatter-gather kernel gathers blocks directly from table indices.</p>
       </section>
     </div>
 
@@ -178,23 +189,37 @@ const {
   .logical-block i { color: var(--ie-muted, var(--text-muted)); font-style: normal; }
   .logical-block.active { border-left: 2px solid var(--ie-blue, var(--accent)); }
 
-  .block-table p,
-  .frame-pool p {
+  .block-table p {
     display: grid;
     gap: 0.35rem;
     margin: 0 0 0.5rem;
     padding: 0.65rem;
     border: 1px solid var(--ie-rule, var(--border-default));
     font-size: 0.8rem;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
   }
-
-  .block-table p { grid-template-columns: 1fr auto 1fr; align-items: center; }
   .block-table i { color: var(--ie-blue, var(--accent)); font-style: normal; }
   .block-table strong { color: var(--ie-blue, var(--accent)); }
 
-  .frame-pool p { border-color: var(--ie-blue, var(--accent)); background: var(--ie-blue-soft, var(--accent-subtle)); }
-  .frame-pool p.other { border-color: var(--ie-rule, var(--border-default)); background: transparent; color: var(--ie-muted, var(--text-muted)); }
-  .frame-pool span { color: var(--ie-muted, var(--text-muted)); }
+  .scatter-callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+    padding: 0.45rem 0.55rem;
+    border-left: 2px solid var(--ie-blue);
+    background: var(--ie-blue-soft);
+    font-family: var(--font-diagram);
+    font-size: 0.72rem;
+    line-height: 1.35;
+    color: var(--ie-ink);
+  }
+
+  .callout-indicator {
+    color: var(--ie-blue);
+    font-weight: 700;
+  }
 
   .kernel-read { display: grid; gap: 0.45rem; }
   .kernel-read code { padding: 0.65rem; border-left: 2px solid var(--ie-blue, var(--accent)); background: var(--ie-code); color: var(--ie-code-text); font-size: 0.76rem; }

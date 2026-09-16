@@ -23,11 +23,19 @@
 .practice-page .problem-list { padding: 0; margin: 1.5rem 0 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1.5rem; }
 .practice-page .problem-list li { border-top: 2px solid var(--ie-blue); padding-top: .9rem; color: var(--ie-ink-secondary); font-size: .9375rem; line-height: 1.6; }
 .practice-page .problem-list strong { display: block; color: var(--ie-ink); margin-bottom: .4rem; font-weight: 600; }
-.practice-page .evidence-feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; padding: 1.5rem; background: var(--ie-surface); border: 1px solid var(--ie-rule); }
-.practice-page .evidence-details { margin: 0; }
+.practice-page .evidence-feature { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 2rem; padding: 1.5rem; background: var(--ie-surface); border: 1px solid var(--ie-rule); border-radius: var(--radius-card, 6px); align-items: center; }
+.practice-page .evidence-details { margin: 1rem 0; }
 .practice-page .evidence-details dt { color: var(--ie-ink); font-weight: 600; font-size: .9375rem; margin-bottom: .25rem; }
-.practice-page .evidence-details dd { margin: 0 0 1rem; color: var(--ie-ink-secondary); font-size: .9375rem; line-height: 1.6; }
+.practice-page .evidence-details dd { margin: 0 0 .75rem; color: var(--ie-ink-secondary); font-size: .875rem; line-height: 1.55; }
 .practice-page .evidence-details dd:last-child { margin-bottom: 0; }
+.practice-page .evidence-links { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-top: 1.25rem; }
+.practice-page .evidence-links a { font-family: var(--font-diagram); font-size: var(--ie-type-ui); font-weight: 600; color: var(--ie-blue); }
+.practice-page .evidence-links a.secondary-link { color: var(--ie-ink-secondary); font-weight: 400; }
+.practice-page .evidence-links a.secondary-link:hover { color: var(--ie-blue); }
+.practice-page .evidence-blueprint-frame { border: 1px solid var(--ie-rule); border-radius: var(--radius-sm, 4px); overflow: hidden; background: var(--ie-surface-raised); }
+.practice-page .evidence-blueprint-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; background: var(--ie-surface); border-top: 1px solid var(--ie-rule); font-family: var(--font-mono); font-size: var(--ie-type-micro); }
+.practice-page .blueprint-label { color: var(--ie-muted); font-size: 0.68rem; letter-spacing: 0.04em; }
+.practice-page .blueprint-link { color: var(--ie-blue); font-weight: 600; text-decoration: none; }
 .practice-page .engagement-row { display: grid; grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr); gap: 2rem; padding: 1.5rem 0; border-bottom: 1px solid var(--ie-rule); scroll-margin-top: 5rem; }
 .practice-page .engagement-row:first-child { padding-top: .5rem; }
 .practice-page .deliverable { margin-bottom: 0; }
