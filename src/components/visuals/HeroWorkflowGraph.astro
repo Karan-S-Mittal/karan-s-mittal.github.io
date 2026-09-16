@@ -8,9 +8,9 @@
  * - 03 / CI/CD Eval & Safety Gate (MLOps, regression testing, safe deployment)
  *
  * Design updates:
- * - High-contrast, prominent connector pill badges with 10.5px bold font.
- * - Precision stealth blueprint arrowheads (8x8 viewBox, stroke-width 1.5).
- * - Calibrated stage columns and zero text overflow.
+ * - Clean, unobstructed flow arrows with zero box containers or clutter.
+ * - Precision blueprint arrowheads pointing cleanly into target nodes.
+ * - Calibrated stage columns with non-overflowing typography.
  * - Standard semantic <figcaption> centered below the artwork.
  * - 100% semantic tokens (var(--ie-*)), zero raw hex colors.
  */
@@ -32,13 +32,13 @@ const { class: className = '' } = Astro.props;
   >
     <defs>
       <!-- Precision Blueprint Arrowhead (Active Blue) -->
-      <marker id="wf-arr-blue" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
-        <path d="M 1.5 1.5 L 6.5 4 L 1.5 6.5" fill="none" stroke="var(--ie-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <marker id="wf-arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 2 2 L 8 5 L 2 8" fill="none" stroke="var(--ie-blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
       </marker>
 
       <!-- Precision Blueprint Arrowhead (Verified Green) -->
-      <marker id="wf-arr-green" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
-        <path d="M 1.5 1.5 L 6.5 4 L 1.5 6.5" fill="none" stroke="var(--ie-verified)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <marker id="wf-arr-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 2 2 L 8 5 L 2 8" fill="none" stroke="var(--ie-verified)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
       </marker>
     </defs>
 
@@ -75,12 +75,8 @@ const { class: className = '' } = Astro.props;
       </g>
     </g>
 
-    <!-- Connector: Stage 1 to Stage 2 -->
-    <line x1="250" y1="124" x2="286" y2="124" stroke="var(--ie-blue)" stroke-width="1.6" marker-end="url(#wf-arr-blue)" />
-    <g transform="translate(270, 96)">
-      <rect x="-24" y="-10" width="48" height="20" rx="4" fill="var(--ie-surface)" stroke="var(--ie-rule-strong)" stroke-width="1" />
-      <text x="0" y="4" class="wf-connector-pill" text-anchor="middle">ROUTE</text>
-    </g>
+    <!-- Clean Connector: Stage 1 to Stage 2 (Unobstructed Arrow) -->
+    <line x1="250" y1="124" x2="284" y2="124" stroke="var(--ie-blue)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#wf-arr-blue)" />
 
     <!-- ============================================================
          STAGE 02: AGENT STATE GRAPH (Gets Models to Obey)
@@ -115,12 +111,8 @@ const { class: className = '' } = Astro.props;
       </g>
     </g>
 
-    <!-- Connector: Stage 2 to Stage 3 -->
-    <line x1="530" y1="124" x2="566" y2="124" stroke="var(--ie-blue)" stroke-width="1.6" marker-end="url(#wf-arr-blue)" />
-    <g transform="translate(550, 96)">
-      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="var(--ie-surface)" stroke="var(--ie-rule-strong)" stroke-width="1" />
-      <text x="0" y="4" class="wf-connector-pill" text-anchor="middle">EXECUTE</text>
-    </g>
+    <!-- Clean Connector: Stage 2 to Stage 3 (Unobstructed Arrow) -->
+    <line x1="530" y1="124" x2="564" y2="124" stroke="var(--ie-blue)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#wf-arr-blue)" />
 
     <!-- ============================================================
          STAGE 03: MLOPS EVAL HARNESS (Safe Production DevOps)
@@ -155,13 +147,9 @@ const { class: className = '' } = Astro.props;
       </g>
     </g>
 
-    <!-- Connector: Stage 3 to Production Delivery -->
-    <path d="M 690 232 L 690 252 L 410 252 L 410 263" stroke="var(--ie-verified)" stroke-width="1.6" fill="none" marker-end="url(#wf-arr-green)" />
-    <circle cx="690" cy="252" r="2.5" fill="var(--ie-verified)" />
-    <g transform="translate(550, 252)">
-      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="var(--ie-surface)" stroke="var(--ie-rule-strong)" stroke-width="1" />
-      <text x="0" y="4" class="wf-connector-pill green" text-anchor="middle">VERIFIED</text>
-    </g>
+    <!-- Clean Connector: Stage 3 to Production Delivery (Unobstructed Path) -->
+    <path d="M 690 232 L 690 250 L 410 250 L 410 260" stroke="var(--ie-verified)" stroke-width="1.8" fill="none" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#wf-arr-green)" />
+    <circle cx="690" cy="250" r="2.5" fill="var(--ie-verified)" />
 
     <!-- Bottom Destination: Deterministic Production Output -->
     <g transform="translate(230, 265)">
@@ -251,18 +239,6 @@ const { class: className = '' } = Astro.props;
 
   .wf-metric-pill.blue {
     fill: var(--ie-blue);
-  }
-
-  .wf-connector-pill {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    fill: var(--ie-ink);
-  }
-
-  .wf-connector-pill.green {
-    fill: var(--ie-verified);
   }
 
   .wf-destination-title {
