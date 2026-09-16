@@ -55,7 +55,8 @@ Every value below is a CSS custom property in `src/styles/global.css` — light,
 - Tailwind default palette values (`#2563EB`, `#059669`, `#E11D48`, the `slate-*` ramp, etc.) are forbidden. They are not part of this system.
 - 1.5px stroke weight, stealth blueprint arrows, circular terminal junction pins, and smooth rounded fillets (R=10-14px). One rust constraint node max per diagram.
 - **Brand & Tech Logos**: Use `<BrandIcon name="..." />` (`src/components/diagram/icons/BrandIcon.astro`) for vector brand marks (Anthropic, Gemini, OpenAI, MCP, Git, Docker, VS Code, Terminal).
-- **Fonts**: `Inter` (`var(--font-diagram)`) for diagram labels, node titles, and descriptions; `IBM Plex Mono` (`var(--font-mono)`) for metrics/code/tags; `IBM Plex Serif` is reserved for editorial headings.
+- **Fonts**: `Plus Jakarta Sans` (`var(--font-display)`) for display headings and diagram titles; `Inter` (`var(--font-diagram)`) for diagram labels, node titles, and descriptions; `IBM Plex Mono` (`var(--font-mono)`) for metrics/code/tags; `IBM Plex Sans` (`var(--font-sans)`) for body prose.
+- **Tufte Data-Ink & Mechanistic Grammar**: Eliminate superfluous card containers. Use whitespace and hairline rules (`var(--ie-rule)`) first. Use `<MemoryGrid />` for byte/frame/tensor strides and `<StepScrubber />` for interactive algorithmic phase scrubbing.
 - Use leader line callouts for unexpected behavior: `"← notice zero allocation here"`.
 - Every diagram needs an accessible text explanation; no meaning carried by colour alone.
 - **Simple Visuals Workflow**: Follow [`.agents/skills/diagram-craft/SKILL.md`](.agents/skills/diagram-craft/SKILL.md). Create one reusable Astro diagram in `src/components/diagram/`, background-less or on a clean white background, without `<Exhibit />`, and `<VisualAttribution />` (the `karansmittal` wordmark in a standard rounded box with white background and black font) inside the artwork. Omit decorative standards or design-method labels. Add a tiny standalone download page using `src/layouts/VisualPage.astro`. Import the same component into blog posts. No separate preview page or mandatory showroom/gallery registration. Add directory entries only when requested. Keep labels, files, and page chrome small; inspect the actual page and PNG before delivery.
@@ -92,3 +93,10 @@ Every canonical deep-dive on the site is designed to be repurposed for:
 Before making repository changes, read [`docs/memory/README.md`](file:///Users/kshyam/Developer/current/karan-s-mittal.github.io/docs/memory/README.md) and the current-state, decisions, and backlog files it points to. These files are the durable project context for future agents and collaborators; chat history is not.
 
 When work changes architecture, workflow, or an agreed priority, update the smallest relevant memory file in the same change. Do not store credentials, secrets, private correspondence, or a transcript of the conversation. Record decisions and observations, not every command run.
+
+---
+
+## 8. Git & Trunk-Based Development
+
+- **Single Branch (`main`)**: Karan operates strictly on a single trunk (`main`).
+- **No Autonomous Branch Sprawl**: Coding agents must **NOT** create auxiliary feature, chore, or prototype branches (e.g. `codex/*`, `chore/*`) unless Karan explicitly requests a branch. Commit directly to `main` with clean, atomic commits.

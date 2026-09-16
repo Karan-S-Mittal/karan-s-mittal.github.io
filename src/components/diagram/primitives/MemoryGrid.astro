@@ -1,0 +1,238 @@
+---
+/**
+ * MemoryGrid.astro
+ * Distill / Systems-inspired primitive for rendering physical and virtual memory frames,
+ * cache lines, page tables, and tensor strides with exact proportional geometry.
+ *
+ * Invariant: Zero raw hex colors. All colors route through semantic tokens.
+ */
+
+export interface MemoryCell {
+  label: string;
+  sub?: string;
+  offset?: string;
+  state?: 'free' | 'allocated' | 'cached' | 'bottleneck' | 'active';
+  note?: string;
+}
+
+interface Props {
+  title?: string;
+  badge?: string;
+  columns?: number;
+  cells: MemoryCell[];
+  cellWidth?: string;
+  showOffsets?: boolean;
+  class?: string;
+}
+
+const {
+  title,
+  badge,
+  columns = 8,
+  cells = [],
+  cellWidth = 'minmax(54px, 1fr)',
+  showOffsets = true,
+  class: className = '',
+} = Astro.props;
+---
+
+<div class:list={['mem-grid-container', className]}>
+  {(title || badge) && (
+    <div class="mem-grid-header">
+      {title && <span class="mem-grid-title">{title}</span>}
+      {badge && <span class="mem-grid-badge">{badge}</span>}
+    </div>
+  )}
+
+  <div
+    class="mem-grid"
+    style={`grid-template-columns: repeat(${columns}, ${cellWidth});`}
+    role="grid"
+    aria-label={title || "Memory layout grid"}
+  >
+    {cells.map((cell, idx) => (
+      <div
+        class:list={['mem-cell', `state-${cell.state || 'free'}`]}
+        role="gridcell"
+        tabindex="0"
+        aria-label={`${cell.label}${cell.offset ? ` at offset ${cell.offset}` : ''}${cell.state ? ` (${cell.state})` : ''}`}
+      >
+        {showOffsets && (
+          <span class="cell-offset">{cell.offset || `+0x${idx.toString(16).padStart(2, '0')}`}</span>
+        )}
+        <span class="cell-label">{cell.label}</span>
+        {cell.sub && <span class="cell-sub">{cell.sub}</span>}
+        {cell.note && <span class="cell-leader" title={cell.note}><span class="sr-only">{cell.note}</span></span>}
+      </div>
+    ))}
+  </div>
+
+  <div class="mem-legend" aria-hidden="true">
+    <span class="legend-item state-free"><span class="swatch"></span>Free</span>
+    <span class="legend-item state-allocated"><span class="swatch"></span>Allocated</span>
+    <span class="legend-item state-cached"><span class="swatch"></span>Verified/Cached</span>
+    <span class="legend-item state-bottleneck"><span class="swatch"></span>Constraint/Pinned</span>
+  </div>
+</div>
+
+<style>
+  .mem-grid-container {
+    width: 100%;
+    margin: var(--space-4) 0;
+    font-family: var(--font-diagram);
+  }
+
+  .mem-grid-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-2);
+    padding-bottom: var(--space-1);
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .mem-grid-title {
+    font-family: var(--font-display);
+    font-size: var(--ie-type-ui);
+    font-weight: 600;
+    color: var(--ie-ink);
+    letter-spacing: -0.015em;
+  }
+
+  .mem-grid-badge {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .mem-grid {
+    display: grid;
+    gap: 2px;
+    background: var(--ie-rule);
+    padding: 2px;
+    border: 1px solid var(--ie-rule-strong);
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+  }
+
+  .mem-cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 52px;
+    padding: 4px 6px;
+    background: var(--ie-mem-free);
+    color: var(--ie-ink);
+    text-align: center;
+    position: relative;
+    transition: transform var(--transition-fast), outline var(--transition-fast);
+  }
+
+  .mem-cell:focus-visible,
+  .mem-cell:hover {
+    outline: 2px solid var(--ie-blue);
+    outline-offset: -2px;
+    z-index: 2;
+  }
+
+  .cell-offset {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--ie-muted);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .cell-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ie-ink);
+  }
+
+  .cell-sub {
+    font-family: var(--font-diagram);
+    font-size: 0.625rem;
+    color: var(--ie-ink-secondary);
+    line-height: 1;
+    margin-top: 2px;
+  }
+
+  /* States */
+  .state-free {
+    background: var(--ie-mem-free);
+  }
+
+  .state-allocated {
+    background: var(--ie-mem-allocated);
+    border-top: 2px solid var(--ie-mem-allocated-border);
+  }
+
+  .state-allocated .cell-label {
+    color: var(--ie-blue);
+  }
+
+  .state-cached {
+    background: var(--ie-mem-cached);
+    border-top: 2px solid var(--ie-mem-cached-border);
+  }
+
+  .state-cached .cell-label {
+    color: var(--ie-verified);
+  }
+
+  .state-bottleneck {
+    background: var(--ie-mem-bottleneck);
+    border-top: 2px solid var(--ie-mem-bottleneck-border);
+  }
+
+  .state-bottleneck .cell-label {
+    color: var(--ie-rust);
+  }
+
+  .state-active {
+    background: var(--ie-surface);
+    box-shadow: inset 0 0 0 1.5px var(--ie-blue);
+  }
+
+  .mem-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-2);
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+  }
+
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    border: 1px solid var(--ie-rule-strong);
+  }
+
+  .legend-item.state-free .swatch { background: var(--ie-mem-free); }
+  .legend-item.state-allocated .swatch { background: var(--ie-mem-allocated); border-color: var(--ie-mem-allocated-border); }
+  .legend-item.state-cached .swatch { background: var(--ie-mem-cached); border-color: var(--ie-mem-cached-border); }
+  .legend-item.state-bottleneck .swatch { background: var(--ie-mem-bottleneck); border-color: var(--ie-mem-bottleneck-border); }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

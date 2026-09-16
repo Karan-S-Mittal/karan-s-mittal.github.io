@@ -1,10 +1,11 @@
+@import '@fontsource/plus-jakarta-sans/latin-500.css';
+@import '@fontsource/plus-jakarta-sans/latin-600.css';
+@import '@fontsource/plus-jakarta-sans/latin-700.css';
+@import '@fontsource/plus-jakarta-sans/latin-800.css';
 @import '@fontsource/ibm-plex-sans/latin-400.css';
 @import '@fontsource/ibm-plex-sans/latin-500.css';
 @import '@fontsource/ibm-plex-sans/latin-600.css';
 @import '@fontsource/ibm-plex-sans/latin-700.css';
-@import '@fontsource/ibm-plex-serif/latin-400.css';
-@import '@fontsource/ibm-plex-serif/latin-500.css';
-@import '@fontsource/ibm-plex-serif/latin-600.css';
 @import '@fontsource/ibm-plex-mono/latin-400.css';
 @import '@fontsource/ibm-plex-mono/latin-500.css';
 @import '@fontsource/ibm-plex-mono/latin-600.css';
@@ -56,26 +57,23 @@
   --brand-vscode: #007acc;
   --brand-docker: #2496ed;
 
-  /* Hero Visual & Comparison Tokens */
-  --ie-hero-bg: #eceafd;
-  --ie-hero-dot: #c4b5fd;
-  --ie-hero-pill-bg: #15181d;
-  --ie-hero-pill-text: #f0abfc;
-  --ie-hero-pill-border: #2e3440;
-  --ie-hero-card-bg: #15181d;
-  --ie-hero-card-border: #2a2e39;
-  --ie-hero-operator: #8b80b6;
-  --ie-hero-icon-white: #ffffff;
-  --ie-hero-sub-ink: #2a293d;
-  --ie-hero-sub-muted: #5e5c78;
-  --ie-hero-spec-text: #f3f4f6;
-  --ie-hero-spec-sub: #9da3af;
 
   /* Typography Families */
+  --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
   --font-diagram: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-serif: 'IBM Plex Serif', Georgia, serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Mechanistic & Memory Layout Tokens */
+  --ie-mem-free: var(--ie-surface-raised);
+  --ie-mem-free-border: var(--ie-rule);
+  --ie-mem-allocated: var(--ie-blue-soft);
+  --ie-mem-allocated-border: var(--ie-blue);
+  --ie-mem-cached: var(--ie-verified-soft);
+  --ie-mem-cached-border: var(--ie-verified);
+  --ie-mem-bottleneck: var(--ie-rust-soft);
+  --ie-mem-bottleneck-border: var(--ie-rust);
+  --ie-leader-line: var(--ie-muted);
 
   /* Standardized Typography Scale */
   --ie-type-micro: 0.75rem;    /* 12px: badges, dots */
@@ -253,31 +251,10 @@ html.dark {
   --brand-vscode: #38bdf8;
   --brand-docker: #38bdf8;
 
-  /* Hero Visual & Comparison Tokens */
-  --ie-hero-bg: #0f0d1a;
-  --ie-hero-dot: #2a2444;
-  --ie-hero-pill-bg: #15181d;
-  --ie-hero-pill-text: #f0abfc;
-  --ie-hero-pill-border: #2e3440;
-  --ie-hero-card-bg: #15181d;
-  --ie-hero-card-border: #2a2e39;
-  --ie-hero-operator: #7b71a2;
-  --ie-hero-icon-white: #ffffff;
-  --ie-hero-sub-ink: #f0edf8;
-  --ie-hero-sub-muted: #a4a0be;
-  --ie-hero-spec-text: #f3f4f6;
-  --ie-hero-spec-sub: #aeb6c2;
 
   --accent-hover: #b2c4ff;
   --link-hover: #b2c4ff;
   --interactive-primary-hover: #b2c4ff;
-
-  --ex-card-bg: #1e1e23;
-  --ex-gray-bg: #18181c;
-  --ex-border: #27272a;
-  --ex-blue-bg: #202c4f;
-  --ex-blue-stroke: #8daaff;
-  --ex-blue-text: #8daaff;
 }
 
 /* ================================================================
@@ -338,38 +315,42 @@ body {
    Typography
    ================================================================ */
 
-h1, h2 {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  letter-spacing: -0.025em;
+h1, h2, h3 {
+  font-family: var(--font-display);
   color: var(--ie-ink);
   text-wrap: balance;
 }
 
 h1 {
   font-size: var(--ie-type-h1);
+  font-weight: 700;
   line-height: 1.12;
+  letter-spacing: -0.03em;
   margin-bottom: var(--space-4);
 }
 
 h2 {
   font-size: var(--ie-type-h2);
+  font-weight: 600;
   line-height: 1.18;
+  letter-spacing: -0.025em;
   margin: var(--space-7) 0 var(--space-3);
-}
-
-h3, h4, h5, h6 {
-  font-family: var(--font-sans);
-  letter-spacing: -0.015em;
-  color: var(--ie-ink);
-  text-wrap: balance;
 }
 
 h3 {
   font-size: var(--ie-type-h3);
   font-weight: 600;
   line-height: 1.25;
+  letter-spacing: -0.02em;
   margin: var(--space-6) 0 var(--space-2);
+}
+
+h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--ie-ink);
+  text-wrap: balance;
 }
 
 p {

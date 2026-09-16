@@ -83,7 +83,7 @@ To ensure all diagrams look authored by the same studio:
    - Precision blueprint stealth arrows and circular junction pins.
    - Vector brand and tech logos via `<BrandIcon name="..." />` (`claude`, `gemini`, `openai`, `mcp`, `git`, `docker`, `vscode`, etc.).
    - 100% token-based colors (`var(--ie-*)` and `var(--brand-*)`) with automatic Light and Dark mode adaptation.
-4. Preflight test via `npm run studio:check`.
+4. Verify build via `npm run build`.
 
 ### Option B: Obsidian Excalidraw
 1. In Obsidian, create an Excalidraw drawing: `public/diagrams/<post-slug>/my-diagram.excalidraw.md`.

@@ -100,28 +100,33 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
     margin: 0;
     font-family: var(--font-mono);
     font-size: var(--ie-type-micro);
-    font-weight: 500;
-    color: var(--interactive-primary);
+    font-weight: 600;
+    color: var(--ie-blue);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     line-height: 1.4;
     min-width: 0;
     flex: 1 1 16rem;
   }
 
   .exhibit-label-title {
-    color: var(--muted);
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-size: var(--ie-type-ui);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-transform: none;
+    color: var(--ie-ink);
+    margin-left: 0.4rem;
   }
 
   .exhibit-badge {
     font-family: var(--font-mono);
     font-size: 0.65rem;
     font-weight: 600;
-    color: var(--muted);
-    background: var(--bg-inset);
-    border: 1px solid var(--border);
-    padding: 0.15rem 0.4rem;
+    color: var(--ie-muted);
+    background: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
+    padding: 0.15rem 0.45rem;
     border-radius: var(--radius-sm);
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -130,9 +135,9 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
   }
 
   .exhibit-frame {
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-card, 16px);
-    background: var(--ex-bg);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    background: var(--ie-surface);
     padding: var(--space-5) var(--space-4);
     display: flex;
     flex-direction: column;

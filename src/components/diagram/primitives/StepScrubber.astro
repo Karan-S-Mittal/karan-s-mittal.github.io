@@ -1,0 +1,359 @@
+---
+/**
+ * StepScrubber.astro
+ * Ciechanowski / Bret Victor tactile step controller.
+ * Allows readers to scrub or click through discrete algorithmic phases,
+ * state machine transitions, or timeline moments without heavy client frameworks.
+ *
+ * Invariant: Zero raw hex colors. All colors route through semantic tokens.
+ */
+
+export interface ScrubberStep {
+  id: string;
+  label: string;
+  badge?: string;
+  detail?: string;
+}
+
+interface Props {
+  targetId: string;
+  steps: ScrubberStep[];
+  title?: string;
+  initialStep?: number;
+  class?: string;
+}
+
+const {
+  targetId,
+  steps = [],
+  title = 'Execution Lifecycle',
+  initialStep = 0,
+  class: className = '',
+} = Astro.props;
+
+const scrubberId = `scrubber-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<div
+  class:list={['step-scrubber', className]}
+  id={scrubberId}
+  data-target={targetId}
+  data-step-count={steps.length}
+  role="region"
+  aria-label={title}
+>
+  <div class="scrubber-header">
+    <div class="scrubber-title-row">
+      <span class="scrubber-dot"></span>
+      <span class="scrubber-title">{title}</span>
+    </div>
+    <div class="scrubber-counter">
+      Step <span class="step-current">1</span> of <span class="step-total">{steps.length}</span>
+    </div>
+  </div>
+
+  <div class="scrubber-track-wrap">
+    <div class="scrubber-track" role="tablist">
+      {steps.map((step, idx) => (
+        <button
+          type="button"
+          role="tab"
+          class:list={['step-node', { active: idx === initialStep }]}
+          data-step-index={idx}
+          data-step-id={step.id}
+          aria-selected={idx === initialStep ? 'true' : 'false'}
+          title={step.label}
+        >
+          <span class="node-bullet">{idx + 1}</span>
+          <span class="node-label">{step.label}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="scrubber-detail" aria-live="polite">
+    {steps.map((step, idx) => (
+      <div
+        class:list={['step-pane', { visible: idx === initialStep }]}
+        data-pane-index={idx}
+      >
+        <div class="pane-meta">
+          <strong class="pane-label">{step.label}</strong>
+          {step.badge && <span class="pane-badge">{step.badge}</span>}
+        </div>
+        {step.detail && <p class="pane-detail">{step.detail}</p>}
+      </div>
+    ))}
+  </div>
+
+  <div class="scrubber-controls">
+    <button type="button" class="ctrl-btn btn-prev" aria-label="Previous step">
+      ← Prev
+    </button>
+    <input
+      type="range"
+      class="scrubber-range"
+      min="0"
+      max={steps.length - 1}
+      value={initialStep}
+      aria-label="Scrub through execution steps"
+    />
+    <button type="button" class="ctrl-btn btn-next" aria-label="Next step">
+      Next →
+    </button>
+  </div>
+</div>
+
+<script>
+  function initScrubbers() {
+    document.querySelectorAll<HTMLElement>('.step-scrubber').forEach(scrubber => {
+      if (scrubber.dataset.initialized) return;
+      scrubber.dataset.initialized = 'true';
+
+      const targetId = scrubber.dataset.target;
+      const target = targetId ? document.getElementById(targetId) : null;
+      const nodes = scrubber.querySelectorAll<HTMLButtonElement>('.step-node');
+      const panes = scrubber.querySelectorAll<HTMLElement>('.step-pane');
+      const range = scrubber.querySelector<HTMLInputElement>('.scrubber-range');
+      const currentLabel = scrubber.querySelector<HTMLElement>('.step-current');
+      const prevBtn = scrubber.querySelector<HTMLButtonElement>('.btn-prev');
+      const nextBtn = scrubber.querySelector<HTMLButtonElement>('.btn-next');
+      const max = nodes.length - 1;
+
+      let current = 0;
+
+      function setStep(index: number) {
+        if (index < 0) index = 0;
+        if (index > max) index = max;
+        current = index;
+
+        if (range) range.value = String(current);
+        if (currentLabel) currentLabel.textContent = String(current + 1);
+
+        nodes.forEach((n, idx) => {
+          const isActive = idx === current;
+          n.classList.toggle('active', isActive);
+          n.setAttribute('aria-selected', String(isActive));
+        });
+
+        panes.forEach((p, idx) => {
+          p.classList.toggle('visible', idx === current);
+        });
+
+        if (target) {
+          const stepId = nodes[current]?.dataset.stepId || String(current);
+          target.setAttribute('data-active-step', stepId);
+          target.setAttribute('data-step-index', String(current));
+          target.dispatchEvent(new CustomEvent('stepchange', { detail: { step: current, stepId } }));
+        }
+
+        if (prevBtn) prevBtn.disabled = current === 0;
+        if (nextBtn) nextBtn.disabled = current === max;
+      }
+
+      nodes.forEach((n, idx) => {
+        n.addEventListener('click', () => setStep(idx));
+      });
+
+      range?.addEventListener('input', (e) => {
+        setStep(parseInt((e.target as HTMLInputElement).value, 10));
+      });
+
+      prevBtn?.addEventListener('click', () => setStep(current - 1));
+      nextBtn?.addEventListener('click', () => setStep(current + 1));
+
+      // Initial state
+      setStep(0);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initScrubbers);
+  initScrubbers();
+</script>
+
+<style>
+  .step-scrubber {
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    background: var(--ie-surface);
+    padding: var(--space-4);
+    margin: var(--space-4) 0;
+    font-family: var(--font-diagram);
+  }
+
+  .scrubber-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .scrubber-title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .scrubber-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ie-blue);
+  }
+
+  .scrubber-title {
+    font-family: var(--font-display);
+    font-size: var(--ie-type-ui);
+    font-weight: 600;
+    color: var(--ie-ink);
+    letter-spacing: -0.015em;
+  }
+
+  .scrubber-counter {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+  }
+
+  .scrubber-track-wrap {
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: var(--space-3);
+  }
+
+  .scrubber-track {
+    display: flex;
+    gap: var(--space-2);
+    min-width: max-content;
+  }
+
+  .step-node {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-sm);
+    background: var(--ie-surface-raised);
+    color: var(--ie-ink-secondary);
+    font-family: var(--font-diagram);
+    font-size: var(--ie-type-label);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .step-node:hover {
+    border-color: var(--ie-blue);
+    color: var(--ie-ink);
+  }
+
+  .step-node.active {
+    background: var(--ie-blue-soft);
+    border-color: var(--ie-blue);
+    color: var(--ie-blue);
+    font-weight: 600;
+  }
+
+  .node-bullet {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--ie-rule-strong);
+    color: var(--ie-ink);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    line-height: 1;
+  }
+
+  .step-node.active .node-bullet {
+    background: var(--ie-blue);
+    color: var(--ie-canvas);
+  }
+
+  .scrubber-detail {
+    min-height: 54px;
+    padding: var(--space-2) var(--space-3);
+    background: var(--ie-canvas);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-3);
+  }
+
+  .step-pane {
+    display: none;
+  }
+
+  .step-pane.visible {
+    display: block;
+  }
+
+  .pane-meta {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin-bottom: 3px;
+  }
+
+  .pane-label {
+    font-family: var(--font-display);
+    font-size: var(--ie-type-ui);
+    color: var(--ie-ink);
+    font-weight: 600;
+  }
+
+  .pane-badge {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    color: var(--ie-verified);
+    background: var(--ie-verified-soft);
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+
+  .pane-detail {
+    margin: 0;
+    font-size: var(--ie-type-label);
+    color: var(--ie-ink-secondary);
+    line-height: 1.5;
+  }
+
+  .scrubber-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .ctrl-btn {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    font-weight: 600;
+    padding: 4px 10px;
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-sm);
+    background: var(--ie-surface);
+    color: var(--ie-ink);
+    cursor: pointer;
+    transition: border-color var(--transition-fast);
+  }
+
+  .ctrl-btn:hover:not(:disabled) {
+    border-color: var(--ie-blue);
+    color: var(--ie-blue);
+  }
+
+  .ctrl-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .scrubber-range {
+    flex: 1;
+    accent-color: var(--ie-blue);
+    cursor: pointer;
+  }
+</style>

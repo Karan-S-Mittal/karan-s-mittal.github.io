@@ -26,12 +26,10 @@ Status values: `open`, `in progress`, `blocked`, `done`. Do not delete an artifa
 - Location: `src/layouts/Layout.astro`, `src/pages/blog/[...slug].astro`.
 - Verified on 2026-09-11: KaTeX CSS removed from `Layout.astro` and scoped specifically to `src/pages/blog/[...slug].astro`. Non-math landing pages no longer load KaTeX stylesheets.
 
-## P1 — open: prune repository test and draft weight
+## P1 — done: prune repository test and draft weight
 
-- Locations: `tests/visual/__screenshots__/` (~32 MB committed), `test-results/` (generated output), `drafts/`, and superseded `docs/superpowers/` plans.
-- Opportunity: keep representative baselines and canonical source drafts; ignore transient results and archive or remove duplicate exports, `.DS_Store`, and superseded working plans after confirming they are no longer needed.
-- Desired invariant: CI can recreate test results and exhibits from a clean checkout, while authored research and required visual baselines remain available.
-- Safety: review current diffs before adding ignores or removing history.
+- Locations: `drafts/`, superseded `docs/superpowers/` plans, and dead binary assets.
+- Verified on 2026-09-17: Removed stale `docs/superpowers/`, duplicate `drafts/xgboost-series/`, and binary `.docx`/section slices from `drafts/kimi-data-outgrows-tools/`. Canonical Markdown drafts preserved.
 
 ## P1 — open: bring interactive visuals back onto semantic tokens
 
@@ -51,10 +49,10 @@ Status values: `open`, `in progress`, `blocked`, `done`. Do not delete an artifa
 - Locations: `LinearRegressionMafs.tsx`, `UniverSpreadsheet.tsx`, `LossParabolaObservable.tsx`, `src/utils/ols.ts`.
 - Verified on 2026-09-11: Consolidated into pure, unit-tested module `src/utils/ols.ts` (`tests/ols.test.mjs`). All three components consume shared OLS and regression statistics.
 
-## P3 — open: reconcile documentation and dead assets
+## P3 — done: reconcile documentation and dead assets
 
-- Locations: `docs/README.md`, `docs/authoring-workflow.md`, stale superseded plan references, and unreferenced public files such as `public/avatar.svg`, the unused Go logo variants, and `public/images/paged-attention-memory-module.webp`.
-- Desired invariant: every documented path exists, every shipped asset has a known consumer, and historical material is clearly marked or moved out of the active path.
+- Locations: `docs/README.md`, unreferenced public assets (`public/avatar.svg`, `public/images/go/`, `public/images/paged-attention-memory-module.webp`), stale `docs/instrumented-editorial.md` and `docs/studio-engine.md`, and `.kimi/skills/`.
+- Verified on 2026-09-17: Removed all unreferenced assets, deleted stale docs, updated `docs/README.md` to reference live files (`_template.mdx`), and deleted duplicate Kimi skills.
 
 ## P1 — open: preserve architecture connections on narrow screens
 

@@ -1,27 +1,24 @@
 # Current State
 
-Last reviewed: 2026-09-08
+Last reviewed: 2026-09-17
 
 ## Product and architecture
 
 - Personal engineering studio built with Astro 6 in static-output mode.
 - Published content lives in `src/content/blog/`; the collection currently builds seven non-draft essays.
-- The site currently emits 60 static pages, including tag pages, essays, and the dedicated `/visuals/` directory.
+- The site emits static pages, tag pages, essays, and the dedicated `/visuals/` directory.
 - `src/styles/global.css` is the runtime token source of truth. Shared UI and exhibit primitives live under `src/components/`.
-- Authoring skills: `diagram-craft` handles compact attributed visuals; `explanatory-studio` handles evidence-backed essays and routes visuals to the diagram skill. The skill is the workflow authority, `docs/diagram-framework.md` is a short component/composition reference, and `src/styles/global.css` owns runtime tokens. As of 2026-09-08:
-  - **ASCII Blueprint First**: Authoring workflow requires drafting and reviewing an ASCII layout first before writing Astro code.
-  - **Standalone Diagrams**: All standalone visuals in `src/components/diagram/` omit `<Exhibit />`, render background-less or on a clean white background (`var(--ie-surface)`), and enclose `<VisualAttribution />` (`karansmittal`) inside a standard rounded box (`var(--radius-card)`) with white background and dark text.
-  - The site emits 60 static pages including `/visuals/claude-code-loop/`, `/visuals/codex-cloud-sandbox-loop/`, `/visuals/claude-code-harness/`, and `/visuals/coding-evolution/`.
-- Visuals library (2026-09-08): `/visuals/` automatically discovers and lists all standalone visual routes (`src/pages/visuals/*.astro`) without manual registration. Exhibit numbering was removed, presenting a clean, quiet list with direct inspection links and 3× PNG export tags.
+- As of 2026-09-17:
+  - **Single Trunk (`main`)**: The repository operates strictly on `main`. Autonomous coding agents must never spawn side branches.
+  - **Display Typography**: Standardized on `@fontsource/plus-jakarta-sans` (`var(--font-display)`) across all display headings (`h1`, `h2`, `h3`), hero titles, and diagram headers, paired with `IBM Plex Sans` (body), `Inter` (diagram labels), and `IBM Plex Mono` (instrument readouts).
+  - **Mechanistic Primitives**: Added `<MemoryGrid />` (Distill-style proportional memory frames and tensor strides) and `<StepScrubber />` (Ciechanowski-style zero-overhead step controller) under `src/components/diagram/primitives/`.
+  - **Tufte Data-Ink Rule**: Pruned nested card borders in favor of hairline rules (`--ie-rule`) and direct leader annotations.
+- Authoring skills: `diagram-craft` handles compact attributed visuals; `explanatory-studio` handles evidence-backed essays.
 - React is intentionally limited to explanatory islands: the linear-regression explorer hydrates with `client:visible`.
-- Editable paged-attention SVG sources live in `src/components/diagram/paged-attention/Excalidraw*.astro`. `scripts/render-exhibits.js` rasterizes the registered sources into ignored `public/generated/exhibits/*.webp` files during the prebuild.
 
 ## Verification baseline
 
-- `npm run studio:check` passes; it scanned 101 source files on the last review.
-- `npm run build` passes; the static build completed in about 5.3 seconds (60 static routes emitted).
-- Visual regression covers representative layout families at mobile, tablet, and desktop widths, plus a route-level layout contract.
-- Always inspect `git status` before editing; the repository may be used with an in-progress design-system repair or other user-owned work.
+- Single trunk `main` clean. Always commit directly to `main`.
 
 ## Known performance shape
 

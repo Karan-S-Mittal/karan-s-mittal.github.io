@@ -51,3 +51,8 @@ Decommissioned the unused internal `/studio/` control room and showroom pages, r
 
 Refined `diagram-craft` skill to enforce pure block-focused architectural diagrams. Omit decorative category banners, method classifications, and runtime footers inside the component canvas. Mandate zero emojis in favor of 1.5px monoline vectors from `@lucide/astro` and `BrandIcon.astro`, supported by `npm run icon <keyword>` (`scripts/find-icon.js`). Added automated headless visual verification via `scripts/capture-visual.js` (`npm run visual:capture <slug>`) to capture dual-theme light/dark screenshots into `test-results/` for inspection before delivery.
 
+## 2026-09-17 — Plus Jakarta Sans, Single Trunk, and Mechanistic Primitives
+
+Standardized all display typography (`h1`, `h2`, `h3`, page display titles, and diagram exhibit titles) on Plus Jakarta Sans (`var(--font-display)`), while preserving IBM Plex Sans for body prose and IBM Plex Mono for metrics and code. Enforced strict single trunk (`main`) development, barring coding agents from creating side branches. Introduced Distill-inspired `<MemoryGrid />` for proportional memory strides and Ciechanowski-inspired `<StepScrubber />` for zero-overhead interactive algorithmic phase walkthroughs. Applied Tufte data-ink principles across exhibits and layouts by eliminating redundant card borders in favor of hairline rules and direct leader annotations.
+
+

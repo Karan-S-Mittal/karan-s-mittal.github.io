@@ -17,6 +17,8 @@ Keep an entity's label and semantic encoding consistent across figures. Explain 
 ## Reuse the existing pieces
 
 - [`Exhibit.astro`](../src/components/editorial/Exhibit.astro): title, frame, and accessible caption.
+- [`MemoryGrid.astro`](../src/components/diagram/primitives/MemoryGrid.astro): Distill-style memory allocations, page tables, byte arrays, and tensor strides with proportional geometry.
+- [`StepScrubber.astro`](../src/components/diagram/primitives/StepScrubber.astro): Ciechanowski-style tactile step controller for algorithmic phase exploration.
 - [`VisualAttribution.astro`](../src/components/diagram/VisualAttribution.astro): the `karansmittal` wordmark inside the artwork.
 - [`VisualPage.astro`](../src/layouts/VisualPage.astro): small download page with theme controls.
 - [`DiagramExportBar.astro`](../src/components/diagram/DiagramExportBar.astro): 3× PNG pixel resolution; interaction-only controls use `data-export-ignore`.
@@ -26,7 +28,7 @@ Keep an entity's label and semantic encoding consistent across figures. Explain 
 - Online directories: [lucide.dev/icons](https://lucide.dev/icons) and [simpleicons.org](https://simpleicons.org).
 - [`CodingAgentArchitecture.astro`](../src/components/diagram/CodingAgentArchitecture.astro) and [`CodingTimelineComparison.astro`](../src/components/diagram/CodingTimelineComparison.astro): composition references, not boilerplate to copy wholesale.
 
-Runtime colors and type tokens come from [`global.css`](../src/styles/global.css); broader visual semantics live in [`design-language.md`](design-language.md). Use Inter for diagram labels and IBM Plex Mono for metrics/code as specified in `AGENTS.md`.
+Runtime colors and type tokens come from [`global.css`](../src/styles/global.css); broader visual semantics live in [`design-language.md`](design-language.md). Use Plus Jakarta Sans (`var(--font-display)`) for diagram display titles, Inter (`var(--font-diagram)`) for node labels, and IBM Plex Mono (`var(--font-mono)`) for metrics/code as specified in `AGENTS.md`.
 
 ## Geometry that survives export
 

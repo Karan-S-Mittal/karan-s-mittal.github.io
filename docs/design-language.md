@@ -26,16 +26,19 @@ The visual system combines the authority of an editorial publication with the pr
 
 ## Type
 
-| Role | Typeface | Use |
-| --- | --- | --- |
-| Editorial | IBM Plex Serif | Display headings, essay titles, major section openings |
-| Interface | IBM Plex Sans | Navigation, body copy, controls, diagram labels |
-| Instrument | IBM Plex Mono | Measurements, metadata, citations, code, state readouts |
+| Role | Typeface | Token | Use |
+| --- | --- | --- | --- |
+| Display & Title | Plus Jakarta Sans | `--font-display` | Page H1s, section titles, card headers, diagram titles |
+| Interface & Body | IBM Plex Sans | `--font-sans` | Navigation, long-form reading prose, controls |
+| Diagram Labels | Inter | `--font-diagram` | Technical node labels, annotations, state flags |
+| Instrument | IBM Plex Mono | `--font-mono` | Measurements, offsets, addresses, metadata, code |
 
 - Reading column: **700px**, 18px body, 1.72–1.8 line height.
 - Technical labels and metadata: **13px minimum**; dense diagram labels may use 12px only when geometry cannot support 13px.
-- Essay H1: 48–90px depending on viewport; H2: 34–52px.
-- Avoid mixing display and interface faces within the same semantic role.
+- Display H1: 48–90px depending on viewport; H2: 34–52px.
+- **Tufte data-ink discipline**: Kill unnecessary boxed containers; structure hierarchy with whitespace, hairline rules (`--ie-rule`), and Plus Jakarta Sans weights before adding cards.
+- **Direct leader annotations**: Label subtleties directly with leader callouts (`← zero allocation here`) rather than detached legends.
+- **Mechanistic primitives**: Use `<MemoryGrid />` for memory frames and tensor strides; use `<StepScrubber />` for interactive phase exploration.
 
 ## Colour
 

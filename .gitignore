@@ -19,6 +19,7 @@ pnpm-debug.log*
 # Test outputs & temporary exports
 test-results/
 output/
+tests/visual/__screenshots__/
 
 # macOS
 .DS_Store
