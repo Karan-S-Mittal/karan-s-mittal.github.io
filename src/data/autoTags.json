@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "name": "Architecture",
+    "slug": "architecture",
+    "aliases": []
+  },
+  {
+    "name": "DevOps",
+    "slug": "devops",
+    "aliases": []
+  },
+  {
+    "name": "Git",
+    "slug": "git",
+    "aliases": []
+  },
+  {
+    "name": "Systems Engineering",
+    "slug": "systems-engineering",
+    "aliases": []
+  }
+]

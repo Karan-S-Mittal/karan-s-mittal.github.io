@@ -2,17 +2,27 @@
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 const nav = [
+  { href: '/publications', label: 'Publications' },
   { href: '/work', label: 'Work' },
-  { href: '/blog', label: 'Writing' },
-  { href: '/visuals', label: 'Visuals' },
   { href: '/about', label: 'About' },
-  { href: '/talks', label: 'Talks' },
   { href: '/now', label: 'Now' },
 ];
 
 function isActive(href: string) {
   const cleanHref = href.replace(/\/$/, '') || '/';
   if (cleanHref === '/') return pathname === '/';
+  if (cleanHref === '/publications') {
+    return (
+      pathname === '/publications' ||
+      pathname.startsWith('/publications/') ||
+      pathname === '/blog' ||
+      pathname.startsWith('/blog/') ||
+      pathname === '/visuals' ||
+      pathname.startsWith('/visuals/') ||
+      pathname === '/talks' ||
+      pathname.startsWith('/talks/')
+    );
+  }
   return pathname === cleanHref || pathname.startsWith(cleanHref + '/');
 }
 ---

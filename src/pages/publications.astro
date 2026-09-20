@@ -1,0 +1,486 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '@layouts/Layout.astro';
+import PageHeader from '@components/content/PageHeader.astro';
+import BlogPostCard from '@components/content/BlogPostCard.astro';
+import VisualBlueprintCard from '@components/visuals/VisualBlueprintCard.astro';
+import TalkCard from '@components/content/TalkCard.astro';
+import YearGroup from '@components/content/YearGroup.astro';
+import talksData from '@data/talks.json';
+import type { Talk } from '../types/talks';
+
+// 1. Fetch published essays
+const isDev = import.meta.env.DEV;
+const allPosts = await getCollection('blog');
+const posts = allPosts
+  .filter((post) => isDev || !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// 2. Discover Architectural Blueprints
+const rawBlueprintPages = import.meta.glob<string>('./visuals/*.astro', { query: '?raw', import: 'default', eager: true });
+const curatedBlueprintMeta: Record<string, { title?: string; desc?: string; category?: string; archetype?: 'loop' | 'pipeline' | 'memory' | 'tree' | 'hierarchy' | 'comparison' }> = {
+  'platform-stack': {
+    title: 'Developer Platform Stack Hierarchy',
+    desc: 'The four-tier functional architecture of modern code hosting: SCM Merkle DAGs, collaboration ACLs, automated CI runners, and ephemeral cloud IDEs.',
+    category: 'SYSTEMS ARCHITECTURE',
+    archetype: 'hierarchy',
+  },
+  'code-review-topologies': {
+    title: 'Three Code Review Topologies',
+    desc: 'Comparative architectural breakdown: Branch PRs vs Gerrit/Sapling Stacked Changes vs Linux Kernel Patch-over-email.',
+    category: 'REVIEW PROTOCOLS',
+    archetype: 'comparison',
+  },
+};
+
+const preferredOrder = ['platform-stack', 'code-review-topologies'];
+
+const blueprints = Object.entries(rawBlueprintPages)
+  .filter(([path]) => !path.endsWith('index.astro'))
+  .map(([path, rawContent]) => {
+    const slug = path.replace(/^\.\/visuals\//, '').replace(/\.astro$/, '');
+    const curated = curatedBlueprintMeta[slug] || {};
+    const titleMatch = rawContent.match(/const\s+title\s*=\s*['"`]([^'"`]+)['"`]/);
+    const descMatch = rawContent.match(/const\s+(?:caption|description)\s*=\s*['"`]([^'"`]+)['"`]/);
+
+    return {
+      id: slug,
+      title: curated.title || (titleMatch ? titleMatch[1] : slug.replace(/-/g, ' ')),
+      desc: curated.desc || (descMatch ? descMatch[1] : ''),
+      category: curated.category || 'SYSTEMS ARCHITECTURE',
+      archetype: curated.archetype || ('pipeline' as const),
+      href: `/visuals/${slug}/`,
+    };
+  })
+  .sort((a, b) => {
+    const idxA = preferredOrder.indexOf(a.id);
+    const idxB = preferredOrder.indexOf(b.id);
+    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+    if (idxA !== -1) return -1;
+    if (idxB !== -1) return 1;
+    return a.title.localeCompare(b.title);
+  });
+
+// 3. Talks & Masterclasses
+const talks: Talk[] = talksData.talks;
+const sortedTalks = [...talks].sort(
+  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+const talksByYear = sortedTalks.reduce<Record<string, Talk[]>>((acc, talk) => {
+  if (!acc[talk.year]) acc[talk.year] = [];
+  acc[talk.year].push(talk);
+  return acc;
+}, {});
+const talkYears = Object.keys(talksByYear).sort((a, b) => Number(b) - Number(a));
+---
+
+<Layout title="Publications & Blueprints | Karan Mittal" description="Systems engineering whitepapers, architectural blueprints, and public workshops by Karan Mittal.">
+  <main class="container publications-page">
+    <PageHeader
+      label="Archival Registry"
+      title="Publications & Blueprints."
+      description="Peer-reviewed engineering whitepapers, architectural blueprints, and keynote technical sessions on hard systems problems."
+    />
+
+    <!-- Tab Filter Navigation -->
+    <div class="pub-controls">
+      <nav class="pub-tabs" role="tablist" aria-label="Publication formats">
+        <button
+          type="button"
+          class="pub-tab active"
+          role="tab"
+          id="tab-essays"
+          aria-selected="true"
+          aria-controls="panel-essays"
+          data-tab="essays"
+        >
+          <span class="tab-index">[01]</span>
+          <span class="tab-label">Essays &amp; Notes</span>
+          <span class="tab-count">{posts.length}</span>
+        </button>
+
+        <button
+          type="button"
+          class="pub-tab"
+          role="tab"
+          id="tab-blueprints"
+          aria-selected="false"
+          aria-controls="panel-blueprints"
+          data-tab="blueprints"
+        >
+          <span class="tab-index">[02]</span>
+          <span class="tab-label">Blueprints</span>
+          <span class="tab-count">{blueprints.length}</span>
+        </button>
+
+        <button
+          type="button"
+          class="pub-tab"
+          role="tab"
+          id="tab-talks"
+          aria-selected="false"
+          aria-controls="panel-talks"
+          data-tab="talks"
+        >
+          <span class="tab-index">[03]</span>
+          <span class="tab-label">Talks &amp; Workshops</span>
+          <span class="tab-count">{talks.length}</span>
+        </button>
+      </nav>
+
+      <div class="search-wrap pub-search">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="search"
+          id="pub-search-input"
+          placeholder="Filter publications, models, topics..."
+          aria-label="Filter publications"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+
+    <!-- Panel 01: Essays & Systems Notes -->
+    <section
+      id="panel-essays"
+      class="pub-panel active"
+      role="tabpanel"
+      aria-labelledby="tab-essays"
+    >
+      <div class="panel-head">
+        <h2>In-Depth Systems Essays</h2>
+        <p>Evidence-backed mechanistic breakdowns of distributed systems, AI inference, and developer platforms.</p>
+      </div>
+
+      <div class="essays-list" id="essays-container">
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <BlogPostCard
+              post={post}
+              searchText={`${post.data.title} ${post.data.description} ${post.data.tags?.join(' ') || ''}`}
+            />
+          ))
+        ) : (
+          <p class="empty-state">No published essays found.</p>
+        )}
+      </div>
+    </section>
+
+    <!-- Panel 02: Architectural Blueprints -->
+    <section
+      id="panel-blueprints"
+      class="pub-panel"
+      role="tabpanel"
+      aria-labelledby="tab-blueprints"
+      hidden
+    >
+      <div class="panel-head">
+        <h2>Architectural Blueprints</h2>
+        <p>Code-first SVG system maps and review protocols with high-resolution vector export.</p>
+      </div>
+
+      <div class="blueprints-grid" id="blueprints-container">
+        {blueprints.map((item, index) => (
+          <VisualBlueprintCard
+            id={item.id}
+            title={item.title}
+            desc={item.desc}
+            category={item.category}
+            archetype={item.archetype}
+            href={item.href}
+            index={index + 1}
+          />
+        ))}
+      </div>
+    </section>
+
+    <!-- Panel 03: Talks & Workshops -->
+    <section
+      id="panel-talks"
+      class="pub-panel"
+      role="tabpanel"
+      aria-labelledby="tab-talks"
+      hidden
+    >
+      <div class="panel-head">
+        <h2>Talks, Workshops &amp; Masterclasses</h2>
+        <p>Selected speaking and teaching contributions across AI, cloud, and software systems.</p>
+      </div>
+
+      <div class="talks-archive" id="talks-container">
+        {talkYears.map((year) => (
+          <YearGroup year={year} count={talksByYear[year].length}>
+            {talksByYear[year].map((talk) => (
+              <TalkCard talk={talk} />
+            ))}
+          </YearGroup>
+        ))}
+      </div>
+    </section>
+
+    <p id="pub-no-results" class="empty-state" style="display: none; margin-top: 3rem;">
+      No matching publications found for this filter.
+    </p>
+  </main>
+</Layout>
+
+<script>
+  function initPublicationTabs() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('.pub-tab');
+    const panels = document.querySelectorAll<HTMLElement>('.pub-panel');
+    const searchInput = document.querySelector<HTMLInputElement>('#pub-search-input');
+    const noResults = document.querySelector<HTMLElement>('#pub-no-results');
+
+    function switchTab(targetId: string, updateHash: boolean = true) {
+      tabs.forEach((tab) => {
+        const isActive = tab.dataset.tab === targetId;
+        tab.classList.toggle('active', isActive);
+        tab.setAttribute('aria-selected', String(isActive));
+      });
+
+      panels.forEach((panel) => {
+        const isTarget = panel.id === `panel-${targetId}`;
+        panel.classList.toggle('active', isTarget);
+        panel.hidden = !isTarget;
+      });
+
+      if (updateHash) {
+        history.replaceState(null, '', `#${targetId}`);
+      }
+
+      // Re-run search filtering within the newly active tab
+      if (searchInput) {
+        filterActivePanel(searchInput.value.toLowerCase().trim());
+      }
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const targetTab = tab.dataset.tab;
+        if (targetTab) switchTab(targetTab);
+      });
+    });
+
+    // Check URL Hash on initial load (e.g. #blueprints, #talks, #essays)
+    const initialHash = window.location.hash.replace(/^#/, '');
+    if (['essays', 'blueprints', 'talks'].includes(initialHash)) {
+      switchTab(initialHash, false);
+    }
+
+    function filterActivePanel(query: string) {
+      const activePanel = document.querySelector<HTMLElement>('.pub-panel.active');
+      if (!activePanel) return;
+
+      let visibleCount = 0;
+
+      if (activePanel.id === 'panel-essays') {
+        const cards = activePanel.querySelectorAll<HTMLElement>('.post-card');
+        cards.forEach((card) => {
+          const text = (card.dataset.search || card.textContent || '').toLowerCase();
+          const matches = !query || text.includes(query);
+          card.style.display = matches ? '' : 'none';
+          if (matches) visibleCount++;
+        });
+      } else if (activePanel.id === 'panel-blueprints') {
+        const cards = activePanel.querySelectorAll<HTMLElement>('.blueprint-card');
+        cards.forEach((card) => {
+          const text = (card.textContent || '').toLowerCase();
+          const matches = !query || text.includes(query);
+          card.style.display = matches ? '' : 'none';
+          if (matches) visibleCount++;
+        });
+      } else if (activePanel.id === 'panel-talks') {
+        const cards = activePanel.querySelectorAll<HTMLElement>('.talk-card');
+        cards.forEach((card) => {
+          const text = (card.textContent || '').toLowerCase();
+          const matches = !query || text.includes(query);
+          card.style.display = matches ? '' : 'none';
+          if (matches) visibleCount++;
+        });
+
+        // Hide empty year groups
+        const yearGroups = activePanel.querySelectorAll<HTMLElement>('.year-group');
+        yearGroups.forEach((group) => {
+          const visibleCardsInGroup = group.querySelectorAll('.talk-card:not([style*="display: none"])');
+          group.style.display = visibleCardsInGroup.length > 0 ? '' : 'none';
+        });
+      }
+
+      if (noResults) {
+        noResults.style.display = visibleCount === 0 && query !== '' ? 'block' : 'none';
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = (e.target as HTMLInputElement).value.toLowerCase().trim();
+        filterActivePanel(query);
+      });
+    }
+  }
+
+  document.addEventListener('astro:page-load', initPublicationTabs);
+  initPublicationTabs();
+</script>
+
+<style>
+  .publications-page {
+    padding-bottom: 5rem;
+  }
+
+  .pub-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin: 2.5rem 0 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .pub-tabs {
+    display: inline-flex;
+    gap: 0.5rem;
+    background: var(--ie-surface-raised);
+    padding: 0.3rem;
+    border-radius: 6px;
+    border: 1px solid var(--ie-rule);
+  }
+
+  .pub-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.85rem;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--ie-ink-secondary);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 120ms ease;
+  }
+
+  .pub-tab:hover {
+    color: var(--ie-ink);
+    background: color-mix(in srgb, var(--ie-surface) 60%, transparent);
+  }
+
+  .pub-tab.active {
+    background: var(--ie-surface);
+    color: var(--ie-ink);
+    border-color: var(--ie-rule-strong);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .tab-index {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    color: var(--ie-blue);
+    font-weight: 600;
+  }
+
+  .tab-count {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+    background: var(--ie-surface-raised);
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+  }
+
+  .pub-search {
+    position: relative;
+    min-width: 260px;
+  }
+
+  .pub-search input {
+    width: 100%;
+    padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: 4px;
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
+    color: var(--ie-ink);
+    outline: none;
+    transition: border-color 150ms ease;
+  }
+
+  .pub-search input:focus {
+    border-color: var(--ie-blue);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ie-muted);
+    pointer-events: none;
+  }
+
+  .panel-head {
+    margin-bottom: 2rem;
+  }
+
+  .panel-head h2 {
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h2);
+    color: var(--ie-ink);
+    letter-spacing: -0.02em;
+    margin: 0 0 0.5rem;
+  }
+
+  .panel-head p {
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-body);
+    color: var(--ie-ink-secondary);
+    margin: 0;
+  }
+
+  .pub-panel {
+    display: none;
+  }
+
+  .pub-panel.active {
+    display: block;
+  }
+
+  .blueprints-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .empty-state {
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-small);
+  }
+
+  @media (max-width: 768px) {
+    .pub-controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .pub-tabs {
+      flex-direction: column;
+    }
+
+    .pub-search {
+      min-width: 100%;
+    }
+
+    .blueprints-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -93,8 +93,9 @@ Standardized all display typography (`h1`, `h2`, `h3`, page display titles, and 
 - **Technical Exhibit Craftsmanship**: Added CAD registration corner ticks (`+`) and `EXHIBIT // {exhibit}` specimen headers to `Exhibit.astro` for authentic technical draughtsmanship.
 - **Client-Side Export Reliability**: Installed `html-to-image` into `package.json` to back `DiagramExportBar.astro` for multi-scale (2×, 3×, 4×) PNG diagram downloads with font synchronization.
 
+## 2026-09-20 — Unified Publications Hub & Homepage Directed State Graph
 
-
-
-
-
+- **Unified Publications Registry (`/publications`)**: Consolidated fragmented output categories (`Writing`, `Visuals`, `Talks`) into a single, comprehensive research and technical registry. Integrated three tabbed filters (Essays & Systems Notes, Architectural Blueprints, Keynotes & Workshops) with client URL hash persistence (`#essays`, `#blueprints`, `#talks`).
+- **Architectural Blueprints Rebranding**: Rebranded "Visuals" to "Architectural Blueprints" across the homepage, navigation, and publication records, aligning with Karan's persona as an engineer-scientist building hard systems.
+- **Authentic Directed State Graph (`HeroWorkflowGraph.astro`)**: Upgraded the homepage hero from static card boxes into an authentic directed SVG state graph featuring discrete nodes, branching router edges (SLM vs Frontier), circular junction pins, tool sandboxes, and a closed-loop retry recovery feedback loop (`RETRY: FIX & REPLAY [k<=3]`) with CAD registration crosshairs.
+- **Publication of Version Control Deep Dive**: Un-drafted `src/content/blog/exploring-version-control.mdx`, enabling real tag generation across `/tags/`, rendering live canonical post cards on the homepage, and ensuring 0 broken or empty links across the site.

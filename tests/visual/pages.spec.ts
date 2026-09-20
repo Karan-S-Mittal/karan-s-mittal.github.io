@@ -10,6 +10,7 @@ const VIEWPORTS = [
 // below separately checks every generated page without producing 150 baselines.
 const PAGES = [
   { path: '/', name: 'home' },
+  { path: '/publications/', name: 'publications' },
   { path: '/blog/', name: 'blog-index' },
   { path: '/work/', name: 'work' },
   { path: '/talks/', name: 'talks' },
@@ -27,6 +28,7 @@ const ROUTES = [
   '/blog/',
   '/contact/',
   '/now/',
+  '/publications/',
   '/visuals/',
   '/tags/',
   '/talks/',
