@@ -85,6 +85,15 @@ Standardized all display typography (`h1`, `h2`, `h3`, page display titles, and 
 - **Eliminated Dead Assets & Math Tests**: Removed ~1.2 MB of unused `.webp` hero images (`public/images/blog/`), stale export PNGs (`public/visuals/`), and the unused OLS regression math utilities (`src/utils/ols.ts` and `tests/ols.test.mjs`), streamlining `npm test` to run `npm run studio:check`.
 - **Synchronized Documentation**: Fixed dangling references to `instrumented-editorial.md` in `AGENTS.md` and `docs/design-language.md`.
 
+## 2026-09-20 — Instrumented Editorial Design Refresh & Visual Blueprint Registry
+
+- **Deep Contrast Dark Palette**: Calibrated `--ie-canvas` to `#09090b` and `--ie-surface` to `#141416`, deepening contrast for high-resolution OLED displays while refining brand tint tokens (`--ie-blue-soft: #1a2744`, `--ie-rust-soft: #382416`, `--ie-verified-soft: #132d24`).
+- **Ruled Editorial Ledger**: Replaced ad-hoc problem cards on the homepage with an instrumented horizontal ruled ledger (`[01] STATE GRAPHS`, `[02] TOKEN EFFICIENCY`, `[03] EVAL HARNESS`) displaying monospace index labels, engineering capability prose, and quantitative outcome badges (`100% Deterministic flow`, `~70% API spend cut`, `Automated CI/CD gates`).
+- **Visual Blueprint Showcase & Routes**: Wired the two new version control blueprints (`PlatformStackHierarchy` and `CodeReviewTopologies`) into the homepage visual showcase and `/visuals/` registry. Created dedicated inspection and export routes at `/visuals/platform-stack/` and `/visuals/code-review-topologies/`.
+- **Technical Exhibit Craftsmanship**: Added CAD registration corner ticks (`+`) and `EXHIBIT // {exhibit}` specimen headers to `Exhibit.astro` for authentic technical draughtsmanship.
+- **Client-Side Export Reliability**: Installed `html-to-image` into `package.json` to back `DiagramExportBar.astro` for multi-scale (2×, 3×, 4×) PNG diagram downloads with font synchronization.
+
+
 
 
 

@@ -16,7 +16,23 @@ const featuredBlueprints: Array<{
   title: string;
   desc: string;
   badge: string;
-}> = [];
+  archetype: 'hierarchy' | 'comparison';
+}> = [
+  {
+    slug: 'platform-stack',
+    title: 'Developer Platform Stack',
+    desc: 'The four-tier architecture spanning POSIX Git Merkle DAGs, auth gateways, CI runners, and ephemeral cloud workspaces.',
+    badge: 'SYSTEM ARCHITECTURE',
+    archetype: 'hierarchy',
+  },
+  {
+    slug: 'code-review-topologies',
+    title: 'Three Code Review Topologies',
+    desc: 'Comparative breakdown of code review: GitHub Branch PRs vs. Gerrit Stacked Changes vs. Linux Kernel Patch series.',
+    badge: 'REVIEW PROTOCOL',
+    archetype: 'comparison',
+  },
+];
 ---
 
 <Layout title={SITE.title} description={SITE.description}>
@@ -37,24 +53,52 @@ const featuredBlueprints: Array<{
       <HeroWorkflowGraph />
     </section>
 
-    <!-- 3 Core Pillars -->
-    <ul class="problem-list" aria-label="Problems I help solve">
-      <li>
-        <span class="problem-num">01 / AGENT WORKFLOWS &amp; STATE GRAPHS</span>
-        <strong>Get models to follow instructions.</strong>
-        Replace fragile single-prompt chains with structured state graphs, tool sandboxes, and schema validation. Ensure agents reliably complete multi-step tasks without getting stuck in infinite loops.
-      </li>
-      <li>
-        <span class="problem-num">02 / MLOPS &amp; COST OPTIMIZATION</span>
-        <strong>Stop overpaying for tokens.</strong>
-        Architect tiered model routing, semantic caching, and prompt compaction. Run 90% of routine traffic on fast, inexpensive models to cut monthly API spend by up to 70%.
-      </li>
-      <li>
-        <span class="problem-num">03 / CONTINUOUS EVAL HARNESS</span>
-        <strong>Ship model updates safely.</strong>
-        Build automated regression test suites and policy gates into CI/CD. Test prompt adjustments and new model releases against benchmark datasets before they touch customers.
-      </li>
-    </ul>
+    <!-- 3 Core Pillars: Ruled Editorial Ledger -->
+    <section class="pillar-ledger-section" aria-label="Core focus areas">
+      <div class="pillar-ledger">
+        <article class="ledger-row">
+          <div class="ledger-meta">
+            <span class="ledger-index">[01]</span>
+            <span class="ledger-tag">STATE GRAPHS</span>
+          </div>
+          <div class="ledger-content">
+            <h3>Get models to follow instructions.</h3>
+            <p>Replace fragile single-prompt chains with structured state graphs, tool sandboxes, and schema validation. Ensure agents reliably complete multi-step tasks without getting stuck in infinite loops.</p>
+          </div>
+          <div class="ledger-badge-wrap">
+            <span class="ledger-badge">100% Deterministic flow</span>
+          </div>
+        </article>
+
+        <article class="ledger-row">
+          <div class="ledger-meta">
+            <span class="ledger-index">[02]</span>
+            <span class="ledger-tag">TOKEN EFFICIENCY</span>
+          </div>
+          <div class="ledger-content">
+            <h3>Stop overpaying for tokens.</h3>
+            <p>Architect tiered model routing, semantic caching, and prompt compaction. Run 90% of routine traffic on fast, inexpensive models to cut monthly API spend by up to 70%.</p>
+          </div>
+          <div class="ledger-badge-wrap">
+            <span class="ledger-badge">~70% API spend cut</span>
+          </div>
+        </article>
+
+        <article class="ledger-row">
+          <div class="ledger-meta">
+            <span class="ledger-index">[03]</span>
+            <span class="ledger-tag">EVAL HARNESS</span>
+          </div>
+          <div class="ledger-content">
+            <h3>Ship model updates safely.</h3>
+            <p>Build automated regression test suites and policy gates into CI/CD. Test prompt adjustments and new model releases against benchmark datasets before they touch customers.</p>
+          </div>
+          <div class="ledger-badge-wrap">
+            <span class="ledger-badge">Automated CI/CD gates</span>
+          </div>
+        </article>
+      </div>
+    </section>
 
     <!-- Section 01: Featured Architecture Blueprints -->
     <section class="section" aria-labelledby="blueprints-heading">
@@ -65,23 +109,19 @@ const featuredBlueprints: Array<{
         </div>
         <a href="/visuals">Explore visual library →</a>
       </div>
-      {featuredBlueprints.length > 0 ? (
-        <div class="featured-blueprints-grid">
-          {featuredBlueprints.map(bp => (
-            <a href={`/visuals/${bp.slug}/`} class="blueprint-showcase-card">
-              <VisualMicroSchematic slug={bp.slug} />
-              <div class="blueprint-card-info">
-                <span class="register">{bp.badge}</span>
-                <h3>{bp.title}</h3>
-                <p>{bp.desc}</p>
-                <span class="blueprint-card-cta">Inspect blueprint &rarr;</span>
-              </div>
-            </a>
-          ))}
-        </div>
-      ) : (
-        <p class="empty-state">Fresh architectural blueprints are being prepared. Explore the library soon.</p>
-      )}
+      <div class="featured-blueprints-grid">
+        {featuredBlueprints.map(bp => (
+          <a href={`/visuals/${bp.slug}/`} class="blueprint-showcase-card">
+            <VisualMicroSchematic slug={bp.slug} archetype={bp.archetype} />
+            <div class="blueprint-card-info">
+              <span class="register">{bp.badge}</span>
+              <h3>{bp.title}</h3>
+              <p>{bp.desc}</p>
+              <span class="blueprint-card-cta">Inspect blueprint &rarr;</span>
+            </div>
+          </a>
+        ))}
+      </div>
     </section>
 
     <!-- Section 02: Selected Writing -->

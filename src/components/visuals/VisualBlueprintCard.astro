@@ -92,7 +92,7 @@ const formattedIndex = typeof index === 'number' ? `ARC-${String(index).padStart
   .viewport-hover-indicator {
     position: absolute;
     inset: 0;
-    background: rgba(38, 118, 170, 0.08);
+    background: color-mix(in srgb, var(--ie-blue) 8%, transparent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -114,7 +114,7 @@ const formattedIndex = typeof index === 'number' ? `ARC-${String(index).padStart
     font-size: var(--ie-type-micro);
     font-weight: 600;
     color: var(--ie-blue);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--ie-ink) 10%, transparent);
   }
 
   .card-body {

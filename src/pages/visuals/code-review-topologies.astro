@@ -1,0 +1,27 @@
+---
+import VisualPage from '@layouts/VisualPage.astro';
+import CodeReviewTopologies from '@components/diagram/version-control/CodeReviewTopologies.astro';
+
+const title = 'Three Code Review Topologies';
+const description = 'Comparative architectural breakdown of three code review paradigms: GitHub/GitLab Branch PRs, Gerrit/Sapling Stacked Changes, and Linux Kernel Patch-over-email series.';
+---
+
+<VisualPage
+  title={title}
+  description={description}
+  targetId="code-review-export"
+  filename="code-review-topologies"
+  category="REVIEW PROTOCOLS"
+  drawingNo="VCS-02"
+>
+  <div id="code-review-export" class="visual-wrapper">
+    <CodeReviewTopologies id="code-review-diagram" />
+  </div>
+</VisualPage>
+
+<style>
+  .visual-wrapper {
+    width: 100%;
+    padding: 1.5rem 0.5rem;
+  }
+</style>

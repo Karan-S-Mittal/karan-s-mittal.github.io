@@ -31,6 +31,7 @@
     "astro": "^6.4.6",
     "fast-glob": "^3.3.3",
     "gray-matter": "^4.0.3",
+    "html-to-image": "^1.11.13",
     "katex": "^0.18.4",
     "mdast-util-find-and-replace": "^3.0.2",
     "rehype-autolink-headings": "^7.1.0",

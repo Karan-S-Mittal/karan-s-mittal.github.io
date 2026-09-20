@@ -26,20 +26,19 @@
 .practice-page .hero-content { display: flex; flex-direction: column; }
 .practice-page .hero-portrait { width: 180px; height: 216px; object-fit: cover; object-position: top; border: 1px solid var(--ie-rule); border-radius: 4px; }
 .practice-page .portrait-caption { display: block; font-family: var(--font-mono); font-size: var(--ie-type-label); color: var(--ie-muted); line-height: 1.5; margin-top: .6rem; }
-.practice-page .problem-list { padding: 0; margin: 3rem 0 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 2.25rem; }
-.practice-page .problem-list li { border-top: 1px solid var(--ie-rule); padding-top: 1.25rem; color: var(--ie-ink-secondary); font-family: var(--font-sans); font-size: var(--ie-type-small); line-height: 1.65; }
-.practice-page .problem-list .problem-num { display: block; font-family: var(--font-mono); font-size: var(--ie-type-micro); color: var(--ie-muted); letter-spacing: 0.06em; margin-bottom: .6rem; }
-.practice-page .problem-list strong { display: block; color: var(--ie-ink); font-family: var(--font-display); margin-bottom: .45rem; font-weight: 600; font-size: var(--ie-type-base); }
-.practice-page .evidence-feature { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 3rem; padding: 1rem 0; align-items: center; }
-.practice-page .evidence-summary { color: var(--ie-ink-secondary); font-family: var(--font-sans); font-size: var(--ie-type-small); line-height: 1.6; margin-bottom: 1.25rem; }
-.practice-page .evidence-links { display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center; margin-top: 1rem; }
-.practice-page .evidence-links a { font-family: var(--font-sans); font-size: var(--ie-type-ui); font-weight: 600; color: var(--ie-blue); }
-.practice-page .evidence-links a.secondary-link { color: var(--ie-ink-secondary); font-weight: 400; }
-.practice-page .evidence-links a.secondary-link:hover { color: var(--ie-blue); }
-.practice-page .evidence-blueprint-frame { border: 1px solid var(--ie-rule); border-radius: var(--radius-sm, 4px); overflow: hidden; background: var(--ie-surface-raised); }
-.practice-page .evidence-blueprint-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; background: var(--ie-surface); border-top: 1px solid var(--ie-rule); font-family: var(--font-mono); font-size: var(--ie-type-micro); }
-.practice-page .blueprint-label { color: var(--ie-muted); font-size: var(--ie-type-micro); letter-spacing: 0.04em; }
-.practice-page .blueprint-link { color: var(--ie-blue); font-weight: 600; text-decoration: none; }
+/* Ruled Editorial Ledger for Capabilities */
+.practice-page .pillar-ledger-section { margin: 3.5rem 0 1rem; border-top: 1px solid var(--ie-rule-strong); }
+.practice-page .pillar-ledger { display: flex; flex-direction: column; }
+.practice-page .ledger-row { display: grid; grid-template-columns: 140px minmax(0, 1fr) 180px; gap: 1.5rem; align-items: baseline; padding: 1.75rem 0; border-bottom: 1px solid var(--ie-rule); transition: background-color 120ms ease; }
+.practice-page .ledger-row:hover { background: color-mix(in srgb, var(--ie-surface-raised) 40%, transparent); }
+.practice-page .ledger-meta { display: flex; flex-direction: column; gap: 0.35rem; }
+.practice-page .ledger-index { font-family: var(--font-mono); font-size: var(--ie-type-micro); font-weight: 600; color: var(--ie-blue); letter-spacing: 0.05em; }
+.practice-page .ledger-tag { font-family: var(--font-mono); font-size: var(--ie-type-micro); color: var(--ie-muted); letter-spacing: 0.04em; text-transform: uppercase; }
+.practice-page .ledger-content h3 { font-family: var(--font-display); font-size: var(--ie-type-h3); font-weight: 600; color: var(--ie-ink); letter-spacing: -0.02em; margin: 0 0 0.4rem; }
+.practice-page .ledger-content p { font-family: var(--font-sans); font-size: var(--ie-type-small); color: var(--ie-ink-secondary); line-height: 1.6; margin: 0; }
+.practice-page .ledger-badge-wrap { display: flex; justify-content: flex-end; align-items: center; }
+.practice-page .ledger-badge { display: inline-flex; align-items: center; font-family: var(--font-mono); font-size: var(--ie-type-micro); color: var(--ie-ink); background: var(--ie-surface-raised); border: 1px solid var(--ie-rule-strong); padding: 0.3rem 0.65rem; border-radius: 4px; white-space: nowrap; }
+
 .practice-page .engagement-row { display: grid; grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr); gap: 2rem; padding: 1.5rem 0; border-bottom: 1px solid var(--ie-rule); scroll-margin-top: 5rem; }
 .practice-page .engagement-row:first-child { padding-top: .5rem; }
 .practice-page .deliverable { margin-bottom: 0; }
@@ -50,7 +49,7 @@
 .practice-page .note-row p, .practice-page .event-row p { margin-bottom: .5rem; }
 .practice-page time, .practice-page .event-meta { font-family: var(--font-mono); font-size: var(--ie-type-label); color: var(--ie-muted); line-height: 1.6; }
 .practice-page .event-meta { display: block; margin-bottom: .5rem; }
-.practice-page .featured-blueprints-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+.practice-page .featured-blueprints-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
 .practice-page .blueprint-showcase-card { display: flex; flex-direction: column; background: var(--ie-surface); border: 1px solid var(--ie-rule); border-radius: var(--radius-sm, 4px); overflow: hidden; text-decoration: none; transition: transform var(--transition-fast), border-color var(--transition-fast); }
 .practice-page .blueprint-showcase-card:hover { transform: translateY(-2px); border-color: var(--ie-blue); }
 .practice-page .blueprint-showcase-card:hover h3 { color: var(--ie-blue); }
@@ -71,7 +70,9 @@
   .practice-page .hero-aside { display: flex; align-items: center; gap: 1rem; }
   .practice-page .hero-portrait { width: 80px; height: 96px; }
   .practice-page .portrait-caption { margin: 0; max-width: 200px; }
-  .practice-page .problem-list, .practice-page .evidence-feature, .practice-page .engagement-row, .practice-page .featured-blueprints-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .practice-page .ledger-row { grid-template-columns: 1fr; gap: 0.75rem; padding: 1.25rem 0; }
+  .practice-page .ledger-badge-wrap { justify-content: flex-start; }
+  .practice-page .engagement-row, .practice-page .featured-blueprints-grid { grid-template-columns: 1fr; gap: 1rem; }
   .practice-page .section-head { align-items: start; flex-direction: column; gap: .8rem; }
   .practice-page .note-row, .practice-page .event-row { grid-template-columns: 1fr; gap: .5rem; }
   .practice-page .actions { align-items: stretch; }

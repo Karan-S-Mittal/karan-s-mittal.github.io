@@ -16,9 +16,22 @@ interface VisualItem {
 const rawPages = import.meta.glob<string>('./*.astro', { query: '?raw', import: 'default', eager: true });
 
 // Curated metadata and archetype mapping for established visuals
-const curatedMeta: Record<string, { title?: string; desc?: string; category?: string; archetype?: 'loop' | 'pipeline' | 'memory' | 'tree' | 'hierarchy' | 'comparison' }> = {};
+const curatedMeta: Record<string, { title?: string; desc?: string; category?: string; archetype?: 'loop' | 'pipeline' | 'memory' | 'tree' | 'hierarchy' | 'comparison' }> = {
+  'platform-stack': {
+    title: 'Developer Platform Stack Hierarchy',
+    desc: 'The four-tier functional architecture of modern code hosting: SCM Merkle DAGs, collaboration ACLs, automated CI runners, and ephemeral cloud IDEs.',
+    category: 'SYSTEMS ARCHITECTURE',
+    archetype: 'hierarchy',
+  },
+  'code-review-topologies': {
+    title: 'Three Code Review Topologies',
+    desc: 'Comparative architectural breakdown: Branch PRs vs Gerrit/Sapling Stacked Changes vs Linux Kernel Patch-over-email.',
+    category: 'REVIEW PROTOCOLS',
+    archetype: 'comparison',
+  },
+};
 
-const preferredOrder: string[] = [];
+const preferredOrder: string[] = ['platform-stack', 'code-review-topologies'];
 
 const visuals: VisualItem[] = Object.entries(rawPages)
   .filter(([path]) => !path.endsWith('index.astro'))

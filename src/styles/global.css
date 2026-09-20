@@ -216,22 +216,22 @@
 :root.dark,
 html.dark {
   color-scheme: dark;
-  --ie-canvas: #0c0a09;
-  --ie-surface: #18181b;
+  --ie-canvas: #09090b;
+  --ie-surface: #141416;
   --ie-embed-surface: #ffffff;
-  --ie-surface-raised: #27272a;
-  --ie-ink: #f3f4f6;
-  --ie-ink-secondary: #d5d9df;
-  --ie-muted: #aeb6c2;
+  --ie-surface-raised: #1f1f23;
+  --ie-ink: #f4f4f5;
+  --ie-ink-secondary: #d4d4d8;
+  --ie-muted: #a1a1aa;
   --ie-rule: #27272a;
   --ie-rule-strong: #3f3f46;
   --ie-blue: #8daaff;
-  --ie-blue-soft: #202c4f;
+  --ie-blue-soft: #1a2744;
   --ie-rust: #ffb36b;
-  --ie-rust-soft: #3a281e;
+  --ie-rust-soft: #382416;
   --ie-verified: #5FD3A6;
-  --ie-verified-soft: #1B3A30;
-  --ie-code: #0b0d10;
+  --ie-verified-soft: #132d24;
+  --ie-code: #0b0c10;
 
   /* Brand & Technology Tokens for System Diagrams */
   --brand-anthropic: #f59e0b;

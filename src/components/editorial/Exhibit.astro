@@ -39,7 +39,7 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
     <div class="exhibit-header">
       {exhibit && (
         <p class="exhibit-label">
-          Exhibit {exhibit}{title && <span class="exhibit-label-title">&mdash; {title}</span>}
+          EXHIBIT // {exhibit}{title && <span class="exhibit-label-title">&mdash; {title}</span>}
         </p>
       )}
       {!exhibit && title && <p class="exhibit-label">{title}</p>}
@@ -47,6 +47,14 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
     </div>
   )}
   <div class="exhibit-frame">
+    {!minimal && (
+      <>
+        <span class="frame-crosshair crosshair-tl" aria-hidden="true">+</span>
+        <span class="frame-crosshair crosshair-tr" aria-hidden="true">+</span>
+        <span class="frame-crosshair crosshair-bl" aria-hidden="true">+</span>
+        <span class="frame-crosshair crosshair-br" aria-hidden="true">+</span>
+      </>
+    )}
     {src ? (
       <div class="raster-exhibit-canvas">
         {zoomable ? (
@@ -135,6 +143,7 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
   }
 
   .exhibit-frame {
+    position: relative;
     border: 1px solid var(--ie-rule);
     border-radius: var(--radius-card, 8px);
     background: var(--ie-surface);
@@ -145,6 +154,22 @@ const imageAlt = alt || title || (exhibit ? `Exhibit ${exhibit}` : "Diagram");
     justify-content: center;
     overflow: hidden;
   }
+
+  .frame-crosshair {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: var(--ie-muted);
+    opacity: 0.4;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .crosshair-tl { top: 6px; left: 8px; }
+  .crosshair-tr { top: 6px; right: 8px; }
+  .crosshair-bl { bottom: 6px; left: 8px; }
+  .crosshair-br { bottom: 6px; right: 8px; }
 
   .exhibit.minimal .exhibit-frame {
     display: block;

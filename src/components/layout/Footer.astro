@@ -8,6 +8,7 @@ const socials = SOCIALS;
   <div class="footer-inner">
     <div class="footer-left">
       <p class="copyright">&copy; {new Date().getFullYear()} {SITE.name}</p>
+      <span class="footer-status"><span class="status-dot" aria-hidden="true">●</span> Static // 0-RTT</span>
       <nav class="footer-nav" aria-label="Footer navigation">
         <a href="/blog">Writing</a>
         <a href="/work">Work</a>
@@ -85,6 +86,25 @@ const socials = SOCIALS;
     font-size: var(--ie-type-label);
     color: var(--ie-muted);
     margin: 0;
+  }
+
+  .footer-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--ie-rule);
+    border-radius: 3px;
+    background: var(--ie-surface);
+  }
+
+  .status-dot {
+    color: var(--ie-verified);
+    font-size: 8px;
+    line-height: 1;
   }
 
   .footer-nav {

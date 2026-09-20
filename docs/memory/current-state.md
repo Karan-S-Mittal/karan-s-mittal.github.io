@@ -16,8 +16,14 @@ Last reviewed: 2026-09-17
     - Streamlined `src/pages/work.astro` to focus on public sessions and direct client engagements.
     - Cleaned out all dead static assets (`public/images/`, `public/visuals/`, `public/templates/`), `Excalidraw/`, and `drafts/`.
     - Removed dead OLS math utilities (`src/utils/ols.ts`) and unit test (`tests/ols.test.mjs`), streamlining `npm test` to `npm run studio:check`.
-    - Updated `tests/visual/` Playwright test suite to target only active routes.
-    - Updated `src/pages/visuals/index.astro` to a clean empty state with no stale metadata.
+  - **Instrumented Editorial Design Refresh**:
+    - Calibrated dark mode tokens in `src/styles/global.css` (`--ie-canvas: #09090b`, `--ie-surface: #141416`, deeper contrast, subtle brand tints).
+    - Global chrome polish: Header nav typography refined with `Inter` 500; Footer status indicator added (`● Static // 0-RTT`).
+    - Homepage workbench refresh: Ruled editorial ledger for capabilities with monospace index markers (`[01] STATE GRAPHS`, `[02] TOKEN EFFICIENCY`, `[03] EVAL HARNESS`) and outcome badges.
+    - Featured blueprints: Wired `src/pages/index.astro` and `/visuals/` gallery to the version control blueprints.
+    - Dedicated visual inspection routes: Added `src/pages/visuals/platform-stack.astro` and `src/pages/visuals/code-review-topologies.astro`.
+    - Exhibit craftsmanship: Added CAD registration corner ticks (`+`) and `EXHIBIT // {exhibit}` specimen headers to `src/components/editorial/Exhibit.astro`.
+    - Resolved `html-to-image` client dependency for 3× PNG downloads in `DiagramExportBar.astro`.
   - **Modern Version Control Deep-Dive**: Authored `src/content/blog/exploring-version-control.mdx` (`draft: true`) breaking down raw Git vs developer platforms, SCM Merkle DAGs, the 4-tier platform stack, multi-platform sovereignty trade-offs (GitHub, GitLab, Codeberg, Forgejo, SourceHut), 3-way code review topologies (Branch PR vs Stacked Changes vs Patch-over-email), CI/CD runner execution & OCI isolation, hypervisor SMT vCPU cache contention, and decoupled ephemeral storage.
   - **New Diagram Exhibits**: Added `PlatformStackHierarchy.astro` (Exhibit 01) and `CodeReviewTopologies.astro` (Exhibit 02) under `src/components/diagram/version-control/` — 100% token compliant with Soft Architecture grammar.
   - **Universal Diagram Verification & 100% Token Compliance**: Automated via `scripts/studio-check.js` (runs on `npm test` and `npm run prebuild`).
@@ -27,7 +33,7 @@ Last reviewed: 2026-09-17
 
 - Single trunk `main` clean. Always commit directly to `main`.
 - `npm test` runs `studio:check`.
-- Full production build verified via `npm run build`.
+- Full production build verified via `npm run build` (13 static pages, 0 errors).
 
 ## Known performance shape
 
