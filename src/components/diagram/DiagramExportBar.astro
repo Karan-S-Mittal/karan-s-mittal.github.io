@@ -226,6 +226,7 @@ const {
 
   .export-actions {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.5rem;
   }
@@ -235,6 +236,7 @@ const {
     align-items: center;
     gap: 0.4rem;
     padding: 0.35rem 0.75rem;
+    min-height: 44px;
     font-size: var(--ie-type-micro);
     font-weight: 600;
     font-family: var(--font-diagram);
@@ -298,6 +300,8 @@ const {
 
   .scale-btn {
     padding: 0.15rem 0.45rem;
+    min-width: 44px;
+    min-height: 44px;
     font-size: var(--ie-type-micro);
     font-family: var(--font-mono);
     font-weight: 600;
@@ -334,14 +338,27 @@ const {
     border: 1px solid var(--ie-rule);
     border-radius: var(--radius-sm);
     color: var(--ie-ink-secondary);
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .meta-caption {
     font-size: var(--ie-type-micro);
     color: var(--ie-muted);
+    flex: 1;
+    min-width: 0;
+    line-height: 1.4;
   }
 
   @media (max-width: 640px) {
+    .export-actions {
+      width: 100%;
+    }
+
+    .scale-picker {
+      margin-left: 0;
+    }
+
     .export-meta {
       width: 100%;
       justify-content: space-between;

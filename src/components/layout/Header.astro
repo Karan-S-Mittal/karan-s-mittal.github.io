@@ -1,29 +1,26 @@
 ---
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 
-const nav = [
-  { href: '/publications', label: 'Publications' },
-  { href: '/work', label: 'Work' },
-  { href: '/about', label: 'About' },
-  { href: '/now', label: 'Now' },
+interface NavItem {
+  href: string;
+  label: string;
+  activePaths?: string[];
+}
+
+const nav: NavItem[] = [
+  { href: '/work/', label: 'Work' },
+  { href: '/writing/', label: 'Writing' },
+  { href: '/ideas/', label: 'Ideas', activePaths: ['/ideas', '/diagrams'] },
+  { href: '/about/', label: 'About' },
 ];
 
-function isActive(href: string) {
-  const cleanHref = href.replace(/\/$/, '') || '/';
-  if (cleanHref === '/') return pathname === '/';
-  if (cleanHref === '/publications') {
-    return (
-      pathname === '/publications' ||
-      pathname.startsWith('/publications/') ||
-      pathname === '/blog' ||
-      pathname.startsWith('/blog/') ||
-      pathname === '/visuals' ||
-      pathname.startsWith('/visuals/') ||
-      pathname === '/talks' ||
-      pathname.startsWith('/talks/')
-    );
-  }
-  return pathname === cleanHref || pathname.startsWith(cleanHref + '/');
+function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
+  const paths = item.activePaths || [item.href];
+  return paths.some((href) => {
+    const cleanHref = href.replace(/\/$/, '') || '/';
+    if (cleanHref === '/') return pathname === '/';
+    return pathname === cleanHref || pathname.startsWith(cleanHref + '/');
+  });
 }
 ---
 
@@ -38,7 +35,7 @@ function isActive(href: string) {
 
     <nav class="main-nav" aria-label="Primary">
       {nav.map(item => (
-        <a href={item.href} class={isActive(item.href) ? 'active' : ''} aria-current={isActive(item.href) ? 'page' : undefined}>
+        <a href={item.href} class={isActive(item) ? 'active' : ''} aria-current={isActive(item) ? 'page' : undefined}>
           {item.label}
         </a>
       ))}
@@ -49,12 +46,12 @@ function isActive(href: string) {
         <summary>Index</summary>
         <nav class="mobile-nav-panel" aria-label="Mobile primary navigation">
           {nav.map(item => (
-            <a href={item.href} class={isActive(item.href) ? 'active' : ''} aria-current={isActive(item.href) ? 'page' : undefined}>
+            <a href={item.href} class={isActive(item) ? 'active' : ''} aria-current={isActive(item) ? 'page' : undefined}>
               <span>{item.label}</span>
               <span aria-hidden="true">↗</span>
             </a>
           ))}
-          <a href="/contact" class="mobile-nav-contact">
+          <a href="/contact/" class="mobile-nav-contact">
             <span>Discuss your problem</span>
             <span aria-hidden="true">→</span>
           </a>
@@ -78,7 +75,7 @@ function isActive(href: string) {
         </svg>
       </button>
 
-      <a href="/contact" class:list={['consult-cta', { active: isActive('/contact') }]}>
+      <a href="/contact/" class:list={['consult-cta', { active: isActive({ href: '/contact/' }) }]}>
         <span>Contact</span>
       </a>
     </div>
@@ -127,7 +124,7 @@ function isActive(href: string) {
   header {
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 20;
     background: color-mix(in srgb, var(--ie-canvas) 96%, transparent);
     border-bottom: 1px solid var(--ie-rule);
     backdrop-filter: blur(12px);
@@ -141,7 +138,7 @@ function isActive(href: string) {
   }
 
   .header-inner {
-    max-width: 960px;
+    max-width: var(--width-visual, 1180px);
     min-height: 64px;
     margin: 0 auto;
     padding: 0 var(--space-5, 1.5rem);
@@ -192,6 +189,9 @@ function isActive(href: string) {
   }
 
   .main-nav a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
     color: var(--ie-muted);
     font-family: var(--font-sans);
     font-size: var(--ie-type-ui);
@@ -223,8 +223,8 @@ function isActive(href: string) {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
     border: 1px solid var(--ie-rule);
     border-radius: 5px;
     background: transparent;
@@ -248,7 +248,7 @@ function isActive(href: string) {
   .consult-cta {
     display: inline-flex;
     align-items: center;
-    min-height: 34px;
+    min-height: 44px;
     padding: 0.4rem 0.8rem;
     border: 1px solid var(--ie-ink);
     border-radius: 5px;
@@ -266,7 +266,7 @@ function isActive(href: string) {
   .consult-cta.active {
     border-color: var(--ie-blue);
     background: var(--ie-blue);
-    color: #ffffff;
+    color: var(--ie-surface);
   }
 
   .mobile-nav {
@@ -301,7 +301,7 @@ function isActive(href: string) {
     .mobile-nav summary {
       display: inline-flex;
       min-width: 54px;
-      min-height: 36px;
+      min-height: 44px;
       align-items: center;
       justify-content: center;
       border: 1px solid var(--ie-rule-strong);

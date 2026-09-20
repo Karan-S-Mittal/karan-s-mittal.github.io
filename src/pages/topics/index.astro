@@ -1,0 +1,107 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '@layouts/Layout.astro';
+import PageHeader from '@components/content/PageHeader.astro';
+import { normalizeTag, tagSlug } from '@utils/tags.js';
+
+const allPosts = await getCollection('blog');
+const isDev = import.meta.env.DEV;
+const posts = allPosts.filter((post) => isDev || !post.data.draft);
+
+const tagCounts = posts.reduce<Record<string, number>>((acc, post) => {
+  for (const tag of post.data.tags) {
+    const key = normalizeTag(tag);
+    acc[key] = (acc[key] || 0) + 1;
+  }
+  return acc;
+}, {});
+
+const tags = Object.entries(tagCounts)
+  .filter(([, count]) => count >= 2)
+  .sort((a, b) => b[1] - a[1])
+  .map(([tag, count]) => ({ tag, count }));
+---
+
+<Layout title="Topics index | Karan Mittal" description="Topic archives with at least two published systems essays." robots={tags.length === 0 ? 'noindex, follow' : undefined}>
+  <main class="container tags-page">
+    <PageHeader
+      label="Topics"
+      title="Topics and systems index."
+      description="Topic archives appear after at least two published essays share a subject."
+      count={tags.length}
+      countLabel="topics"
+    />
+
+    {tags.length > 0 ? (
+      <div class="tags-grid">
+        {tags.map(({ tag, count }) => (
+          <a href={`/topics/${tagSlug(tag)}/`} class="tag-card">
+            <span class="tag-name">{tag}</span>
+            <span class="tag-count">{count} essays</span>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p class="empty-state">No topic has enough published material for a useful archive yet. Browse the <a href="/writing">writing index</a> instead.</p>
+    )}
+  </main>
+</Layout>
+
+<style>
+  .tags-page {
+    padding-bottom: clamp(3rem, 6vw, 6rem);
+  }
+
+  .tags-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.85rem;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .tag-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.65rem 1rem;
+    min-height: 44px;
+    border-radius: var(--radius-pill, 999px);
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 120ms ease, background-color 120ms ease, color 120ms ease;
+  }
+
+  .tag-card:hover {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue-soft);
+    color: var(--ie-blue);
+    text-decoration: none;
+  }
+
+  .tag-name {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.8rem;
+    color: var(--ie-ink);
+  }
+
+  .tag-card:hover .tag-name {
+    color: var(--ie-blue);
+  }
+
+  .tag-count {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ie-muted);
+    font-weight: 500;
+  }
+
+  .empty-state {
+    max-width: 58ch;
+    margin-top: 2rem;
+    color: var(--ie-ink-secondary);
+  }
+</style>

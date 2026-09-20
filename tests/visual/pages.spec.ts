@@ -10,29 +10,47 @@ const VIEWPORTS = [
 // below separately checks every generated page without producing 150 baselines.
 const PAGES = [
   { path: '/', name: 'home' },
-  { path: '/publications/', name: 'publications' },
-  { path: '/blog/', name: 'blog-index' },
+  { path: '/writing/', name: 'writing-index' },
   { path: '/work/', name: 'work' },
-  { path: '/talks/', name: 'talks' },
+  { path: '/speaking/', name: 'speaking' },
   { path: '/about/', name: 'about' },
   { path: '/contact/', name: 'contact' },
   { path: '/now/', name: 'now' },
-  { path: '/tags/', name: 'tags' },
-  { path: '/visuals/', name: 'visuals' },
+  { path: '/topics/', name: 'topics' },
+  { path: '/ideas/', name: 'ideas' },
+  { path: '/writing/version-control-stack/', name: 'systems-essay' },
+  { path: '/diagrams/developer-platform-stack/', name: 'diagram-detail' },
 ] as const;
 
 const ROUTES = [
   '/404.html',
   '/',
   '/about/',
-  '/blog/',
   '/contact/',
+  '/ideas/',
+  '/diagrams/code-review-topologies/',
+  '/diagrams/developer-platform-stack/',
+  '/diagrams/semiconductor-traceability/',
   '/now/',
-  '/publications/',
-  '/visuals/',
-  '/tags/',
-  '/talks/',
+  '/speaking/',
+  '/topics/',
   '/work/',
+  '/writing/',
+  '/writing/version-control-stack/',
+] as const;
+
+const LEGACY_REDIRECTS = [
+  { from: '/blog/', to: '/writing/' },
+  { from: '/blog/exploring-version-control/', to: '/writing/version-control-stack/' },
+  { from: '/blog/version-control-stack/', to: '/writing/version-control-stack/' },
+  { from: '/publications/', to: '/writing/' },
+  { from: '/diagrams/', to: '/ideas/' },
+  { from: '/visuals/', to: '/ideas/' },
+  { from: '/visuals/platform-stack/', to: '/diagrams/developer-platform-stack/' },
+  { from: '/visuals/code-review-topologies/', to: '/diagrams/code-review-topologies/' },
+  { from: '/tags/', to: '/topics/' },
+  { from: '/tags/git/', to: '/topics/git/' },
+  { from: '/talks/', to: '/speaking/' },
 ] as const;
 
 for (const vp of VIEWPORTS) {
@@ -55,6 +73,9 @@ for (const vp of VIEWPORTS) {
         viewportWidth: window.innerWidth,
         tocHashes: [...document.querySelectorAll('.toc-link')]
           .filter((link) => link.textContent?.trim().endsWith('#')).length,
+        duplicateIds: [...document.querySelectorAll('[id]')]
+          .map((element) => element.id)
+          .filter((id, index, ids) => ids.indexOf(id) !== index),
         mobileTocOpen: document.querySelector<HTMLDetailsElement>('.post-mobile-toc')?.open ?? false,
       }));
 
@@ -99,6 +120,9 @@ for (const vp of VIEWPORTS) {
         instrumented: document.body.classList.contains('instrumented'),
         tocHashes: [...document.querySelectorAll('.toc-link')]
           .filter((link) => link.textContent?.trim().endsWith('#')).length,
+        duplicateIds: [...document.querySelectorAll('[id]')]
+          .map((element) => element.id)
+          .filter((id, index, ids) => ids.indexOf(id) !== index),
       }));
 
       expect(contract.overflowX, `${route} must not overflow horizontally`).toBe(0);
@@ -107,6 +131,7 @@ for (const vp of VIEWPORTS) {
       expect(contract.unlabeledControls, `${route} must label form controls`).toBe(0);
       expect(contract.instrumented, `${route} must use Instrumented Editorial`).toBe(true);
       expect(contract.tocHashes, `${route} TOC labels must stay clean`).toBe(0);
+      expect(contract.duplicateIds, `${route} must not contain duplicate element IDs`).toEqual([]);
       expect(pageErrors, `${route} must load without browser page errors`).toEqual([]);
       if (vp.name === 'mobile') {
         expect(contract.bodyFont, `${route} mobile body text must be at least 17px`).toBeGreaterThanOrEqual(17);
@@ -124,9 +149,8 @@ test('runtime smoke: homepage boots and theme switches between explicit light/da
 
   expect(pageErrors, 'homepage must not emit browser page errors').toEqual([]);
   await expect(page.locator('#home-title')).toBeVisible();
-  await expect(page.locator('.hero-portrait')).toBeVisible();
   await expect(page.locator('#theme-toggle')).toBeVisible();
-  await expect(page.locator('.note-row')).toHaveCount(3);
+  await expect(page.locator('.note-row')).toHaveCount(1);
 
   const lightCanvas = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ie-canvas').trim());
   expect(lightCanvas.toLowerCase()).toBe('#f8f9fc');
@@ -134,15 +158,22 @@ test('runtime smoke: homepage boots and theme switches between explicit light/da
   await page.locator('#theme-toggle').click();
   await expect.poll(() => page.locator('html').evaluate((element) => element.classList.contains('dark'))).toBe(true);
   const darkCanvas = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ie-canvas').trim());
-  expect(darkCanvas.toLowerCase()).toBe('#0c0a09');
+  expect(darkCanvas.toLowerCase()).toBe('#09090b');
 
   await page.locator('#theme-toggle').click();
   await expect.poll(() => page.locator('html').evaluate((element) => element.classList.contains('dark'))).toBe(false);
 });
 
+for (const redirect of LEGACY_REDIRECTS) {
+  test(`legacy route ${redirect.from} resolves to ${redirect.to}`, async ({ page }) => {
+    await page.goto(redirect.from, { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(new RegExp(`${redirect.to.replaceAll('/', '\\/')}?$`));
+  });
+}
+
 test('mobile navigation and dense figure inspection remain contained', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto('/blog/deterministic-rag-intro/', { waitUntil: 'networkidle' });
+  await page.goto('/writing/version-control-stack/', { waitUntil: 'networkidle' });
 
   const nav = page.locator('.mobile-nav');
   const panel = page.locator('.mobile-nav-panel');
@@ -151,12 +182,13 @@ test('mobile navigation and dense figure inspection remain contained', async ({ 
   await expect(panel).toBeVisible();
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBe(375);
 
-  const figureLink = page.locator('.post-hero-media');
-  await expect(figureLink).toHaveAttribute('target', '_blank');
-  const figureBounds = await figureLink.evaluate((element) => ({
-    clientWidth: element.clientWidth,
-    scrollWidth: element.scrollWidth,
-  }));
-  expect(figureBounds.scrollWidth, 'dense diagrams should be inspectable without shrinking to a thumbnail')
-    .toBeGreaterThan(figureBounds.clientWidth);
+  await nav.locator('summary').click();
+  await expect(panel).toBeHidden();
+  await expect(page.locator('.exhibit')).toHaveCount(2);
+  const figureBounds = await page.locator('.exhibit').first().evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return { left: rect.left, right: rect.right, viewport: window.innerWidth };
+  });
+  expect(figureBounds.left).toBeGreaterThanOrEqual(0);
+  expect(figureBounds.right).toBeLessThanOrEqual(figureBounds.viewport);
 });

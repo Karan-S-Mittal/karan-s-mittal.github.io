@@ -1,0 +1,33 @@
+---
+import VisualPage from '@layouts/VisualPage.astro';
+import SemiconductorTraceabilityGraph from '@components/diagram/SemiconductorTraceabilityGraph.astro';
+
+const title = 'Semiconductor Traceability Graph';
+const description = 'A dependency graph connecting suppliers, material disclosures, PFAS evidence, quality events, and agent-review boundaries.';
+const explanation = 'Read from the physical dependency chain into its evidence records and operational consequences. The lower rail compares a general agent with a distilled reviewer: repeatable, bounded checks can take the specialized path, while missing evidence and novel relationships retain an explicit route to broader reasoning and human review.';
+---
+
+<VisualPage
+  title={title}
+  description={description}
+  explanation={explanation}
+  targetId="semiconductor-traceability-export"
+  filename="semiconductor-traceability-graph"
+  category="GRAPH ENGINEERING"
+  drawingNo="SGR-01"
+>
+  <div class="diagram-scroll">
+    <SemiconductorTraceabilityGraph id="semiconductor-traceability-download" />
+  </div>
+</VisualPage>
+
+<style>
+  .diagram-scroll { width: 100%; }
+
+  @media (max-width: 680px) {
+    .diagram-scroll {
+      width: 760px;
+      max-width: none;
+    }
+  }
+</style>

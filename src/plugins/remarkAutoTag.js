@@ -55,8 +55,9 @@ function buildPattern(entries) {
 }
 
 export function remarkAutoTag() {
-  const lookup = buildLookup(autoTags);
-  const pattern = buildPattern(autoTags);
+  const indexableTags = autoTags.filter((entry) => (entry.count || 0) >= 2);
+  const lookup = buildLookup(indexableTags);
+  const pattern = buildPattern(indexableTags);
 
   if (!pattern) {
     // No tags defined yet; return no-op plugin
@@ -84,7 +85,7 @@ export function remarkAutoTag() {
 
         return {
           type: 'link',
-          url: `/tags/${slug}/`,
+          url: `/topics/${slug}/`,
           data: {
             hProperties: {
               class: 'auto-tag',

@@ -1,0 +1,29 @@
+---
+import VisualPage from '@layouts/VisualPage.astro';
+import CodeReviewTopologies from '@components/diagram/version-control/CodeReviewTopologies.astro';
+
+const title = 'Three Code Review Topologies';
+const description = 'A comparison of review identity and revision flow across branch, Change-Id, and email patch-series workflows.';
+const explanation = 'Read each column as a distinct review topology rather than a maturity ranking. The diagram compares where review identity lives, how revisions are represented, and how accepted work reaches the target history; individual hosting services and projects can vary.';
+---
+
+<VisualPage
+  title={title}
+  description={description}
+  explanation={explanation}
+  targetId="code-review-export"
+  filename="code-review-topologies"
+  category="REVIEW PROTOCOLS"
+  drawingNo="VCS-02"
+>
+  <div class="visual-wrapper">
+    <CodeReviewTopologies id="code-review-diagram" />
+  </div>
+</VisualPage>
+
+<style>
+  .visual-wrapper {
+    width: 100%;
+    padding: 1.5rem 0.5rem;
+  }
+</style>

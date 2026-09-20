@@ -1,0 +1,112 @@
+<div class="site-backdrop" aria-hidden="true">
+  <svg viewBox="0 0 760 620" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path class="trace-edge trace-edge-primary" d="M92 190C174 126 228 118 314 146" />
+    <path class="trace-edge" d="M326 154C397 186 421 247 456 320" />
+    <path class="trace-edge trace-edge-secondary" d="M328 147C437 106 531 111 646 176" />
+    <path class="trace-edge trace-edge-return" d="M642 190C599 273 551 314 470 329" />
+
+    <circle class="trace-halo" cx="315" cy="149" r="42" />
+    <circle class="trace-node trace-node-open" cx="92" cy="190" r="11" />
+    <circle class="trace-node trace-node-primary" cx="315" cy="149" r="13" />
+    <circle class="trace-node trace-node-verified" cx="462" cy="331" r="11" />
+    <circle class="trace-node trace-node-terminal" cx="652" cy="182" r="11" />
+
+    <circle class="trace-pin" cx="315" cy="149" r="3" />
+    <circle class="trace-pin" cx="462" cy="331" r="3" />
+  </svg>
+</div>
+
+<style>
+  .site-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .site-backdrop svg {
+    position: absolute;
+    top: clamp(2rem, 7vh, 5rem);
+    right: max(-17rem, calc((100vw - var(--width-visual)) / 2 - 18rem));
+    width: clamp(34rem, 52vw, 49rem);
+    height: auto;
+    opacity: 0.68;
+    -webkit-mask-image: radial-gradient(ellipse at 58% 40%, black 0%, rgb(0 0 0 / 0.78) 44%, transparent 78%);
+    mask-image: radial-gradient(ellipse at 58% 40%, black 0%, rgb(0 0 0 / 0.78) 44%, transparent 78%);
+  }
+
+  .trace-edge {
+    stroke: var(--ie-rule-strong);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .trace-edge-primary {
+    stroke: var(--ie-blue);
+    stroke-opacity: 0.38;
+  }
+
+  .trace-edge-secondary {
+    stroke-dasharray: 4 7;
+  }
+
+  .trace-edge-return {
+    stroke: var(--ie-verified);
+    stroke-opacity: 0.28;
+  }
+
+  .trace-node,
+  .trace-halo {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .trace-node {
+    fill: var(--ie-canvas);
+    stroke: var(--ie-rule-strong);
+    stroke-width: 1.5;
+  }
+
+  .trace-node-primary {
+    stroke: var(--ie-blue);
+    stroke-opacity: 0.62;
+  }
+
+  .trace-node-verified {
+    stroke: var(--ie-verified);
+    stroke-opacity: 0.52;
+  }
+
+  .trace-halo {
+    fill: none;
+    stroke: var(--ie-blue);
+    stroke-width: 1;
+    stroke-dasharray: 2 8;
+    stroke-opacity: 0.2;
+  }
+
+  .trace-pin {
+    fill: var(--ie-blue);
+    fill-opacity: 0.38;
+  }
+
+  @media (max-width: 720px) {
+    .site-backdrop svg {
+      top: 2.5rem;
+      right: -13rem;
+      width: 34rem;
+      opacity: 0.54;
+    }
+
+    .trace-node-terminal,
+    .trace-edge-secondary,
+    .trace-edge-return {
+      display: none;
+    }
+  }
+
+  @media print {
+    .site-backdrop { display: none; }
+  }
+</style>

@@ -8,7 +8,7 @@ for (const viewport of [{ width: 375, height: 812 }, { width: 1440, height: 900 
     await page.evaluate(() => document.fonts.ready);
     await page.screenshot({ animations: 'disabled', path: testInfo.outputPath('home-light.png') });
     await page.locator('#theme-toggle').click();
-    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(12, 10, 9)');
+    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(9, 9, 11)');
     await page.screenshot({ animations: 'disabled', path: testInfo.outputPath('home-dark.png') });
     await page.locator('#theme-toggle').click();
 

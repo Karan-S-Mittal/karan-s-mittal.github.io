@@ -2,21 +2,25 @@
   {
     "name": "Architecture",
     "slug": "architecture",
+    "count": 1,
     "aliases": []
   },
   {
     "name": "DevOps",
     "slug": "devops",
+    "count": 1,
     "aliases": []
   },
   {
     "name": "Git",
     "slug": "git",
+    "count": 1,
     "aliases": []
   },
   {
     "name": "Systems Engineering",
     "slug": "systems-engineering",
+    "count": 1,
     "aliases": []
   }
 ]

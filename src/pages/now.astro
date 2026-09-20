@@ -4,7 +4,7 @@ import PageHeader from '@components/content/PageHeader.astro';
 import { formatTalkDate } from '@utils/date';
 
 // Bump this date whenever this page's content is edited.
-const lastUpdated = new Date('2026-09-05');
+const lastUpdated = new Date('2026-09-20');
 
 const focusAreas = [
   {
@@ -13,8 +13,8 @@ const focusAreas = [
     status: 'ACTIVE',
     items: [
       { text: 'Co-founding and leading systems engineering at ', link: { text: 'Dextar.co', url: 'https://dextar.co' } },
-      { text: 'Architecting deterministic retrieval and production GraphRAG systems for enterprise scale' },
-      { text: 'Advising on MLOps infrastructure, memory layout bottlenecks, and GPU cluster throughput' },
+      { text: 'Developing systems-engineering advisory and implementation work around retrieval, AI workflows, and delivery' },
+      { text: 'Making public claims and architecture explanations easier to inspect and verify' },
     ],
   },
   {
@@ -22,9 +22,9 @@ const focusAreas = [
     category: 'Building & Open Source',
     status: 'IN PROGRESS',
     items: [
-      { text: 'An open-source deterministic RAG evaluation harness for precision retrieval' },
-      { text: 'A CUDA/PTX memory hierarchy and optimization pattern cookbook for inference' },
-      { text: 'Explanatory visual engines for mechanistically inspectable systems architecture' },
+      { text: 'Expanding a code-first architecture visual library' },
+      { text: 'Publishing a systems essay on version control, review protocols, and CI execution boundaries' },
+      { text: 'Improving the accessibility and evidence discipline of this engineering studio' },
     ],
   },
   {
@@ -32,9 +32,9 @@ const focusAreas = [
     category: 'Research & Systems',
     status: 'EXPLORING',
     items: [
-      { text: 'Kernel bypass and low-latency network I/O in Rust' },
-      { text: 'CPU/GPU co-design and cache-line alignment for high-throughput embedding search' },
-      { text: 'PagedAttention memory fragmentation bounds and speculative decoding runtimes' },
+      { text: 'Git object storage, ref-update boundaries, and packfile mechanics' },
+      { text: 'Code-review protocols across branch, change, and patch-series workflows' },
+      { text: 'CI runner isolation and the boundary between an image definition and a reproducible build' },
     ],
   },
   {
@@ -52,9 +52,9 @@ const focusAreas = [
     category: 'Technical Speaking',
     status: 'UPCOMING',
     items: [
-      { text: 'Preparing deep dives on GraphRAG vs Vector RAG trade-offs for 2026 conferences' },
-      { text: 'Hands-on masterclasses on building deterministic inference engines' },
-      { text: 'View all past and upcoming presentations on the ', link: { text: 'Talks ledger →', url: '/talks' } },
+      { text: 'Maintaining a public ledger of past talks and workshops' },
+      { text: 'Developing future sessions only when the material and event record are ready to publish' },
+      { text: 'View all past and upcoming presentations on the ', link: { text: 'Speaking archive →', url: '/speaking' } },
     ],
   },
 ];
@@ -67,8 +67,8 @@ const focusAreas = [
   <main class="container now-page">
     <PageHeader
       label="Now"
-      title="Current Systems Focus & Priorities."
-      description="A living snapshot of active engineering projects, open-source developments, low-level systems research, and speaking."
+      title="Current systems focus and priorities."
+      description="A living snapshot of current work, public writing, systems research, and community activity."
     />
 
     <div class="now-grid">
@@ -118,33 +118,23 @@ const focusAreas = [
 
   .now-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
+    border-top: 1px solid var(--ie-rule-strong);
     margin-top: clamp(1.5rem, 3vw, 2.5rem);
   }
 
   .now-card {
-    display: flex;
-    flex-direction: column;
-    padding: 1.4rem 1.5rem;
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-card, 8px);
-    background: var(--ie-surface);
-    transition: border-color 140ms ease;
-  }
-
-  .now-card:hover {
-    border-color: var(--ie-rule-strong);
+    display: grid;
+    grid-template-columns: minmax(13rem, 0.68fr) minmax(0, 1.32fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    padding: clamp(1.5rem, 3vw, 2rem) 0;
+    border-bottom: 1px solid var(--ie-rule);
   }
 
   .card-header {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--ie-rule);
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.75rem;
   }
 
   .header-left {
@@ -172,8 +162,7 @@ const focusAreas = [
   .status-pill {
     display: inline-flex;
     align-items: center;
-    padding: 0.15rem 0.55rem;
-    border-radius: var(--radius-pill, 999px);
+    padding: 0;
     font-family: var(--font-mono);
     font-size: var(--ie-type-micro);
     font-weight: 600;
@@ -182,20 +171,16 @@ const focusAreas = [
   }
 
   .status-pill.active {
-    background: var(--ie-blue-soft);
     color: var(--ie-blue);
   }
 
   .status-pill.in-progress {
-    background: var(--ie-rust-soft);
     color: var(--ie-rust);
   }
 
   .status-pill.exploring,
   .status-pill.upcoming {
-    background: var(--ie-surface-raised);
     color: var(--ie-muted);
-    border: 1px solid var(--ie-rule);
   }
 
   .focus-list {
@@ -246,5 +231,16 @@ const focusAreas = [
 
   .now-meta-footer a:hover {
     color: var(--ie-blue);
+  }
+
+  @media (max-width: 680px) {
+    .now-card {
+      grid-template-columns: 1fr;
+      gap: 1.15rem;
+    }
+
+    .card-header {
+      gap: 0.55rem;
+    }
   }
 </style>

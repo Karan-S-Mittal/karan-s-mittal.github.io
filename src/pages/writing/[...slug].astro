@@ -1,0 +1,606 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import Layout from '@layouts/Layout.astro';
+import TableOfContents from '@components/layout/TableOfContents.astro';
+import RelatedPosts from '@components/content/RelatedPosts.astro';
+import PostCTA from '@components/content/PostCTA.astro';
+import { getReadingTime } from '@utils/readingTime';
+import { normalizeTag, tagSlug } from '@utils/tags.js';
+import 'katex/dist/katex.min.css';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.filter((post) => import.meta.env.DEV || !post.data.draft).map((post) => ({
+    params: { slug: post.id },
+    props: post,
+  }));
+}
+
+type Props = CollectionEntry<'blog'>;
+const post = Astro.props;
+const { Content, headings } = await render(post);
+
+const tocHeadings = headings
+  .filter((h) => h.depth >= 2 && h.depth <= 3)
+  .map((h) => ({ ...h, text: h.text.replace(/\s*#\s*$/, '') }));
+const showToc = tocHeadings.length > 2;
+
+const readingTime = getReadingTime(post.body || '');
+
+const publishedPosts = (await getCollection('blog')).filter((entry) => !entry.data.draft);
+const tagCounts = publishedPosts.reduce<Record<string, number>>((counts, entry) => {
+  for (const tag of entry.data.tags) {
+    const key = normalizeTag(tag);
+    counts[key] = (counts[key] || 0) + 1;
+  }
+  return counts;
+}, {});
+
+const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<Layout
+  title={`${post.data.title} | Karan Mittal`}
+  description={post.data.description}
+  type="article"
+  pubDate={post.data.pubDate}
+  image={
+    post.data.image
+      ? new URL(post.data.image, Astro.site).toString()
+      : undefined
+  }
+>
+  <main class="container post-layout instrumented-essay">
+    <article class="post-content">
+      <header class="post-header">
+        <div class="post-header-copy">
+          <div class="post-meta">
+            <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
+            <span aria-hidden="true" class="meta-sep">·</span>
+            <span>{readingTime} min read</span>
+            {post.data.updatedDate && (
+              <>
+                <span aria-hidden="true" class="meta-sep">·</span>
+                <span class="updated">
+                  Updated {post.data.updatedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                </span>
+              </>
+            )}
+          </div>
+
+          {post.data.titleHtml ? (
+            <h1 set:html={post.data.titleHtml} />
+          ) : (
+            <h1>{post.data.title}</h1>
+          )}
+
+          {post.data.description && <p class="post-standfirst">{post.data.description}</p>}
+
+          {post.data.tags.length > 0 && (
+            <div class="post-tags">
+              {post.data.tags.map((tag) => (
+                tagCounts[normalizeTag(tag)] >= 2
+                  ? <a href={`/topics/${tagSlug(tag)}/`} class="tag">{tag}</a>
+                  : <span class="tag">{tag}</span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {post.data.image && (
+          <figure class="post-hero-figure">
+            <a
+              class="post-hero-media"
+              href={post.data.image}
+              target="_blank"
+              rel="noopener"
+              aria-label={`Open full-size figure: ${post.data.heroCaption || post.data.title}`}
+            >
+              <img
+                src={post.data.image}
+                alt={post.data.heroCaption || post.data.title}
+                width="1920"
+                height="1072"
+                class="post-hero-img"
+                loading="eager"
+                decoding="async"
+              />
+            </a>
+            {post.data.heroCaption && (
+              <figcaption class="post-hero-caption">
+                <span class="caption-marker">FIG 00</span>
+                <span>{post.data.heroCaption}</span>
+                <span class="post-hero-hint" aria-hidden="true">Open full-size ↗</span>
+              </figcaption>
+            )}
+          </figure>
+        )}
+      </header>
+
+      {showToc && (
+        <details class="post-mobile-toc">
+          <summary>
+            <span>Article contents</span>
+            <span class="post-mobile-toc-count">{tocHeadings.length} sections</span>
+          </summary>
+          <div class="post-mobile-toc-panel">
+            <TableOfContents headings={tocHeadings} idPrefix="mobile-toc" />
+          </div>
+        </details>
+      )}
+
+      <Content />
+
+      <RelatedPosts post={post} />
+      <PostCTA />
+
+      <footer class="post-footer">
+        <p class="back-link">
+          <a href="/writing/">← All writing</a>
+        </p>
+      </footer>
+    </article>
+
+    {showToc && (
+      <aside class="post-sidebar">
+        <TableOfContents headings={tocHeadings} idPrefix="desktop-toc" />
+      </aside>
+    )}
+  </main>
+</Layout>
+
+<style>
+  .post-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 232px;
+    gap: 2.5rem;
+    max-width: 1280px;
+    padding-inline: 1.5rem;
+    align-items: start;
+  }
+  .post-content {
+    min-width: 0;
+    max-width: none;
+  }
+  .post-sidebar {
+    position: sticky;
+    top: 5rem;
+    align-self: start;
+  }
+  .post-mobile-toc {
+    display: none;
+  }
+
+  .post-header {
+    max-width: 1040px;
+    margin-bottom: 4.5rem;
+    padding: 3.5rem 0 2rem;
+    border-bottom: 1px solid var(--ie-rule-strong);
+    background: transparent;
+  }
+
+  .post-header-copy {
+    max-width: 760px;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
+    letter-spacing: 0.02em;
+    color: var(--ie-muted);
+  }
+  .meta-sep {
+    color: var(--ie-rule-strong);
+  }
+  .updated {
+    color: var(--ie-rust);
+  }
+
+  .post-header h1 {
+    max-width: 28ch;
+    margin: 0 0 1.35rem;
+    color: var(--ie-ink);
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h1);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  .post-standfirst {
+    max-width: 62ch;
+    margin: 0;
+    color: var(--ie-ink-secondary);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-h3);
+    line-height: 1.6;
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+    font-family: var(--font-mono);
+  }
+
+  .post-tags .tag {
+    padding: 0 0 0.15rem;
+    border: 0;
+    border-bottom: 1px solid var(--ie-rule-strong);
+    border-radius: 0;
+    background: transparent;
+    color: var(--ie-muted);
+    font-size: var(--ie-type-label);
+    text-decoration: none;
+    transition: color 120ms ease, border-color 120ms ease;
+  }
+  .post-tags a.tag:hover {
+    color: var(--ie-blue);
+    border-bottom-color: var(--ie-blue);
+  }
+
+  .post-hero-figure {
+    max-width: 1040px;
+    margin: 3rem 0 0;
+    border-radius: 6px;
+    border: 1px solid var(--ie-rule-strong);
+    background: var(--ie-surface);
+    overflow: hidden;
+  }
+
+  .post-hero-media {
+    display: block;
+    overflow-x: auto;
+    color: inherit;
+  }
+
+  .post-hero-img {
+    width: 100%;
+    height: auto;
+    max-height: 440px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .post-hero-caption {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 10px 16px;
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+    border-top: 1px solid var(--ie-rule);
+    background: var(--ie-surface-raised);
+  }
+
+  .caption-marker {
+    font-weight: 700;
+    color: var(--ie-rust);
+    letter-spacing: 0.05em;
+  }
+
+  .post-hero-hint {
+    margin-left: auto;
+    white-space: nowrap;
+    color: var(--ie-blue);
+  }
+
+  .post-footer {
+    max-width: 700px;
+    margin-top: var(--space-8, 4rem);
+    padding-top: var(--space-5, 2rem);
+    border-top: 1px solid var(--ie-rule-strong);
+  }
+  .back-link {
+    margin: 0;
+  }
+  .back-link a {
+    font-size: var(--ie-type-ui);
+    font-weight: 600;
+    color: var(--ie-blue);
+    text-decoration: none;
+    transition: opacity 120ms ease;
+  }
+  .back-link a:hover {
+    opacity: 0.85;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 1100px) {
+    .post-layout {
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 1040px;
+      padding-inline: 1.25rem;
+    }
+    .post-sidebar {
+      display: none;
+    }
+    .post-mobile-toc {
+      display: block;
+      max-width: var(--prose-max-width, 700px);
+      margin: -1rem 0 3rem;
+      border: 1px solid var(--ie-rule);
+      border-radius: var(--radius-sm, 6px);
+      background: var(--ie-surface);
+    }
+    .post-mobile-toc summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      color: var(--ie-ink);
+      font-family: var(--font-sans);
+      font-size: var(--ie-type-micro);
+      font-weight: 600;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+      cursor: pointer;
+      list-style: none;
+    }
+    .post-mobile-toc summary::-webkit-details-marker { display: none; }
+    .post-mobile-toc summary::after {
+      content: '+';
+      color: var(--ie-blue);
+      font-size: var(--ie-type-base);
+    }
+    .post-mobile-toc[open] summary::after { content: '\2212'; }
+    .post-mobile-toc-count {
+      margin-left: auto;
+      color: var(--ie-muted);
+      font-family: var(--font-mono);
+      font-weight: 400;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    .post-mobile-toc-panel {
+      padding: 0 0.75rem 0.75rem;
+    }
+    .post-mobile-toc-panel :global(.toc-root) {
+      max-height: min(60vh, 30rem);
+      border: 0;
+      border-left: 1px solid var(--ie-rule-strong);
+      border-radius: 0;
+      padding: 0.75rem 0 0.75rem 0.75rem;
+      background: transparent;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .post-header {
+      padding-top: 2rem;
+      margin-bottom: 3rem;
+    }
+    .post-header h1 {
+      font-size: clamp(1.6rem, 6.5vw, 2rem);
+      line-height: 1.15;
+    }
+    .post-hero-img {
+      width: 720px;
+      min-width: 720px;
+      max-width: none;
+      max-height: none;
+    }
+    .post-hero-caption {
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .post-hero-hint {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+</style>
+
+<style is:global>
+  /* Prose rules target markdown-rendered content within the instrumented essay. */
+  .instrumented-essay .post-content > :is(p, ul, ol, blockquote, pre, h2, h3, h4, hr, table, .math-card, .formula-note, .katex-display) {
+    max-width: 700px;
+  }
+
+  .instrumented-essay .post-content > :is(.exhibit, .interactive-walkthrough, .verification-wrapper, .verification-ledger, figure) {
+    width: 100%;
+    max-width: 1040px;
+  }
+
+  .instrumented-essay .post-content > p,
+  .instrumented-essay .post-content > :is(ul, ol) li {
+    color: var(--ie-ink-secondary);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-body);
+    line-height: 1.78;
+  }
+
+  .instrumented-essay .post-content > :is(ul, ol) {
+    padding-left: 1.5rem;
+    margin: 1.25rem 0;
+  }
+
+  .instrumented-essay .post-content > :is(ul, ol) li {
+    margin-bottom: 0.45rem;
+  }
+
+  .instrumented-essay .post-content > h2 {
+    margin-top: 5.5rem;
+    padding-top: 1rem;
+    scroll-margin-top: 5.5rem;
+    border-top: 1px solid var(--ie-rule-strong);
+    color: var(--ie-ink);
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h2);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  .instrumented-essay .post-content > h3 {
+    margin-top: 3.25rem;
+    scroll-margin-top: 5.5rem;
+    color: var(--ie-ink);
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h3);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  .instrumented-essay .post-content > h4 {
+    margin: 2rem 0 0.65rem;
+    scroll-margin-top: 5.5rem;
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h4);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--ie-ink);
+  }
+
+  .instrumented-essay .post-content code {
+    font-family: var(--font-mono);
+  }
+
+  .instrumented-essay .post-content > blockquote {
+    margin-block: 2.5rem;
+    padding: 0.2rem 0 0.2rem 1.25rem;
+    border-left: 3px solid var(--ie-rust);
+    background: transparent;
+    color: var(--ie-ink-secondary);
+  }
+
+  .instrumented-essay .post-content > blockquote p {
+    margin: 0;
+    color: var(--ie-ink-secondary);
+    font-size: var(--ie-type-body);
+    line-height: 1.68;
+  }
+
+  .instrumented-essay .post-content .katex-mathml,
+  .instrumented-essay .post-content .katex-mathml math {
+    inline-size: 1px !important;
+    max-inline-size: 1px !important;
+    overflow: hidden !important;
+  }
+  .instrumented-essay .post-content p > .katex:only-child {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .instrumented-essay .post-content .katex-display {
+    margin: var(--space-5, 2rem) 0 var(--space-3, 1rem);
+    padding: var(--space-4, 1.25rem) var(--space-5, 2rem);
+    overflow-x: auto;
+    border: 1px solid var(--ie-rule);
+    border-left: 2px solid var(--ie-blue);
+    border-radius: 4px;
+    background: var(--ie-surface);
+    color: var(--ie-ink);
+  }
+  .instrumented-essay .post-content .katex-display > .katex {
+    min-width: max-content;
+    font-size: 1.1em;
+  }
+
+  /* Table styling: Inter for prose sentences, Mono for code and data tags */
+  .instrumented-essay .post-content table {
+    width: 100%;
+    margin: 2rem 0;
+    border-collapse: collapse;
+    table-layout: auto;
+    border-top: 2px solid var(--ie-ink);
+    border-bottom: 1px solid var(--ie-rule-strong);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-small);
+    line-height: 1.5;
+  }
+
+  .instrumented-essay .post-content th,
+  .instrumented-essay .post-content td {
+    padding: 0.75rem 0.85rem;
+    border-width: 0 0 1px;
+    border-style: solid;
+    border-color: var(--ie-rule);
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .instrumented-essay .post-content th {
+    background: transparent;
+    color: var(--ie-ink);
+    font-weight: 600;
+    font-size: var(--ie-type-micro);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .instrumented-essay .post-content td {
+    color: var(--ie-ink-secondary);
+  }
+
+  .instrumented-essay .post-content table code {
+    font-family: var(--font-mono);
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+
+  .instrumented-essay .post-content .formula-note {
+    margin: 0 0 var(--space-5, 2rem);
+    padding-left: var(--space-3, 1rem);
+    border-left: 1px solid var(--ie-rule);
+    color: var(--ie-muted);
+    font-size: var(--ie-type-ui);
+    line-height: 1.6;
+  }
+
+  .instrumented-essay .post-sidebar .toc-root {
+    position: sticky;
+    top: 5.5rem;
+    padding: 1rem 0 1rem 1rem;
+    border: 0;
+    border-left: 1px solid var(--ie-rule-strong);
+    border-radius: 0;
+    background: transparent;
+  }
+
+  @media (max-width: 640px) {
+    .ex-canvas-frame { padding: 1rem; }
+    .instrumented-essay .post-content .katex-display {
+      padding: var(--space-3, 1rem);
+      font-size: 0.88rem;
+    }
+    .instrumented-essay .post-content .katex-display > .katex {
+      min-width: 0;
+      font-size: 0.95em;
+      white-space: normal;
+    }
+    .instrumented-essay .post-content p > .katex:only-child {
+      font-size: 0.94em;
+    }
+    .instrumented-essay .post-content table {
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .instrumented-essay .post-content th,
+    .instrumented-essay .post-content td {
+      min-width: 10rem;
+      padding: 0.65rem 0.75rem;
+    }
+    .instrumented-essay .post-content > :is(.exhibit, .interactive-walkthrough, .verification-wrapper, .verification-ledger, figure) {
+      min-width: 0;
+      max-width: 100%;
+    }
+  }
+</style>

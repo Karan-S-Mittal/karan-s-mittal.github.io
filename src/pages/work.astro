@@ -2,21 +2,112 @@
 import Layout from '@layouts/Layout.astro';
 import EngagementList from '@components/content/EngagementList.astro';
 import talksData from '@data/talks.json';
+import { externalWriting } from '@data/publications';
 import '@styles/practice.css';
 const workshops = talksData.talks.filter(t => ['agentverse-rag-2026', 'build-with-ai-ips-2025'].includes(t.id));
 ---
 <Layout title="Work & Engagements | Karan Mittal" description="Explore Karan Mittal’s public engineering work, technical workshops, and ways to work together on data, AI, and software problems.">
-  <main class="practice-page">
-    <span class="register">Work & engagements</span><h1>Understand the problem.<br />Take responsibility for the solution.</h1>
-    <p class="lead">I work with organisations on data, AI, and software systems—from investigating a problem to implementing a solution and helping the team own it.</p>
-    <div class="actions"><a class="action" href="/contact">Discuss your problem →</a><a href="#engagements">Ways to work together ↓</a></div>
+  <main class="practice-page work-page">
+    <header class="work-hero">
+      <span class="register">Work &amp; engagements</span>
+      <h1>Understand the problem.<br />Take responsibility for the solution.</h1>
+      <p class="lead">I work with organisations on graph engineering, AI systems, and technical infrastructure—from tracing dependencies and evidence to implementing a solution the team can own.</p>
+      <div class="actions">
+        <a class="action" href="/contact">Discuss your problem &rarr;</a>
+        <a class="action secondary" href="#engagements">Ways to work together &darr;</a>
+      </div>
+    </header>
 
-    <section class="section" aria-labelledby="public-work"><span class="register">01 / Public work</span><h2 id="public-work">Selected workshops and technical sessions.</h2><p class="lead">Hands-on workshops and public teaching covering systems engineering, agent workflows, and practical AI implementations.</p>
-      {workshops.map(talk => <article class="event-row"><div><span class="register">Workshop</span><time datetime={talk.date}>{new Date(talk.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric', timeZone:'UTC' })}</time></div><div><span class="event-meta">{talk.role} / {talk.org}</span><h3>{talk.title}</h3><p>{talk.description}</p><a href={talk.links[0].url} target="_blank" rel="noopener">View the event record ↗</a></div></article>)}
-      <div class="actions"><a href="/talks">More talks & workshops →</a></div>
+    <section class="section" aria-labelledby="public-work">
+      <span class="register">01 / Public work</span>
+      <h2 id="public-work">External publications and public teaching.</h2>
+      <p class="lead">Work published outside this site, alongside workshops and technical sessions with public event records.</p>
+      {externalWriting.map(article => (
+        <article class="event-row">
+          <div>
+            <span class="register">Published article</span>
+            <time datetime={article.pubDate}>{new Date(article.pubDate).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric', timeZone:'UTC' })}</time>
+          </div>
+          <div>
+            <span class="event-meta">Author / {article.publication}</span>
+            <h3>{article.title}</h3>
+            <p>{article.description}</p>
+            <a href={article.href} target="_blank" rel="noopener">Read at {article.publication} &nearr;</a>
+          </div>
+        </article>
+      ))}
+      {workshops.map(talk => (
+        <article class="event-row">
+          <div>
+            <span class="register">Workshop</span>
+            <time datetime={talk.date}>{new Date(talk.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric', timeZone:'UTC' })}</time>
+          </div>
+          <div>
+            <span class="event-meta">{talk.role} / {talk.org}</span>
+            <h3>{talk.title}</h3>
+            <p>{talk.description}</p>
+            <a href={talk.links[0].url} target="_blank" rel="noopener">View the event record &nearr;</a>
+          </div>
+        </article>
+      ))}
+      <div class="actions">
+        <a href="/speaking/">More talks &amp; workshops &rarr;</a>
+      </div>
     </section>
-    <section class="section" id="engagements" aria-labelledby="engagements-heading"><span class="register">02 / Working together</span><h2 id="engagements-heading">Choose the starting point that fits.</h2><p class="lead">The scope follows the problem. We agree on the useful outcome, constraints, and responsibilities before implementation begins.</p><EngagementList /></section>
-    <section class="section" aria-labelledby="practice-heading"><span class="register">03 / Engineering focus</span><h2 id="practice-heading">Technical depth, applied to a useful outcome.</h2><ul class="problem-list"><li><strong>Knowledge & retrieval</strong>Source traceability, retrieval design, and evaluation for teams that need to use scattered information.</li><li><strong>System performance</strong>Profiling, inference paths, and memory or hardware constraints when latency and cost affect the usefulness of a system.</li><li><strong>Delivery & ownership</strong>System boundaries, operational checks, documentation, and handover so the team can maintain what is built.</li></ul></section>
-    <section class="section closing"><h2>What needs to work better?</h2><p class="lead">Describe the problem, who it affects, and what a useful result would look like. You do not need to arrive with a chosen technology or a finished brief.</p><a href="/contact" class="action">Start a conversation →</a></section>
+
+    <section class="section" id="engagements" aria-labelledby="engagements-heading">
+      <span class="register">02 / Working together</span>
+      <h2 id="engagements-heading">Choose the starting point that fits.</h2>
+      <p class="lead">The scope follows the problem. We agree on the useful outcome, constraints, and responsibilities before implementation begins.</p>
+      <p class="scope-note">These are working modes, not case studies or claims about past client outcomes.</p>
+      <EngagementList />
+    </section>
+
+    <section class="section" aria-labelledby="practice-heading">
+      <span class="register">03 / Engineering focus</span>
+      <h2 id="practice-heading">Technical depth, applied to a useful outcome.</h2>
+      <ul class="problem-list">
+        <li>
+          <strong>Graph engineering &amp; traceability</strong>
+          <span>Dependency models, evidence graphs, and explainable decisions across complex technical and organisational systems.</span>
+        </li>
+        <li>
+          <strong>Agent systems &amp; model adaptation</strong>
+          <span>Explicit state, evaluation boundaries, and specialized model paths for work that must remain inspectable.</span>
+        </li>
+        <li>
+          <strong>System performance &amp; ownership</strong>
+          <span>Execution constraints, operational checks, documentation, and handover so the team can maintain what is built.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="section closing">
+      <span class="register">Start a conversation</span>
+      <h2>What needs to work better?</h2>
+      <p class="lead">Describe the problem, who it affects, and what a useful result would look like. You do not need to arrive with a chosen technology or a finished brief.</p>
+      <div class="actions">
+        <a href="/contact" class="action">Start a conversation &rarr;</a>
+      </div>
+    </section>
   </main>
 </Layout>
+
+<style>
+  .scope-note {
+    max-width: 68ch;
+    padding-left: 0.8rem;
+    border-left: 2px solid var(--ie-rule-strong);
+    color: var(--ie-muted);
+    font-size: var(--ie-type-ui);
+  }
+
+  .problem-list li {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .problem-list strong {
+    color: var(--ie-ink);
+  }
+</style>

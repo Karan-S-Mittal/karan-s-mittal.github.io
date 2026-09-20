@@ -10,7 +10,7 @@ Take the supplied flow and create a finished visual. Choose sensible defaults an
 ## The result
 
 - One reusable diagram file in `src/components/diagram/<Name>.astro`.
-- One tiny download route in `src/pages/visuals/<slug>.astro` using `src/layouts/VisualPage.astro` (automatically discovered and listed in `/visuals/`).
+- One tiny download route in `src/pages/diagrams/<slug>.astro` using `src/layouts/VisualPage.astro` (automatically discovered and listed in `/diagrams/`).
 - A short caption and **karansmittal** wordmark inside the artwork, included in every PNG and blog embed.
 - No separate preview page, large page heading, specifications panel, or manual gallery entry needed. The download page is where the visual is inspected.
 
@@ -85,4 +85,4 @@ To embed in a blog, import that same diagram component and render it directly. D
    - Contrast and visual hierarchy preserved across both light and dark themes.
 4. **Deliver**: Return the visual page link and reusable component path, with a short note on verification.
 
-For unusual visual details, consult `docs/diagram-framework.md`; runtime tokens live in `src/styles/global.css`. This skill is the delivery source of truth. Other agents can read this same Markdown file rather than maintaining divergent copies.
+Runtime tokens live in `src/styles/global.css`; existing primitives and reference implementations live in `src/components/diagram/`. This skill is the delivery source of truth. Do not create a second diagram specification that can drift from the implementation.

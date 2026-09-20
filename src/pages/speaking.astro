@@ -1,0 +1,136 @@
+---
+import Layout from '@layouts/Layout.astro';
+import PageHeader from '@components/content/PageHeader.astro';
+import YearGroup from '@components/content/YearGroup.astro';
+import TalkCard from '@components/content/TalkCard.astro';
+import talksData from '@data/talks.json';
+import type { Talk } from '../types/talks';
+
+const talks: Talk[] = talksData.talks;
+
+const sortedTalks = [...talks].sort(
+  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+
+const talksByYear = sortedTalks.reduce<Record<string, Talk[]>>((acc, talk) => {
+  if (!acc[talk.year]) acc[talk.year] = [];
+  acc[talk.year].push(talk);
+  return acc;
+}, {});
+
+const years = Object.keys(talksByYear).sort((a, b) => Number(b) - Number(a));
+---
+
+<Layout title="Speaking and workshops | Karan Mittal" description="A public record of Karan Mittal's talks, workshops, event roles, and supporting event links.">
+  <main class="container speaking-page">
+    <PageHeader
+      label="Speaking"
+      title="Talks, workshops, and masterclasses."
+      description="Selected speaking and teaching contributions across AI, cloud, and software systems. Explore the event records and the communities behind them."
+    />
+
+    <div class="archive-list" id="speaking-timeline">
+      {years.map((year) => (
+        <YearGroup year={year} count={talksByYear[year].length} unit="talk">
+          {talksByYear[year].map((talk) => (
+            <TalkCard
+              talk={talk}
+              searchText={[
+                talk.title,
+                talk.description,
+                talk.event,
+                talk.org,
+                talk.venue,
+                talk.type,
+                ...talk.tags,
+              ].join(' ').toLowerCase()}
+            />
+          ))}
+        </YearGroup>
+      ))}
+    </div>
+
+    <section class="cta-section">
+      <div class="cta-inner">
+        <span class="section-register">Speaking &amp; Workshops</span>
+        <h2>Teaching from direct systems practice</h2>
+        <p>For a conference session or a workshop with your team, tell me about the audience and what you would like them to understand or build.</p>
+        <div class="cta-actions">
+          <a href="/contact" class="ie-action primary">Inquire about speaking <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .speaking-page {
+    padding-bottom: clamp(3rem, 6vw, 6rem);
+  }
+
+  .section-register {
+    display: block;
+    margin-bottom: 0.6rem;
+    color: var(--ie-blue);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-label);
+    font-weight: 600;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+  }
+
+  .cta-section {
+    margin-top: clamp(3rem, 6vw, 5rem);
+  }
+
+  .cta-inner {
+    max-width: 720px;
+    padding-top: clamp(1.5rem, 3vw, 2rem);
+    border-top: 2px solid var(--ie-blue);
+  }
+
+  .cta-inner h2 {
+    margin: 0 0 0.5rem;
+    color: var(--ie-ink);
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h2);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .cta-inner p {
+    margin: 0 0 1.5rem;
+    max-width: 620px;
+    color: var(--ie-ink-secondary);
+    font-size: var(--ie-type-body);
+    line-height: 1.6;
+  }
+
+  .ie-action {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.65rem 1.15rem;
+    border-radius: var(--radius, 4px);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+  }
+
+  .ie-action.primary {
+    border: 1px solid var(--ie-ink);
+    background: var(--ie-ink);
+    color: var(--ie-canvas);
+  }
+
+  .ie-action.primary:hover {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue);
+    color: var(--ie-surface);
+  }
+
+</style>

@@ -1,0 +1,623 @@
+---
+import VisualAttribution from './VisualAttribution.astro';
+
+interface Props {
+  id?: string;
+  class?: string;
+}
+
+const {
+  id = 'semiconductor-traceability-graph',
+  class: className = '',
+} = Astro.props;
+---
+
+<figure id={id} class:list={['semiconductor-traceability-figure', className]}>
+  <svg
+    class="semiconductor-traceability-graph desktop-graph"
+    viewBox="0 0 980 700"
+    role="img"
+    aria-labelledby={`${id}-title ${id}-description`}
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <title id={`${id}-title`}>Semiconductor part, PFAS evidence, and cost-of-quality dependency graph</title>
+    <desc id={`${id}-description`}>
+      Four separated process stages show a semiconductor dependency chain, PFAS evidence review,
+      cost-of-quality consequences, and routing between general, distilled, and human review.
+    </desc>
+
+    <defs>
+      <marker id={`${id}-arrow-blue`} viewBox="0 0 8 8" refX="6.5" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M1.5 1.5 6.5 4 1.5 6.5" fill="none" stroke="var(--ie-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </marker>
+      <marker id={`${id}-arrow-green`} viewBox="0 0 8 8" refX="6.5" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M1.5 1.5 6.5 4 1.5 6.5" fill="none" stroke="var(--ie-verified)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </marker>
+      <marker id={`${id}-arrow-rust`} viewBox="0 0 8 8" refX="6.5" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M1.5 1.5 6.5 4 1.5 6.5" fill="none" stroke="var(--ie-rust)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </marker>
+    </defs>
+
+    <g class="graph-layer graph-layer-1">
+      <text x="24" y="28" class="stage-title">
+        <tspan class="stage-index">01</tspan><tspan dx="12">Dependency structure</tspan>
+      </text>
+
+      <g transform="translate(24 54)">
+        <rect width="170" height="64" rx="8" class="node-surface" />
+        <text x="16" y="28" class="node-title">Supplier S-14</text>
+        <text x="16" y="48" class="node-note">site · qualification</text>
+      </g>
+      <g transform="translate(264 54)">
+        <rect width="170" height="64" rx="8" class="node-surface" />
+        <text x="16" y="28" class="node-title">Material lot C17</text>
+        <text x="16" y="48" class="node-note">compound · batch</text>
+      </g>
+      <g transform="translate(504 54)">
+        <rect width="170" height="64" rx="8" class="node-primary" />
+        <text x="16" y="28" class="node-title">Part P-4821</text>
+        <text x="16" y="48" class="node-note">controlled component</text>
+      </g>
+      <g transform="translate(744 54)">
+        <rect width="212" height="64" rx="8" class="node-surface" />
+        <text x="16" y="28" class="node-title">Controller assembly</text>
+        <text x="16" y="48" class="node-note">line · product family</text>
+      </g>
+
+      <path d="M194 86H258" class="edge-blue" marker-end={`url(#${id}-arrow-blue)`} />
+      <path d="M434 86H498" class="edge-blue" marker-end={`url(#${id}-arrow-blue)`} />
+      <path d="M674 86H738" class="edge-blue" marker-end={`url(#${id}-arrow-blue)`} />
+      <text x="226" y="75" text-anchor="middle" class="edge-label">supplies</text>
+      <text x="466" y="75" text-anchor="middle" class="edge-label">used in</text>
+      <text x="706" y="75" text-anchor="middle" class="edge-label">feeds</text>
+    </g>
+
+    <g class="graph-layer graph-layer-2">
+      <text x="24" y="178" class="stage-title">
+        <tspan class="stage-index">02</tspan><tspan dx="12">PFAS evidence</tspan>
+      </text>
+
+      <g transform="translate(24 204)">
+        <rect width="170" height="64" rx="8" class="node-surface" />
+        <text x="16" y="28" class="node-title">Part + material</text>
+        <text x="16" y="48" class="node-note">identity · supplier · lot</text>
+      </g>
+      <g transform="translate(264 204)">
+        <rect width="170" height="64" rx="8" class="node-surface" />
+        <text x="16" y="28" class="node-title">Supplier evidence</text>
+        <text x="16" y="48" class="node-note">declaration · revision</text>
+      </g>
+      <g transform="translate(504 204)">
+        <rect width="170" height="64" rx="8" class="node-surface" />
+        <text x="16" y="28" class="node-title">PFAS assessment</text>
+        <text x="16" y="48" class="node-note">substance · threshold</text>
+      </g>
+      <g transform="translate(744 204)">
+        <rect width="212" height="64" rx="8" class="node-verified" />
+        <text x="16" y="28" class="node-title">Evidence register</text>
+        <text x="16" y="48" class="node-note">claim · source · confidence</text>
+      </g>
+
+      <path d="M194 236H258" class="edge-green" marker-end={`url(#${id}-arrow-green)`} />
+      <path d="M434 236H498" class="edge-green" marker-end={`url(#${id}-arrow-green)`} />
+      <path d="M674 236H738" class="edge-green" marker-end={`url(#${id}-arrow-green)`} />
+      <text x="226" y="225" text-anchor="middle" class="edge-label">scope</text>
+      <text x="466" y="225" text-anchor="middle" class="edge-label">screen</text>
+      <text x="706" y="225" text-anchor="middle" class="edge-label">record</text>
+    </g>
+
+    <g class="graph-layer graph-layer-3">
+      <text x="24" y="328" class="stage-title">
+        <tspan class="stage-index">03</tspan><tspan dx="12">Cost of quality</tspan>
+      </text>
+
+      <g transform="translate(24 354)">
+        <rect width="170" height="64" rx="8" class="node-constraint" />
+        <text x="16" y="28" class="node-title constraint-text">Evidence gap</text>
+        <text x="16" y="48" class="node-note">unresolved relationship</text>
+      </g>
+      <g transform="translate(264 354)">
+        <rect width="170" height="64" rx="8" class="node-surface" />
+        <text x="16" y="28" class="node-title">Quality event</text>
+        <text x="16" y="48" class="node-note">hold · retest · rework</text>
+      </g>
+      <g transform="translate(504 354)">
+        <rect width="170" height="64" rx="8" class="node-surface" />
+        <text x="16" y="28" class="node-title">Cost attribution</text>
+        <text x="16" y="48" class="node-note">appraisal · failure · delay</text>
+      </g>
+      <g transform="translate(744 354)">
+        <rect width="212" height="64" rx="8" class="node-surface" />
+        <text x="16" y="28" class="node-title">Disposition</text>
+        <text x="16" y="48" class="node-note">release · contain · replace</text>
+      </g>
+
+      <path d="M194 386H258" class="edge-rust" marker-end={`url(#${id}-arrow-rust)`} />
+      <path d="M434 386H498" class="edge-blue" marker-end={`url(#${id}-arrow-blue)`} />
+      <path d="M674 386H738" class="edge-blue" marker-end={`url(#${id}-arrow-blue)`} />
+      <text x="226" y="375" text-anchor="middle" class="edge-label">triggers</text>
+      <text x="466" y="375" text-anchor="middle" class="edge-label">attributes</text>
+      <text x="706" y="375" text-anchor="middle" class="edge-label">informs</text>
+    </g>
+
+    <g class="graph-layer graph-layer-4">
+      <text x="24" y="478" class="stage-title">
+        <tspan class="stage-index">04</tspan><tspan dx="12">Specialized review</tspan>
+      </text>
+
+      <g transform="translate(24 554)">
+        <rect width="170" height="64" rx="8" class="node-surface" />
+        <text x="16" y="28" class="node-title">Review request</text>
+        <text x="16" y="48" class="node-note">part + evidence</text>
+      </g>
+
+      <path d="M194 586H224V546H258" class="edge-blue" marker-end={`url(#${id}-arrow-blue)`} />
+      <path d="M224 586V626H258" class="edge-green" marker-end={`url(#${id}-arrow-green)`} />
+      <circle cx="224" cy="586" r="3" class="junction-blue" />
+      <text x="240" y="534" text-anchor="middle" class="edge-label">novel</text>
+      <text x="241" y="646" text-anchor="middle" class="edge-label">bounded</text>
+
+      <g transform="translate(264 514)">
+        <rect width="170" height="64" rx="8" class="node-primary" />
+        <text x="16" y="28" class="node-title">General agent</text>
+        <text x="16" y="48" class="node-note">broad search</text>
+      </g>
+      <g transform="translate(264 594)">
+        <rect width="170" height="64" rx="8" class="node-specialized" />
+        <text x="16" y="28" class="node-title">Distilled reviewer</text>
+        <text x="16" y="48" class="node-note">bounded · repeatable</text>
+      </g>
+
+      <g transform="translate(504 554)">
+        <rect width="170" height="64" rx="8" class="node-verified" />
+        <text x="16" y="28" class="node-title">Graph-grounded check</text>
+        <text x="16" y="48" class="node-note">relations + evidence</text>
+      </g>
+
+      <path d="M434 546H466V586H498" class="edge-blue" marker-end={`url(#${id}-arrow-blue)`} />
+      <path d="M434 626H466V586H498" class="edge-green" marker-end={`url(#${id}-arrow-green)`} />
+      <circle cx="466" cy="586" r="3" class="junction-green" />
+      <text x="466" y="534" text-anchor="middle" class="edge-label">reason</text>
+      <text x="466" y="646" text-anchor="middle" class="edge-label">repeat</text>
+
+      <g transform="translate(744 514)">
+        <rect width="212" height="64" rx="8" class="node-surface" />
+        <text x="16" y="28" class="node-title">Verified route</text>
+        <text x="16" y="48" class="node-note">decision + trace</text>
+      </g>
+      <g transform="translate(744 594)">
+        <rect width="212" height="64" rx="8" class="node-surface" />
+        <text x="16" y="28" class="node-title">Human review</text>
+        <text x="16" y="48" class="node-note">novel or uncertain</text>
+      </g>
+
+      <path d="M674 586H706V546H738" class="edge-green" marker-end={`url(#${id}-arrow-green)`} />
+      <path d="M674 586H706V626H738" class="edge-rust edge-dashed" marker-end={`url(#${id}-arrow-rust)`} />
+      <circle cx="706" cy="586" r="3" class="junction-green" />
+      <text x="706" y="534" text-anchor="middle" class="edge-label">pass</text>
+      <text x="706" y="646" text-anchor="middle" class="edge-label">escalate</text>
+    </g>
+  </svg>
+
+  <!-- Mobile Focused Stage View: 100% responsive, zero horizontal overflow -->
+  <div class="mobile-stage-view" aria-label="Focused stage view of semiconductor traceability graph">
+    <!-- Stage 01 Mobile Card -->
+    <div class="mobile-stage-card mobile-stage-1">
+      <div class="mobile-stage-header">
+        <span class="mobile-stage-num">01</span>
+        <span class="mobile-stage-name">Dependency structure</span>
+      </div>
+      <svg class="mobile-stage-svg" viewBox="0 0 340 148" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+        <defs>
+          <marker id={`${id}-m1-arr-blue`} viewBox="0 0 8 8" refX="6.5" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M1.5 1.5 6.5 4 1.5 6.5" fill="none" stroke="var(--ie-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </marker>
+        </defs>
+        <g transform="translate(8 12)">
+          <rect width="144" height="48" rx="6" class="node-surface" />
+          <text x="12" y="22" class="node-title">Supplier S-14</text>
+          <text x="12" y="38" class="node-note">site · qualification</text>
+        </g>
+        <path d="M152 36 H180" class="edge-blue" marker-end={`url(#${id}-m1-arr-blue)`} />
+        <text x="166" y="28" text-anchor="middle" class="edge-label">supplies</text>
+        <g transform="translate(188 12)">
+          <rect width="144" height="48" rx="6" class="node-surface" />
+          <text x="12" y="22" class="node-title">Material lot C17</text>
+          <text x="12" y="38" class="node-note">compound · batch</text>
+        </g>
+        <path d="M260 60 V74 H80 V84" class="edge-blue" marker-end={`url(#${id}-m1-arr-blue)`} />
+        <text x="170" y="71" text-anchor="middle" class="edge-label">used in</text>
+        <g transform="translate(8 84)">
+          <rect width="144" height="48" rx="6" class="node-primary" />
+          <text x="12" y="22" class="node-title">Part P-4821</text>
+          <text x="12" y="38" class="node-note">controlled component</text>
+        </g>
+        <path d="M152 108 H180" class="edge-blue" marker-end={`url(#${id}-m1-arr-blue)`} />
+        <text x="166" y="100" text-anchor="middle" class="edge-label">feeds</text>
+        <g transform="translate(188 84)">
+          <rect width="144" height="48" rx="6" class="node-surface" />
+          <text x="12" y="22" class="node-title">Controller assembly</text>
+          <text x="12" y="38" class="node-note">line · product family</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Stage 02 Mobile Card -->
+    <div class="mobile-stage-card mobile-stage-2">
+      <div class="mobile-stage-header">
+        <span class="mobile-stage-num">02</span>
+        <span class="mobile-stage-name">PFAS evidence</span>
+      </div>
+      <svg class="mobile-stage-svg" viewBox="0 0 340 148" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+        <defs>
+          <marker id={`${id}-m2-arr-green`} viewBox="0 0 8 8" refX="6.5" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M1.5 1.5 6.5 4 1.5 6.5" fill="none" stroke="var(--ie-verified)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </marker>
+        </defs>
+        <g transform="translate(8 12)">
+          <rect width="144" height="48" rx="6" class="node-surface" />
+          <text x="12" y="22" class="node-title">Part + material</text>
+          <text x="12" y="38" class="node-note">identity · supplier · lot</text>
+        </g>
+        <path d="M152 36 H180" class="edge-green" marker-end={`url(#${id}-m2-arr-green)`} />
+        <text x="166" y="28" text-anchor="middle" class="edge-label">scope</text>
+        <g transform="translate(188 12)">
+          <rect width="144" height="48" rx="6" class="node-surface" />
+          <text x="12" y="22" class="node-title">Supplier evidence</text>
+          <text x="12" y="38" class="node-note">declaration · revision</text>
+        </g>
+        <path d="M260 60 V74 H80 V84" class="edge-green" marker-end={`url(#${id}-m2-arr-green)`} />
+        <text x="170" y="71" text-anchor="middle" class="edge-label">screen</text>
+        <g transform="translate(8 84)">
+          <rect width="144" height="48" rx="6" class="node-surface" />
+          <text x="12" y="22" class="node-title">PFAS assessment</text>
+          <text x="12" y="38" class="node-note">substance · threshold</text>
+        </g>
+        <path d="M152 108 H180" class="edge-green" marker-end={`url(#${id}-m2-arr-green)`} />
+        <text x="166" y="100" text-anchor="middle" class="edge-label">record</text>
+        <g transform="translate(188 84)">
+          <rect width="144" height="48" rx="6" class="node-verified" />
+          <text x="12" y="22" class="node-title">Evidence register</text>
+          <text x="12" y="38" class="node-note">claim · confidence</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Stage 03 Mobile Card -->
+    <div class="mobile-stage-card mobile-stage-3">
+      <div class="mobile-stage-header">
+        <span class="mobile-stage-num">03</span>
+        <span class="mobile-stage-name">Cost of quality</span>
+      </div>
+      <svg class="mobile-stage-svg" viewBox="0 0 340 148" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+        <defs>
+          <marker id={`${id}-m3-arr-blue`} viewBox="0 0 8 8" refX="6.5" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M1.5 1.5 6.5 4 1.5 6.5" fill="none" stroke="var(--ie-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </marker>
+          <marker id={`${id}-m3-arr-rust`} viewBox="0 0 8 8" refX="6.5" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M1.5 1.5 6.5 4 1.5 6.5" fill="none" stroke="var(--ie-rust)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </marker>
+        </defs>
+        <g transform="translate(8 12)">
+          <rect width="144" height="48" rx="6" class="node-constraint" />
+          <text x="12" y="22" class="node-title constraint-text">Evidence gap</text>
+          <text x="12" y="38" class="node-note">unresolved relationship</text>
+        </g>
+        <path d="M152 36 H180" class="edge-rust" marker-end={`url(#${id}-m3-arr-rust)`} />
+        <text x="166" y="28" text-anchor="middle" class="edge-label">triggers</text>
+        <g transform="translate(188 12)">
+          <rect width="144" height="48" rx="6" class="node-surface" />
+          <text x="12" y="22" class="node-title">Quality event</text>
+          <text x="12" y="38" class="node-note">hold · retest · rework</text>
+        </g>
+        <path d="M260 60 V74 H80 V84" class="edge-blue" marker-end={`url(#${id}-m3-arr-blue)`} />
+        <text x="170" y="71" text-anchor="middle" class="edge-label">attributes</text>
+        <g transform="translate(8 84)">
+          <rect width="144" height="48" rx="6" class="node-surface" />
+          <text x="12" y="22" class="node-title">Cost attribution</text>
+          <text x="12" y="38" class="node-note">failure · delay</text>
+        </g>
+        <path d="M152 108 H180" class="edge-blue" marker-end={`url(#${id}-m3-arr-blue)`} />
+        <text x="166" y="100" text-anchor="middle" class="edge-label">informs</text>
+        <g transform="translate(188 84)">
+          <rect width="144" height="48" rx="6" class="node-surface" />
+          <text x="12" y="22" class="node-title">Disposition</text>
+          <text x="12" y="38" class="node-note">release · contain · replace</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Stage 04 Mobile Card -->
+    <div class="mobile-stage-card mobile-stage-4">
+      <div class="mobile-stage-header">
+        <span class="mobile-stage-num">04</span>
+        <span class="mobile-stage-name">Specialized review</span>
+      </div>
+      <svg class="mobile-stage-svg" viewBox="0 0 340 156" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+        <defs>
+          <marker id={`${id}-m4-arr-blue`} viewBox="0 0 8 8" refX="6.5" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M1.5 1.5 6.5 4 1.5 6.5" fill="none" stroke="var(--ie-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </marker>
+          <marker id={`${id}-m4-arr-green`} viewBox="0 0 8 8" refX="6.5" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M1.5 1.5 6.5 4 1.5 6.5" fill="none" stroke="var(--ie-verified)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </marker>
+        </defs>
+        <g transform="translate(8 52)">
+          <rect width="90" height="48" rx="6" class="node-surface" />
+          <text x="8" y="22" class="node-title">Review req</text>
+          <text x="8" y="38" class="node-note">part + evidence</text>
+        </g>
+        <path d="M98 66 H112 V30 H120" class="edge-blue" marker-end={`url(#${id}-m4-arr-blue)`} />
+        <path d="M98 86 H112 V122 H120" class="edge-green" marker-end={`url(#${id}-m4-arr-green)`} />
+        <g transform="translate(122 8)">
+          <rect width="108" height="44" rx="6" class="node-primary" />
+          <text x="8" y="20" class="node-title">General agent</text>
+          <text x="8" y="34" class="node-note">broad search</text>
+        </g>
+        <g transform="translate(122 100)">
+          <rect width="108" height="44" rx="6" class="node-specialized" />
+          <text x="8" y="20" class="node-title">Distilled rev</text>
+          <text x="8" y="34" class="node-note">bounded repeat</text>
+        </g>
+        <path d="M230 30 H238 V66 H246" class="edge-blue" marker-end={`url(#${id}-m4-arr-blue)`} />
+        <path d="M230 122 H238 V86 H246" class="edge-green" marker-end={`url(#${id}-m4-arr-green)`} />
+        <g transform="translate(248 52)">
+          <rect width="84" height="48" rx="6" class="node-verified" />
+          <text x="8" y="22" class="node-title">Check</text>
+          <text x="8" y="38" class="node-note">verified route</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="diagram-signature"><VisualAttribution /></div>
+  <figcaption>
+    Four complete process stages connect semiconductor dependencies to PFAS evidence,
+    quality cost, and the boundary between general, specialized, and human review.
+  </figcaption>
+</figure>
+
+<style>
+  .semiconductor-traceability-figure {
+    position: relative;
+    width: 100%;
+    margin: 0;
+  }
+
+  .semiconductor-traceability-graph {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .stage-title,
+  .node-title,
+  .node-note,
+  .edge-label {
+    font-family: var(--font-diagram);
+  }
+
+  .stage-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    fill: var(--ie-ink);
+  }
+
+  .stage-index {
+    fill: var(--ie-blue);
+    font-weight: 700;
+  }
+
+  .node-title {
+    font-size: 12.5px;
+    font-weight: 600;
+    fill: var(--ie-ink);
+  }
+
+  .node-note {
+    font-size: 10.5px;
+    fill: var(--ie-muted);
+  }
+
+  .edge-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    fill: var(--ie-ink-secondary);
+  }
+
+  .node-surface,
+  .node-primary,
+  .node-specialized,
+  .node-verified,
+  .node-constraint {
+    stroke-width: 1.5;
+  }
+
+  .node-surface {
+    fill: var(--ie-surface);
+    stroke: var(--ie-rule-strong);
+  }
+
+  .node-primary {
+    fill: var(--ie-blue-soft);
+    stroke: var(--ie-blue);
+  }
+
+  .node-specialized,
+  .node-verified {
+    fill: var(--ie-verified-soft);
+    stroke: var(--ie-verified);
+  }
+
+  .node-constraint {
+    fill: var(--ie-rust-soft);
+    stroke: var(--ie-rust);
+  }
+
+  .constraint-text { fill: var(--ie-rust); }
+
+  .edge-blue,
+  .edge-green,
+  .edge-rust {
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .edge-blue { stroke: var(--ie-blue); }
+  .edge-green { stroke: var(--ie-verified); }
+  .edge-rust { stroke: var(--ie-rust); }
+  .edge-dashed { stroke-dasharray: 5 5; }
+
+  .junction-blue { fill: var(--ie-blue); }
+  .junction-green { fill: var(--ie-verified); }
+
+  .diagram-signature {
+    position: absolute;
+    right: 0.35rem;
+    bottom: 2.55rem;
+  }
+
+  figcaption {
+    max-width: 72ch;
+    margin: 0.8rem 0 0;
+    color: var(--ie-muted);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-label);
+    line-height: 1.55;
+  }
+
+  .graph-layer {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Interactive story visual states */
+  /* 1. Upcoming stages: ghosted */
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='1']) .graph-layer-2,
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='1']) .graph-layer-3,
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='1']) .graph-layer-4,
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='2']) .graph-layer-3,
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='2']) .graph-layer-4,
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='3']) .graph-layer-4 {
+    opacity: 0.10;
+    transform: translateY(4px);
+    pointer-events: none;
+  }
+
+  /* 2. Completed prior stages: receded context */
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='2']) .graph-layer-1,
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='3']) .graph-layer-1,
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='3']) .graph-layer-2,
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='4']) .graph-layer-1,
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='4']) .graph-layer-2,
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='4']) .graph-layer-3 {
+    opacity: 0.45;
+  }
+
+  /* 3. Active stage: fully emphasized */
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='1']) .graph-layer-1,
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='2']) .graph-layer-2,
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='3']) .graph-layer-3,
+  :global(.semiconductor-story[data-enhanced='true'][data-stage='4']) .graph-layer-4 {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Mobile Focused Stage View Styling */
+  .mobile-stage-view {
+    display: none;
+    width: 100%;
+  }
+
+  .mobile-stage-card {
+    display: none;
+    width: 100%;
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule-strong);
+    border-radius: var(--radius, 6px);
+    padding: 0.65rem 0.6rem 0.5rem;
+  }
+
+  .mobile-stage-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--ie-rule);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-label);
+  }
+
+  .mobile-stage-num {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--ie-blue);
+  }
+
+  .mobile-stage-name {
+    font-weight: 600;
+    color: var(--ie-ink);
+    letter-spacing: -0.01em;
+  }
+
+  .mobile-stage-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 840px) {
+    /* 1. Enhanced state with JS: focused single-card switching */
+    :global(.semiconductor-story[data-enhanced='true']) .desktop-graph {
+      display: none;
+    }
+
+    :global(.semiconductor-story[data-enhanced='true']) .mobile-stage-view {
+      display: block;
+    }
+
+    :global(.semiconductor-story[data-enhanced='true'][data-stage='1']) .mobile-stage-1,
+    :global(.semiconductor-story[data-enhanced='true'][data-stage='2']) .mobile-stage-2,
+    :global(.semiconductor-story[data-enhanced='true'][data-stage='3']) .mobile-stage-3,
+    :global(.semiconductor-story[data-enhanced='true'][data-stage='4']) .mobile-stage-4 {
+      display: block;
+    }
+
+    :global(.semiconductor-story[data-enhanced='true']) .diagram-signature,
+    :global(.semiconductor-story[data-enhanced='true']) figcaption {
+      display: none;
+    }
+
+    /* 2. Non-JS fallback: render all 4 stage cards in sequence */
+    :global(.semiconductor-story:not([data-enhanced='true'])) .desktop-graph {
+      display: none;
+    }
+
+    :global(.semiconductor-story:not([data-enhanced='true'])) .mobile-stage-view {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    :global(.semiconductor-story:not([data-enhanced='true'])) .mobile-stage-card {
+      display: block;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .stage-title { font-size: 14px; }
+    .node-title { font-size: 13px; }
+    .node-note,
+    .edge-label { font-size: 11px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .graph-layer { transition: none; }
+  }
+</style>

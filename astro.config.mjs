@@ -5,7 +5,6 @@ import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { remarkAutoTag } from './src/plugins/remarkAutoTag.js';
 import fs from 'node:fs';
 import fg from 'fast-glob';
@@ -25,7 +24,7 @@ for (const file of fg.sync('src/content/blog/*.mdx', { ignore: ['src/content/blo
 const indexableTagPaths = new Set(
   [...tagCounts]
     .filter(([, count]) => count >= 2)
-    .map(([tag]) => `/tags/${tagSlug(tag)}/`),
+    .map(([tag]) => `/topics/${tagSlug(tag)}/`),
 );
 
 // GitHub Pages user site config
@@ -42,7 +41,10 @@ export default defineConfig({
     sitemap({
       filter: (page) => {
         const pathname = new URL(page).pathname;
-        if (/^\/tags\/[^/]+\/$/.test(pathname)) return indexableTagPaths.has(pathname);
+        if (pathname === '/diagrams/') return false;
+        if (pathname === '/topics/') return indexableTagPaths.size > 0;
+        if (/^\/topics\/[^/]+\/$/.test(pathname)) return indexableTagPaths.has(pathname);
+        if (/^\/(?:blog|visuals|talks|tags|publications)(?:\/.*)?\/?$/.test(pathname)) return false;
         return !/^\/(?:contact|now|studio(?:\/.*)?|case-studies\/soft-architecture)\/?$/.test(pathname);
       },
     }),
@@ -54,15 +56,6 @@ export default defineConfig({
       rehypePlugins: [
         rehypeSlug,
         rehypeKatex,
-        // Astro already slugs headings; this makes them linkable (spec §16 ethos)
-        [
-          rehypeAutolinkHeadings,
-          {
-            behavior: 'append',
-            properties: { class: 'heading-anchor', ariaHidden: true, tabIndex: -1 },
-            content: { type: 'text', value: '#' },
-          },
-        ],
       ],
     }),
     shikiConfig: {

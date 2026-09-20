@@ -63,11 +63,11 @@ const { id = 'code-review-topologies' } = Astro.props;
         </div>
         <div class="metric-row">
           <span class="metric-label">State Tracking</span>
-          <span class="metric-val">Ephemeral branch ref</span>
+          <span class="metric-val">Branch pair + platform record</span>
         </div>
         <div class="metric-row">
           <span class="metric-label">Bisection Hygiene</span>
-          <span class="metric-val warn">Requires post-squash</span>
+          <span class="metric-val warn">Depends on merge strategy</span>
         </div>
       </div>
     </div>
@@ -106,14 +106,14 @@ const { id = 'code-review-topologies' } = Astro.props;
             <text x="0" y="42" font-family="var(--font-mono)" font-size="7" fill="var(--ie-muted)" text-anchor="middle">Draft</text>
           </g>
 
-          <text x="120" y="118" font-family="var(--font-mono)" font-size="8" fill="var(--ie-muted)" text-anchor="middle">Unique Change-Id per atomic commit</text>
+          <text x="120" y="118" font-family="var(--font-mono)" font-size="8" fill="var(--ie-muted)" text-anchor="middle">Change-Id links successive patch sets</text>
         </svg>
       </div>
 
       <div class="metrics-list">
         <div class="metric-row">
           <span class="metric-label">Review Unit</span>
-          <span class="metric-val">Single atomic commit</span>
+          <span class="metric-val">One change across patch sets</span>
         </div>
         <div class="metric-row">
           <span class="metric-label">State Tracking</span>
@@ -121,7 +121,7 @@ const { id = 'code-review-topologies' } = Astro.props;
         </div>
         <div class="metric-row">
           <span class="metric-label">Bisection Hygiene</span>
-          <span class="metric-val good">Deterministic 100%</span>
+          <span class="metric-val good">Commit-scoped review</span>
         </div>
       </div>
     </div>
@@ -146,14 +146,14 @@ const { id = 'code-review-topologies' } = Astro.props;
           <rect x="40" y="82" width="175" height="24" rx="3" fill="var(--ie-surface-raised)" stroke="var(--ie-rule)" />
           <text x="50" y="97" font-family="var(--font-mono)" font-size="8" fill="var(--ie-ink-secondary)">[PATCH 2/2] doc: update</text>
 
-          <text x="120" y="122" font-family="var(--font-mono)" font-size="8" fill="var(--ie-verified)" text-anchor="middle">Maintainer: git am mbox</text>
+          <text x="120" y="122" font-family="var(--font-mono)" font-size="8" fill="var(--ie-verified)" text-anchor="middle">Maintainer may apply an mbox</text>
         </svg>
       </div>
 
       <div class="metrics-list">
         <div class="metric-row">
           <span class="metric-label">Review Unit</span>
-          <span class="metric-val">Plain-text RFC diff</span>
+          <span class="metric-val">Patch or patch series</span>
         </div>
         <div class="metric-row">
           <span class="metric-label">State Tracking</span>
@@ -161,7 +161,7 @@ const { id = 'code-review-topologies' } = Astro.props;
         </div>
         <div class="metric-row">
           <span class="metric-label">Bisection Hygiene</span>
-          <span class="metric-val good">Preserved via series</span>
+          <span class="metric-val good">Depends on accepted commits</span>
         </div>
       </div>
     </div>

@@ -20,19 +20,19 @@ const { id = 'platform-stack-hierarchy' } = Astro.props;
     <div class="stack-layer layer-ai">
       <div class="layer-badge">
         <span class="layer-num">04</span>
-        <span class="layer-name">AI & Cloud Dev Environments</span>
+        <span class="layer-name">Optional Development Environments</span>
       </div>
       <div class="layer-cards">
-        <div class="stack-pill highlight">GitHub Codespaces (Ephemeral VMs)</div>
-        <div class="stack-pill highlight">GitHub Copilot & Agentic CLI</div>
-        <div class="stack-pill">Remote SSH Daemons</div>
-        <div class="stack-pill">Dev Container Runtimes</div>
+        <div class="stack-pill highlight">Remote Workspaces</div>
+        <div class="stack-pill highlight">Development Containers</div>
+        <div class="stack-pill">Remote Editor Services</div>
+        <div class="stack-pill">Workspace Lifecycle Controls</div>
       </div>
     </div>
 
     <div class="stack-connector">
       <span class="connector-line"></span>
-      <span class="connector-text">Operates against workspace context</span>
+      <span class="connector-text">Adds an optional working environment</span>
       <span class="connector-line"></span>
     </div>
 
@@ -43,16 +43,16 @@ const { id = 'platform-stack-hierarchy' } = Astro.props;
         <span class="layer-name">Automation & Artifact Delivery</span>
       </div>
       <div class="layer-cards">
-        <div class="stack-pill">GitHub Actions / GitLab CI (Event-Driven Daemons)</div>
-        <div class="stack-pill">Packages & OCI Container Registry</div>
-        <div class="stack-pill">GitHub Pages (Static Edge CDN)</div>
-        <div class="stack-pill">Deployments & Secret Vaults</div>
+        <div class="stack-pill">Workflow Scheduler & Runner Queue</div>
+        <div class="stack-pill">Package & OCI Registries</div>
+        <div class="stack-pill">Build Logs, Caches & Artifacts</div>
+        <div class="stack-pill">Deployment & Secret Distribution</div>
       </div>
     </div>
 
     <div class="stack-connector">
       <span class="connector-line"></span>
-      <span class="connector-text">Executes on commits, tags, and PR events</span>
+      <span class="connector-text">Reacts to repository and review events</span>
       <span class="connector-line"></span>
     </div>
 
@@ -84,7 +84,7 @@ const { id = 'platform-stack-hierarchy' } = Astro.props;
       </div>
       <div class="layer-cards">
         <div class="stack-pill foundation">Git Repositories (Bare Remotes)</div>
-        <div class="stack-pill foundation">Merkle Tree DAG (Blobs, Trees, Commits)</div>
+        <div class="stack-pill foundation">Objects (Blobs, Trees, Commits, Tags)</div>
         <div class="stack-pill foundation">Reference Pointers (Branches, Tags, HEAD)</div>
         <div class="stack-pill foundation">Packfiles & Delta Compression (.pack, .idx)</div>
       </div>

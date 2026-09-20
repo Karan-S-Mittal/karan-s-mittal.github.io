@@ -1,13 +1,13 @@
 ---
 /**
  * PrimaryVerification.astro
- * Publication-grade Primary Citation & Ground Truth verification grid.
- * Adheres to the Explanatory Systems Studio Verification Standard.
+ * Streamlined, publication-grade Primary Citation & Verification Ledger.
+ * Ruled, high-density table linking claims to authoritative primary sources.
  */
 
 export interface CitationItem {
   id: string;
-  badge: string;
+  badge?: string;
   claim: string;
   source?: string;
   authors?: string;
@@ -23,442 +23,233 @@ interface Props {
   items?: CitationItem[];
 }
 
-const defaultCitations: CitationItem[] = [
-  {
-    id: "01",
-    badge: "RUNTIME DESIGN DOC",
-    claim: "Scalable M:N work-stealing runtime scheduler with 256-entry lock-free local runqueues and network poller integration.",
-    authors: "Dmitry Vyukov",
-    sourceTitle: "Scalable Go Scheduler Design Document",
-    sourceAnchor: "src/runtime/proc.go:findrunnable()",
-    permalink: "https://golang.org/s/go15subslice"
-  },
-  {
-    id: "02",
-    badge: "GO PROPOSAL / RFC",
-    claim: "Asynchronous non-cooperative Goroutine preemption via POSIX SIGURG signal interruption.",
-    authors: "Austin Clements",
-    sourceTitle: "Proposal: Non-cooperative Goroutine Preemption",
-    sourceAnchor: "src/runtime/signal_unix.go:signalM()",
-    permalink: "https://go.googlesource.com/proposal/+/master/design/24543-non-cooperative-preemption.md"
-  },
-  {
-    id: "03",
-    badge: "GC SPECIFICATION",
-    claim: "Concurrent Tri-Color Mark-Sweep with Hybrid Write Barrier eliminating STW stack rescans.",
-    authors: "Austin Clements & Rick Hudson",
-    sourceTitle: "Go 1.8 Hybrid Write Barrier Technical Specification",
-    sourceAnchor: "src/runtime/mgcwork.go:gcWriteBarrier()",
-    permalink: "https://github.com/golang/proposal/blob/master/design/17503-eliminate-rescan.md"
-  },
-  {
-    id: "04",
-    badge: "ALLOCATOR ARCHITECTURE",
-    claim: "TCMalloc-derived thread-caching allocator with 67 discrete size classes and zero-lock local mcache fast path.",
-    authors: "Sanjay Ghemawat & Paul Menage",
-    sourceTitle: "TCMalloc: Thread-Caching Malloc Architecture",
-    sourceAnchor: "src/runtime/malloc.go:mallocgc()",
-    permalink: "https://github.com/google/tcmalloc"
-  },
-  {
-    id: "05",
-    badge: "COMMIT PERMALINK",
-    claim: "Go 1.24 SwissTable hash map implementation with 16-byte metadata control groups probed via 128-bit SIMD vector instructions.",
-    authors: "Keith Randall & Michael Pratt",
-    sourceTitle: "runtime: replace map implementation with SwissTable (Go 1.24)",
-    sourceAnchor: "src/runtime/map_swiss.go:probe()",
-    permalink: "https://go.dev/cl/543335"
-  },
-  {
-    id: "06",
-    badge: "LANGUAGE SPEC",
-    claim: "Zero-allocation range-over-function iterators (iter.Seq) with inlined yield closures.",
-    authors: "Russ Cox",
-    sourceTitle: "Go 1.22/1.23 Iterator Specification (Range-over-Func)",
-    sourceAnchor: "src/runtime/iter.go:rangeFunc()",
-    permalink: "https://go.dev/wiki/Rangefunc"
-  }
-];
-
-const rawCitations = Astro.props.citations || Astro.props.items || defaultCitations;
+const rawCitations = Astro.props.citations || Astro.props.items || [];
 const citations = rawCitations.map((c) => ({
   id: c.id,
-  badge: c.badge || 'VERIFIED SOURCE',
   claim: c.claim,
   source: c.source || c.authors || 'Primary Source',
   title: c.title || c.sourceTitle || 'Official Specification',
   url: c.url || c.permalink || '#',
-  anchor: c.anchor || c.sourceAnchor,
+  anchor: c.anchor,
 }));
 ---
 
-<div class="verification-wrapper">
-  <div class="verification-header">
-    <div class="vh-badge-group">
-      <span class="vh-dot" aria-hidden="true"></span>
-      <span class="vh-tag">PRIMARY CITATIONS &amp; VERIFICATIONS</span>
-    </div>
-    <p class="vh-subtitle">
-      Every architectural claim, memory metric, and runtime algorithm is verified against primary source code, RFCs, and vendor specifications.
-    </p>
+<div class="citation-ledger" aria-labelledby="citation-ledger-title">
+  <div class="citation-ledger-head">
+    <span class="citation-ledger-eyebrow">Evidence Ledger</span>
+    <h3 id="citation-ledger-title" class="citation-ledger-title">Primary source citations &amp; verifications</h3>
   </div>
 
-  <div class="verification-grid">
-    {citations.map((c) => (
-      <article class="citation-card">
-        <div class="citation-top">
-          <span class="citation-id">[{c.id}]</span>
-          <span class="citation-badge">{c.badge}</span>
-        </div>
-
-        <p class="citation-claim">{c.claim}</p>
-
-        <div class="citation-meta">
-          <div class="citation-author-row">
-            <span class="citation-author">{c.source}</span>
-            <span class="citation-sep" aria-hidden="true">&middot;</span>
-            <span class="citation-title">{c.title}</span>
-          </div>
-
-          {c.anchor && (
-            <div class="citation-anchor-row">
-              <span class="citation-anchor-label">Anchor:</span>
-              <code class="citation-anchor-code">{c.anchor}</code>
-            </div>
-          )}
-        </div>
-
-        <div class="citation-action">
-          <a
-            href={c.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="citation-link"
-          >
-            <span>Verify Primary Source</span>
-            <svg class="citation-link-icon" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </a>
-        </div>
-      </article>
-    ))}
+  <div class="citation-table-wrap">
+    <table class="citation-table">
+      <thead>
+        <tr>
+          <th scope="col" class="col-ref">Ref</th>
+          <th scope="col" class="col-source">Primary Source</th>
+          <th scope="col" class="col-claim">Verified Claim / Invariant</th>
+        </tr>
+      </thead>
+      <tbody>
+        {citations.map((c) => (
+          <tr>
+            <td class="cell-ref">[{c.id}]</td>
+            <td class="cell-source">
+              <a href={c.url} target="_blank" rel="noopener noreferrer" class="citation-link">
+                <span class="citation-title">{c.title}</span>
+                <span class="citation-arrow" aria-hidden="true">↗</span>
+              </a>
+              <div class="citation-meta">
+                <span class="citation-author">{c.source}</span>
+                {c.anchor && (
+                  <>
+                    <span class="citation-sep" aria-hidden="true">·</span>
+                    <code class="citation-anchor">{c.anchor}</code>
+                  </>
+                )}
+              </div>
+            </td>
+            <td class="cell-claim">{c.claim}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   </div>
 </div>
 
 <style>
-  .verification-wrapper {
-    min-width: 0;
-    margin: var(--space-8) 0 var(--space-6);
-    padding: var(--space-6);
-    background: var(--surface-card);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-card);
-    box-shadow: var(--shadow-card);
+  .citation-ledger {
+    margin: 4.5rem 0 3.5rem;
+    border-top: 2px solid var(--ie-ink);
+    border-bottom: 1px solid var(--ie-rule-strong);
   }
 
-  .verification-header {
-    margin-bottom: var(--space-6);
-    padding-bottom: var(--space-4);
-    border-bottom: 1px solid var(--border-default);
+  .citation-ledger-head {
+    padding: 1.25rem 0 0.85rem;
+    border-bottom: 1px solid var(--ie-rule);
   }
 
-  .vh-badge-group {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: var(--space-2);
-  }
-
-  .vh-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
-  }
-
-  .vh-tag {
-    font-family: var(--font-mono);
-    font-size: 11px;
+  .citation-ledger-eyebrow {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--ie-blue);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-label);
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.055em;
     text-transform: uppercase;
-    color: var(--accent);
   }
 
-  .vh-subtitle {
+  .citation-ledger-title {
     margin: 0;
-    font-size: 13.5px;
-    line-height: 1.5;
-    color: var(--text-muted);
-  }
-
-  .verification-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-
-  @media (min-width: 640px) {
-    .verification-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  .citation-card {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: var(--space-4);
-    background: var(--bg);
-    border: 1px solid var(--border-default);
-    border-radius: calc(var(--radius-card) - 4px);
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  }
-
-  .citation-card:hover {
-    border-color: color-mix(in srgb, var(--accent) 40%, var(--border-default));
-    box-shadow: 0 2px 12px color-mix(in srgb, var(--accent) 6%, transparent);
-  }
-
-  .citation-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: var(--space-2);
-  }
-
-  .citation-id {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-muted);
-  }
-
-  .citation-badge {
-    font-family: var(--font-mono);
-    font-size: 9.5px;
+    color: var(--ie-ink);
+    font-family: var(--font-display);
+    font-size: var(--ie-type-ui);
     font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 2px 6px;
-    background: color-mix(in srgb, var(--accent) 12%, transparent);
-    color: var(--accent);
-    border-radius: 4px;
-    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    letter-spacing: -0.015em;
   }
 
-  .citation-claim {
-    margin: 0 0 var(--space-3);
-    font-size: 13px;
-    line-height: 1.45;
+  .citation-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--ie-rule) transparent;
+  }
+
+  .citation-table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    table-layout: auto;
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-small);
+  }
+
+  .citation-table th {
+    padding: 0.85rem 1rem 0.85rem 0;
+    border-bottom: 1px solid var(--ie-rule-strong);
+    color: var(--ie-ink);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-micro);
     font-weight: 600;
-    color: var(--text);
-  }
-
-  .citation-meta {
-    margin-bottom: var(--space-3);
-    font-size: 12px;
-    line-height: 1.4;
-    color: var(--text-muted);
-  }
-
-  .citation-author-row {
-    min-width: 0;
-    margin-bottom: 4px;
-    overflow-wrap: anywhere;
-  }
-
-  .citation-author {
-    font-weight: 500;
-    color: var(--text);
-  }
-
-  .citation-sep {
-    margin: 0 4px;
-    opacity: 0.5;
-  }
-
-  .citation-title {
-    font-style: italic;
-  }
-
-  .citation-anchor-row {
-    display: flex;
-    /* Source anchors are arbitrary-length paths like
-       `faiss/IndexIVFPQ.cpp:search_preassigned()`. On a 375px viewport this row
-       has only ~75px of slack, so it must be allowed to wrap rather than push
-       the page into horizontal overflow. */
-    flex-wrap: wrap;
-    min-width: 0;
-    align-items: center;
-    gap: 6px;
-    margin-top: 4px;
-    font-size: 11px;
-  }
-
-  .citation-anchor-label {
-    color: var(--text-muted);
-    font-size: 10px;
+    text-align: left;
     text-transform: uppercase;
     letter-spacing: 0.04em;
+    background: transparent;
   }
 
-  .citation-anchor-code {
-    min-width: 0;
+  .citation-table td {
+    padding: 1.1rem 1rem 1.1rem 0;
+    border-bottom: 1px solid var(--ie-rule);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+
+  .citation-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .col-ref {
+    width: 4.5rem;
+  }
+
+  .col-source {
+    width: 32%;
+    min-width: 13rem;
+  }
+
+  .col-claim {
+    width: auto;
+  }
+
+  .cell-ref {
     font-family: var(--font-mono);
-    font-size: 11px;
-    padding: 1px 5px;
-    background: color-mix(in srgb, var(--text) 6%, transparent);
-    border-radius: 3px;
-    color: var(--text);
-    overflow-wrap: anywhere;
-    word-break: break-word;
+    font-size: var(--ie-type-label);
+    font-weight: 600;
+    color: var(--ie-rust);
+    white-space: nowrap;
   }
 
-  .citation-action {
-    margin-top: auto;
-    padding-top: var(--space-3);
-    border-top: 1px dashed var(--border-default);
+  .cell-source {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-right: 1.5rem;
   }
 
   .citation-link {
     display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-family: var(--font-mono);
-    font-size: 11px;
+    align-items: baseline;
+    gap: 0.3rem;
+    color: var(--ie-ink);
     font-weight: 600;
-    color: var(--accent);
     text-decoration: none;
-    transition: opacity 0.15s ease;
+    transition: color 120ms ease;
   }
 
   .citation-link:hover {
-    text-decoration: underline;
-    opacity: 0.85;
-  }
-
-  .citation-link-icon {
-    width: 10px;
-    height: 10px;
-  }
-
-  :global(html.instrumented) .verification-wrapper {
-    margin: 5rem 0 4rem;
-    padding: 0;
-    border: 0;
-    border-top: 2px solid var(--ie-ink);
-    border-bottom: 1px solid var(--ie-rule-strong);
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-  }
-
-  :global(html.instrumented) .verification-header {
-    display: grid;
-    grid-template-columns: minmax(13rem, 0.8fr) minmax(0, 1.2fr);
-    gap: 2rem;
-    margin: 0;
-    padding: 1rem 0 1.25rem;
-    border-bottom-color: var(--ie-rule-strong);
-  }
-
-  :global(html.instrumented) .vh-dot {
-    width: 12px;
-    height: 2px;
-    border-radius: 0;
-    background: var(--ie-rust);
-    box-shadow: none;
-  }
-
-  :global(html.instrumented) .vh-tag {
-    color: var(--ie-ink);
-    font-size: var(--ie-type-label);
-  }
-
-  :global(html.instrumented) .vh-subtitle {
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-  }
-
-  :global(html.instrumented) .verification-grid {
-    gap: 0;
-  }
-
-  :global(html.instrumented) .citation-card {
-    padding: 1.35rem 0;
-    border: 0;
-    border-bottom: 1px solid var(--ie-rule);
-    border-radius: 0;
-    background: transparent;
-    transition: none;
-  }
-
-  :global(html.instrumented) .citation-card:hover {
-    border-color: var(--ie-rule);
-    box-shadow: none;
-  }
-
-  :global(html.instrumented) .citation-id {
-    color: var(--ie-rust);
-  }
-
-  :global(html.instrumented) .citation-badge {
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
     color: var(--ie-blue);
+    text-decoration: underline;
   }
 
-  :global(html.instrumented) .citation-claim {
-    max-width: 55ch;
-    color: var(--ie-ink);
-    font-size: 1rem;
-    line-height: 1.5;
+  .citation-arrow {
+    color: var(--ie-blue);
+    font-size: 0.85em;
+    font-weight: normal;
   }
 
-  :global(html.instrumented) .citation-anchor-code {
-    border-radius: 2px;
+  .citation-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+  }
+
+  .citation-author {
+    color: var(--ie-muted);
+  }
+
+  .citation-sep {
+    color: var(--ie-rule-strong);
+  }
+
+  .citation-anchor {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    padding: 0.1rem 0.3rem;
+    border-radius: var(--radius-sm, 3px);
     background: var(--ie-surface-raised);
+    color: var(--ie-ink-secondary);
   }
 
-  :global(html.instrumented) .citation-action {
-    border-top-color: var(--ie-rule);
+  .cell-claim {
+    color: var(--ie-ink-secondary);
+    max-width: 50ch;
   }
 
-  :global(html.instrumented) :is(
-    .citation-id,
-    .citation-badge,
-    .citation-meta,
-    .citation-anchor-row,
-    .citation-anchor-label,
-    .citation-anchor-code,
-    .citation-link
-  ) {
-    font-size: var(--ie-type-label);
-  }
-
-  @media (min-width: 640px) {
-    :global(html.instrumented) .citation-card:nth-child(odd) {
-      padding-right: 1.5rem;
-      border-right: 1px solid var(--ie-rule);
+  @media (max-width: 640px) {
+    .citation-table {
+      min-width: 32rem;
     }
 
-    :global(html.instrumented) .citation-card:nth-child(even) {
-      padding-left: 1.5rem;
+    .citation-table th,
+    .citation-table td {
+      padding: 0.75rem 0.75rem 0.75rem 0;
     }
-  }
 
-  @media (max-width: 639px) {
-    :global(html.instrumented) .verification-header {
-      grid-template-columns: 1fr;
-      gap: 0.6rem;
+    .col-ref {
+      width: 3rem;
+    }
+
+    .col-source {
+      width: 11rem;
+      min-width: 11rem;
+    }
+
+    .cell-claim {
+      min-width: 16rem;
     }
   }
 </style>

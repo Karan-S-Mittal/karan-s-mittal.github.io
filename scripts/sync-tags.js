@@ -58,16 +58,18 @@ async function main() {
     if (Array.isArray(data.tags)) {
       data.tags.forEach((tag) => {
         const key = normalizeTag(tag);
-        if (!tagMap.has(key)) tagMap.set(key, tag.trim());
+        if (!tagMap.has(key)) tagMap.set(key, { name: tag.trim(), count: 0 });
+        tagMap.get(key).count += 1;
       });
     }
   }
 
   // 3. Build new dictionary
   const tags = Array.from(tagMap.entries()).sort(([a], [b]) => a.localeCompare(b));
-  const dictionary = tags.map(([key, name]) => ({
-    name,
-    slug: tagSlug(name),
+  const dictionary = tags.map(([key, entry]) => ({
+    name: entry.name,
+    slug: tagSlug(entry.name),
+    count: entry.count,
     aliases: aliasMap.get(key) || [],
   }));
 

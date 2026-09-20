@@ -145,13 +145,17 @@ const chapters = buildHierarchy(headings);
         let activeHeading: HTMLElement | null = headingElements[0];
         const offset = 140;
 
-        for (let i = 0; i < headingElements.length; i++) {
-          const el = headingElements[i];
-          const top = el.getBoundingClientRect().top;
-          if (top <= offset) {
-            activeHeading = el;
-          } else {
-            break;
+        if (scrollY + windowHeight >= document.documentElement.scrollHeight - 24) {
+          activeHeading = headingElements[headingElements.length - 1];
+        } else {
+          for (let i = 0; i < headingElements.length; i++) {
+            const el = headingElements[i];
+            const top = el.getBoundingClientRect().top;
+            if (top <= offset) {
+              activeHeading = el;
+            } else {
+              break;
+            }
           }
         }
 
@@ -196,12 +200,12 @@ const chapters = buildHierarchy(headings);
   }
 
   .toc-title {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: var(--ie-type-label);
     font-weight: 600;
     color: var(--ie-muted);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.055em;
   }
 
   .toc-progress-pct {

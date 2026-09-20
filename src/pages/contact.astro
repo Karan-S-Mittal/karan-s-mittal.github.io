@@ -40,7 +40,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 
         <div class="aside-block">
           <p class="aside-label">What happens next</p>
-          <p>I’ll review your note and reply to clarify the problem and whether I can help. If there is a fit, we’ll discuss the scope, useful outcomes, and next steps before agreeing on an engagement.</p>
+          <p>I review messages personally. Response timing depends on current commitments, so include any real deadline. If there is a fit, we’ll clarify scope, useful outcomes, and next steps before agreeing on an engagement.</p>
           <a class="engagement-link" href="/work#engagements">Explore ways to work together →</a>
         </div>
 
@@ -64,11 +64,11 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
           <div class="form-badge-row">
             <span class="pill-badge">Start a conversation</span>
           </div>
-          <p>Use the form below or send an email. A high-level description is enough for the first conversation.</p>
+          <p>Use the form below or send an email. A high-level description is enough for the first conversation. The embedded form is provided by Tally under its <a href="https://tally.so/help/privacy-policy" target="_blank" rel="noopener">privacy notice</a>; do not include credentials, private keys, or regulated personal data.</p>
         </div>
 
         <div class="iframe-container" id="tally-container">
-          <div class="form-skeleton" id="form-skeleton" aria-hidden="true">
+          <div class="form-skeleton" id="form-skeleton" role="status" aria-live="polite">
             <div class="skeleton-header">
               <span class="skeleton-pill"></span>
               <span class="skeleton-status">Loading contact form…</span>
@@ -88,11 +88,9 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
             marginheight="0"
             marginwidth="0"
             title="Start an engineering conversation with Karan Mittal"
-            onload="document.getElementById('form-skeleton')?.classList.add('loaded')"
-            onerror="document.getElementById('form-skeleton')?.classList.add('loaded'); document.getElementById('form-error')?.removeAttribute('hidden')"
           ></iframe>
           <p id="form-error" class="form-error" role="alert" hidden>
-            The intake form could not be loaded. <a href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>Send the project brief by email instead</a>.
+            The intake form could not be loaded. <a href="https://tally.so/r/jar8jY" target="_blank" rel="noopener">Open it directly on Tally</a> or <a href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>send the project brief by email</a>.
           </p>
           <noscript>
             <p class="form-fallback">
@@ -105,7 +103,23 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 
     <script is:inline>
       var documentRef = document;
+      var frame = documentRef.getElementById('tally-iframe');
+      var skeleton = documentRef.getElementById('form-skeleton');
+      var formError = documentRef.getElementById('form-error');
       var tallyScript = 'https://tally.so/widgets/embed.js';
+      var completed = false;
+      var markLoaded = function () {
+        if (!frame || !frame.getAttribute('src') || frame.getAttribute('src') === 'about:blank') return;
+        completed = true;
+        skeleton && skeleton.classList.add('loaded');
+      };
+      var showFallback = function () {
+        if (completed) return;
+        skeleton && skeleton.classList.add('loaded');
+        formError && formError.removeAttribute('hidden');
+      };
+      frame && frame.addEventListener('load', markLoaded);
+      frame && frame.addEventListener('error', showFallback);
       var loadTallyEmbeds = function () {
         if (typeof Tally !== 'undefined') {
           Tally.loadEmbeds();
@@ -116,13 +130,15 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
         });
       };
 
+      window.setTimeout(showFallback, 12000);
+
       if (typeof Tally !== 'undefined') {
         loadTallyEmbeds();
       } else if (documentRef.querySelector('script[src="' + tallyScript + '"]') === null) {
         var script = documentRef.createElement('script');
         script.src = tallyScript;
         script.onload = loadTallyEmbeds;
-        script.onerror = loadTallyEmbeds;
+        script.onerror = function () { loadTallyEmbeds(); window.setTimeout(showFallback, 3000); };
         documentRef.body.appendChild(script);
       }
     </script>
@@ -135,8 +151,26 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
   }
 
   .contact-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
-  .email-action { display: inline-flex; align-items: center; min-height: 44px; padding: .6rem 1rem; background: var(--ie-ink); color: var(--ie-canvas); border-radius: 4px; text-decoration: none; }
-  .email-action:hover { background: var(--ie-blue); color: var(--ie-canvas); }
+  .email-action {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.65rem 1.15rem;
+    border: 1px solid var(--ie-ink);
+    background: var(--ie-ink);
+    color: var(--ie-canvas);
+    border-radius: var(--radius, 4px);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+  }
+  .email-action:hover {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue);
+    color: var(--ie-surface);
+  }
   #tally-container { scroll-margin-top: 5rem; }
 
   .contact-layout {
@@ -159,15 +193,21 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     background: var(--ie-surface);
   }
 
-  .engagement-link { display: inline-block; margin-top: .8rem; font-size: var(--ie-type-ui); }
+  .engagement-link {
+    display: inline-block;
+    margin-top: 0.8rem;
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
+    font-weight: 500;
+  }
 
   .aside-label {
     margin: 0 0 0.65rem;
     color: var(--ie-blue);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-label);
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.055em;
     text-transform: uppercase;
   }
 
@@ -211,13 +251,14 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     justify-content: space-between;
     gap: 0.5rem;
     padding: 0.5rem 0.75rem;
+    min-height: 44px;
     overflow-wrap: anywhere;
     border: 1px solid var(--ie-rule);
     border-radius: var(--radius, 6px);
     background: var(--ie-surface-raised);
     color: var(--ie-ink);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
     text-decoration: none;
     transition: border-color 120ms ease, color 120ms ease, background-color 120ms ease;
   }
@@ -261,7 +302,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     border-radius: var(--radius-pill, 999px);
     background: var(--ie-blue-soft);
     color: var(--ie-blue);
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: var(--ie-type-micro);
     font-weight: 600;
     letter-spacing: 0.05em;

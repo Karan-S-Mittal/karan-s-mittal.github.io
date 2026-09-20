@@ -36,11 +36,11 @@ const Heading = headingLevel;
     align-items: baseline;
     gap: var(--space-2);
     margin-bottom: var(--space-2);
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: var(--ie-type-label);
     font-weight: 600;
-    letter-spacing: 0.08em;
-    color: var(--accent);
+    letter-spacing: 0.055em;
+    color: var(--ie-blue);
     text-transform: uppercase;
   }
   .page-header :is(h1, h2) {
@@ -50,11 +50,11 @@ const Heading = headingLevel;
     font-weight: 700;
     letter-spacing: -0.025em;
     line-height: 1.15;
-    color: var(--text);
+    color: var(--ie-ink);
     margin-bottom: var(--space-4);
   }
   .lead {
-    color: var(--text-secondary);
+    color: var(--ie-ink-secondary);
     max-width: 680px;
     margin: 0;
     line-height: 1.68;
@@ -66,9 +66,9 @@ const Heading = headingLevel;
     font-size: var(--ie-type-micro);
     font-weight: 600;
     font-family: var(--font-mono);
-    color: var(--accent);
+    color: var(--ie-blue);
     background: var(--ie-blue-soft);
-    border: 1px solid var(--border-default);
+    border: 1px solid var(--ie-rule);
     padding: 0.15rem 0.5rem;
     border-radius: 3px;
     white-space: nowrap;

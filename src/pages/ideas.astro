@@ -1,0 +1,175 @@
+---
+import Layout from '@layouts/Layout.astro';
+import PageHeader from '@components/content/PageHeader.astro';
+import VisualBlueprintCard from '@components/visuals/VisualBlueprintCard.astro';
+
+const diagrams = [
+  {
+    slug: 'semiconductor-traceability',
+    title: 'Semiconductor Traceability Graph',
+    desc: 'Supplier, material, PFAS evidence, quality cost, and agent-review boundaries in one inspectable dependency graph.',
+    category: 'GRAPH ENGINEERING',
+    archetype: 'pipeline' as const,
+  },
+  {
+    slug: 'developer-platform-stack',
+    title: 'Developer Platform Stack Hierarchy',
+    desc: 'A functional model separating Git storage, collaboration policy, CI execution, and optional remote workspaces.',
+    category: 'SYSTEMS ARCHITECTURE',
+    archetype: 'hierarchy' as const,
+  },
+  {
+    slug: 'code-review-topologies',
+    title: 'Three Code Review Topologies',
+    desc: 'A comparison of review identity and revision flow across branch, Change-Id, and email patch-series workflows.',
+    category: 'REVIEW PROTOCOLS',
+    archetype: 'comparison' as const,
+  },
+];
+---
+
+<Layout
+  title="Ideas and visual models | Karan Mittal"
+  description="Visual models, technical experiments, and working concepts for understanding complex engineering systems."
+>
+  <main class="ideas-page">
+    <div class="container page-shell">
+      <PageHeader
+        label="Ideas"
+        title="Ideas made inspectable."
+        description="Visual models, technical experiments, and working concepts for understanding complex engineering systems."
+        count={diagrams.length}
+        countLabel="published models"
+      />
+
+      <section id="diagrams" class="ideas-section" aria-labelledby="diagrams-title">
+        <header class="ideas-section-head">
+          <div>
+            <span class="section-index">01 / System diagrams</span>
+            <h2 id="diagrams-title">Systems blueprints and visual models.</h2>
+          </div>
+          <p>Reusable drawings that expose structure, boundaries, and trade-offs without hiding the mechanics.</p>
+        </header>
+
+        <div class="blueprints-catalog">
+          <div class="featured-blueprint">
+            <VisualBlueprintCard
+              slug={diagrams[0].slug}
+              index={1}
+              title={diagrams[0].title}
+              desc={diagrams[0].desc}
+              category={diagrams[0].category}
+              href={`/diagrams/${diagrams[0].slug}/`}
+              archetype={diagrams[0].archetype}
+              variant="hero"
+            />
+          </div>
+
+          <div class="supporting-blueprints-grid">
+            {diagrams.slice(1).map((diagram, index) => (
+              <div class:list={['supporting-col', index === 0 ? 'col-wide' : 'col-narrow']}>
+                <VisualBlueprintCard
+                  slug={diagram.slug}
+                  index={index + 2}
+                  title={diagram.title}
+                  desc={diagram.desc}
+                  category={diagram.category}
+                  href={`/diagrams/${diagram.slug}/`}
+                  archetype={diagram.archetype}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .ideas-page {
+    padding-bottom: clamp(3rem, 6vw, 6rem);
+  }
+
+  .page-shell {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 var(--space-5, 1.5rem);
+  }
+
+  .ideas-section {
+    scroll-margin-top: 6rem;
+  }
+
+  .ideas-section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.7fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: end;
+    padding: 0 0 1.25rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--ie-rule-strong);
+  }
+
+  .section-index {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: var(--ie-blue);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-micro);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .ideas-section-head h2 {
+    margin: 0;
+    color: var(--ie-ink);
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h2);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+  }
+
+  .ideas-section-head p {
+    max-width: 48ch;
+    margin: 0;
+    color: var(--ie-ink-secondary);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
+    line-height: 1.6;
+  }
+
+  .blueprints-catalog {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .featured-blueprint {
+    width: 100%;
+  }
+
+  .supporting-blueprints-grid {
+    display: grid;
+    grid-template-columns: 1.45fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .supporting-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (max-width: 840px) {
+    .ideas-section-head,
+    .supporting-blueprints-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .supporting-blueprints-grid {
+      gap: 1.25rem;
+    }
+  }
+</style>

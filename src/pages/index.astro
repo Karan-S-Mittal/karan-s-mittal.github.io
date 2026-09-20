@@ -4,14 +4,20 @@ import { getCollection } from 'astro:content';
 import { SITE } from '../config';
 import VisualMicroSchematic from '@components/visuals/VisualMicroSchematic.astro';
 import HeroWorkflowGraph from '@components/visuals/HeroWorkflowGraph.astro';
+import { externalWriting } from '@data/publications';
 import '@styles/practice.css';
 
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const featuredPosts = [...publishedPosts.filter(p => p.data.featured), ...publishedPosts.filter(p => !p.data.featured)].slice(0, 3);
-const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'});
+const featuredPosts = [...publishedPosts.filter((post) => post.data.featured), ...publishedPosts.filter((post) => !post.data.featured)].slice(0, 3);
+const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
 
-const featuredBlueprints: Array<{
+const featuredDiagrams: Array<{
   slug: string;
   title: string;
   desc: string;
@@ -19,16 +25,16 @@ const featuredBlueprints: Array<{
   archetype: 'hierarchy' | 'comparison';
 }> = [
   {
-    slug: 'platform-stack',
+    slug: 'developer-platform-stack',
     title: 'Developer Platform Stack',
-    desc: 'The four-tier architecture spanning POSIX Git Merkle DAGs, auth gateways, CI runners, and ephemeral cloud workspaces.',
+    desc: 'A functional model separating Git storage, collaboration policy, CI execution, and optional remote workspaces.',
     badge: 'SYSTEM ARCHITECTURE',
     archetype: 'hierarchy',
   },
   {
     slug: 'code-review-topologies',
     title: 'Three Code Review Topologies',
-    desc: 'Comparative breakdown of code review: GitHub Branch PRs vs. Gerrit Stacked Changes vs. Linux Kernel Patch series.',
+    desc: 'A comparison of review identity and revision flow across branch, Change-Id, and email patch-series workflows.',
     badge: 'REVIEW PROTOCOL',
     archetype: 'comparison',
   },
@@ -36,106 +42,167 @@ const featuredBlueprints: Array<{
 ---
 
 <Layout title={SITE.title} description={SITE.description}>
-  <main class="practice-page">
-    <!-- Centered Hero -->
-    <section class="hero hero-centric" aria-labelledby="home-title">
-      <div class="hero-content">
-        <span class="register">Karan Mittal &bull; Systems Engineering &amp; MLOps</span>
-        <h1 id="home-title">Solve the real problem.<br />Build a system that lasts.</h1>
+  <main class="practice-page home-page">
+    <section class="home-hero" aria-labelledby="home-title">
+      <div class="home-hero-copy">
+        <span class="register">Karan Mittal / Engineer-scientist</span>
+        <h1 id="home-title">Make complex systems traceable.</h1>
         <p class="lead">
-          I help engineering teams turn unpredictable LLM prototypes into reliable, cost-efficient production systems—through state-graph workflows, smart model routing, and automated evaluation.
+          I design graph-backed AI and data systems for consequential work—from semiconductor
+          supply chains to life sciences and energy infrastructure.
         </p>
         <div class="actions">
-          <a class="action" href="/contact">Discuss your system →</a>
-          <a class="action secondary" href="/publications#blueprints">Explore architecture blueprints →</a>
+          <a class="action" href="/work">Explore the work →</a>
+          <a class="action secondary" href="/writing">Read the writing →</a>
+        </div>
+        <a class="scroll-cue" href="#system-story">
+          <span>Follow one system walkthrough</span>
+          <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </section>
+
+    <section id="system-story" class="semiconductor-story" data-stage="1" aria-labelledby="story-title">
+      <div class="story-visual" aria-label="Semiconductor traceability graph that gains detail as the explanation progresses">
+        <div class="story-visual-sticky">
+          <HeroWorkflowGraph />
         </div>
       </div>
-      <HeroWorkflowGraph />
-    </section>
 
-    <!-- 3 Core Pillars: Ruled Editorial Ledger -->
-    <section class="pillar-ledger-section" aria-label="Core focus areas">
-      <div class="pillar-ledger">
-        <article class="ledger-row">
-          <div class="ledger-meta">
-            <span class="ledger-index">[01]</span>
-            <span class="ledger-tag">STATE GRAPHS</span>
-          </div>
-          <div class="ledger-content">
-            <h3>Get models to follow instructions.</h3>
-            <p>Replace fragile single-prompt chains with structured state graphs, tool sandboxes, and schema validation. Ensure agents reliably complete multi-step tasks without getting stuck in infinite loops.</p>
-          </div>
-          <div class="ledger-badge-wrap">
-            <span class="ledger-badge">100% Deterministic flow</span>
-          </div>
+      <div class="story-steps">
+        <div class="story-intro-meta">
+          <span class="register">Case study &bull; Traceability in practice</span>
+          <p class="story-intro-note">Follow one controlled component through four dependency stages.</p>
+        </div>
+
+        <article class="story-step" data-story-stage="1">
+          <div class="step-badge"><span class="step-num">01</span><span class="step-label">Dependency structure</span></div>
+          <h2 id="story-title">A part is never just a part.</h2>
+          <p>
+            A controlled component inherits relationships from suppliers, material lots, sites,
+            assemblies, and product families. The graph gives each dependency an address.
+          </p>
         </article>
 
-        <article class="ledger-row">
-          <div class="ledger-meta">
-            <span class="ledger-index">[02]</span>
-            <span class="ledger-tag">TOKEN EFFICIENCY</span>
-          </div>
-          <div class="ledger-content">
-            <h3>Stop overpaying for tokens.</h3>
-            <p>Architect tiered model routing, semantic caching, and prompt compaction. Run 90% of routine traffic on fast, inexpensive models to cut monthly API spend by up to 70%.</p>
-          </div>
-          <div class="ledger-badge-wrap">
-            <span class="ledger-badge">~70% API spend cut</span>
-          </div>
+        <article class="story-step" data-story-stage="2">
+          <div class="step-badge"><span class="step-num">02</span><span class="step-label">Evidence graph</span></div>
+          <h2>Compliance evidence belongs on the same graph.</h2>
+          <p>
+            Supplier declarations, material disclosures, and screening results become traceable
+            records—not attachments separated from the parts and claims they support.
+          </p>
         </article>
 
-        <article class="ledger-row">
-          <div class="ledger-meta">
-            <span class="ledger-index">[03]</span>
-            <span class="ledger-tag">EVAL HARNESS</span>
-          </div>
-          <div class="ledger-content">
-            <h3>Ship model updates safely.</h3>
-            <p>Build automated regression test suites and policy gates into CI/CD. Test prompt adjustments and new model releases against benchmark datasets before they touch customers.</p>
-          </div>
-          <div class="ledger-badge-wrap">
-            <span class="ledger-badge">Automated CI/CD gates</span>
+        <article class="story-step" data-story-stage="3">
+          <div class="step-badge"><span class="step-num">03</span><span class="step-label">Operational consequence</span></div>
+          <h2>The graph exposes the cost of uncertainty.</h2>
+          <p>
+            Missing PFAS evidence can be connected to holds, retesting, rework, delay, and
+            disposition. Cost-of-quality reporting becomes an explanation of causality rather
+            than a detached total.
+          </p>
+        </article>
+
+        <article class="story-step" data-story-stage="4">
+          <div class="step-badge"><span class="step-num">04</span><span class="step-label">Agent boundary</span></div>
+          <h2>Specialize only the path that repeats.</h2>
+          <p>
+            A distilled reviewer can handle bounded, recurring checks against the graph. Novel
+            parts, weak evidence, and unfamiliar relationships keep an explicit route back to a
+            general agent and human review.
+          </p>
+          <div class="step-recap">
+            <a href="/diagrams/semiconductor-traceability/" class="step-recap-link">
+              <span>Inspect complete semiconductor model & export diagram</span>
+              <span aria-hidden="true">→</span>
+            </a>
           </div>
         </article>
       </div>
     </section>
 
-    <!-- Section 01: Featured Architecture Blueprints -->
-    <section class="section" aria-labelledby="blueprints-heading">
+    <!-- Unified Evidence Stream: Chapters 01, 02, 03 -->
+    <div class="evidence-stream-intro">
+      <span class="register">Verification trail &bull; Public proof</span>
+      <h2 id="verification-heading">From system models to inspectable proof.</h2>
+      <p class="lead">
+        Every architectural claim is grounded in published technical essays, reusable systems blueprints,
+        and recorded conference sessions.
+      </p>
+    </div>
+
+    <section class="section evidence-section" aria-labelledby="proof-heading">
       <div class="section-head">
         <div>
-          <span class="register">01 / Verified blueprints</span>
-          <h2 id="blueprints-heading">Architectures you can inspect.</h2>
+          <span class="register">Chapter 01 &bull; Public record</span>
+          <h2 id="proof-heading">Inspect the work behind the claim.</h2>
         </div>
-        <a href="/publications#blueprints">Explore blueprint library →</a>
+      </div>
+      <div class="proof-ledger">
+        <a href={externalWriting[0].href} target="_blank" rel="noopener" class="proof-row">
+          <span class="proof-index">01</span>
+          <div>
+            <span class="register">Published at {externalWriting[0].publication}</span>
+            <h3>{externalWriting[0].title}</h3>
+            <p>{externalWriting[0].description}</p>
+          </div>
+          <span class="proof-action">Read article ↗</span>
+        </a>
+        <a href="/speaking" class="proof-row">
+          <span class="proof-index">02</span>
+          <div>
+            <span class="register">Talks & workshops</span>
+            <h3>Technical ideas tested in public.</h3>
+            <p>Recorded sessions and hands-on workshops on agent systems, retrieval, and engineering practice.</p>
+          </div>
+          <span class="proof-action">View speaking →</span>
+        </a>
+        <a href="/diagrams/semiconductor-traceability/" class="proof-row">
+          <span class="proof-index">03</span>
+          <div>
+            <span class="register">Reusable visual</span>
+            <h3>Semiconductor traceability graph.</h3>
+            <p>Inspect the complete dependency model and export the attributed visual.</p>
+          </div>
+          <span class="proof-action">Open diagram →</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section evidence-section" aria-labelledby="diagrams-heading">
+      <div class="section-head">
+        <div>
+          <span class="register">Chapter 02 &bull; Reusable models</span>
+          <h2 id="diagrams-heading">Inspect the model.</h2>
+        </div>
+        <a href="/ideas/#diagrams">All ideas →</a>
       </div>
       <div class="featured-blueprints-grid">
-        {featuredBlueprints.map(bp => (
-          <a href={`/visuals/${bp.slug}/`} class="blueprint-showcase-card">
-            <VisualMicroSchematic slug={bp.slug} archetype={bp.archetype} />
+        {featuredDiagrams.map((diagram) => (
+          <a href={`/diagrams/${diagram.slug}/`} class="blueprint-showcase-card">
+            <VisualMicroSchematic slug={diagram.slug === 'developer-platform-stack' ? 'platform-stack' : diagram.slug} archetype={diagram.archetype} />
             <div class="blueprint-card-info">
-              <span class="register">{bp.badge}</span>
-              <h3>{bp.title}</h3>
-              <p>{bp.desc}</p>
-              <span class="blueprint-card-cta">Inspect blueprint &rarr;</span>
+              <span class="register">{diagram.badge}</span>
+              <h3>{diagram.title}</h3>
+              <p>{diagram.desc}</p>
+              <span class="blueprint-card-cta">Inspect diagram →</span>
             </div>
           </a>
         ))}
       </div>
     </section>
 
-    <!-- Section 02: Selected Publications -->
-    <section class="section" aria-labelledby="publications-heading">
+    <section class="section" aria-labelledby="writing-heading">
       <div class="section-head">
         <div>
-          <span class="register">02 / Selected publications</span>
-          <h2 id="publications-heading">Deep dives &amp; systems architecture.</h2>
+          <span class="register">Chapter 03 &bull; Engineering writing</span>
+          <h2 id="writing-heading">Follow the argument.</h2>
         </div>
-        <a href="/publications">All publications →</a>
+        <a href="/writing">All writing →</a>
       </div>
       {featuredPosts.length > 0 ? (
-        featuredPosts.map(post => (
-          <a class="note-row" href={`/blog/${post.id}/`}>
+        featuredPosts.map((post) => (
+          <a class="note-row" href={`/writing/${post.id}/`}>
             <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
             <div>
               <h3>{post.data.title}</h3>
@@ -144,19 +211,45 @@ const featuredBlueprints: Array<{
           </a>
         ))
       ) : (
-        <p class="empty-state">Starting afresh with new systems essays. Check back soon.</p>
+        <p class="empty-state">New systems essays are in progress.</p>
       )}
     </section>
 
-    <!-- Centered Closing -->
-    <section class="closing centered-closing" aria-labelledby="closing-heading">
-      <span class="register">03 / Start a conversation</span>
-      <h2 id="closing-heading">Have an AI system that needs to work better?</h2>
-      <p class="lead">Whether you are struggling with agent reliability, runaway API bills, or scaling your evaluation pipeline, let’s talk through the engineering.</p>
+    <section class="closing" aria-labelledby="closing-heading">
+      <span class="register">Work together</span>
+      <h2 id="closing-heading">Bring the difficult system.</h2>
+      <p class="lead">
+        If a technical system is difficult to reason about, expensive to operate, or unsafe to
+        change, we can make its dependencies visible and work from evidence.
+      </p>
       <div class="actions">
-        <a href="/contact" class="action">Tell me what needs to work better →</a>
-        <a href="/work" class="action secondary">Explore advisory &amp; build options →</a>
+        <a href="/contact" class="action">Discuss the system →</a>
+        <a href="/work" class="action secondary">Ways to work together →</a>
       </div>
     </section>
   </main>
 </Layout>
+
+<script>
+  function initialiseAgentStory() {
+    const story = document.querySelector<HTMLElement>('.semiconductor-story');
+    if (!story || story.dataset.enhanced === 'true') return;
+
+    const steps = Array.from(story.querySelectorAll<HTMLElement>('[data-story-stage]'));
+    if (steps.length === 0 || !('IntersectionObserver' in window)) return;
+
+    story.dataset.enhanced = 'true';
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const stage = (entry.target as HTMLElement).dataset.storyStage;
+        if (stage) story.dataset.stage = stage;
+      }
+    }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+
+    steps.forEach((step) => observer.observe(step));
+  }
+
+  initialiseAgentStory();
+  document.addEventListener('astro:page-load', initialiseAgentStory);
+</script>

@@ -58,7 +58,7 @@ server.listen(PORT, async () => {
   try {
     const browser = await chromium.launch();
     const page = await browser.newPage({ viewport: { width: 1200, height: 800 } });
-    const targetUrl = `http://localhost:${PORT}/visuals/${slug}/`;
+    const targetUrl = `http://localhost:${PORT}/diagrams/${slug}/`;
 
     await page.goto(targetUrl);
     await page.waitForTimeout(300);

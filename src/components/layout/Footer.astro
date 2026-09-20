@@ -8,12 +8,15 @@ const socials = SOCIALS;
   <div class="footer-inner">
     <div class="footer-left">
       <p class="copyright">&copy; {new Date().getFullYear()} {SITE.name}</p>
-      <span class="footer-status"><span class="status-dot" aria-hidden="true">●</span> Static // 0-RTT</span>
+      <span class="footer-status"><span class="status-dot" aria-hidden="true">●</span> Static HTML</span>
       <nav class="footer-nav" aria-label="Footer navigation">
-        <a href="/publications">Publications</a>
-        <a href="/work">Work</a>
-        <a href="/about">About</a>
-        <a href="/tags">Tags</a>
+        <a href="/work/">Work</a>
+        <a href="/writing/">Writing</a>
+        <a href="/ideas/">Ideas</a>
+        <a href="/speaking/">Speaking</a>
+        <a href="/about/">About</a>
+        <a href="/now/">Now</a>
+        <a href="/contact/">Contact</a>
         <a href="/rss.xml">RSS</a>
       </nav>
     </div>
@@ -62,7 +65,7 @@ const socials = SOCIALS;
   }
 
   .footer-inner {
-    max-width: 960px;
+    max-width: var(--width-visual, 1180px);
     margin: 0 auto;
     padding: 2rem var(--space-5, 1.5rem);
     display: flex;
@@ -113,6 +116,9 @@ const socials = SOCIALS;
   }
 
   .footer-nav a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
     font-family: var(--font-mono);
     font-size: var(--ie-type-label);
     color: var(--ie-muted);
@@ -136,8 +142,8 @@ const socials = SOCIALS;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
     border: 1px solid var(--ie-rule);
     border-radius: var(--radius-sm, 4px);
     background: var(--ie-surface);

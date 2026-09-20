@@ -26,7 +26,7 @@
   --ie-surface-raised: #f1f5f9;
   --ie-ink: #1a1a2e;
   --ie-ink-secondary: #4a4a6a;
-  --ie-muted: #5b6470;
+  --ie-muted: #475569;
   --ie-rule: #e8ecf4;
   --ie-rule-strong: #cbd5e1;
   --ie-blue: #2676aa;
@@ -201,6 +201,7 @@
   --page-max-width: 960px;
   --width-content: 960px;
   --max-width: 960px;
+  --width-visual: 1180px;
   --width-reading: 680px;
   --prose-max-width: 680px;
 
@@ -279,6 +280,12 @@ body {
   font-feature-settings: 'ss01' on, 'ss03' on;
   text-rendering: optimizeLegibility;
   transition: background-color 140ms ease, color 140ms ease;
+}
+
+#main-content,
+body > footer {
+  position: relative;
+  z-index: 1;
 }
 
 @media (max-width: 720px) {
@@ -438,6 +445,8 @@ pre code {
   top: var(--space-2);
   right: var(--space-2);
   padding: var(--space-1) var(--space-2);
+  min-width: 44px;
+  min-height: 44px;
   font-size: var(--ie-type-micro);
   font-family: var(--font-sans);
   font-weight: 500;
@@ -446,11 +455,12 @@ pre code {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  opacity: 0;
+  opacity: 0.88;
   transition: opacity var(--transition-fast);
 }
 
-pre:hover .copy-code { opacity: 1; }
+pre:hover .copy-code,
+pre:focus-within .copy-code { opacity: 1; }
 .copy-code:hover { background: var(--ie-blue); color: #fff; border-color: var(--ie-blue); }
 .copy-code.copied { color: var(--ie-blue); border-color: var(--ie-blue); }
 
@@ -633,4 +643,43 @@ article blockquote p:last-child {
 
 .sys-diagram text {
   dominant-baseline: central;
+}
+
+@media print {
+  @page { margin: 18mm; }
+
+  html,
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  #site-header,
+  body > footer,
+  .skip-link,
+  .copy-code,
+  .export-bar,
+  .table-of-contents,
+  .visual-controls {
+    display: none !important;
+  }
+
+  #main-content,
+  main,
+  article {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  a {
+    color: inherit !important;
+    text-decoration: underline;
+  }
+
+  pre,
+  figure,
+  .exhibit {
+    break-inside: avoid;
+  }
 }

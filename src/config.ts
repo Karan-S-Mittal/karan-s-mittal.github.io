@@ -6,7 +6,7 @@ export const SITE = {
   name: 'Karan Mittal',
   title: 'Karan Mittal | Engineering Systems That Last',
   description:
-    'Karan Mittal is an engineer-scientist helping organisations solve data, AI, and software problems through system reviews, implementation, and technical advisory.',
+    'Karan Mittal is an engineer-scientist designing graph-backed AI and data systems for complex, consequential work.',
   url: 'https://karan-s-mittal.github.io',
   author: 'Karan Mittal',
   email: 'karanshyammittal@gmail.com',

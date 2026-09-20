@@ -7,184 +7,53 @@ draft: __DRAFT__
 ---
 
 import Exhibit from '../../components/editorial/Exhibit.astro';
-import ArchitectureDiagram from '../../components/diagram/ArchitectureDiagram.astro';
-import AlgorithmFlow from '../../components/diagram/AlgorithmFlow.astro';
-import BenchmarkChart from '../../components/diagram/BenchmarkChart.astro';
-import InteractiveWalkthrough from '../../components/diagram/InteractiveWalkthrough.astro';
+import PrimaryVerification from '../../components/editorial/PrimaryVerification.astro';
 
-When building high-throughput or mission-critical systems, conventional intuitions often break down under real hardware and distributed constraints.
+State the engineering question precisely. Separate observed behavior from inference, and name the system boundary being examined.
 
-The bottleneck is rarely where we initially look: rather than raw compute, it is almost always **[state management / synchronization / memory bandwidth / cache coherence]**.
+## 1. Premise
 
-To understand how to architect dependable solutions, we deconstruct the system from first principles:
-1. **The Baseline:** How the naive approach functions under normal conditions.
-2. **The Breaking Point:** Where physical constraints, latency, or concurrency collapse.
-3. **The Architectural Shift:** How [Algorithm / Paging / Zero-Copy / Sharding] resolves the bottleneck.
-4. **Empirical Evidence:** Primary benchmarks and verified kernel/system traces.
+Define the terms and the narrow claim this essay will establish. Link the defining specification or source tree when first introducing the mechanism.
 
----
+## 2. Mechanism
 
-## 1. Where Naive Implementation Breaks
+Explain the sequence, state, and invariants. Use an exhibit only when the visual materially clarifies the mechanism.
 
-Frame the core engineering bottleneck here with precise technical terminology. Describe the baseline workflow before showing the diagram.
+<Exhibit
+  exhibit="01"
+  title="__EXHIBIT_TITLE__"
+  badge="EXPLANATORY MODEL"
+  caption="State what the visual shows and what it does not claim.">
 
-<Exhibit 
-  exhibit="01" 
-  title="The Naive Bottleneck Model" 
-  badge="BASELINE SYSTEM" 
-  caption="Notice how contiguous pre-allocation under variable load creates significant headroom loss and memory fragmentation.">
-
-  <ArchitectureDiagram
-    id="arch-exhibit-01"
-    label="Baseline System Map"
-    description="Logical components mapping to physical execution frames."
-    planes={[
-      { id: 'logical', label: 'LOGICAL DOMAIN', x: 20, y: 20, w: 320, h: 180 },
-      { id: 'physical', label: 'PHYSICAL HARDWARE', x: 380, y: 20, w: 320, h: 180 },
-    ]}
-    nodes={[
-      { id: 'n1', label: 'Input Stream', x: 40, y: 60, w: 130, h: 44, kind: 'signal' },
-      { id: 'n2', label: 'Buffer Pool', x: 190, y: 60, w: 130, h: 44 },
-      { id: 'n3', label: 'Execution Core', x: 400, y: 60, w: 140, h: 44, kind: 'attention' },
-      { id: 'n4', label: 'Memory Bank', x: 560, y: 60, w: 120, h: 44, muted: true },
-    ]}
-    edges={[
-      { from: 'n1', to: 'n2', kind: 'direct' },
-      { from: 'n2', to: 'n3', kind: 'direct', d: 'M320 82 H400' },
-      { from: 'n3', to: 'n4', kind: 'async', d: 'M540 82 H560' },
-    ]}
-    notes={[
-      { text: 'Contiguous pre-allocation creates lock contention', x: 40, y: 170 },
-    ]}
-  />
+  {/* Import and render a token-compliant diagram component here. */}
 
 </Exhibit>
 
-Key observations from the trace:
-- **Allocation overhead:** Every request reserves worst-case memory buffers up front.
-- **Cache pollution:** Unnecessary memory copies saturate memory bus bandwidth.
+## 3. Constraint
 
----
+Describe the failure mode or trade-off. Do not insert numerical performance claims without a primary benchmark whose hardware, software version, workload, and method are stated.
 
-## 2. The 4-Step Mechanistic Flow
+## 4. Evidence
 
-<AlgorithmFlow
-  exhibit="02"
-  title="Dynamic Memory Paging & Execution"
-  badge="ALGORITHM PIPELINE"
-  columns={2}
-  steps={[
+Tie each externally verifiable claim to a primary source: an official specification, source permalink, vendor architecture manual, or original paper. Distinguish measurements you reproduced from measurements reported by a source.
+
+## 5. Decision
+
+Turn the mechanism into a bounded decision rule. State when the architecture applies, when it does not, and what must be measured locally.
+
+## Primary citations and verification ledger
+
+<PrimaryVerification
+  citations={[
     {
-      step: "01",
-      title: "Input Ingestion",
-      tag: "O(1) Step",
-      state: "signal",
-      description: "Incoming requests arrive with variable context lengths without pre-allocating contiguous buffers.",
-      formula: "Req_t = {T_0, T_1, ..., T_k}",
-      note: "Zero memory reservation upfront"
-    },
-    {
-      step: "02",
-      title: "Block Table Lookup",
-      tag: "MMU Indirection",
-      state: "model",
-      description: "Logical block IDs translate into non-contiguous physical page frame addresses.",
-      formula: "Physical_Addr = BlockTable[Logical_ID]",
-      note: "Eliminates external fragmentation"
-    },
-    {
-      step: "03",
-      title: "Fused Gather Kernel",
-      tag: "Compute Core",
-      state: "verified",
-      description: "GPU kernel reads scattered memory frames in parallel, feeding SRAM directly without intermediate host copies.",
-      formula: "Output = softmax((Q K^T) / √d) V",
-      note: "Bandwidth saturation bounded by HBM speed"
-    },
-    {
-      step: "04",
-      title: "Output Delivery",
-      tag: "Low Latency",
-      state: "signal",
-      description: "Decoded tokens return to the client stream while physical memory returns to the free pool on release.",
-      formula: "T_{next} = argmax(P(w | Context))",
-      note: "Memory reclaimed immediately upon stream termination"
+      id: "01",
+      badge: "PRIMARY SOURCE",
+      claim: "Replace with the exact claim this source supports.",
+      source: "Owning project or author",
+      title: "Specification, paper, or source permalink",
+      url: "https://example.com/replace-with-primary-source"
     }
   ]}
 />
 
----
-
-## 3. Performance & Empirical Trade-Offs
-
-<BenchmarkChart
-  exhibit="03"
-  title="Serving Throughput vs Request Concurrency"
-  badge="EMPIRICAL BENCHMARK"
-  xLabel="Concurrent Request Streams"
-  yLabel="Output Token Throughput"
-  xUnit="streams"
-  yUnit="tok/s"
-  annotation="A100-80GB · FP16"
-  caption="Comparison across allocation architectures. Paged memory maintains linear scaling up to saturation, whereas contiguous reservation hits memory exhaustion early."
-  series={[
-    {
-      name: "Optimized Architecture",
-      color: "#0071e3",
-      data: [
-        { x: 1, y: 240 },
-        { x: 2, y: 480 },
-        { x: 4, y: 960 },
-        { x: 8, y: 1820 },
-        { x: 12, y: 2450 },
-        { x: 16, y: 2800 }
-      ]
-    },
-    {
-      name: "Naive Baseline",
-      color: "#6e6e73",
-      dashed: true,
-      data: [
-        { x: 1, y: 220 },
-        { x: 2, y: 410 },
-        { x: 4, y: 720 },
-        { x: 8, y: 880 },
-        { x: 12, y: 890 },
-        { x: 16, y: 890 }
-      ]
-    }
-  ]}
-/>
-
-| Dimension | Naive Baseline | Optimized Architecture | Delta / Impact |
-|---|---|---|---|
-| **Memory Utilization** | 20% – 40% (fragmented) | 96% – 98% (dense) | **~3.5x throughput** |
-| **P99 Latency** | High variance under contention | Predictable bounded latency | **-65% jitter** |
-| **Complexity** | Simple linear buffers | Indirection table + kernel gather | Additional translation step |
-
----
-
-## Primary Citations & Verifications
-
-All claims and architectural representations in this essay are verified against primary technical documentation, peer-reviewed whitepapers, and source code implementations.
-
-| ID | Claim / Component | Primary Source | Reference / Commit |
-|---|---|---|---|
-| `[1]` | Core Algorithm & Theoretical Bounds | Author et al., Year | [arXiv:0000.00000](https://arxiv.org/) |
-| `[2]` | Kernel / Implementation Source | Open Source Repository | [`repo/path/to/kernel.cu#L120`](https://github.com/) |
-| `[3]` | Hardware Microarchitecture Specs | Architecture Programming Guide | [Hardware Vendor Documentation](https://example.com) |
-
----
-
-{/* 
-========================================================================
-LINKEDIN / MEDIUM SYNDICATION OUTLINE (Internal notes for distribution)
-========================================================================
-• Hook / Slide 1: "Why [Common Approach] wastes 70% of your system capacity."
-• Slide 2 (Exhibit 01): The naive failure mode visual.
-• Slide 3: The root cause (Memory / Bandwidth / Lock contention).
-• Slide 4 (Exhibit 02): The architectural fix diagram.
-• Slide 5: Benchmark / Verification table.
-• Slide 6: Summary takeaways + link to full deep-dive on website.
-========================================================================
-*/}
+{/* Keep distribution notes factual. Do not turn unverified numbers into hooks. */}
