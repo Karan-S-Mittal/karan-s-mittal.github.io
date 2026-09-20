@@ -12,10 +12,7 @@ for (const viewport of [{ width: 375, height: 812 }, { width: 1440, height: 900 
     await page.screenshot({ animations: 'disabled', path: testInfo.outputPath('home-dark.png') });
     await page.locator('#theme-toggle').click();
 
-    await page.getByRole('link', { name: 'Read the implementation study' }).click();
-    await expect(page).toHaveURL(/\/case-studies\/explanatory-studio\/?$/);
-    await expect(page.getByRole('link', { name: 'Try the explorer' })).toHaveAttribute('href', '/blog/linear-regression-ordinary-least-squares/');
-    await page.getByRole('link', { name: 'More work & engagement options' }).click();
+    await page.goto('/work/');
     await page.getByRole('link', { name: 'Ways to work together' }).click();
     await expect(page.locator('#engagements')).toBeInViewport();
     await page.getByRole('link', { name: 'Start a conversation', exact: false }).click();

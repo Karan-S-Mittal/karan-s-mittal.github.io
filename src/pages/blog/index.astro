@@ -55,20 +55,27 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
     <p id="no-results" class="no-results" style="display: none;">No matching essays found.</p>
 
     <div class="archive-list" id="blog-timeline">
-      {years.map((year) => (
-        <YearGroup year={year} count={postsByYear[year].length}>
-          {postsByYear[year].map((post) => (
-            <BlogPostCard
-              post={post}
-              searchText={[
-                post.data.title,
-                post.data.description,
-                ...post.data.tags,
-              ].join(' ').toLowerCase()}
-            />
-          ))}
-        </YearGroup>
-      ))}
+      {years.length > 0 ? (
+        years.map((year) => (
+          <YearGroup year={year} count={postsByYear[year].length}>
+            {postsByYear[year].map((post) => (
+              <BlogPostCard
+                post={post}
+                searchText={[
+                  post.data.title,
+                  post.data.description,
+                  ...post.data.tags,
+                ].join(' ').toLowerCase()}
+              />
+            ))}
+          </YearGroup>
+        ))
+      ) : (
+        <div class="empty-blog-state">
+          <p>No essays published yet. Starting afresh.</p>
+          <p class="empty-subtext">Add new posts in <code>src/content/blog/</code> using <code>npm run new</code>.</p>
+        </div>
+      )}
     </div>
   </main>
 </Layout>
@@ -148,7 +155,7 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
     border: 1px solid var(--ie-rule);
     border-radius: var(--radius-pill, 999px);
     font-family: var(--font-sans);
-    font-size: 0.85rem;
+    font-size: var(--ie-type-ui);
     color: var(--ie-ink);
     transition: border-color 120ms ease;
   }
@@ -173,7 +180,7 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
     border: 1px solid var(--ie-rule);
     border-radius: var(--radius-pill, 999px);
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: var(--ie-type-micro);
     font-weight: 500;
     color: var(--ie-ink);
     text-decoration: none;
@@ -202,7 +209,7 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
 
   .no-results {
     font-family: var(--font-mono);
-    font-size: 0.85rem;
+    font-size: var(--ie-type-ui);
     color: var(--ie-muted);
     padding: 2rem 0;
   }
@@ -215,5 +222,24 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
     .blog-search {
       max-width: none;
     }
+  }
+
+  .empty-blog-state {
+    padding: 3rem 0;
+    color: var(--ie-muted);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-body);
+  }
+  .empty-subtext {
+    margin-top: 0.5rem;
+    font-size: var(--ie-type-ui);
+    color: var(--ie-ink-secondary);
+  }
+  .empty-subtext code {
+    font-family: var(--font-mono);
+    padding: 0.1rem 0.35rem;
+    background: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-sm);
   }
 </style>

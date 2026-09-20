@@ -1,7 +1,6 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
-import react from '@astrojs/react';
 import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
@@ -38,13 +37,6 @@ export default defineConfig({
   // Prefetch links as they approach the viewport. This keeps navigation quick
   // without downloading every page on initial load.
   prefetch: { defaultStrategy: 'viewport', prefetchAll: false },
-  vite: {
-    build: {
-      // The linear-regression post's visual-engine bundle (Mafs + Observable
-      // Plot, lazy-loaded) is the largest remaining chunk at roughly 500 kB.
-      chunkSizeWarningLimit: 550,
-    },
-  },
   integrations: [
     // Keep redirect stubs and internal studio tooling out of the public sitemap.
     sitemap({
@@ -55,7 +47,6 @@ export default defineConfig({
       },
     }),
     mdx(),
-    react(),
   ],
   markdown: {
     processor: unified({

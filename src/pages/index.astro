@@ -11,26 +11,12 @@ const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
 const featuredPosts = [...publishedPosts.filter(p => p.data.featured), ...publishedPosts.filter(p => !p.data.featured)].slice(0, 3);
 const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'});
 
-const featuredBlueprints = [
-  {
-    slug: 'claude-code-loop',
-    title: 'Agent Execution Loop',
-    desc: 'Interactive CLI shell, tool dispatch, and permission gates that keep agents deterministic.',
-    badge: 'AGENT WORKFLOW'
-  },
-  {
-    slug: 'deterministic-rag',
-    title: 'Zero-Hallucination Retrieval',
-    desc: 'Hybrid dense/sparse search, immutable hashes, and deterministic replay audit bundles.',
-    badge: 'VERIFIED DATA'
-  },
-  {
-    slug: 'coding-agent',
-    title: 'Cognitive Router & Tools',
-    desc: '3-tier orchestration: planner decomposition, tool routing, and sandboxed bash execution.',
-    badge: 'MLOPS ARCHITECTURE'
-  }
-];
+const featuredBlueprints: Array<{
+  slug: string;
+  title: string;
+  desc: string;
+  badge: string;
+}> = [];
 ---
 
 <Layout title={SITE.title} description={SITE.description}>
@@ -77,21 +63,25 @@ const featuredBlueprints = [
           <span class="register">01 / Verified blueprints</span>
           <h2 id="blueprints-heading">Architectures you can inspect.</h2>
         </div>
-        <a href="/visuals">View all 11 blueprints →</a>
+        <a href="/visuals">Explore visual library →</a>
       </div>
-      <div class="featured-blueprints-grid">
-        {featuredBlueprints.map(bp => (
-          <a href={`/visuals/${bp.slug}/`} class="blueprint-showcase-card">
-            <VisualMicroSchematic slug={bp.slug} />
-            <div class="blueprint-card-info">
-              <span class="register">{bp.badge}</span>
-              <h3>{bp.title}</h3>
-              <p>{bp.desc}</p>
-              <span class="blueprint-card-cta">Inspect blueprint &rarr;</span>
-            </div>
-          </a>
-        ))}
-      </div>
+      {featuredBlueprints.length > 0 ? (
+        <div class="featured-blueprints-grid">
+          {featuredBlueprints.map(bp => (
+            <a href={`/visuals/${bp.slug}/`} class="blueprint-showcase-card">
+              <VisualMicroSchematic slug={bp.slug} />
+              <div class="blueprint-card-info">
+                <span class="register">{bp.badge}</span>
+                <h3>{bp.title}</h3>
+                <p>{bp.desc}</p>
+                <span class="blueprint-card-cta">Inspect blueprint &rarr;</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="empty-state">Fresh architectural blueprints are being prepared. Explore the library soon.</p>
+      )}
     </section>
 
     <!-- Section 02: Selected Writing -->
@@ -101,17 +91,21 @@ const featuredBlueprints = [
           <span class="register">02 / Selected writing</span>
           <h2 id="writing-heading">How I work through complex systems.</h2>
         </div>
-        <a href="/blog">All {publishedPosts.length} essays →</a>
+        <a href="/blog">Visit blog →</a>
       </div>
-      {featuredPosts.map(post => (
-        <a class="note-row" href={`/blog/${post.id}/`}>
-          <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
-          <div>
-            <h3>{post.data.title}</h3>
-            <p>{post.data.description}</p>
-          </div>
-        </a>
-      ))}
+      {featuredPosts.length > 0 ? (
+        featuredPosts.map(post => (
+          <a class="note-row" href={`/blog/${post.id}/`}>
+            <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+            <div>
+              <h3>{post.data.title}</h3>
+              <p>{post.data.description}</p>
+            </div>
+          </a>
+        ))
+      ) : (
+        <p class="empty-state">Starting afresh with new systems essays. Check back soon.</p>
+      )}
     </section>
 
     <!-- Centered Closing -->

@@ -28,40 +28,20 @@ Status values: `open`, `in progress`, `blocked`, `done`. Do not delete an artifa
 
 ## P1 — done: prune repository test and draft weight
 
-- Locations: `drafts/`, superseded `docs/superpowers/` plans, and dead binary assets.
-- Verified on 2026-09-17: Removed stale `docs/superpowers/`, duplicate `drafts/xgboost-series/`, and binary `.docx`/section slices from `drafts/kimi-data-outgrows-tools/`. Canonical Markdown drafts preserved.
+- Locations: `drafts/`, `public/images/`, `public/templates/`, `Excalidraw/`.
+- Verified on 2026-09-20: Deleted obsolete `drafts/kimi-data-outgrows-tools/`, deleted `public/images/blog/` (.webp hero images), deleted `public/templates/` and `Excalidraw/` to maintain a 100% code-only repository.
 
-## P1 — open: bring interactive visuals back onto semantic tokens
+## P1 — done: purge orphaned diagram components and decommission case studies
 
-- Locations: `src/components/visual-engine/ui/UniverSpreadsheet.tsx`, `src/components/visuals/ml/regression/LinearRegressionMafs.tsx`, `src/components/visuals/ml/regression/LossParabolaObservable.tsx`.
-- Opportunity: these files contain repeated raw palettes and Tailwind-era colors, so dark mode and the editorial language can drift from the rest of the site.
-- Desired invariant: one semantic palette works in light and dark modes, without changing the explanatory meaning of positive, negative, and constraint states.
+- Locations: `src/components/diagram/`, `src/pages/case-studies/`, `src/components/editorial/`, `src/components/content/HeroTelemetryWorkbench.astro`.
+- Verified on 2026-09-20: Purged 28 orphaned diagram components (`go-runtime/`, `paged-attention/`, `rag/`, `xgboost/`, and unused agent diagrams). Deleted `/case-studies/` and 6 legacy editorial helpers (`DarkPlane`, `TintedPlane`, `MetaLabel`, `EvidenceObject`, `ArchitectureAnnotation`, `SectionBreak`). Realigned `work.astro`.
 
-## P2 — open: reduce the linear-regression island cost only if it matters in field data
+## P2 — done: consolidate and purge OLS calculations
 
-- Location: `LinearRegressionMafs.tsx` and `LossParabolaObservable.tsx`.
-- Opportunity: the island combines Mafs, Observable Plot, and the spreadsheet into a roughly 549 KB chunk; each slope/point update rebuilds the sampled Plot curve.
-- Sequence: measure real interaction cost first; then consider separating the spreadsheet, lazy-loading the plot, reducing plot dependencies, or updating an existing plot instead of recreating it.
-- Desired invariant: the first meaningful interaction stays immediate and the three views remain synchronized.
-
-## P2 — done: consolidate repeated OLS calculations
- 
-- Locations: `LinearRegressionMafs.tsx`, `UniverSpreadsheet.tsx`, `LossParabolaObservable.tsx`, `src/utils/ols.ts`.
-- Verified on 2026-09-11: Consolidated into pure, unit-tested module `src/utils/ols.ts` (`tests/ols.test.mjs`). All three components consume shared OLS and regression statistics.
+- Locations: `src/utils/ols.ts`, `tests/ols.test.mjs`, `package.json`.
+- Verified on 2026-09-20: OLS module and unit test deleted following removal of the linear-regression island. `npm test` streamlined to `npm run studio:check`. Visual tests updated for active static routes.
 
 ## P3 — done: reconcile documentation and dead assets
 
-- Locations: `docs/README.md`, unreferenced public assets (`public/avatar.svg`, `public/images/go/`, `public/images/paged-attention-memory-module.webp`), stale `docs/instrumented-editorial.md` and `docs/studio-engine.md`, and `.kimi/skills/`.
-- Verified on 2026-09-17: Removed all unreferenced assets, deleted stale docs, updated `docs/README.md` to reference live files (`_template.mdx`), and deleted duplicate Kimi skills.
-
-## P1 — open: preserve architecture connections on narrow screens
-
-- Locations: `CodingAgentArchitecture.astro` and `AgentContextTopology.astro`.
-- Observed during compact-page verification (2026-09-08): existing mobile styles stack nodes and hide connector layers below 640px. Desktop diagrams and exports retain the topology; narrow exports inherit the simplified stack.
-- Desired invariant: small-screen presentation and downloads preserve supplied relationships without clipping. Address diagram responsiveness separately from the compact page wrapper.
-
-## P2 — open: confirm long timeline downloads in the in-app browser
-
-- Location: `DiagramExportBar.astro`, `/visuals/coding-timeline/`.
-- Verification boundary (2026-09-08): architecture PNG files were downloaded and inspected in both themes. Timeline rendering returned to its idle state without a console error, but no downloaded file or download event was observed in the in-app browser. Blob delivery was also attempted; do not treat button text alone as proof of file delivery.
-- Next check: reproduce in a normal browser and verify file delivery, image bounds, and omitted interaction controls before declaring the timeline export verified.
+- Locations: `AGENTS.md`, `docs/README.md`, `docs/design-language.md`, `docs/authoring-workflow.md`.
+- Verified on 2026-09-20: Fixed dangling links to deleted `instrumented-editorial.md` and Excalidraw templates; documented pure code-first diagram authoring.

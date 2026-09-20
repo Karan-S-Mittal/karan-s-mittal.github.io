@@ -1,10 +1,6 @@
 # Instrumented Editorial — Working Design Language
 
-**Status:** Active · selected 2026-09-01
-
-**Full specification:** [`instrumented-editorial.md`](instrumented-editorial.md)
-
-**Supersedes:** Soft Architecture v1, now retained only as historical context
+**Status:** Active · Canonical Specification
 **Site role:** Present Karan Mittal as an engineer-scientist who makes consequential systems inspectable.
 
 ## The idea
@@ -29,9 +25,9 @@ The visual system combines the authority of an editorial publication with the pr
 | Role | Typeface | Token | Use |
 | --- | --- | --- | --- |
 | Display & Title | Plus Jakarta Sans | `--font-display` | Page H1s, section titles, card headers, diagram titles |
-| Interface & Body | IBM Plex Sans | `--font-sans` | Navigation, long-form reading prose, controls |
+| Interface & Body | Inter | `--font-sans` | Navigation, long-form reading prose, controls |
 | Diagram Labels | Inter | `--font-diagram` | Technical node labels, annotations, state flags |
-| Instrument | IBM Plex Mono | `--font-mono` | Measurements, offsets, addresses, metadata, code |
+| Instrument | JetBrains Mono | `--font-mono` | Measurements, offsets, addresses, metadata, code |
 
 - Reading column: **700px**, 18px body, 1.72–1.8 line height.
 - Technical labels and metadata: **13px minimum**; dense diagram labels may use 12px only when geometry cannot support 13px.
@@ -74,7 +70,7 @@ All meaningful figures use `<Exhibit />` with an exhibit number, descriptive tit
 - Solid ink/blue paths are direct or synchronous.
 - Dashed muted paths are async, inferred, optional, or eventual.
 - Rust marks a constraint; use one dominant rust locus per figure.
-- Labels use IBM Plex Sans; values, indices, and addresses use IBM Plex Mono.
+- Labels use Inter; values, indices, and addresses use JetBrains Mono.
 - Colour must be redundant with shape, label, line style, or position.
 - Use leader callouts for surprising behaviour: `← notice zero allocation here`.
 

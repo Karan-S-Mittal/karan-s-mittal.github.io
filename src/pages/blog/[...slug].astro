@@ -211,7 +211,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     margin: 0 0 1rem;
     color: var(--accent);
     font-family: var(--font-mono);
-    font-size: var(--ie-type-label, 0.72rem);
+    font-size: var(--ie-type-label);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -227,7 +227,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     flex-wrap: wrap;
     margin-bottom: var(--space-3);
     font-family: var(--font-mono);
-    font-size: var(--ie-type-label, 0.72rem);
+    font-size: var(--ie-type-label);
     letter-spacing: 0.02em;
     color: var(--muted);
   }
@@ -242,7 +242,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     max-width: 30ch;
     margin: 0.75rem 0 1.25rem;
     font-family: var(--font-display);
-    font-size: clamp(1.75rem, 3.2vw, 2.25rem);
+    font-size: var(--ie-type-h1);
     font-weight: 700;
     letter-spacing: -0.025em;
     line-height: 1.2;
@@ -360,7 +360,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     margin: 0 0 1.35rem;
     color: var(--ie-ink);
     font-family: var(--font-display);
-    font-size: clamp(1.85rem, 3.4vw, 2.6rem);
+    font-size: var(--ie-type-h1);
     font-weight: 700;
     letter-spacing: -0.025em;
     line-height: 1.15;
@@ -369,7 +369,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   .instrumented-essay .post-standfirst {
     max-width: 62ch;
     color: var(--ie-ink-secondary);
-    font-size: 1.25rem;
+    font-size: var(--ie-type-h3);
   }
 
   .instrumented-essay .post-tags {
@@ -500,19 +500,22 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     margin-top: 3.5rem;
     padding-top: 1.1rem;
     scroll-margin-top: 5.5rem;
-    font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h2);
     letter-spacing: -0.025em;
   }
   .post-content > h3 {
     margin-top: 2.25rem;
     scroll-margin-top: 5.5rem;
-    font-size: 1.15rem;
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h3);
     letter-spacing: -0.015em;
   }
   .post-content > h4 {
     margin: 2rem 0 0.65rem;
     scroll-margin-top: 5.5rem;
-    font-size: 1.05rem;
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h4);
     font-weight: 600;
     line-height: 1.4;
     letter-spacing: -0.01em;
@@ -624,8 +627,8 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     align-items: baseline;
     gap: 8px;
     padding: 10px 16px;
-    font-family: var(--font-mono, monospace);
-    font-size: 11.5px;
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
     color: var(--muted);
     border-top: 1px solid var(--border);
     background: var(--bg-inset);
@@ -665,10 +668,10 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     border-top: 1px solid var(--ie-rule-strong);
     color: var(--ie-ink);
     font-family: var(--font-display);
-    font-size: clamp(2.15rem, 4vw, 3.25rem);
+    font-size: var(--ie-type-h2);
     font-weight: 600;
     letter-spacing: -0.025em;
-    line-height: 1.08;
+    line-height: 1.15;
   }
 
   .instrumented-essay .post-content > h2::before {
@@ -685,8 +688,8 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   .instrumented-essay .post-content > h3 {
     margin-top: 3.25rem;
     color: var(--ie-ink);
-    font-family: var(--font-sans);
-    font-size: 1.45rem;
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h3);
     font-weight: 600;
   }
 
@@ -709,7 +712,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     border-top: 2px solid var(--ie-ink);
     border-bottom: 1px solid var(--ie-rule-strong);
     font-family: var(--font-mono);
-    font-size: 0.76rem;
+    font-size: var(--ie-type-micro);
   }
 
   .instrumented-essay .post-content th,

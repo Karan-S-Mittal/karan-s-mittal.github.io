@@ -121,8 +121,8 @@ const ariaLabel = `${label ?? 'System diagram'} — ${description ?? ''} ${gener
   aria-label={ariaLabel}
 >
   <defs>
-    <marker id={`${id}-arrow`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L8,4 L0,8 Z" fill="var(--diagram-edge-primary)" />
+    <marker id={`${id}-arrow`} viewBox="0 0 8 8" refX="6.5" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M1.5,1.5 L6.5,4 L1.5,6.5" fill="none" stroke="var(--ie-ink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
     </marker>
   </defs>
 

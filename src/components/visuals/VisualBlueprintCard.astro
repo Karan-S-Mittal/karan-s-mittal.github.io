@@ -153,7 +153,7 @@ const formattedIndex = typeof index === 'number' ? `ARC-${String(index).padStart
 
   .meta-export {
     margin-left: auto;
-    font-size: 0.65rem;
+    font-size: var(--ie-type-micro);
     color: var(--ie-muted);
     padding: 0.15rem 0.35rem;
     border: 1px solid var(--ie-rule);
@@ -165,7 +165,7 @@ const formattedIndex = typeof index === 'number' ? `ARC-${String(index).padStart
   .card-title {
     margin: 0.2rem 0 0;
     font-family: var(--font-display);
-    font-size: 1.0625rem;
+    font-size: var(--ie-type-h4);
     font-weight: 600;
     letter-spacing: -0.015em;
     line-height: 1.35;
@@ -179,8 +179,8 @@ const formattedIndex = typeof index === 'number' ? `ARC-${String(index).padStart
 
   .card-desc {
     margin: 0;
-    font-family: var(--font-diagram);
-    font-size: var(--ie-type-small, 0.875rem);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-label);
     color: var(--ie-ink-secondary);
     line-height: 1.5;
     display: -webkit-box;

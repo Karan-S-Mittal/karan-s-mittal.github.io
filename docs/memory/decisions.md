@@ -63,5 +63,29 @@ Standardized all display typography (`h1`, `h2`, `h3`, page display titles, and 
 - **Precision Blueprint Arrowheads & Clean Flow**: Barred placing artificial box containers over connector arrows. Enforced continuous 1.8px blueprint connector lines with standardized 8×8/10×10 precision markers (`refX="7"–"8"`, `markerWidth="6"`, `stroke-width="1.6"–"1.8"` with rounded joins). Bridge labels in diagrams use high-contrast 11px text (`var(--ie-ink)`), never faint sub-10px muted text.
 - **Codified into Skills & Framework**: Upgraded `.agents/skills/diagram-craft/SKILL.md`, `docs/diagram-framework.md`, and diagram components (`ClaudeCodeLocalLoop`, `ClaudeCodeHarness`, `CodexCloudSandboxLoop`, `VisualMicroSchematic`, `HeroWorkflowGraph`).
 
+## 2026-09-17 — Universal Diagram Compliance, Automated Studio Verification, and Token Purge
+
+- **Automated Verification Script (`scripts/studio-check.js`)**: Created and wired into `"studio:check"`, `"prebuild"`, and `"test"` in `package.json`. Enforces 0 raw hex colors in `<style>` blocks and SVG attributes, valid bundled typography tokens, and purges legacy/deprecated tokens across all diagram and visual components.
+- **100% Semantic Token Compliance**: Refactored all 44 diagram components across the site to use strictly canonical `var(--ie-*)` or `var(--brand-*)` tokens. Completely eliminated legacy tokens (`--accent`, `--border-default`, `--surface-card`, `--signal-warm`, `--text`, `--bg`). Result: 0 errors and 0 warnings.
+- **Direct Block Focus & Header Deduplication**: Configured default `showHeader = false` across all architectural diagram components (`AgentContextTopology`, `CodingAgentArchitecture`, `CodingTimelineComparison`, `DeterministicRAGArchitecture`, `PagedAttentionStepsArchitecture`, `CodingEvolutionTree`) so diagrams render their functional nodes directly without duplicating page chrome when hosted on `VisualPage.astro` or within `<Exhibit />`.
+- **Precision Blueprint Markers Across All Figures**: Replaced legacy solid `<polygon>` arrowheads and clunky markers across all Excalidraw, PagedAttention, and architecture diagrams (`ExcalidrawNaiveVsKVCache`, `ExcalidrawPagedSteps`, `ExcalidrawCopyOnWrite`, `ArchitectureDiagram`, `AgentContextTopology`, `CodingAgentArchitecture`) with 8×8 viewBox precision blueprint chevron markers (`refX="6.5" refY="4" stroke-width="1.5"`).
+- **High-Contrast Hardware & Cache Indicators**: Fixed low-contrast and invisible text defects in `CacheAwareBufferArchitecture.astro` (L1/L2 miss badges, cache hex addresses, AVX2 SIMD headers) using high-contrast surface fills and ink contrast rules.
+
+## 2026-09-17 — Typography Standardization: Two Proportional Fonts + JetBrains Mono and Scale Tokenization
+
+- **Two Core Proportional Fonts**: Standardized exclusively on `Plus Jakarta Sans` (`@fontsource/plus-jakarta-sans`, `var(--font-display)`) for display headings, hero titles, card headings, and diagram exhibit titles, and `Inter` (`@fontsource/inter`, `var(--font-sans)` and `var(--font-diagram)`) for all body prose, UI controls, navigation, and technical diagram nodes/labels.
+- **JetBrains Mono Adoption**: Installed `@fontsource/jetbrains-mono` and updated `var(--font-mono)` across the entire site. Completely uninstalled and banned legacy IBM Plex fonts (`@fontsource/ibm-plex-sans`, `@fontsource/ibm-plex-mono`, `@fontsource/ibm-plex-serif`), enforcing zero-tolerance in `scripts/studio-check.js`.
+- **Global Typographic Scale Tokenization**: Standardized all headings, cards, badges, and boxes across the site to use the canonical `--ie-type-*` typographic scale tokens (`--ie-type-micro` [12px], `--ie-type-label` [13px], `--ie-type-ui` [14px], `--ie-type-small` [15px], `--ie-type-base` [16px], `--ie-type-body` [18px], `--ie-type-h4` [17px], `--ie-type-h3` [20px], `--ie-type-h2` [22.4–29.6px], `--ie-type-h1` [32–44px]). Replaced ad-hoc font sizes across all pages (`blog/[...slug].astro`, `contact.astro`, `talks.astro`, `now.astro`, `blog/index.astro`) and core layout components.
+
+## 2026-09-20 — Minimal Repository Pruning & 100% Code-Only Architecture
+
+- **Clean Sweep of Orphaned Diagram Components**: Purged 28 unimported legacy diagram components across `go-runtime/`, `paged-attention/`, `rag/`, `xgboost/`, and top-level agent/coding assistant diagrams. Retained only the 4 generic starter templates (`_template.mdx`) and active `version-control/` diagrams.
+- **Decommissioning /case-studies/**: Deleted both `explanatory-studio.astro` and archived `soft-architecture.astro`. Purged the 6 obsolete editorial helpers (`DarkPlane`, `TintedPlane`, `MetaLabel`, `EvidenceObject`, `ArchitectureAnnotation`, `SectionBreak`). Realigned `work.astro` around direct client engagements and community teaching.
+- **Pure Code-Only Diagram Standard**: Deleted `Excalidraw/` and `public/templates/studio-starter.excalidraw`. Diagrams are exclusively written as declarative, token-compliant Astro and SVG components under `src/components/diagram/`.
+- **Eliminated Dead Assets & Math Tests**: Removed ~1.2 MB of unused `.webp` hero images (`public/images/blog/`), stale export PNGs (`public/visuals/`), and the unused OLS regression math utilities (`src/utils/ols.ts` and `tests/ols.test.mjs`), streamlining `npm test` to run `npm run studio:check`.
+- **Synchronized Documentation**: Fixed dangling references to `instrumented-editorial.md` in `AGENTS.md` and `docs/design-language.md`.
+
+
+
 
 

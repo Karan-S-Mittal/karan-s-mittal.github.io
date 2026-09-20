@@ -8,27 +8,31 @@ Last reviewed: 2026-09-17
 - Published content lives in `src/content/blog/`; the collection currently builds seven non-draft essays.
 - The site emits static pages, tag pages, essays, and the dedicated `/visuals/` directory.
 - `src/styles/global.css` is the runtime token source of truth. Shared UI and exhibit primitives live under `src/components/`.
-- As of 2026-09-17:
+- As of 2026-09-20:
   - **Single Trunk (`main`)**: The repository operates strictly on `main`. Autonomous coding agents must never spawn side branches.
-  - **Centered Homepage & High-Signal Culling**: The homepage is centered (`.hero.hero-centric`), focusing directly on client value (LLM agent reliability, MLOps cost cutting, automated CI/CD evaluation) and pruning low-signal consulting packages/event tables down to 3 core pillars, 3 featured blueprints, and selected writing.
-  - **Unboxed Systems Architecture Workflow**: `HeroWorkflowGraph.astro` provides an unboxed, transparent 3-stage LLM & MLOps production pipeline with standard `<figcaption>` below the artwork.
-  - **Precision Arrowheads & High-Contrast Connectors**: Standardized on 8×8/10×10 viewBox blueprint arrow markers (`stroke-width="1.5"–"1.8"`), continuous unobstructed flow lines (no boxes over arrows), and high-contrast 11px connector text in `var(--ie-ink)`.
-  - **Display Typography**: Standardized on `@fontsource/plus-jakarta-sans` (`var(--font-display)`) across all display headings (`h1`, `h2`, `h3`), hero titles, and diagram headers, paired with `IBM Plex Sans` (body), `Inter` (diagram labels), and `IBM Plex Mono` (instrument readouts).
-  - **Mechanistic Primitives**: Added `<MemoryGrid />` (Distill-style proportional memory frames and tensor strides) and `<StepScrubber />` (Ciechanowski-style zero-overhead step controller) under `src/components/diagram/primitives/`.
-  - **Tufte Data-Ink Rule**: Pruned nested card borders in favor of hairline rules (`--ie-rule`) and direct leader annotations.
+  - **Complete Minimal Repository Pruning**:
+    - Purged all 28 orphaned diagram components (`go-runtime/`, `paged-attention/`, `rag/`, `xgboost/`, and the 9 unused agent/coding assistant diagrams).
+    - Removed `/case-studies/` route (`explanatory-studio.astro` and `soft-architecture.astro`) and deleted 6 legacy soft-architecture helper components (`DarkPlane`, `TintedPlane`, `MetaLabel`, `ArchitectureAnnotation`, `EvidenceObject`, `SectionBreak`).
+    - Streamlined `src/pages/work.astro` to focus on public sessions and direct client engagements.
+    - Cleaned out all dead static assets (`public/images/`, `public/visuals/`, `public/templates/`), `Excalidraw/`, and `drafts/`.
+    - Removed dead OLS math utilities (`src/utils/ols.ts`) and unit test (`tests/ols.test.mjs`), streamlining `npm test` to `npm run studio:check`.
+    - Updated `tests/visual/` Playwright test suite to target only active routes.
+    - Updated `src/pages/visuals/index.astro` to a clean empty state with no stale metadata.
+  - **Modern Version Control Deep-Dive**: Authored `src/content/blog/exploring-version-control.mdx` (`draft: true`) breaking down raw Git vs developer platforms, SCM Merkle DAGs, the 4-tier platform stack, multi-platform sovereignty trade-offs (GitHub, GitLab, Codeberg, Forgejo, SourceHut), 3-way code review topologies (Branch PR vs Stacked Changes vs Patch-over-email), CI/CD runner execution & OCI isolation, hypervisor SMT vCPU cache contention, and decoupled ephemeral storage.
+  - **New Diagram Exhibits**: Added `PlatformStackHierarchy.astro` (Exhibit 01) and `CodeReviewTopologies.astro` (Exhibit 02) under `src/components/diagram/version-control/` — 100% token compliant with Soft Architecture grammar.
+  - **Universal Diagram Verification & 100% Token Compliance**: Automated via `scripts/studio-check.js` (runs on `npm test` and `npm run prebuild`).
 - Authoring skills: `diagram-craft` handles compact attributed visuals; `explanatory-studio` handles evidence-backed essays.
-- React is intentionally limited to explanatory islands: the linear-regression explorer hydrates with `client:visible`.
 
 ## Verification baseline
 
 - Single trunk `main` clean. Always commit directly to `main`.
+- `npm test` runs `studio:check`.
+- Full production build verified via `npm run build`.
 
 ## Known performance shape
 
-- The ordinary site is static HTML and small route CSS. The largest global stylesheet emitted in the last build was about 49 KB.
-- The linear-regression React island emitted a roughly 549 KB client chunk because Mafs, Observable Plot, and the spreadsheet explorer share one interactive boundary.
-- As of 2026-09-11, KaTeX CSS is scoped strictly to `src/pages/blog/[...slug].astro`, removing math stylesheet and font payload from all non-mathematical pages.
-- Closed-form OLS regression calculations are centralized in `src/utils/ols.ts` and verified by `tests/ols.test.mjs` (`npm test`).
+- The ordinary site is static HTML and small route CSS.
+- KaTeX CSS is scoped strictly to `src/pages/blog/[...slug].astro`, removing math stylesheet and font payload from all non-mathematical pages.
 
 ## Correctness note
 

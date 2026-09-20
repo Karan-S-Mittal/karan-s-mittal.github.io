@@ -2,17 +2,13 @@
 @import '@fontsource/plus-jakarta-sans/latin-600.css';
 @import '@fontsource/plus-jakarta-sans/latin-700.css';
 @import '@fontsource/plus-jakarta-sans/latin-800.css';
-@import '@fontsource/ibm-plex-sans/latin-400.css';
-@import '@fontsource/ibm-plex-sans/latin-500.css';
-@import '@fontsource/ibm-plex-sans/latin-600.css';
-@import '@fontsource/ibm-plex-sans/latin-700.css';
-@import '@fontsource/ibm-plex-mono/latin-400.css';
-@import '@fontsource/ibm-plex-mono/latin-500.css';
-@import '@fontsource/ibm-plex-mono/latin-600.css';
 @import '@fontsource/inter/latin-400.css';
 @import '@fontsource/inter/latin-500.css';
 @import '@fontsource/inter/latin-600.css';
 @import '@fontsource/inter/latin-700.css';
+@import '@fontsource/jetbrains-mono/latin-400.css';
+@import '@fontsource/jetbrains-mono/latin-500.css';
+@import '@fontsource/jetbrains-mono/latin-600.css';
 
 /* ================================================================
    Design Tokens — Soft Architecture v1
@@ -60,9 +56,9 @@
 
   /* Typography Families */
   --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-diagram: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
   /* Mechanistic & Memory Layout Tokens */
   --ie-mem-free: var(--ie-surface-raised);
@@ -76,16 +72,16 @@
   --ie-leader-line: var(--ie-muted);
 
   /* Standardized Typography Scale */
-  --ie-type-micro: 0.75rem;    /* 12px: badges, dots */
-  --ie-type-label: 0.8125rem;  /* 13px: metadata, tags, dates */
-  --ie-type-ui: 0.875rem;      /* 14px: buttons, nav links, controls */
-  --ie-type-small: 0.96875rem; /* 15.5px: card descriptions, captions */
-  --ie-type-base: 1rem;        /* 16px: standard base */
+  --ie-type-micro: 0.75rem;    /* 12px: badges, dots, offset readouts */
+  --ie-type-label: 0.8125rem;  /* 13px: metadata, tags, dates, diagram secondary */
+  --ie-type-ui: 0.875rem;      /* 14px: buttons, nav links, controls, box headers */
+  --ie-type-small: 0.9375rem;  /* 15px: card descriptions, captions */
+  --ie-type-base: 1rem;        /* 16px: standard base UI / lead */
   --ie-type-body: 1.125rem;    /* 18px: essay reading prose & hero lead */
-  --ie-type-h4: 1.0625rem;     /* 17px: sub-headers */
+  --ie-type-h4: 1.0625rem;     /* 17px: sub-headers, box titles */
   --ie-type-h3: 1.25rem;       /* 20px: card and panel titles */
-  --ie-type-h2: clamp(1.35rem, 2.2vw, 1.75rem); /* 21.6–28px: major section titles */
-  --ie-type-h1: clamp(1.85rem, 3.2vw, 2.5rem);  /* 29.6–40px: page display titles */
+  --ie-type-h2: clamp(1.4rem, 2.4vw, 1.85rem); /* 22.4–29.6px: major section titles */
+  --ie-type-h1: clamp(2rem, 3.8vw, 2.75rem);   /* 32–44px: page display titles */
 
   /* Legacy & Semantic Mapping */
   --bg: var(--ie-canvas);
@@ -315,7 +311,7 @@ body {
    Typography
    ================================================================ */
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   color: var(--ie-ink);
   text-wrap: balance;
@@ -331,8 +327,8 @@ h1 {
 
 h2 {
   font-size: var(--ie-type-h2);
-  font-weight: 600;
-  line-height: 1.18;
+  font-weight: 650;
+  line-height: 1.2;
   letter-spacing: -0.025em;
   margin: var(--space-7) 0 var(--space-3);
 }
@@ -340,17 +336,24 @@ h2 {
 h3 {
   font-size: var(--ie-type-h3);
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 1.28;
   letter-spacing: -0.02em;
   margin: var(--space-6) 0 var(--space-2);
 }
 
-h4, h5, h6 {
-  font-family: var(--font-display);
+h4 {
+  font-size: var(--ie-type-h4);
   font-weight: 600;
+  line-height: 1.35;
   letter-spacing: -0.015em;
-  color: var(--ie-ink);
-  text-wrap: balance;
+  margin: var(--space-5) 0 var(--space-2);
+}
+
+h5, h6 {
+  font-size: var(--ie-type-ui);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: var(--space-4) 0 var(--space-2);
 }
 
 p {

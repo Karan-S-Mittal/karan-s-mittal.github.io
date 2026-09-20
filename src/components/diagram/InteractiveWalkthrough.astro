@@ -213,12 +213,12 @@ const {
   }
 
   .walkthrough-kicker {
-    color: var(--text);
+    color: var(--ie-ink);
     font-weight: 600;
   }
 
   .walkthrough-status {
-    color: var(--muted);
+    color: var(--ie-muted);
   }
 
   .walkthrough-nav {
@@ -226,7 +226,7 @@ const {
     gap: 0.5rem;
     overflow-x: auto;
     padding-bottom: 0.25rem;
-    scrollbar-color: var(--border-default) transparent;
+    scrollbar-color: var(--ie-rule) transparent;
   }
 
   .walkthrough-tab {
@@ -236,28 +236,28 @@ const {
     flex: 1 0 8.5rem;
     min-height: 2.75rem;
     padding: 0.5rem 0.75rem;
-    background: var(--bg-inset);
-    border: 1px solid var(--border-default);
+    background: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
     border-radius: var(--radius-sm, 6px);
-    color: var(--text-secondary);
+    color: var(--ie-ink-secondary);
     cursor: pointer;
     text-align: left;
-    font-family: var(--font-sans);
+    font-family: var(--font-diagram);
     font-size: 0.8rem;
     line-height: 1.2;
     transition: all var(--transition-fast);
   }
 
   .walkthrough-tab:hover {
-    color: var(--text);
+    color: var(--ie-ink);
     border-color: var(--ie-rule-strong);
   }
 
   .walkthrough-tab.active {
-    color: var(--accent);
-    border-color: var(--accent);
+    color: var(--ie-blue);
+    border-color: var(--ie-blue);
     background: var(--ie-blue-soft);
-    box-shadow: 0 1px 3px rgba(0, 113, 227, 0.12);
+    box-shadow: 0 1px 3px var(--ie-blue-soft);
   }
 
   .walkthrough-tab-index {
@@ -279,10 +279,10 @@ const {
   .walkthrough-explainer {
     margin: 0.85rem 0 0.5rem;
     padding: 0.65rem 0.85rem;
-    background: var(--bg-inset);
+    background: var(--ie-surface-raised);
     border-radius: var(--radius-sm, 6px);
-    border-left: 3px solid var(--accent);
-    color: var(--text);
+    border-left: 3px solid var(--ie-blue);
+    color: var(--ie-ink);
     font-family: var(--font-sans);
     font-size: 0.875rem;
     line-height: 1.5;

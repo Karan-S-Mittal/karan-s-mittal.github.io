@@ -1,6 +1,6 @@
 # Authoring & Visual Production Workflow
 
-This guide is the master reference for writing, illustrating, verifying, and publishing deep-tech essays using **Obsidian**, **Excalidraw**, and **Astro**.
+This guide is the master reference for writing, illustrating, verifying, and publishing deep-tech essays using **Astro** and the studio's diagram craft framework.
 
 ---
 
@@ -84,11 +84,6 @@ To ensure all diagrams look authored by the same studio:
    - Vector brand and tech logos via `<BrandIcon name="..." />` (`claude`, `gemini`, `openai`, `mcp`, `git`, `docker`, `vscode`, etc.).
    - 100% token-based colors (`var(--ie-*)` and `var(--brand-*)`) with automatic Light and Dark mode adaptation.
 4. Verify build via `npm run build`.
-
-### Option B: Obsidian Excalidraw
-1. In Obsidian, create an Excalidraw drawing: `public/diagrams/<post-slug>/my-diagram.excalidraw.md`.
-2. Use the semantic tokens: Anchor Blue (`--ie-blue`), Constraint Rust (`--ie-rust`), Verified Green (`--ie-verified`), Ink (`--ie-ink`), Muted (`--ie-muted`).
-3. Set Obsidian Excalidraw plugin to **Auto-export SVG** to generate `my-diagram.svg`.
 
 ---
 

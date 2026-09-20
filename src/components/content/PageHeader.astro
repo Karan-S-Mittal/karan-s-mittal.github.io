@@ -46,7 +46,7 @@ const Heading = headingLevel;
   .page-header :is(h1, h2) {
     font-family: var(--font-display);
     max-width: 28ch;
-    font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+    font-size: var(--ie-type-h1);
     font-weight: 700;
     letter-spacing: -0.025em;
     line-height: 1.15;
@@ -58,7 +58,7 @@ const Heading = headingLevel;
     max-width: 680px;
     margin: 0;
     line-height: 1.68;
-    font-size: var(--ie-type-body, 1.125rem);
+    font-size: var(--ie-type-body);
   }
   .count-badge {
     display: inline-block;
@@ -79,7 +79,7 @@ const Heading = headingLevel;
       margin-bottom: var(--space-6);
     }
     .lead {
-      font-size: 1.0625rem;
+      font-size: var(--ie-type-h4);
     }
   }
 </style>

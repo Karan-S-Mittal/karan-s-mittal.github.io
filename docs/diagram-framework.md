@@ -28,7 +28,7 @@ Keep an entity's label and semantic encoding consistent across figures. Explain 
 - Online directories: [lucide.dev/icons](https://lucide.dev/icons) and [simpleicons.org](https://simpleicons.org).
 - [`CodingAgentArchitecture.astro`](../src/components/diagram/CodingAgentArchitecture.astro) and [`CodingTimelineComparison.astro`](../src/components/diagram/CodingTimelineComparison.astro): composition references, not boilerplate to copy wholesale.
 
-Runtime colors and type tokens come from [`global.css`](../src/styles/global.css); broader visual semantics live in [`design-language.md`](design-language.md). Use Plus Jakarta Sans (`var(--font-display)`) for diagram display titles, Inter (`var(--font-diagram)`) for node labels, and IBM Plex Mono (`var(--font-mono)`) for metrics/code as specified in `AGENTS.md`.
+Runtime colors and type tokens come from [`global.css`](../src/styles/global.css); broader visual semantics live in [`design-language.md`](design-language.md). Use Plus Jakarta Sans (`var(--font-display)`) for diagram display titles, Inter (`var(--font-diagram)`) for node labels and descriptions, and JetBrains Mono (`var(--font-mono)`) for metrics, offsets, and code tags as specified in `AGENTS.md`.
 
 ## Geometry that survives export
 

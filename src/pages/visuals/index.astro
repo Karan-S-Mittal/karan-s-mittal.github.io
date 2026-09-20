@@ -16,88 +16,9 @@ interface VisualItem {
 const rawPages = import.meta.glob<string>('./*.astro', { query: '?raw', import: 'default', eager: true });
 
 // Curated metadata and archetype mapping for established visuals
-const curatedMeta: Record<string, { title?: string; desc?: string; category?: string; archetype?: 'loop' | 'pipeline' | 'memory' | 'tree' | 'hierarchy' | 'comparison' }> = {
-  'claude-code-loop': {
-    title: 'Claude Code Local Agent Loop',
-    desc: 'Interactive CLI orchestrator, context state compaction, ReAct execution cycle, and native primitives.',
-    category: 'EXECUTION LOOP',
-    archetype: 'loop',
-  },
-  'claude-code-harness': {
-    title: 'Claude Code Harness Architecture',
-    desc: 'Local execution harness lifecycle: CLI prompt dispatch, model reasoning, PreToolUse permission evaluation, and closed-loop compaction.',
-    category: 'HARNESS PIPELINE',
-    archetype: 'pipeline',
-  },
-  'codex-cloud-sandbox-loop': {
-    title: 'OpenAI Codex Cloud Sandbox Loop',
-    desc: 'Autonomous cloud daemon lifecycle: task dispatch, ephemeral VM provisioning, mutation engine, and self-correcting PR packaging.',
-    category: 'CLOUD DAEMON',
-    archetype: 'loop',
-  },
-  'codex-vs-claude-code': {
-    title: 'Claude Code vs. OpenAI Codex Hero Visual',
-    desc: 'Publication hero graphic and runtime architecture comparison between Anthropic Claude Code and OpenAI Codex.',
-    category: 'RUNTIME COMPARISON',
-    archetype: 'comparison',
-  },
-  'coding-agent': {
-    title: 'Autonomous Coding Agent Cognitive Architecture',
-    desc: 'Hierarchical flow from cognitive model orchestrator through context discovery, ReAct loops, and MCP dispatch into sandboxes.',
-    category: 'COGNITIVE ARCHITECTURE',
-    archetype: 'hierarchy',
-  },
-  'coding-timeline': {
-    title: 'Agentic Coding Evolution: Claude Code vs. OpenAI Codex',
-    desc: 'Comparative timeline tracking 16 major releases from terminal research previews to dynamic multi-agent orchestration.',
-    category: 'COMPARATIVE TIMELINE',
-    archetype: 'comparison',
-  },
-  'agent-context': {
-    title: 'Coding Agent Topology: CLI to Multi-Agent Swarm',
-    desc: 'Coding agents progressing from a local terminal to repository context, cloud environments, and coordinated agents.',
-    category: 'CONTEXT PERIMETER',
-    archetype: 'hierarchy',
-  },
-  'agent-progression': {
-    title: 'Coding Agent Context Horizons & State Span',
-    desc: 'Context perimeter expansion from ~8KB shell buffers to ~100MB AST graphs, cloud containers, and distributed swarm buses.',
-    category: 'HORIZON EXPANSION',
-    archetype: 'tree',
-  },
-  'paged-attention': {
-    title: 'PagedAttention KV Cache Page Translation',
-    desc: 'Physical page frame allocations and logical block tables modeling non-contiguous KV cache pooling to eliminate memory fragmentation.',
-    category: 'MEMORY ARCHITECTURE',
-    archetype: 'memory',
-  },
-  'deterministic-rag': {
-    title: '3-Plane Deterministic RAG Replay Architecture',
-    desc: 'Three execution planes compiling immutable corpus artifacts, deterministic hybrid retrieval, and auditable evidence bundles.',
-    category: 'REPLAY ARCHITECTURE',
-    archetype: 'hierarchy',
-  },
-  'coding-evolution': {
-    title: 'Agent Coding Evolution Tree',
-    desc: 'Evolution tree tracking the architectural branching of coding assistants from token completions to autonomous swarms.',
-    category: 'EVOLUTION TREE',
-    archetype: 'tree',
-  },
-};
+const curatedMeta: Record<string, { title?: string; desc?: string; category?: string; archetype?: 'loop' | 'pipeline' | 'memory' | 'tree' | 'hierarchy' | 'comparison' }> = {};
 
-const preferredOrder = [
-  'claude-code-loop',
-  'claude-code-harness',
-  'codex-cloud-sandbox-loop',
-  'codex-vs-claude-code',
-  'coding-agent',
-  'coding-timeline',
-  'agent-context',
-  'agent-progression',
-  'deterministic-rag',
-  'paged-attention',
-  'coding-evolution',
-];
+const preferredOrder: string[] = [];
 
 const visuals: VisualItem[] = Object.entries(rawPages)
   .filter(([path]) => !path.endsWith('index.astro'))
@@ -146,41 +67,50 @@ const visuals: VisualItem[] = Object.entries(rawPages)
         countLabel="systems visuals"
       />
 
-      <div class="search-bar-wrap">
-        <input
-          type="search"
-          id="visual-search"
-          placeholder="Filter visuals by keyword, topic, or technology..."
-          aria-label="Filter visuals"
-        />
+      {visuals.length > 0 ? (
+        <>
+          <div class="search-bar-wrap">
+            <input
+              type="search"
+              id="visual-search"
+              placeholder="Filter visuals by keyword, topic, or technology..."
+              aria-label="Filter visuals"
+            />
 
-        <div class="archetype-filter-bar" role="tablist" aria-label="Filter by system archetype">
-          <button type="button" class="filter-pill active" data-filter="all" role="tab" aria-selected="true">All (11)</button>
-          <button type="button" class="filter-pill" data-filter="loop" role="tab" aria-selected="false">Loops & Harnesses</button>
-          <button type="button" class="filter-pill" data-filter="memory" role="tab" aria-selected="false">Memory & Paging</button>
-          <button type="button" class="filter-pill" data-filter="hierarchy" role="tab" aria-selected="false">Topologies & Swarms</button>
-          <button type="button" class="filter-pill" data-filter="comparison" role="tab" aria-selected="false">Comparisons</button>
-          <button type="button" class="filter-pill" data-filter="tree" role="tab" aria-selected="false">Evolution Trees</button>
+            <div class="archetype-filter-bar" role="tablist" aria-label="Filter by system archetype">
+              <button type="button" class="filter-pill active" data-filter="all" role="tab" aria-selected="true">All ({visuals.length})</button>
+              <button type="button" class="filter-pill" data-filter="loop" role="tab" aria-selected="false">Loops & Harnesses</button>
+              <button type="button" class="filter-pill" data-filter="memory" role="tab" aria-selected="false">Memory & Paging</button>
+              <button type="button" class="filter-pill" data-filter="hierarchy" role="tab" aria-selected="false">Topologies & Swarms</button>
+              <button type="button" class="filter-pill" data-filter="comparison" role="tab" aria-selected="false">Comparisons</button>
+              <button type="button" class="filter-pill" data-filter="tree" role="tab" aria-selected="false">Evolution Trees</button>
+            </div>
+          </div>
+
+          <div class="visuals-grid" id="visuals-grid">
+            {visuals.map((v, i) => (
+              <VisualBlueprintCard
+                slug={v.id}
+                index={i + 1}
+                title={v.title}
+                desc={v.desc}
+                category={v.category}
+                href={v.href}
+                archetype={v.archetype}
+              />
+            ))}
+          </div>
+
+          <p id="no-results" class="no-results" style="display: none;">
+            No visuals match your filter.
+          </p>
+        </>
+      ) : (
+        <div class="empty-visuals-state">
+          <p>No architecture visuals published yet. Starting afresh.</p>
+          <p class="empty-subtext">Add standalone visuals in <code>src/pages/visuals/</code> using the diagram-craft workflow.</p>
         </div>
-      </div>
-
-      <div class="visuals-grid" id="visuals-grid">
-        {visuals.map((v, i) => (
-          <VisualBlueprintCard
-            slug={v.id}
-            index={i + 1}
-            title={v.title}
-            desc={v.desc}
-            category={v.category}
-            href={v.href}
-            archetype={v.archetype}
-          />
-        ))}
-      </div>
-
-      <p id="no-results" class="no-results" style="display: none;">
-        No visuals match your filter.
-      </p>
+      )}
     </div>
   </main>
 </Layout>
@@ -320,5 +250,24 @@ const visuals: VisualItem[] = Object.entries(rawPages)
       grid-template-columns: 1fr;
       gap: 1.25rem;
     }
+  }
+
+  .empty-visuals-state {
+    padding: 3rem 0;
+    color: var(--ie-muted);
+    font-family: var(--font-diagram);
+    font-size: var(--ie-type-body);
+  }
+  .empty-subtext {
+    margin-top: 0.5rem;
+    font-size: var(--ie-type-ui);
+    color: var(--ie-ink-secondary);
+  }
+  .empty-subtext code {
+    font-family: var(--font-mono);
+    padding: 0.1rem 0.35rem;
+    background: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-sm);
   }
 </style>

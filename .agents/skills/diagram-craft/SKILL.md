@@ -35,7 +35,7 @@ Preserve supplied nodes, relationships, direction, and meaning. Shorten labels w
   - **Online Directories**: Browse [lucide.dev/icons](https://lucide.dev/icons) and [simpleicons.org](https://simpleicons.org).
 - **Typography & Font Tokens**:
   - `Inter` via `var(--font-diagram)` for node titles, descriptions, and labels.
-  - `IBM Plex Mono` via `var(--font-mono)` for metrics, code tokens, and tags.
+  - `JetBrains Mono` via `var(--font-mono)` for metrics, code tokens, and tags.
   - Use existing `--ie-type-*` scale; never use Serif headings inside diagram components.
 - **Colors & Tokens (100% Token Compliant)**:
   - Canvas: `var(--ie-canvas)`, Surface: `var(--ie-surface)`, Rule: `var(--ie-rule)`.

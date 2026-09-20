@@ -2,48 +2,48 @@
 .practice-page { max-width: 960px; margin-inline: auto; padding: clamp(2rem, 5vw, 3.5rem) var(--space-5, 1.5rem) 4rem; }
 .practice-page .register { display: block; font-family: var(--font-mono); font-size: var(--ie-type-label); color: var(--ie-blue); line-height: 1.6; margin-bottom: .65rem; }
 .practice-page h1, .practice-page h2, .practice-page h3 { font-family: var(--font-display); color: var(--ie-ink); font-weight: 600; letter-spacing: -.025em; }
-.practice-page h1 { font-size: clamp(2.2rem, 4.3vw, 3.3rem); line-height: 1.12; margin: 0 0 1.2rem; max-width: 760px; }
-.practice-page h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); line-height: 1.2; margin: 0 0 .8rem; }
-.practice-page h3 { font-size: 1.25rem; line-height: 1.35; margin: 0 0 .6rem; }
-.practice-page p { color: var(--ie-ink-secondary); font-size: 1rem; line-height: 1.65; margin: 0 0 1rem; }
+.practice-page h1 { font-size: var(--ie-type-h1); line-height: 1.12; margin: 0 0 1.2rem; max-width: 760px; }
+.practice-page h2 { font-size: var(--ie-type-h2); line-height: 1.2; margin: 0 0 .8rem; }
+.practice-page h3 { font-size: var(--ie-type-h3); line-height: 1.3; margin: 0 0 .6rem; }
+.practice-page p { color: var(--ie-ink-secondary); font-family: var(--font-sans); font-size: var(--ie-type-base); line-height: 1.65; margin: 0 0 1rem; }
 .practice-page .lead { font-size: var(--ie-type-body); max-width: 680px; }
 .practice-page a { text-underline-offset: 4px; }
 .practice-page .actions { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.2rem; margin-top: 1.5rem; }
-.practice-page .action { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: .6rem 1rem; border: 1px solid var(--ie-ink); border-radius: 4px; background: var(--ie-ink); color: var(--ie-canvas); font-size: .9375rem; text-decoration: none; }
+.practice-page .action { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: .6rem 1rem; border: 1px solid var(--ie-ink); border-radius: 4px; background: var(--ie-ink); color: var(--ie-canvas); font-family: var(--font-sans); font-size: var(--ie-type-ui); text-decoration: none; }
 .practice-page .action:hover { background: var(--ie-blue); border-color: var(--ie-blue); color: var(--ie-canvas); }
 .practice-page .action.secondary { background: transparent; color: var(--ie-ink); border-color: var(--ie-rule-strong); }
 .practice-page .action.secondary:hover { color: var(--ie-blue); border-color: var(--ie-blue); }
 .practice-page .section { margin-top: clamp(2.5rem, 6vw, 4rem); padding-top: 1.5rem; border-top: 1px solid var(--ie-rule-strong); scroll-margin-top: 5rem; }
 .practice-page .section-head { display: flex; align-items: end; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.5rem; }
 .practice-page .section-head h2 { margin-bottom: 0; }
-.practice-page .section-head > a { flex-shrink: 0; font-size: .9375rem; }
+.practice-page .section-head > a { flex-shrink: 0; font-family: var(--font-sans); font-size: var(--ie-type-ui); }
 .practice-page .hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: center; gap: 3rem; padding-bottom: 1.5rem; }
 .practice-page .hero.hero-centric { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 860px; margin: 0 auto; padding-bottom: 2rem; }
 .practice-page .hero-centric .hero-content { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 740px; }
 .practice-page .hero-centric h1 { max-width: 720px; margin: 0 0 1.25rem; }
-.practice-page .hero-centric .lead { max-width: 640px; margin: 0 auto 1.5rem; text-align: center; font-size: 1.125rem; line-height: 1.65; }
+.practice-page .hero-centric .lead { max-width: 640px; margin: 0 auto 1.5rem; text-align: center; font-size: var(--ie-type-body); line-height: 1.65; }
 .practice-page .hero-centric .actions { justify-content: center; margin-top: 0.5rem; }
 .practice-page .hero-content { display: flex; flex-direction: column; }
 .practice-page .hero-portrait { width: 180px; height: 216px; object-fit: cover; object-position: top; border: 1px solid var(--ie-rule); border-radius: 4px; }
 .practice-page .portrait-caption { display: block; font-family: var(--font-mono); font-size: var(--ie-type-label); color: var(--ie-muted); line-height: 1.5; margin-top: .6rem; }
 .practice-page .problem-list { padding: 0; margin: 3rem 0 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 2.25rem; }
-.practice-page .problem-list li { border-top: 1px solid var(--ie-rule); padding-top: 1.25rem; color: var(--ie-ink-secondary); font-size: .9375rem; line-height: 1.65; }
+.practice-page .problem-list li { border-top: 1px solid var(--ie-rule); padding-top: 1.25rem; color: var(--ie-ink-secondary); font-family: var(--font-sans); font-size: var(--ie-type-small); line-height: 1.65; }
 .practice-page .problem-list .problem-num { display: block; font-family: var(--font-mono); font-size: var(--ie-type-micro); color: var(--ie-muted); letter-spacing: 0.06em; margin-bottom: .6rem; }
-.practice-page .problem-list strong { display: block; color: var(--ie-ink); margin-bottom: .45rem; font-weight: 600; font-size: 1rem; }
+.practice-page .problem-list strong { display: block; color: var(--ie-ink); font-family: var(--font-display); margin-bottom: .45rem; font-weight: 600; font-size: var(--ie-type-base); }
 .practice-page .evidence-feature { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 3rem; padding: 1rem 0; align-items: center; }
-.practice-page .evidence-summary { color: var(--ie-ink-secondary); font-size: .9375rem; line-height: 1.6; margin-bottom: 1.25rem; }
+.practice-page .evidence-summary { color: var(--ie-ink-secondary); font-family: var(--font-sans); font-size: var(--ie-type-small); line-height: 1.6; margin-bottom: 1.25rem; }
 .practice-page .evidence-links { display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center; margin-top: 1rem; }
-.practice-page .evidence-links a { font-family: var(--font-diagram); font-size: var(--ie-type-ui); font-weight: 600; color: var(--ie-blue); }
+.practice-page .evidence-links a { font-family: var(--font-sans); font-size: var(--ie-type-ui); font-weight: 600; color: var(--ie-blue); }
 .practice-page .evidence-links a.secondary-link { color: var(--ie-ink-secondary); font-weight: 400; }
 .practice-page .evidence-links a.secondary-link:hover { color: var(--ie-blue); }
 .practice-page .evidence-blueprint-frame { border: 1px solid var(--ie-rule); border-radius: var(--radius-sm, 4px); overflow: hidden; background: var(--ie-surface-raised); }
 .practice-page .evidence-blueprint-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; background: var(--ie-surface); border-top: 1px solid var(--ie-rule); font-family: var(--font-mono); font-size: var(--ie-type-micro); }
-.practice-page .blueprint-label { color: var(--ie-muted); font-size: 0.68rem; letter-spacing: 0.04em; }
+.practice-page .blueprint-label { color: var(--ie-muted); font-size: var(--ie-type-micro); letter-spacing: 0.04em; }
 .practice-page .blueprint-link { color: var(--ie-blue); font-weight: 600; text-decoration: none; }
 .practice-page .engagement-row { display: grid; grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr); gap: 2rem; padding: 1.5rem 0; border-bottom: 1px solid var(--ie-rule); scroll-margin-top: 5rem; }
 .practice-page .engagement-row:first-child { padding-top: .5rem; }
 .practice-page .deliverable { margin-bottom: 0; }
-.practice-page .deliverable strong { display: block; color: var(--ie-ink); }
+.practice-page .deliverable strong { display: block; color: var(--ie-ink); font-family: var(--font-display); }
 .practice-page .note-row, .practice-page .event-row { display: grid; grid-template-columns: 7rem minmax(0,1fr); gap: 1.5rem; padding: 1.3rem 0; border-bottom: 1px solid var(--ie-rule); }
 .practice-page .note-row { text-decoration: none; }
 .practice-page .note-row:hover h3 { color: var(--ie-blue); }
@@ -55,9 +55,9 @@
 .practice-page .blueprint-showcase-card:hover { transform: translateY(-2px); border-color: var(--ie-blue); }
 .practice-page .blueprint-showcase-card:hover h3 { color: var(--ie-blue); }
 .practice-page .blueprint-card-info { padding: 1rem 1.1rem; display: flex; flex-direction: column; flex: 1; }
-.practice-page .blueprint-card-info h3 { font-size: 1rem; margin: 0 0 .35rem; }
-.practice-page .blueprint-card-info p { font-size: .875rem; color: var(--ie-ink-secondary); line-height: 1.5; margin: 0 0 .75rem; }
-.practice-page .blueprint-card-cta { font-family: var(--font-diagram); font-size: var(--ie-type-ui); font-weight: 600; color: var(--ie-blue); margin-top: auto; }
+.practice-page .blueprint-card-info h3 { font-family: var(--font-display); font-size: var(--ie-type-h4); margin: 0 0 .35rem; }
+.practice-page .blueprint-card-info p { font-family: var(--font-sans); font-size: var(--ie-type-label); color: var(--ie-ink-secondary); line-height: 1.5; margin: 0 0 .75rem; }
+.practice-page .blueprint-card-cta { font-family: var(--font-sans); font-size: var(--ie-type-ui); font-weight: 600; color: var(--ie-blue); margin-top: auto; }
 .practice-page .closing.centered-closing { text-align: center; max-width: 680px; margin: 4rem auto 0; padding-top: 3rem; border-top: 1px solid var(--ie-rule); }
 .practice-page .closing.centered-closing .actions { justify-content: center; }
 .practice-page .closing.centered-closing .lead { margin-inline: auto; }
@@ -75,4 +75,12 @@
   .practice-page .section-head { align-items: start; flex-direction: column; gap: .8rem; }
   .practice-page .note-row, .practice-page .event-row { grid-template-columns: 1fr; gap: .5rem; }
   .practice-page .actions { align-items: stretch; }
+}
+
+.practice-page .empty-state {
+  font-family: var(--font-sans);
+  font-size: var(--ie-type-base);
+  color: var(--ie-muted);
+  padding: 1.5rem 0;
+  margin: 0;
 }

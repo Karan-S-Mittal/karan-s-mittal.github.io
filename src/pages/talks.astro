@@ -167,7 +167,7 @@ const allYears = [...new Set(talks.map((t) => t.year))].sort((a, b) => Number(b)
     border: 1px solid var(--ie-rule);
     border-radius: var(--radius-pill, 999px);
     font-family: var(--font-sans);
-    font-size: 0.85rem;
+    font-size: var(--ie-type-ui);
     color: var(--ie-ink);
     transition: border-color 120ms ease;
   }
@@ -179,7 +179,7 @@ const allYears = [...new Set(talks.map((t) => t.year))].sort((a, b) => Number(b)
 
   .year-filter select {
     padding: 0.55rem 1.25rem;
-    font-size: 0.85rem;
+    font-size: var(--ie-type-ui);
     font-family: var(--font-mono);
     color: var(--ie-ink);
     background: var(--ie-surface);
@@ -196,7 +196,7 @@ const allYears = [...new Set(talks.map((t) => t.year))].sort((a, b) => Number(b)
 
   .no-results {
     font-family: var(--font-mono);
-    font-size: 0.85rem;
+    font-size: var(--ie-type-ui);
     color: var(--ie-muted);
     padding: 2rem 0;
   }
@@ -206,7 +206,7 @@ const allYears = [...new Set(talks.map((t) => t.year))].sort((a, b) => Number(b)
     margin-bottom: 0.45rem;
     color: var(--ie-blue);
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: var(--ie-type-micro);
     font-weight: 600;
     letter-spacing: 0.075em;
     text-transform: uppercase;
@@ -227,7 +227,7 @@ const allYears = [...new Set(talks.map((t) => t.year))].sort((a, b) => Number(b)
     margin: 0 0 0.5rem;
     color: var(--ie-ink);
     font-family: var(--font-display);
-    font-size: clamp(1.5rem, 2.6vw, 1.95rem);
+    font-size: var(--ie-type-h2);
     font-weight: 600;
     letter-spacing: -0.02em;
   }
@@ -236,7 +236,7 @@ const allYears = [...new Set(talks.map((t) => t.year))].sort((a, b) => Number(b)
     margin: 0 0 1.5rem;
     max-width: 620px;
     color: var(--ie-ink-secondary);
-    font-size: 0.95rem;
+    font-size: var(--ie-type-body);
     line-height: 1.6;
   }
 
@@ -249,7 +249,7 @@ const allYears = [...new Set(talks.map((t) => t.year))].sort((a, b) => Number(b)
     padding: 0.55rem 1rem;
     border-radius: var(--radius, 6px);
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: var(--ie-type-micro);
     font-weight: 600;
     text-decoration: none;
     transition: border-color 120ms ease, background-color 120ms ease, color 120ms ease;
