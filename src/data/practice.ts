@@ -1,51 +1,86 @@
-/** Structured project brief definitions and client-facing engagement models.
- * Outcomes are proposed deliverables and operating protocols, not speculative past results.
+/**
+ * Client-facing systems engineering practice data:
+ * Problem-solving scenarios and concrete core capabilities.
  */
 
-export interface EngagementBrief {
+export interface ProblemScenario {
   id: string;
-  label: string;
-  operatingModel: string;
-  title: string;
+  tag: string;
   problem: string;
-  constraint: string;
+  symptom: string;
   intervention: string;
-  outcome: string;
-  responsibility: string;
+  deliverable: string;
 }
 
-export const engagements: EngagementBrief[] = [
+export interface CoreCapability {
+  id: string;
+  num: string;
+  title: string;
+  description: string;
+  artifacts: string[];
+}
+
+export const problemScenarios: ProblemScenario[] = [
   {
-    id: 'diagnose',
-    label: 'System Review',
-    operatingModel: 'Independent Advisory',
-    title: 'Bottleneck diagnosis and architectural audit',
-    problem: 'A production service, data pipeline, or inference path suffers from unacceptable latency, unbounded memory growth, or brittle operational boundaries, with no consensus on root cause.',
-    constraint: 'Production traffic cannot be interrupted; source code access may be restricted; findings must rest on empirical telemetry and microarchitectural profiling rather than speculative rewrites.',
-    intervention: 'Instrument critical execution paths, trace memory footprints and thread contention, map subsystem boundaries, and verify behaviour against hardware constraints.',
-    outcome: 'An evidence-backed audit report, reproducible benchmark harness, and prioritized engineering recommendations.',
-    responsibility: 'Karan leads instrumentation, profiling, and architectural diagnosis; internal engineering leadership approves operational parameters and reviews recommendations.',
+    id: 'hallucinations-and-tools',
+    tag: 'RELIABILITY & SAFETY',
+    problem: 'Our agent is nondeterministic, hallucinates tool calls, and breaks in production.',
+    symptom: 'Agents call invalid endpoints, generate corrupt JSON arguments, loop endlessly on error responses, or fail silently under edge-case inputs.',
+    intervention: 'Implement deterministic finite-state transition wrappers, strict runtime schema validation, sandboxed execution boundaries, and bounded fallback routing.',
+    deliverable: 'A hardened execution harness, schema-enforced tool router, and an automated regression test suite run on every prompt or model update.',
   },
   {
-    id: 'build',
-    label: 'Design & Implementation',
-    operatingModel: 'Venture Delivery via Dextar / Studio',
-    title: 'Production subsystem design, implementation, and handover',
-    problem: 'The team needs a core systems capability—such as an evidence graph, semantic cache, or structured agent evaluation boundary—that requires deep systems rigor and rapid execution.',
-    constraint: 'Must integrate cleanly with existing CI/CD pipelines, runtime stacks, and deployment targets without introducing vendor lock-in or orphan abstractions.',
-    intervention: 'Specify clean component interfaces, implement verified modules with rigorous automated test suites, and write operational playbooks for day-two maintenance.',
-    outcome: 'Production-ready code merged to your repository, end-to-end integration tests, and full handover documentation.',
-    responsibility: 'Karan (or Dextar engineering team for venture-scale builds) designs and implements the subsystem; in-house engineers review PRs and take operational ownership.',
+    id: 'memory-and-coordination',
+    tag: 'STATE & CONTEXT',
+    problem: 'We need stateful multi-agent coordination with persistent user memory.',
+    symptom: 'Agents forget crucial user preferences between sessions, blow context window token limits, or supervisor-worker handoffs deadlock in recursive loops.',
+    intervention: 'Design a multi-tiered memory plane (episodic recall, session compaction, semantic retrieval via Mem0 / vector / graph), explicit supervisor-worker state protocols, and loop-breaker safeguards.',
+    deliverable: 'Production memory runtime, multi-agent orchestration pipeline with auditable handoffs, and deterministic state synchronization.',
   },
   {
-    id: 'guide',
-    label: 'Technical Advisory',
-    operatingModel: 'Independent Advisory',
-    title: 'Retained advisory for engineering leadership',
-    problem: 'Engineering leaders face high-stakes technical inflection points—such as model evaluation topology, storage engine selection, or version control architecture—with conflicting internal trade-offs.',
-    constraint: 'Leadership requires objective, evidence-backed challenge without hiring full-time executives or relying on vendor-sponsored roadmaps.',
-    intervention: 'Bi-weekly architectural reviews, design RFC scrutiny, benchmark verification, and structured decision records.',
-    outcome: 'Written architectural RFC evaluations, trade-off matrices backed by primary sources, and unblocked engineering decisions.',
-    responsibility: 'Karan provides external technical review, rigorous critique, and primary research; internal leadership retains ultimate decision and execution authority.',
+    id: 'inference-cost-and-latency',
+    tag: 'SCALE & PERFORMANCE',
+    problem: 'Our LLM inference costs and latency are exploding as traffic grows.',
+    symptom: 'Every interaction sends bloated context to high-cost frontier reasoning models, causing severe p99 latency spikes and unsustainable monthly token bills.',
+    intervention: 'Introduce semantic response caching, prompt distillation, context-budget pruning, and dynamic model routing (frontier models for complex planning, compact local/open-source models for structured tool execution).',
+    deliverable: 'Multi-tier model router, semantic cache layer, and automated token/cost benchmark harnesses demonstrating verified latency and cost reductions.',
+  },
+];
+
+export const coreCapabilities: CoreCapability[] = [
+  {
+    id: 'eval-harnesses',
+    num: '01',
+    title: 'Evaluation & Test Harnesses',
+    description: 'Deterministic trajectory benchmarks, synthetic adversarial test-cases, and automated CI/CD regression gates to ensure prompt, tool, or model changes do not cause silent degradation.',
+    artifacts: ['Trajectory benchmarking harness', 'CI/CD regression gates', 'Adversarial eval suites'],
+  },
+  {
+    id: 'runtime-sandboxing',
+    num: '02',
+    title: 'Agent Runtime & Tool Sandboxing',
+    description: 'Secure, isolated tool execution environments (containerized/microVM), strict JSON Schema / Pydantic validation, fine-grained permission boundaries, and bounded retry state machines.',
+    artifacts: ['Sandboxed tool executor', 'Schema enforcement layer', 'Deterministic state machines'],
+  },
+  {
+    id: 'memory-state',
+    num: '03',
+    title: 'Memory & State Architecture',
+    description: 'Persistent episodic memory, dynamic context-budget compaction, cross-session preference tracking, and hybrid vector/graph retrieval pipelines tailored for low latency and high relevance.',
+    artifacts: ['Persistent episodic store (Mem0)', 'Dynamic context compactor', 'Hybrid retrieval graph'],
+  },
+  {
+    id: 'multi-agent-orchestration',
+    num: '04',
+    title: 'Multi-Agent Orchestration',
+    description: 'Disciplined supervisor-worker topologies, explicit transition protocols, distributed state synchronization, structured error-recovery, and loop-detection circuit breakers.',
+    artifacts: ['Supervisor-worker protocols', 'State handoff channels', 'Cycle detection circuits'],
+  },
+  {
+    id: 'cost-latency-opt',
+    num: '05',
+    title: 'Cost & Latency Optimization',
+    description: 'Semantic vector caching for repetitive queries, prompt distillation, token budget optimization, and intelligent model routing between frontier APIs and self-hosted open models.',
+    artifacts: ['Semantic caching engine', 'Dynamic model router', 'Token budget monitor'],
   },
 ];

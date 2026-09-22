@@ -2,251 +2,549 @@
 import Layout from '@layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { SITE } from '../config';
-import VisualMicroSchematic from '@components/visuals/VisualMicroSchematic.astro';
-import HeroWorkflowGraph from '@components/visuals/HeroWorkflowGraph.astro';
+import { problemScenarios, coreCapabilities } from '@data/practice';
 import { externalWriting } from '@data/publications';
-import { diagrams } from '@data/diagrams';
 import '@styles/practice.css';
 
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const featuredPosts = [...publishedPosts.filter((post) => post.data.featured), ...publishedPosts.filter((post) => !post.data.featured)].slice(0, 3);
-const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('en-GB', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-  timeZone: 'UTC',
-});
-
-const featuredDiagrams = diagrams.filter((d) =>
-  ['developer-platform-stack', 'code-review-topologies'].includes(d.slug)
-);
+const featuredLocalPost = publishedPosts[0];
+const externalArticle = externalWriting[0];
 ---
 
-<Layout title={SITE.title} description={SITE.description}>
+<Layout title={SITE.title} description="Karan Mittal is a systems engineer building deterministic harnesses, evaluation boundaries, and persistent state for production AI agents and LLMOps.">
   <main class="practice-page home-page">
-    <section class="home-hero" aria-labelledby="home-title">
-      <div class="home-hero-copy">
-        <span class="register">Karan Mittal / Engineer-scientist</span>
-        <h1 id="home-title">Make complex systems traceable.</h1>
+    <!-- Hero Section -->
+    <header class="home-hero" aria-labelledby="hero-heading">
+      <div class="hero-content">
+        <span class="register">Systems Engineering &bull; Production AI Agents</span>
+        <h1 id="hero-heading">Deterministic harnesses for production AI agents.</h1>
         <p class="lead">
-          I design graph-backed AI and data systems for consequential work—from semiconductor
-          supply chains to life sciences and energy infrastructure.
+          I build runtime execution sandboxes, evaluation boundaries, and persistent state for agentic systems where hallucination, state corruption, and silent failures are unacceptable.
+        </p>
+        <p class="hero-subtext">
+          Co-founder at <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a>. Operating at the intersection of LLMOps, memory architectures, and high-performance system runtimes.
         </p>
         <div class="actions">
-          <a class="action" href="/work">Explore the work →</a>
-          <a class="action secondary" href="/writing">Read the writing →</a>
-        </div>
-        <a class="scroll-cue" href="#system-story">
-          <span>Follow one system walkthrough</span>
-          <span aria-hidden="true">↓</span>
-        </a>
-      </div>
-    </section>
-
-    <section id="system-story" class="semiconductor-story" data-stage="1" aria-labelledby="story-title">
-      <div class="story-visual" aria-label="Semiconductor traceability graph that gains detail as the explanation progresses">
-        <div class="story-visual-sticky">
-          <HeroWorkflowGraph />
+          <a class="action" href="/contact">Discuss your problem &rarr;</a>
+          <a class="action secondary" href="#scenarios">Explore problem scenarios &darr;</a>
         </div>
       </div>
+    </header>
 
-      <div class="story-steps">
-        <div class="story-intro-meta">
-          <span class="register">Worked system example &bull; Traceability in practice</span>
-          <p class="story-intro-note">Follow one controlled component through four dependency stages.</p>
-          <a href="/diagrams/semiconductor-traceability/" class="mobile-model-shortcut">
-            <span>View complete model &rarr;</span>
-          </a>
-        </div>
-
-        <article class="story-step" data-story-stage="1">
-          <div class="step-badge"><span class="step-num">01</span><span class="step-label">Dependency structure</span></div>
-          <h2 id="story-title">A part is never just a part.</h2>
-          <p>
-            A controlled component inherits relationships from suppliers, material lots, sites,
-            assemblies, and product families. The graph gives each dependency an address.
-          </p>
-        </article>
-
-        <article class="story-step" data-story-stage="2">
-          <div class="step-badge"><span class="step-num">02</span><span class="step-label">Evidence graph</span></div>
-          <h2>Compliance evidence belongs on the same graph.</h2>
-          <p>
-            Supplier declarations, material disclosures, and screening results become traceable
-            records—not attachments separated from the parts and claims they support.
-          </p>
-        </article>
-
-        <article class="story-step" data-story-stage="3">
-          <div class="step-badge"><span class="step-num">03</span><span class="step-label">Operational consequence</span></div>
-          <h2>The graph exposes the cost of uncertainty.</h2>
-          <p>
-            Missing PFAS evidence can be connected to holds, retesting, rework, delay, and
-            disposition. Cost-of-quality reporting becomes an explanation of causality rather
-            than a detached total.
-          </p>
-        </article>
-
-        <article class="story-step" data-story-stage="4">
-          <div class="step-badge"><span class="step-num">04</span><span class="step-label">Agent boundary</span></div>
-          <h2>Specialize only the path that repeats.</h2>
-          <p>
-            A distilled reviewer can handle bounded, recurring checks against the graph. Novel
-            parts, weak evidence, and unfamiliar relationships keep an explicit route back to a
-            general agent and human review.
-          </p>
-          <div class="step-recap">
-            <a href="/diagrams/semiconductor-traceability/" class="step-recap-link">
-              <span>Inspect complete semiconductor model & export diagram</span>
-              <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </article>
+    <!-- Section 01: Problem Scenarios -->
+    <section id="scenarios" class="section" aria-labelledby="scenarios-heading">
+      <div class="section-header">
+        <span class="register">01 / Real-world problems</span>
+        <h2 id="scenarios-heading">Where production agent systems break down.</h2>
+        <p class="lead">
+          Proof-of-concept AI agents work in isolation. In production, they hallucinate tool parameters, blow context window limits, or leak state across sessions. Here is how we engineer around the failure modes.
+        </p>
       </div>
-    </section>
 
-    <!-- Unified Evidence Stream: Chapters 01, 02, 03 -->
-    <div class="evidence-stream-intro">
-      <span class="register">Verification trail &bull; Public proof</span>
-      <h2 id="verification-heading">From system models to inspectable proof.</h2>
-      <p class="lead">
-        Every architectural claim is grounded in published technical essays, reusable systems blueprints,
-        and recorded conference sessions.
-      </p>
-    </div>
-
-    <section class="section evidence-section" aria-labelledby="proof-heading">
-      <div class="section-head">
-        <div>
-          <span class="register">Chapter 01 &bull; Public record</span>
-          <h2 id="proof-heading">Inspect the work behind the claim.</h2>
-        </div>
-      </div>
-      <div class="proof-feature-wrap">
-        <article class="proof-feature-card">
-          <div class="proof-feature-meta">
-            <span class="proof-tag">FLAGSHIP ESSAY &bull; PRIMARY RECORD</span>
-            <span class="proof-pub">Published at {externalWriting[0].publication}</span>
-          </div>
-          <h3 class="proof-feature-title">
-            <a href={externalWriting[0].href} target="_blank" rel="noopener">
-              {externalWriting[0].title}
-            </a>
-          </h3>
-          <p class="proof-feature-desc">{externalWriting[0].description}</p>
-          <div class="proof-feature-footer">
-            <a href={externalWriting[0].href} target="_blank" rel="noopener" class="proof-feature-cta">
-              <span>Read article at {externalWriting[0].publication}</span>
-              <span aria-hidden="true">&nearr;</span>
-            </a>
-          </div>
-        </article>
-
-        <div class="proof-supporting-grid">
-          <a href="/speaking" class="proof-supporting-card">
-            <span class="proof-supporting-index">02</span>
-            <div>
-              <span class="register">Talks &amp; workshops</span>
-              <h4>Technical ideas tested in public.</h4>
-              <p>Recorded sessions and hands-on workshops on agent systems, retrieval, and engineering practice.</p>
+      <div class="scenarios-grid">
+        {problemScenarios.map((scenario) => (
+          <article class="scenario-card" id={scenario.id}>
+            <div class="scenario-top">
+              <span class="scenario-tag">{scenario.tag}</span>
+              <h3 class="scenario-problem">"{scenario.problem}"</h3>
             </div>
-            <span class="proof-supporting-cta">View speaking &rarr;</span>
-          </a>
-          <a href="/diagrams/semiconductor-traceability/" class="proof-supporting-card">
-            <span class="proof-supporting-index">03</span>
-            <div>
-              <span class="register">Reusable visual</span>
-              <h4>Semiconductor traceability graph.</h4>
-              <p>Inspect the complete dependency model and export the attributed visual.</p>
-            </div>
-            <span class="proof-supporting-cta">Open diagram &rarr;</span>
-          </a>
-        </div>
-      </div>
-    </section>
 
-    <section class="section evidence-section" aria-labelledby="diagrams-heading">
-      <div class="section-head">
-        <div>
-          <span class="register">Chapter 02 &bull; Reusable models</span>
-          <h2 id="diagrams-heading">Inspect the model.</h2>
-        </div>
-        <a href="/ideas/#diagrams">All ideas →</a>
-      </div>
-      <div class="featured-blueprints-grid">
-        {featuredDiagrams.map((diagram) => (
-          <a href={diagram.href} class="blueprint-showcase-card">
-            <VisualMicroSchematic slug={diagram.slug === 'developer-platform-stack' ? 'platform-stack' : diagram.slug} archetype={diagram.previewArchetype} />
-            <div class="blueprint-card-info">
-              <span class="register">{diagram.canonicalId} &bull; {diagram.category}</span>
-              <h3>{diagram.title}</h3>
-              <p>{diagram.description}</p>
-              <span class="blueprint-card-cta">Inspect diagram →</span>
+            <div class="scenario-body">
+              <div class="scenario-point">
+                <span class="point-label">Failure mode</span>
+                <p>{scenario.symptom}</p>
+              </div>
+
+              <div class="scenario-point highlight">
+                <span class="point-label">Systems intervention</span>
+                <p>{scenario.intervention}</p>
+              </div>
+
+              <div class="scenario-point deliverable">
+                <span class="point-label">What you leave with</span>
+                <p>{scenario.deliverable}</p>
+              </div>
             </div>
-          </a>
+          </article>
         ))}
       </div>
     </section>
 
-    <section class="section" aria-labelledby="writing-heading">
-      <div class="section-head">
-        <div>
-          <span class="register">Chapter 03 &bull; Engineering writing</span>
-          <h2 id="writing-heading">Follow the argument.</h2>
-        </div>
-        <a href="/writing">All writing →</a>
+    <!-- Section 02: Core Capabilities -->
+    <section id="capabilities" class="section" aria-labelledby="capabilities-heading">
+      <div class="section-header">
+        <span class="register">02 / Core capabilities</span>
+        <h2 id="capabilities-heading">What I build for engineering teams.</h2>
+        <p class="lead">
+          Concrete systems deliverables for teams moving beyond brittle prompt chaining into audited, repeatable agent architectures.
+        </p>
       </div>
-      {featuredPosts.length > 0 ? (
-        featuredPosts.map((post) => (
-          <a class="note-row" href={`/writing/${post.id}/`}>
-            <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
-            <div>
-              <h3>{post.data.title}</h3>
-              <p>{post.data.description}</p>
+
+      <div class="capabilities-list">
+        {coreCapabilities.map((cap) => (
+          <div class="capability-item" id={cap.id}>
+            <div class="cap-meta">
+              <span class="cap-num">{cap.num}</span>
             </div>
-          </a>
-        ))
-      ) : (
-        <p class="empty-state">New systems essays are in progress.</p>
-      )}
+            <div class="cap-content">
+              <h3 class="cap-title">{cap.title}</h3>
+              <p class="cap-desc">{cap.description}</p>
+              <div class="cap-artifacts">
+                <span class="artifacts-label">Key Deliverables:</span>
+                <ul class="artifacts-list">
+                  {cap.artifacts.map((art) => (
+                    <li>{art}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
 
-    <section class="closing" aria-labelledby="closing-heading">
-      <span class="register">Work together</span>
-      <h2 id="closing-heading">Bring the difficult system.</h2>
+    <!-- Section 03: Direct Proof of Work -->
+    <section id="proof" class="section" aria-labelledby="proof-heading">
+      <div class="section-header">
+        <span class="register">03 / Direct proof</span>
+        <h2 id="proof-heading">Published systems research and public writing.</h2>
+        <p class="lead">
+          No vague claims. Read the architecture breakdowns, benchmark methodology, and systems evaluations.
+        </p>
+      </div>
+
+      <div class="proof-cards-grid">
+        {externalArticle && (
+          <article class="proof-card featured">
+            <div class="proof-badge-row">
+              <span class="proof-badge-ext">PUBLISHED RESEARCH &bull; MEM0</span>
+              <time datetime={externalArticle.pubDate}>September 2026</time>
+            </div>
+            <h3 class="proof-title">
+              <a href={externalArticle.href} target="_blank" rel="noopener">
+                {externalArticle.title}
+              </a>
+            </h3>
+            <p class="proof-desc">{externalArticle.description}</p>
+            <div class="proof-footer">
+              <a href={externalArticle.href} target="_blank" rel="noopener" class="proof-link">
+                <span>Read article at Mem0</span>
+                <span aria-hidden="true">&nearr;</span>
+              </a>
+            </div>
+          </article>
+        )}
+
+        {featuredLocalPost && (
+          <article class="proof-card">
+            <div class="proof-badge-row">
+              <span class="proof-badge-local">SYSTEMS ESSAY</span>
+              <time datetime={featuredLocalPost.data.pubDate.toISOString()}>
+                {new Date(featuredLocalPost.data.pubDate).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}
+              </time>
+            </div>
+            <h3 class="proof-title">
+              <a href={`/writing/${featuredLocalPost.id}/`}>
+                {featuredLocalPost.data.title}
+              </a>
+            </h3>
+            <p class="proof-desc">{featuredLocalPost.data.description}</p>
+            <div class="proof-footer">
+              <a href={`/writing/${featuredLocalPost.id}/`} class="proof-link">
+                <span>Read technical essay</span>
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </article>
+        )}
+      </div>
+
+      <div class="proof-actions">
+        <a href="/writing" class="proof-subaction">View all technical writing &rarr;</a>
+        <a href="/speaking" class="proof-subaction">View workshops &amp; conference talks &rarr;</a>
+      </div>
+    </section>
+
+    <!-- Closing Call to Action -->
+    <section class="section closing" aria-labelledby="closing-heading">
+      <span class="register">Start a conversation</span>
+      <h2 id="closing-heading">What needs to work better?</h2>
       <p class="lead">
-        If a technical system is difficult to reason about, expensive to operate, or unsafe to
-        change, we can make its dependencies visible and work from evidence.
+        Describe the agent, pipeline, or systems problem, who it impacts, and what a reliable outcome looks like. A few sentences are enough to start.
       </p>
       <div class="actions">
-        <a href="/contact" class="action">Discuss the system →</a>
-        <a href="/work" class="action secondary">Ways to work together →</a>
+        <a href="/contact" class="action">Start an engineering conversation &rarr;</a>
       </div>
     </section>
   </main>
 </Layout>
 
-<script>
-  function initialiseAgentStory() {
-    const story = document.querySelector<HTMLElement>('.semiconductor-story');
-    if (!story || story.dataset.enhanced === 'true') return;
-
-    const steps = Array.from(story.querySelectorAll<HTMLElement>('[data-story-stage]'));
-    if (steps.length === 0 || !('IntersectionObserver' in window)) return;
-
-    story.dataset.enhanced = 'true';
-    const observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        const stage = (entry.target as HTMLElement).dataset.storyStage;
-        if (stage) story.dataset.stage = stage;
-      }
-    }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
-
-    steps.forEach((step) => observer.observe(step));
+<style>
+  .home-hero {
+    padding-block: clamp(3rem, 6vw, 5rem) clamp(2.5rem, 5vw, 3.5rem);
+    border-bottom: 1px solid var(--ie-rule-strong);
   }
 
-  initialiseAgentStory();
-  document.addEventListener('astro:page-load', initialiseAgentStory);
-</script>
+  .hero-content {
+    max-width: 820px;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(2rem, 3.8vw, 3.4rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-content .lead {
+    font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+    line-height: 1.55;
+    margin-bottom: 1rem;
+    color: var(--ie-ink);
+  }
+
+  .hero-subtext {
+    font-size: var(--ie-type-ui);
+    color: var(--ie-muted);
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+    max-width: 68ch;
+  }
+
+  .hero-subtext a {
+    color: var(--ie-blue);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .section-header {
+    max-width: 780px;
+    margin-bottom: 2rem;
+  }
+
+  /* Problem Scenarios */
+  .scenarios-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .scenario-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    transition: border-color 150ms ease;
+  }
+
+  .scenario-card:hover {
+    border-color: var(--ie-rule-strong);
+  }
+
+  .scenario-top {
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .scenario-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    font-weight: 700;
+    color: var(--ie-rust);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.6rem;
+  }
+
+  .scenario-problem {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h4);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--ie-ink);
+  }
+
+  .scenario-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+  }
+
+  .scenario-point {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .point-label {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    font-weight: 600;
+    color: var(--ie-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .scenario-point p {
+    margin: 0;
+    font-size: var(--ie-type-small);
+    line-height: 1.55;
+    color: var(--ie-ink-secondary);
+  }
+
+  .scenario-point.highlight {
+    padding: 0.75rem 0.85rem;
+    background: var(--ie-surface-raised);
+    border-left: 2px solid var(--ie-blue);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .scenario-point.highlight .point-label {
+    color: var(--ie-blue);
+  }
+
+  .scenario-point.deliverable {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--ie-rule);
+  }
+
+  .scenario-point.deliverable .point-label {
+    color: var(--ie-verified);
+  }
+
+  /* Capabilities List */
+  .capabilities-list {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .capability-item {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    transition: border-color 150ms ease;
+  }
+
+  .capability-item:hover {
+    border-color: var(--ie-rule-strong);
+  }
+
+  .cap-meta {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-h3);
+    font-weight: 700;
+    color: var(--ie-muted);
+    line-height: 1;
+    padding-top: 0.15rem;
+  }
+
+  .cap-title {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h3);
+    font-weight: 600;
+    color: var(--ie-ink);
+  }
+
+  .cap-desc {
+    margin: 0 0 1rem;
+    font-size: var(--ie-type-base);
+    line-height: 1.6;
+    color: var(--ie-ink-secondary);
+    max-width: 68ch;
+  }
+
+  .cap-artifacts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.85rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--ie-rule);
+  }
+
+  .artifacts-label {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .artifacts-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.6rem;
+  }
+
+  .artifacts-list li {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    color: var(--ie-blue);
+    padding: 0.15rem 0.5rem;
+    background: var(--ie-blue-soft);
+    border-radius: 3px;
+  }
+
+  /* Proof Cards */
+  .proof-cards-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .proof-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.75rem;
+    background: var(--ie-surface);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-card, 8px);
+    transition: border-color 150ms ease;
+  }
+
+  .proof-card:hover {
+    border-color: var(--ie-blue);
+  }
+
+  .proof-card.featured {
+    border-color: var(--ie-rule-strong);
+  }
+
+  .proof-badge-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.85rem;
+  }
+
+  .proof-badge-ext,
+  .proof-badge-local {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+  }
+
+  .proof-badge-ext {
+    color: var(--ie-blue);
+    background: var(--ie-blue-soft);
+  }
+
+  .proof-badge-local {
+    color: var(--ie-ink-secondary);
+    background: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
+  }
+
+  .proof-badge-row time {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+  }
+
+  .proof-title {
+    margin: 0 0 0.65rem;
+    font-family: var(--font-display);
+    font-size: var(--ie-type-h3);
+    line-height: 1.3;
+  }
+
+  .proof-title a {
+    color: var(--ie-ink);
+    text-decoration: none;
+    transition: color 140ms ease;
+  }
+
+  .proof-title a:hover {
+    color: var(--ie-blue);
+  }
+
+  .proof-desc {
+    margin: 0 0 1.25rem;
+    font-size: var(--ie-type-small);
+    line-height: 1.6;
+    color: var(--ie-ink-secondary);
+  }
+
+  .proof-footer {
+    margin-top: auto;
+  }
+
+  .proof-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--ie-blue);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .proof-link:hover {
+    text-decoration: underline;
+  }
+
+  .proof-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--ie-rule);
+  }
+
+  .proof-subaction {
+    color: var(--ie-blue);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .proof-subaction:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 960px) {
+    .scenarios-grid {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    .proof-cards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .capability-item {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .cap-meta {
+      padding-top: 0;
+    }
+  }
+</style>

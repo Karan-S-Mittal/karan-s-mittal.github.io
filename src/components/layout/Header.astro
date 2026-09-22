@@ -8,10 +8,10 @@ interface NavItem {
 }
 
 const nav: NavItem[] = [
-  { href: '/work/', label: 'Work' },
   { href: '/writing/', label: 'Writing' },
-  { href: '/ideas/', label: 'Ideas', activePaths: ['/ideas', '/diagrams'] },
+  { href: '/speaking/', label: 'Speaking' },
   { href: '/about/', label: 'About' },
+  { href: '/now/', label: 'Now' },
 ];
 
 function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {

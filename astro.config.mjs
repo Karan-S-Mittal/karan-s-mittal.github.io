@@ -41,10 +41,9 @@ export default defineConfig({
     sitemap({
       filter: (page) => {
         const pathname = new URL(page).pathname;
-        if (pathname === '/diagrams/') return false;
         if (pathname === '/topics/') return indexableTagPaths.size > 0;
         if (/^\/topics\/[^/]+\/$/.test(pathname)) return indexableTagPaths.has(pathname);
-        if (/^\/(?:blog|visuals|talks|tags|publications)(?:\/.*)?\/?$/.test(pathname)) return false;
+        if (/^\/(?:blog|visuals|talks|tags|publications|diagrams|ideas|work)(?:\/.*)?\/?$/.test(pathname)) return false;
         return !/^\/(?:contact|now|studio(?:\/.*)?|case-studies\/soft-architecture)\/?$/.test(pathname);
       },
     }),
