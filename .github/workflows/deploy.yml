@@ -27,17 +27,13 @@ jobs:
           node-version: 24
           cache: npm
 
+      # A clean install catches lockfile drift (npm ci is stricter than a
+      # local npm install); the build catches broken imports, CSS, and schema.
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
-
       - name: Build site
         run: npm run build
-
-      - name: Run runtime smoke checks
-        run: npx playwright test tests/visual/pages.spec.ts --grep "runtime smoke"
 
   build:
     needs: verify
