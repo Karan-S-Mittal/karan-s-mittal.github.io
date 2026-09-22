@@ -13,7 +13,10 @@ const diagram = getDiagramBySlug('developer-platform-stack')!;
   targetId={diagram.targetId}
   filename={diagram.filename}
   category={diagram.category}
-  drawingNo={diagram.canonicalId}
+  canonicalId={diagram.canonicalId}
+  modelStatus={diagram.modelStatus}
+  provenance={diagram.provenance}
+  socialImage={diagram.socialImage}
 >
   <div class="visual-wrapper">
     <PlatformStackHierarchy id="platform-stack-diagram" />

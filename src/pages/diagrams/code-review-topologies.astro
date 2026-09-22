@@ -13,7 +13,10 @@ const diagram = getDiagramBySlug('code-review-topologies')!;
   targetId={diagram.targetId}
   filename={diagram.filename}
   category={diagram.category}
-  drawingNo={diagram.canonicalId}
+  canonicalId={diagram.canonicalId}
+  modelStatus={diagram.modelStatus}
+  provenance={diagram.provenance}
+  socialImage={diagram.socialImage}
 >
   <div class="visual-wrapper">
     <CodeReviewTopologies id="code-review-diagram" />

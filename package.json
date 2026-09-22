@@ -16,6 +16,7 @@
     "new": "node scripts/new-post.js",
     "icon": "node scripts/find-icon.js",
     "visual:capture": "node scripts/capture-visual.js",
+    "visual:social": "node scripts/capture-social.js",
     "test": "npm run studio:check",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots"
