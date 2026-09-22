@@ -4,57 +4,47 @@ import PageHeader from '@components/content/PageHeader.astro';
 import { formatTalkDate } from '@utils/date';
 
 // Bump this date whenever this page's content is edited.
-const lastUpdated = new Date('2026-09-20');
+const lastUpdated = new Date('2026-09-22');
 
 const focusAreas = [
   {
     index: '01',
-    category: 'Work & Advisory',
+    category: 'Building',
     status: 'ACTIVE',
     items: [
       { text: 'Co-founding and leading systems engineering at ', link: { text: 'Dextar.co', url: 'https://dextar.co' } },
-      { text: 'Developing systems-engineering advisory and implementation work around retrieval, AI workflows, and delivery' },
-      { text: 'Making public claims and architecture explanations easier to inspect and verify' },
+      { text: 'Graph-grounded traceability and evidence screening pipelines for complex manufacturing supply chains' },
+      { text: 'Deterministic retrieval layers and bounded agent workflows for enterprise knowledge systems' },
     ],
   },
   {
     index: '02',
-    category: 'Building & Open Source',
-    status: 'IN PROGRESS',
+    category: 'Investigating',
+    status: 'RESEARCH',
     items: [
-      { text: 'Expanding a code-first architecture visual library' },
-      { text: 'Publishing a systems essay on version control, review protocols, and CI execution boundaries' },
-      { text: 'Improving the accessibility and evidence discipline of this engineering studio' },
+      { text: 'Git object storage, packfile delta compression limits, and quarantine mechanics under heavy concurrent write load' },
+      { text: 'CI runner container isolation boundaries: evaluating when image definitions fail to guarantee reproducible builds' },
+      { text: 'Code-review protocol topology: comparing commit-trailer Change-Id models against branch PR state machines' },
     ],
   },
   {
     index: '03',
-    category: 'Research & Systems',
-    status: 'EXPLORING',
+    category: 'Teaching',
+    status: 'ACTIVE',
     items: [
-      { text: 'Git object storage, ref-update boundaries, and packfile mechanics' },
-      { text: 'Code-review protocols across branch, change, and patch-series workflows' },
-      { text: 'CI runner isolation and the boundary between an image definition and a reproducible build' },
+      { text: 'Organizing hands-on AI systems and LLMOps workshops at ', link: { text: 'MLIndore', url: 'https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/' } },
+      { text: 'Mentoring engineers in systems architecture and distributed systems at ', link: { text: 'CodeVipassana', url: 'https://www.codevipassana.dev/' } },
+      { text: 'Hosting distributed systems and cloud infrastructure technical masterclasses with ', link: { text: 'GDG Cloud Indore', url: 'https://gdg.community.dev/gdg-cloud-indore/' } },
     ],
   },
   {
     index: '04',
-    category: 'Community & Mentorship',
-    status: 'ACTIVE',
+    category: 'Changed My Mind About',
+    status: 'PERSPECTIVE',
     items: [
-      { text: 'Organizing hands-on AI systems workshops at ', link: { text: 'MLIndore', url: 'https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/' } },
-      { text: 'Mentoring engineers in systems architecture at ', link: { text: 'CodeVipassana', url: 'https://www.codevipassana.dev/' } },
-      { text: 'Hosting distributed systems sessions with ', link: { text: 'GDG Cloud Indore', url: 'https://gdg.community.dev/gdg-cloud-indore/' } },
-    ],
-  },
-  {
-    index: '05',
-    category: 'Technical Speaking',
-    status: 'UPCOMING',
-    items: [
-      { text: 'Maintaining a public ledger of past talks and workshops' },
-      { text: 'Developing future sessions only when the material and event record are ready to publish' },
-      { text: 'View all past and upcoming presentations on the ', link: { text: 'Speaking archive →', url: '/speaking' } },
+      { text: 'Review platforms vs protocols: moved from treating GitHub pull requests as universal to recognizing review identity as an independent protocol that should not be fused to Git object storage' },
+      { text: 'Containerization as reproducible builds: an OCI image configures layers and environments, but cannot guarantee deterministic reproducibility without content-addressed inputs and network isolation' },
+      { text: 'General-purpose agent loops: shifted from open-ended autonomous agent workflows to bounded, specialized paths backed by explicit graph-grounded verification gates' },
     ],
   },
 ];

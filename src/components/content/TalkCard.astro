@@ -23,10 +23,17 @@ const typeLabel: Record<Talk['type'], string> = {
     <time datetime={talk.date}>{formattedDate}</time>
     <span aria-hidden="true" class="meta-sep">·</span>
     <span class="talk-type" data-type={talk.type}>{typeLabel[talk.type]}</span>
+    {talk.topicTitle && (
+      <>
+        <span aria-hidden="true" class="meta-sep">·</span>
+        <span class="talk-topic">{talk.topicTitle}</span>
+      </>
+    )}
   </div>
 
   <h3 class="talk-title">{talk.title}</h3>
   <p class="talk-description">{talk.description}</p>
+  {talk.caption && <p class="talk-caption">{talk.caption}</p>}
 
   <div class="talk-footnote">
     <span>{talk.event}</span>
@@ -38,9 +45,15 @@ const typeLabel: Record<Talk['type'], string> = {
         <span>{talk.venue}</span>
       </>
     )}
+    {talk.audience && (
+      <>
+        <span class="sep">·</span>
+        <span>Audience: {talk.audience}</span>
+      </>
+    )}
   </div>
 
-  {talk.links.length > 0 && (
+  {(talk.links.length > 0 || talk.slides || talk.recording) && (
     <div class="talk-links">
       {talk.links.map((link) => (
         <a href={link.url} target="_blank" rel="noopener noreferrer" class="talk-link">
@@ -51,6 +64,24 @@ const typeLabel: Record<Talk['type'], string> = {
           </svg>
         </a>
       ))}
+      {talk.slides && (
+        <a href={talk.slides} target="_blank" rel="noopener noreferrer" class="talk-link">
+          Slides
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 17L17 7"/>
+            <path d="M7 7h10v10"/>
+          </svg>
+        </a>
+      )}
+      {talk.recording && (
+        <a href={talk.recording} target="_blank" rel="noopener noreferrer" class="talk-link">
+          Recording
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 17L17 7"/>
+            <path d="M7 7h10v10"/>
+          </svg>
+        </a>
+      )}
     </div>
   )}
 </article>

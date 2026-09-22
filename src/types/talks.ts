@@ -16,6 +16,12 @@ export interface Talk {
   type: 'talk' | 'workshop' | 'panel' | 'keynote';
   tags: string[];
   links: TalkLink[];
+  topicTitle?: string;
+  image?: string;
+  slides?: string;
+  recording?: string;
+  audience?: string;
+  caption?: string;
 }
 
 export interface TalksData {

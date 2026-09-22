@@ -24,37 +24,39 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 
     <div class="contact-layout">
       <aside class="contact-aside" aria-label="Consulting guidance">
-        <div class="aside-block">
-          <p class="aside-label">A useful first note</p>
-          <p>Describe what is happening, its impact on the team or organisation, and any timing or constraints that matter. You do not need a finished brief or a chosen technology.</p>
-        </div>
+        <div class="aside-brief-card">
+          <div class="brief-section">
+            <p class="aside-label">A useful first note</p>
+            <p>Describe what is happening, its impact on the team or organisation, and any timing or constraints that matter. You do not need a finished brief or a chosen technology.</p>
+          </div>
 
-        <div class="aside-block">
-          <p class="aside-label">What this is for</p>
-          <ul class="aside-list">
-            <li><span>→</span> System reviews and problem diagnosis</li>
-            <li><span>→</span> Design, implementation, and handover</li>
-            <li><span>→</span> Technical advisory, speaking, and workshops</li>
-          </ul>
-        </div>
+          <div class="brief-section">
+            <p class="aside-label">Engagement scope</p>
+            <ul class="aside-list">
+              <li><span>→</span> System reviews and problem diagnosis</li>
+              <li><span>→</span> Design, implementation, and handover</li>
+              <li><span>→</span> Technical advisory, speaking, and workshops</li>
+            </ul>
+          </div>
 
-        <div class="aside-block">
-          <p class="aside-label">What happens next</p>
-          <p>I review messages personally. Response timing depends on current commitments, so include any real deadline. If there is a fit, we’ll clarify scope, useful outcomes, and next steps before agreeing on an engagement.</p>
-          <a class="engagement-link" href="/work#engagements">Explore ways to work together →</a>
-        </div>
+          <div class="brief-section">
+            <p class="aside-label">What happens next</p>
+            <p>I review messages personally. Response timing depends on current commitments, so include any real deadline. If there is a fit, we’ll clarify scope, useful outcomes, and next steps before agreeing on an engagement.</p>
+            <a class="engagement-link" href="/work#engagements">Explore ways to work together →</a>
+          </div>
 
-        <div class="aside-block quiet-route">
-          <p class="aside-label">Email or connect directly</p>
-          <div class="route-links">
-            <a href="https://www.linkedin.com/in/karansmittal/" target="_blank" rel="noopener" class="route-link">
-              <span>Connect on LinkedIn</span>
-              <span class="arrow" aria-hidden="true">↗</span>
-            </a>
-            <a href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`} class="route-link">
-              <span>{SITE.email}</span>
-              <span class="arrow" aria-hidden="true">↗</span>
-            </a>
+          <div class="brief-section quiet-route">
+            <p class="aside-label">Email or connect directly</p>
+            <div class="route-links">
+              <a href="https://www.linkedin.com/in/karansmittal/" target="_blank" rel="noopener" class="route-link">
+                <span>Connect on LinkedIn</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+              </a>
+              <a href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`} class="route-link">
+                <span>{SITE.email}</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+              </a>
+            </div>
           </div>
         </div>
       </aside>
@@ -182,15 +184,23 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
   }
 
   .contact-aside {
-    display: grid;
-    gap: 1.5rem;
+    display: block;
   }
 
-  .aside-block {
-    padding: 1.25rem 1.4rem;
+  .aside-brief-card {
     border: 1px solid var(--ie-rule);
     border-radius: var(--radius-card, 8px);
     background: var(--ie-surface);
+    overflow: hidden;
+  }
+
+  .brief-section {
+    padding: 1.25rem 1.4rem;
+    border-bottom: 1px solid var(--ie-rule);
+  }
+
+  .brief-section:last-child {
+    border-bottom: 0;
   }
 
   .engagement-link {
@@ -211,7 +221,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     text-transform: uppercase;
   }
 
-  .aside-block p:not(.aside-label) {
+  .brief-section p:not(.aside-label) {
     margin: 0;
     color: var(--ie-ink-secondary);
     font-size: var(--ie-type-ui);

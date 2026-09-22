@@ -61,8 +61,8 @@ const evidence = [
           />
         </div>
         <figcaption>
-          <span class="register">Karan Mittal &bull; Current practice</span>
-          Engineer-scientist, Dextar co-founder, and community mentor.
+          <span class="register">Karan Mittal &bull; Technical session</span>
+          Hands-on systems workshop on agent architectures and retrieval boundaries.
         </figcaption>
       </figure>
     </section>
@@ -74,9 +74,9 @@ const evidence = [
         <h2 id="method-title">The problem comes before the tool.</h2>
         <p class="lead">
           I’m co-founder of <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a>.
-          My experience spans enterprise knowledge infrastructure, life sciences, semiconductor
-          supply chains, energy systems, and finance. My current technical work includes graph
-          engineering, agent systems, model adaptation, and performance engineering.
+          My core engineering focus is graph-grounded systems, distributed data infrastructure, and
+          model evaluation boundaries—applied in practice to enterprise knowledge platforms,
+          semiconductor supply chain traceability, and biomedical data workflows.
         </p>
       </div>
 
@@ -117,6 +117,29 @@ const evidence = [
       <div class="actions method-actions">
         <a href="/work" class="action">Explore my work →</a>
         <a href="/now" class="action secondary">What I’m working on now →</a>
+      </div>
+    </section>
+
+    <!-- Section: Personal Intellectual History -->
+    <section class="section about-history" aria-labelledby="history-title">
+      <div class="section-intro">
+        <span class="register">Foundations &bull; Intellectual History</span>
+        <h2 id="history-title">From distributed storage to inspectable graphs.</h2>
+        <p class="lead">
+          My perspective is shaped by engineering at the boundary between low-level infrastructure and high-consequence decision systems.
+        </p>
+      </div>
+
+      <div class="history-narrative">
+        <p>
+          I started in systems engineering with distributed storage, Linux internals, and data-intensive pipelines. The discipline of distributed consensus and transactional integrity made one principle clear: when complex systems fail, they rarely fail inside isolated algorithms—they fail at the unverified boundaries between subsystems and the gap between assumed state and operational reality.
+        </p>
+        <p>
+          As machine learning systems moved into production, that same failure mode amplified. Teams often treated probabilistic model outputs as an oracle rather than an unverified component. My work focused on grounding model decisions in explicit graph structures: capturing material lots, chemical regulations, and supplier claims as inspectable records where uncertainty has an explicit operational cost.
+        </p>
+        <p>
+          At <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a> and in independent advisory, the goal remains consistent: design systems whose boundaries can be inspected, whose state can be audited, and that engineering teams can own and operate with confidence.
+        </p>
       </div>
     </section>
 
@@ -354,6 +377,32 @@ const evidence = [
     padding-top: 1.5rem;
     border-top: 1px solid var(--ie-rule);
     max-width: 820px;
+  }
+
+  .about-history {
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+    border-top: 1px solid var(--ie-rule);
+  }
+
+  .history-narrative {
+    max-width: 72ch;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .history-narrative p {
+    margin: 0;
+    color: var(--ie-ink-secondary);
+    font-size: var(--ie-type-base);
+    line-height: 1.72;
+  }
+
+  .history-narrative a {
+    color: var(--ie-blue);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   /* ================================================================

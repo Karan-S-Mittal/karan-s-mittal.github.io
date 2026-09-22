@@ -59,7 +59,9 @@ const workshops = talksData.talks.filter(t => ['agentverse-rag-2026', 'build-wit
       <span class="register">02 / Working together</span>
       <h2 id="engagements-heading">Choose the starting point that fits.</h2>
       <p class="lead">The scope follows the problem. We agree on the useful outcome, constraints, and responsibilities before implementation begins.</p>
-      <p class="scope-note">These are working modes, not case studies or claims about past client outcomes.</p>
+      <div class="operating-scope-callout">
+        <p><strong>Operating boundaries:</strong> Independent architecture reviews, bottleneck diagnoses, and technical advisory are conducted directly through my studio. Venture-scale engineering builds and multi-surface product implementations are delivered through <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a>. The project briefs below illustrate our structured working protocol—never speculative client claims.</p>
+      </div>
       <EngagementList />
     </section>
 
@@ -94,12 +96,33 @@ const workshops = talksData.talks.filter(t => ['agentverse-rag-2026', 'build-wit
 </Layout>
 
 <style>
-  .scope-note {
-    max-width: 68ch;
-    padding-left: 0.8rem;
-    border-left: 2px solid var(--ie-rule-strong);
-    color: var(--ie-muted);
+  .operating-scope-callout {
+    max-width: 72ch;
+    padding: 0.85rem 1.15rem;
+    margin-bottom: 1.5rem;
+    border-left: 2px solid var(--ie-blue);
+    background: var(--ie-surface);
+    border-top: 1px solid var(--ie-rule);
+    border-right: 1px solid var(--ie-rule);
+    border-bottom: 1px solid var(--ie-rule);
+    border-radius: 0 var(--radius-sm, 4px) var(--radius-sm, 4px) 0;
+  }
+
+  .operating-scope-callout p {
+    margin: 0;
+    color: var(--ie-ink-secondary);
     font-size: var(--ie-type-ui);
+    line-height: 1.6;
+  }
+
+  .operating-scope-callout strong {
+    color: var(--ie-ink);
+  }
+
+  .operating-scope-callout a {
+    color: var(--ie-blue);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .problem-list li {

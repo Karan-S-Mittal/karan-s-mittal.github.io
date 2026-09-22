@@ -3,68 +3,109 @@ import { getCollection } from 'astro:content';
 import Layout from '@layouts/Layout.astro';
 import PageHeader from '@components/content/PageHeader.astro';
 import YearGroup from '@components/content/YearGroup.astro';
-import BlogPostCard from '@components/content/BlogPostCard.astro';
 import { externalWriting } from '@data/publications';
 
 const allPosts = await getCollection('blog');
 const isDev = import.meta.env.DEV;
-const posts = allPosts
-  .filter((post) => isDev || !post.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const postsByYear = posts.reduce<Record<string, typeof posts>>((acc, post) => {
-  const year = post.data.pubDate.getFullYear().toString();
+interface UnifiedWritingItem {
+  id: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  href: string;
+  source: string;
+  external: boolean;
+  tags: string[];
+}
+
+const localPosts: UnifiedWritingItem[] = allPosts
+  .filter((post) => isDev || !post.data.draft)
+  .map((post) => ({
+    id: post.id,
+    title: post.data.title,
+    description: post.data.description,
+    pubDate: post.data.pubDate,
+    href: `/writing/${post.id}/`,
+    source: 'ON-SITE ESSAY',
+    external: false,
+    tags: post.data.tags || [],
+  }));
+
+const extEntries: UnifiedWritingItem[] = externalWriting.map((item) => ({
+  id: item.href,
+  title: item.title,
+  description: item.description,
+  pubDate: new Date(item.pubDate),
+  href: item.href,
+  source: `PUBLISHED AT ${item.publication.toUpperCase()}`,
+  external: true,
+  tags: ['Coding Agents', 'Harness Architecture', 'Evaluation'],
+}));
+
+const allWriting = [...localPosts, ...extEntries].sort(
+  (a, b) => b.pubDate.valueOf() - a.pubDate.valueOf()
+);
+
+const writingByYear = allWriting.reduce<Record<string, UnifiedWritingItem[]>>((acc, item) => {
+  const year = item.pubDate.getFullYear().toString();
   if (!acc[year]) acc[year] = [];
-  acc[year].push(post);
+  acc[year].push(item);
   return acc;
 }, {});
 
-const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
+const years = Object.keys(writingByYear).sort((a, b) => Number(b) - Number(a));
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 ---
 
-<Layout title="Writing and systems notes | Karan Mittal" description="Evidence-backed essays on version control, AI systems, distributed infrastructure, and performance engineering.">
+<Layout
+  title="Writing and systems notes | Karan Mittal"
+  description="Evidence-backed essays and technical publications on version control, AI systems, distributed infrastructure, and performance engineering."
+>
   <main class="container writing-page">
     <PageHeader
       label="Writing"
       title="Writing and systems notes."
       description="Evidence-backed explanations of version control, AI systems, distributed infrastructure, and performance engineering."
+      count={allWriting.length}
+      countLabel="published essays & articles"
     />
-
-    <section class="external-writing" aria-labelledby="external-writing-title">
-      <div class="external-writing-head">
-        <span>Published elsewhere</span>
-        <h2 id="external-writing-title">Writing for engineering audiences.</h2>
-      </div>
-      {externalWriting.map((article) => (
-        <a class="external-writing-row" href={article.href} target="_blank" rel="noopener">
-          <div class="external-meta">
-            <span>{article.publication}</span>
-            <time datetime={article.pubDate}>{new Date(article.pubDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}</time>
-          </div>
-          <div>
-            <h3>{article.title}</h3>
-            <p>{article.description}</p>
-          </div>
-          <span class="external-action">Read at {article.publication} ↗</span>
-        </a>
-      ))}
-    </section>
 
     <div class="archive-list" id="writing-timeline">
       {years.length > 0 ? (
         years.map((year) => (
-          <YearGroup year={year} count={postsByYear[year].length}>
-            {postsByYear[year].map((post) => (
-              <BlogPostCard
-                post={post}
-              />
-            ))}
+          <YearGroup year={year} count={writingByYear[year].length} unit="article">
+            <div class="writing-items-stream">
+              {writingByYear[year].map((item) => (
+                <article class="writing-stream-card">
+                  <div class="writing-card-header">
+                    <span class="source-tag">{item.source}</span>
+                    <span class="meta-sep" aria-hidden="true">&bull;</span>
+                    <time datetime={item.pubDate.toISOString()}>{formatDate(item.pubDate)}</time>
+                  </div>
+                  <h3 class="writing-card-title">
+                    <a href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener' : undefined}>
+                      <span>{item.title}</span>
+                      {item.external && <span class="ext-icon" aria-hidden="true">↗</span>}
+                    </a>
+                  </h3>
+                  <p class="writing-card-desc">{item.description}</p>
+                  {item.tags.length > 0 && (
+                    <div class="writing-tags">
+                      {item.tags.map((tag) => (
+                        <span class="tag-pill">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </article>
+              ))}
+            </div>
           </YearGroup>
         ))
       ) : (
         <div class="empty-blog-state">
           <p>No essays published yet. Starting afresh.</p>
-          <p class="empty-subtext">Add new posts in <code>src/content/blog/</code> using <code>npm run new</code>.</p>
         </div>
       )}
     </div>
@@ -76,108 +117,94 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
     padding-bottom: clamp(3rem, 6vw, 6rem);
   }
 
-  .external-writing {
-    margin-bottom: clamp(3rem, 7vw, 5rem);
-    border-top: 1px solid var(--ie-rule-strong);
+  .writing-items-stream {
+    display: flex;
+    flex-direction: column;
   }
 
-  .external-writing-head {
-    padding: 1.25rem 0;
-    border-bottom: 1px solid var(--ie-rule);
-  }
-
-  .external-writing-head > span {
-    display: block;
-    margin-bottom: 0.4rem;
-    color: var(--ie-blue);
-    font-family: var(--font-sans);
-    font-size: var(--ie-type-label);
-    font-weight: 600;
-    letter-spacing: 0.055em;
-    text-transform: uppercase;
-  }
-
-  .external-meta {
-    display: grid;
-    gap: 0.25rem;
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    line-height: 1.5;
-  }
-
-  .external-action {
-    min-height: 44px;
-    align-content: center;
-    color: var(--ie-blue);
-    font-family: var(--font-sans);
-    font-size: var(--ie-type-ui);
-    font-weight: 600;
-    white-space: nowrap;
-    transition: color 160ms ease;
-  }
-
-  .external-writing-head h2 {
-    margin: 0;
-    color: var(--ie-ink);
-    font-family: var(--font-display);
-    font-size: var(--ie-type-h2);
-  }
-
-  .external-writing-row {
-    display: grid;
-    grid-template-columns: 8rem minmax(0, 1fr) auto;
-    gap: 1.5rem;
-    align-items: start;
+  .writing-stream-card {
     padding: 1.5rem 0;
     border-bottom: 1px solid var(--ie-rule);
-    color: inherit;
-    text-decoration: none;
   }
 
-  .external-meta {
-    display: grid;
-    gap: 0.2rem;
+  .writing-stream-card:last-child {
+    border-bottom: none;
   }
 
-  .external-writing-row h3 {
-    margin: 0 0 0.4rem;
-    color: var(--ie-ink);
+  .writing-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+  }
+
+  .source-tag {
+    font-weight: 700;
+    color: var(--ie-blue);
+    letter-spacing: 0.04em;
+  }
+
+  .meta-sep {
+    color: var(--ie-rule-strong);
+  }
+
+  .writing-card-header time {
+    color: var(--ie-muted);
+  }
+
+  .writing-card-title {
+    margin: 0 0 0.55rem;
     font-family: var(--font-display);
-    font-size: var(--ie-type-h3);
+    font-size: clamp(1.2rem, 2vw, 1.45rem);
+    font-weight: 600;
     line-height: 1.3;
+    letter-spacing: -0.015em;
   }
 
-  .external-writing-row p {
-    max-width: 65ch;
-    margin: 0;
+  .writing-card-title a {
+    color: var(--ie-ink);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    transition: color 140ms ease;
+  }
+
+  .writing-card-title a:hover {
+    color: var(--ie-blue);
+  }
+
+  .ext-icon {
+    font-size: 0.9em;
+    color: var(--ie-muted);
+  }
+
+  .writing-card-desc {
+    max-width: 68ch;
+    margin: 0 0 0.85rem;
     color: var(--ie-ink-secondary);
     font-family: var(--font-sans);
-    font-size: var(--ie-type-small);
-    line-height: 1.6;
+    font-size: var(--ie-type-body);
+    line-height: 1.62;
   }
 
-  .external-action {
-    min-height: 44px;
-    align-content: center;
-    color: var(--ie-blue);
-    white-space: nowrap;
+  .writing-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
   }
 
-  .external-writing-row:hover h3 { color: var(--ie-blue); }
-
-  @media (max-width: 720px) {
-    .external-writing-row {
-      grid-template-columns: 1fr;
-      gap: 0.55rem;
-    }
-
-    .external-meta {
-      grid-template-columns: auto 1fr;
-      gap: 0.75rem;
-    }
-
-    .external-action { min-height: 0; }
+  .tag-pill {
+    padding: 0.15rem 0.5rem;
+    background: var(--ie-surface-raised);
+    border: 1px solid var(--ie-rule);
+    border-radius: var(--radius-sm, 4px);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    color: var(--ie-muted);
+    letter-spacing: 0.02em;
   }
 
   .empty-blog-state {
@@ -185,17 +212,5 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
     color: var(--ie-muted);
     font-family: var(--font-sans);
     font-size: var(--ie-type-body);
-  }
-  .empty-subtext {
-    margin-top: 0.5rem;
-    font-size: var(--ie-type-ui);
-    color: var(--ie-ink-secondary);
-  }
-  .empty-subtext code {
-    font-family: var(--font-mono);
-    padding: 0.1rem 0.35rem;
-    background: var(--ie-surface-raised);
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-sm);
   }
 </style>
