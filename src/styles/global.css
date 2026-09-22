@@ -18,26 +18,26 @@
 :root {
   color-scheme: light;
 
-  /* Semantic Color Palette */
-  --ie-canvas: #f8f9fc;
+  /* Semantic Color Palette — Minimal Neutral Monochromatic */
+  --ie-canvas: #f9f9f8;
   --ie-surface: #ffffff;
   /* Third-party Tally form supplies dark text independently of the site theme. */
   --ie-embed-surface: #ffffff;
-  --ie-surface-raised: #f1f5f9;
-  --ie-ink: #1a1a2e;
-  --ie-ink-secondary: #4a4a6a;
-  --ie-muted: #475569;
-  --ie-rule: #e8ecf4;
-  --ie-rule-strong: #cbd5e1;
-  --ie-blue: #2676aa;
-  --ie-blue-soft: #dceeff;
-  --ie-rust: #a63d17;
-  --ie-rust-soft: #f8e9df;
-  --ie-verified: #157F5F;
-  --ie-verified-soft: #E1F2EA;
-  --ie-code: #15181d;
+  --ie-surface-raised: #f2f2f0;
+  --ie-ink: #111111;
+  --ie-ink-secondary: #444444;
+  --ie-muted: #666666;
+  --ie-rule: #e5e5e2;
+  --ie-rule-strong: #d1d1cc;
+  --ie-blue: #b45309;
+  --ie-blue-soft: #fef3c7;
+  --ie-rust: #9a3412;
+  --ie-rust-soft: #ffedd5;
+  --ie-verified: #15803d;
+  --ie-verified-soft: #dcfce7;
+  --ie-code: #161616;
   /* Code chrome is fixed near-black in BOTH modes, so its text stays fixed light. */
-  --ie-code-text: #f3f4f6;
+  --ie-code-text: #f5f5f4;
 
   /* Brand & Technology Tokens for System Diagrams */
   --brand-anthropic: #d97706;
@@ -217,22 +217,22 @@
 :root.dark,
 html.dark {
   color-scheme: dark;
-  --ie-canvas: #09090b;
-  --ie-surface: #141416;
+  --ie-canvas: #111111;
+  --ie-surface: #191919;
   --ie-embed-surface: #ffffff;
-  --ie-surface-raised: #1f1f23;
-  --ie-ink: #f4f4f5;
-  --ie-ink-secondary: #d4d4d8;
-  --ie-muted: #a1a1aa;
-  --ie-rule: #27272a;
-  --ie-rule-strong: #3f3f46;
-  --ie-blue: #8daaff;
-  --ie-blue-soft: #1a2744;
-  --ie-rust: #ffb36b;
-  --ie-rust-soft: #382416;
-  --ie-verified: #5FD3A6;
-  --ie-verified-soft: #132d24;
-  --ie-code: #0b0c10;
+  --ie-surface-raised: #242424;
+  --ie-ink: #f5f5f4;
+  --ie-ink-secondary: #d6d3d1;
+  --ie-muted: #a8a29e;
+  --ie-rule: #292524;
+  --ie-rule-strong: #44403c;
+  --ie-blue: #f59e0b;
+  --ie-blue-soft: #2e2008;
+  --ie-rust: #fb923c;
+  --ie-rust-soft: #381e0d;
+  --ie-verified: #4ade80;
+  --ie-verified-soft: #143521;
+  --ie-code: #0c0c0c;
 
   /* Brand & Technology Tokens for System Diagrams */
   --brand-anthropic: #f59e0b;
@@ -249,9 +249,9 @@ html.dark {
   --brand-docker: #38bdf8;
 
 
-  --accent-hover: #b2c4ff;
-  --link-hover: #b2c4ff;
-  --interactive-primary-hover: #b2c4ff;
+  --accent-hover: #fcd34d;
+  --link-hover: #fcd34d;
+  --interactive-primary-hover: #fcd34d;
 }
 
 /* ================================================================
@@ -372,14 +372,27 @@ p {
 a {
   color: var(--link);
   text-decoration: none;
-  text-underline-offset: 0.18em;
-  text-decoration-thickness: 1px;
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
 a:hover {
   color: var(--link-hover);
-  text-decoration: underline;
+  text-decoration: none;
+}
+
+/* Inline text links get a soft, subtle pill highlight on hover instead of an underline */
+p a, li a, .post-standfirst a, .lead a {
+  padding: 0.1em 0.35em;
+  margin: -0.1em -0.1em;
+  border-radius: var(--radius-sm, 4px);
+  background: transparent;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+p a:hover, li a:hover, .post-standfirst a:hover, .lead a:hover {
+  background: var(--ie-blue-soft);
+  color: var(--ie-ink);
+  text-decoration: none;
 }
 
 ul, ol {

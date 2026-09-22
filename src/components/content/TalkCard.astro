@@ -182,11 +182,11 @@ const typeLabel: Record<Talk['type'], string> = {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    padding: 0.3rem 0.65rem;
-    min-height: 44px;
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius, 6px);
-    background: var(--ie-surface);
+    padding: 0.35rem 0.85rem;
+    min-height: 38px;
+    border: 1px solid var(--ie-rule-strong);
+    border-radius: var(--radius-pill, 999px);
+    background: var(--ie-surface-raised);
     font-family: var(--font-mono);
     font-size: 0.75rem;
     font-weight: 500;
@@ -198,7 +198,7 @@ const typeLabel: Record<Talk['type'], string> = {
   .talk-link:hover {
     border-color: var(--ie-blue);
     background: var(--ie-blue-soft);
-    color: var(--ie-blue);
+    color: var(--ie-ink);
   }
 
   .talk-link svg {

@@ -197,14 +197,21 @@ const formatDate = (date: Date) =>
   }
 
   .tag-pill {
-    padding: 0.15rem 0.5rem;
+    padding: 0.2rem 0.65rem;
     background: var(--ie-surface-raised);
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-sm, 4px);
+    border: 1px solid var(--ie-rule-strong);
+    border-radius: var(--radius-pill, 999px);
     font-family: var(--font-mono);
     font-size: var(--ie-type-micro);
     color: var(--ie-muted);
     letter-spacing: 0.02em;
+    transition: all 120ms ease;
+  }
+
+  .tag-pill:hover {
+    background: var(--ie-blue-soft);
+    border-color: var(--ie-blue);
+    color: var(--ie-ink);
   }
 
   .empty-blog-state {

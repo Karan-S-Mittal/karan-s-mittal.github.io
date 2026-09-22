@@ -41,8 +41,8 @@ const resolvedImage = image.startsWith('http://') || image.startsWith('https://'
        site's dark mode is also toggleable via a `.dark` class on <html> with a localStorage
        preference, which `prefers-color-scheme` cannot see — an explicit user override won't be
        reflected in the browser chrome color. Not scriptable; accepted limitation. -->
-  <meta name="theme-color" content="#F8F9FC" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#09090B" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f9f9f8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)" />
   <title>{title}</title>
   <meta name="description" content={description} />
   {robots && <meta name="robots" content={robots} />}

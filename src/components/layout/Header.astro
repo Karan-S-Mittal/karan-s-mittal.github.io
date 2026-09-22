@@ -184,13 +184,13 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
 
   .main-nav {
     display: flex;
-    gap: 1.75rem;
+    gap: 0.4rem;
     align-items: center;
   }
 
   .main-nav a {
     display: inline-flex;
-    min-height: 44px;
+    min-height: 36px;
     align-items: center;
     color: var(--ie-muted);
     font-family: var(--font-sans);
@@ -198,19 +198,25 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
     font-weight: 500;
     letter-spacing: -0.01em;
     text-decoration: none;
-    padding: 0.25rem 0;
-    border-bottom: 2px solid transparent;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill, 999px);
+    border: 1px solid transparent;
     transition: all 120ms ease;
   }
 
   .main-nav a:hover {
     color: var(--ie-ink);
+    background: var(--ie-surface-raised);
+    border-color: var(--ie-rule);
+    text-decoration: none;
   }
 
   .main-nav a.active {
     color: var(--ie-ink);
     font-weight: 600;
-    border-bottom-color: var(--ie-blue);
+    background: var(--ie-blue-soft);
+    border-color: color-mix(in srgb, var(--ie-blue) 40%, var(--ie-rule-strong));
+    text-decoration: none;
   }
 
   .header-right {
@@ -354,8 +360,11 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
     }
 
     .mobile-nav-panel a.active {
-      color: var(--ie-blue);
+      color: var(--ie-ink);
       font-weight: 600;
+      background: var(--ie-blue-soft);
+      border-radius: var(--radius-sm, 4px);
+      padding-inline: 0.5rem;
     }
 
     .mobile-nav-panel .mobile-nav-contact {

@@ -252,11 +252,16 @@ const externalArticle = externalWriting[0];
   }
 
   .scenario-tag {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     font-family: var(--font-mono);
     font-size: var(--ie-type-micro);
     font-weight: 700;
     color: var(--ie-rust);
+    background: var(--ie-rust-soft);
+    border: 1px solid color-mix(in srgb, var(--ie-rust) 30%, transparent);
+    padding: 0.2rem 0.65rem;
+    border-radius: var(--radius-pill, 999px);
     letter-spacing: 0.05em;
     margin-bottom: 0.6rem;
   }
@@ -396,10 +401,11 @@ const externalArticle = externalWriting[0];
   .artifacts-list li {
     font-family: var(--font-mono);
     font-size: var(--ie-type-micro);
-    color: var(--ie-blue);
-    padding: 0.15rem 0.5rem;
+    color: var(--ie-ink);
+    padding: 0.2rem 0.65rem;
     background: var(--ie-blue-soft);
-    border-radius: 3px;
+    border: 1px solid color-mix(in srgb, var(--ie-blue) 30%, transparent);
+    border-radius: var(--radius-pill, 999px);
   }
 
   /* Proof Cards */
@@ -440,20 +446,21 @@ const externalArticle = externalWriting[0];
     font-family: var(--font-mono);
     font-size: var(--ie-type-micro);
     font-weight: 700;
-    padding: 0.2rem 0.5rem;
-    border-radius: 3px;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill, 999px);
     letter-spacing: 0.05em;
   }
 
   .proof-badge-ext {
-    color: var(--ie-blue);
+    color: var(--ie-ink);
     background: var(--ie-blue-soft);
+    border: 1px solid color-mix(in srgb, var(--ie-blue) 35%, transparent);
   }
 
   .proof-badge-local {
     color: var(--ie-ink-secondary);
     background: var(--ie-surface-raised);
-    border: 1px solid var(--ie-rule);
+    border: 1px solid var(--ie-rule-strong);
   }
 
   .proof-badge-row time {
@@ -490,40 +497,38 @@ const externalArticle = externalWriting[0];
     margin-top: auto;
   }
 
-  .proof-link {
+  .proof-link,
+  .proof-subaction {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    color: var(--ie-blue);
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--ie-rule-strong);
+    border-radius: var(--radius-pill, 999px);
+    background: var(--ie-surface-raised);
+    color: var(--ie-ink);
     font-family: var(--font-sans);
     font-size: var(--ie-type-ui);
-    font-weight: 600;
+    font-weight: 500;
     text-decoration: none;
+    transition: all 140ms ease;
   }
 
-  .proof-link:hover {
-    text-decoration: underline;
+  .proof-link:hover,
+  .proof-subaction:hover {
+    border-color: var(--ie-blue);
+    background: var(--ie-blue-soft);
+    color: var(--ie-ink);
+    text-decoration: none;
   }
 
   .proof-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: 1rem;
     margin-top: 1.5rem;
-    padding-top: 1rem;
+    padding-top: 1.25rem;
     border-top: 1px solid var(--ie-rule);
-  }
-
-  .proof-subaction {
-    color: var(--ie-blue);
-    font-family: var(--font-sans);
-    font-size: var(--ie-type-ui);
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  .proof-subaction:hover {
-    text-decoration: underline;
   }
 
   @media (max-width: 960px) {
