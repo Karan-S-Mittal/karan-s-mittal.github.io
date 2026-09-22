@@ -1,104 +1,60 @@
-# Personal Website / Blog
+# karan-s-mittal.github.io
 
-A minimal, fast, professional blog built with [Astro](https://astro.build). Deployed automatically to **GitHub Pages** via GitHub Actions.
+Karan Mittal's personal site: graph-grounded knowledge systems, LLM evaluation, writing and talks. Live at **https://karan-s-mittal.github.io**.
 
-## Why Astro?
-- **Zero JS by default** — Pages ship as static HTML. Fast.
-- **MDX support** — Write posts in Markdown. Add components when needed.
-- **Auto-generated RSS** — Required for your GitHub profile auto-update workflow.
-- **GitHub Pages native** — Deploys automatically on every push.
+It's a static [Astro](https://astro.build) site. Every push to `main` deploys to GitHub Pages.
 
----
+## Run it
 
-## 🚀 Setup Instructions (GitHub Pages User Site)
+Requires Node 22.12 or later.
 
-### 1. Create the Magic Repo
-
-On GitHub, create a **new public repository** named exactly:
-
-```
-Karan-S-Mittal.github.io
+```sh
+npm install
+npm run dev        # http://localhost:4321
 ```
 
-> ⚠️ This must match your username exactly. GitHub treats this as your user site.
+| Command | What it does |
+| --- | --- |
+| `npm run build` | Builds to `dist/`. This is the only automated check: it fails on broken imports, bad CSS or an invalid post. |
+| `npm run preview` | Serves the built site. |
+| `npm run shot <route> [selector]` | Screenshots a built page in light and dark mode to `test-results/`. |
+| `npm run shot -- <route> --mobile` | The same at phone width (390px). |
+| `npm run new` | Creates a new essay from `src/content/blog/_template.mdx`. |
+| `npm run icon <query>` | Searches Lucide and brand icons for diagrams. |
 
-### 2. Move These Files to the New Repo
-
-The contents of this `website/` folder should become the **root** of that new repo.
-
-```bash
-# Example workflow after cloning the new repo:
-cd Karan-S-Mittal.github.io
-cp -r /path/to/this/website/* .
-git add .
-git commit -m "init: astro blog"
-git push origin main
-```
-
-### 3. Enable GitHub Pages
-
-1. Go to your new `Karan-S-Mittal.github.io` repo on GitHub.
-2. Navigate to **Settings → Pages**.
-3. Under **Source**, select **GitHub Actions**.
-4. The workflow file in `.github/workflows/deploy.yml` will handle the rest.
-
-### 4. Your Site is Live
-
-Within 2–3 minutes, your site will be available at:
+## Where things live
 
 ```
-https://karan-s-mittal.github.io
+src/
+  pages/            index, about, now, contact, publications (+ redirects)
+  components/
+    content/        PageHeader, YearGroup, TalkCard, essay parts
+    layout/         Header, Footer, TableOfContents
+    diagram/        figures: home/ (hero + practice), primitives/diagram.css
+  data/             practice.ts, publications.ts (writing + software), talks.json, communities.json
+  content/blog/     essays (MDX), published at /writing/<slug>/
+  styles/           global.css (all design tokens), practice.css
+scripts/            capture-page.js (shot), new-post.js, find-icon.js
+.agents/skills/     design, figure and essay rules (linked into .claude/skills/)
 ```
 
-Your RSS feed (used by your profile README workflow) will be at:
+## Common edits
 
-```
-https://karan-s-mittal.github.io/rss.xml
-```
+- **Add an article published elsewhere:** add an entry to `externalWriting` in `src/data/publications.ts`.
+- **Add a talk:** add an entry to `src/data/talks.json`.
+- **Add a repo:** add an entry to `software` in `src/data/publications.ts`. The Software section appears on `/publications/` once the list isn't empty.
+- **Write an essay:** run `npm run new`, write it in `src/content/blog/`, and set `draft: false` to publish.
+- **Update /now:** edit `src/pages/now.astro` and change `lastUpdated`.
 
----
+## Design rules
 
-## ✍️ Add a New Post
+The site follows one design system: neutral greys, blue only for things you can click, spacing instead of dividers, and Apple-style figures. The rules live in:
 
-1. Create a new `.md` file in `src/content/blog/`.
-2. Add frontmatter:
-   ```yaml
-   ---
-   title: "Your Post Title"
-   description: "Short summary for RSS and SEO"
-   pubDate: 2026-05-26
-   ---
-   ```
-3. Write your content in Markdown below the frontmatter.
-4. Commit and push. The site rebuilds automatically.
+- [`.agents/skills/site-design/SKILL.md`](.agents/skills/site-design/SKILL.md): pages, type, spacing, copy
+- [`.agents/skills/diagram-craft/SKILL.md`](.agents/skills/diagram-craft/SKILL.md): figures
+- [`.agents/skills/explanatory-studio/SKILL.md`](.agents/skills/explanatory-studio/SKILL.md): essays and citations
+- [`AGENTS.md`](AGENTS.md): instructions and current state for AI coding agents
 
----
+## Deploy
 
-## 🌐 Custom Domain (Optional)
-
-If you own a domain (e.g., `karansmittal.com`):
-
-1. Update `astro.config.mjs`:
-   ```js
-   export default defineConfig({
-     site: 'https://karansmittal.com',
-     base: '/',
-   });
-   ```
-2. Create `public/CNAME` containing:
-   ```
-   karansmittal.com
-   ```
-3. In your repo **Settings → Pages**, add your custom domain.
-4. Configure DNS A/ALIAS records pointing to GitHub Pages IPs.
-
----
-
-## 🔄 Auto-Deployment
-
-This repo includes `.github/workflows/deploy.yml`. Every time you push to `main`, the site:
-1. Installs dependencies (`npm ci`)
-2. Builds the static site (`astro build`)
-3. Deploys to GitHub Pages
-
-No manual steps required after initial setup.
+`.github/workflows/deploy.yml` runs on every push to `main`. It runs `npm ci` and a build, then deploys to Pages. The runner uses npm 12, which checks `package-lock.json` more strictly than older npm. After changing dependencies, run `npx npm@latest install --package-lock-only` before committing.

@@ -23,13 +23,13 @@ Lead with the engineering problem. Trace concrete state transitions, data moveme
 
 Architecture, algorithms, and performance claims go to papers, official specifications, vendor documentation, or source pinned to a revision — never a secondary blog post or aggregation article. State the workload and hardware conditions behind any metric.
 
-Put citations next to the claims they support. A short inline link is enough for a small claim. For a longer evidence ledger, write a plain table or list — the `PrimaryVerification` component was removed with the site's only essay; build one again only if an essay genuinely needs it.
+Put citations next to the claims they support. A short inline link is enough for a small claim. For a longer evidence ledger, write a plain table or list; build a component only if an essay genuinely needs one.
 
 Equations use KaTeX (`remark-math` + `rehype-katex`, already wired). Define every symbol and connect the equation to the mechanism it explains.
 
 ## Illustrate only when it earns the space
 
-Build visuals with the sibling [diagram-craft skill](../diagram-craft/SKILL.md) in its Apple-style grammar (soft tiles, hairlines, one blue path) and import the component into the article. Caption it with a plain `<figure>` and `<figcaption class="dg-caption">`; never copy diagram markup into the MDX. There is no `<Exhibit>` component any more.
+Build visuals with the sibling [diagram-craft skill](../diagram-craft/SKILL.md) in its Apple-style grammar (soft tiles, hairlines, one blue path) and import the component into the article. Caption it with a plain `<figure>` and `<figcaption class="dg-caption">`; never copy diagram markup into the MDX.
 
 Show physical slots, indices, buffers, and state changes when those are central to the explanation. Keep entity names and visual encodings consistent across figures. An interactive control has to reveal a meaningful change — otherwise use a static figure.
 
@@ -37,7 +37,7 @@ Confirm a component exists in the current repository before referring to it. Add
 
 ## Deliver
 
-There are currently no on-site essays: the previous one was LLM-generated and was removed. A new essay is the first real use of this route, so verify it end to end rather than assuming the template still renders.
+The first essay will be the first real use of the essay route (`src/pages/writing/[...slug].astro`, `TableOfContents`, `RelatedPosts`, `PostCTA`), so verify it end to end rather than assuming the template renders cleanly.
 
 Run `npm run build`, then inspect the rendered page and its figures in both themes:
 
