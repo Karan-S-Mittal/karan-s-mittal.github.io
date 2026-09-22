@@ -53,7 +53,6 @@
   --brand-vscode: #007acc;
   --brand-docker: #2496ed;
 
-
   /* Typography Families */
   --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -61,15 +60,6 @@
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
   /* Mechanistic & Memory Layout Tokens */
-  --ie-mem-free: var(--ie-surface-raised);
-  --ie-mem-free-border: var(--ie-rule);
-  --ie-mem-allocated: var(--ie-blue-soft);
-  --ie-mem-allocated-border: var(--ie-blue);
-  --ie-mem-cached: var(--ie-verified-soft);
-  --ie-mem-cached-border: var(--ie-verified);
-  --ie-mem-bottleneck: var(--ie-rust-soft);
-  --ie-mem-bottleneck-border: var(--ie-rust);
-  --ie-leader-line: var(--ie-muted);
 
   /* Standardized Typography Scale */
   --ie-type-micro: 0.75rem;    /* 12px: badges, dots, offset readouts */
@@ -84,98 +74,19 @@
   --ie-type-h1: clamp(2rem, 3.8vw, 2.75rem);   /* 32–44px: page display titles */
 
   /* Legacy & Semantic Mapping */
-  --bg: var(--ie-canvas);
   --bg-elevated: var(--ie-surface);
-  --bg-inset: var(--ie-surface-raised);
-  --surface-page: var(--ie-canvas);
-  --surface-card: var(--ie-surface);
-  --surface-subtle: var(--ie-surface-raised);
-  --surface: var(--ie-surface);
-  --surface-inverse: var(--ie-ink);
   --text: var(--ie-ink);
-  --text-secondary: var(--ie-ink-secondary);
-  --text-muted: var(--ie-muted);
-  --muted: var(--ie-muted);
   --accent: var(--ie-blue);
-  --accent-hover: #246fa0;
-  --accent-subtle: var(--ie-blue-soft);
+  /* Derived from the accent so it tracks the palette. The previous literal
+     #246fa0 was a steel blue left over from the pre-amber palette, so every
+     primary button and link hover jumped hue in light mode. */
+  --accent-hover: color-mix(in oklab, var(--ie-blue) 78%, var(--ie-ink));
   --link: var(--ie-blue);
-  --link-hover: #246fa0;
-  --border: var(--ie-rule);
-  --border-subtle: var(--ie-rule);
-  --border-default: var(--ie-rule);
-  --border-accent: var(--ie-blue);
-  --border-muted: var(--ie-rule);
-  --interactive-primary: var(--ie-blue);
-  --interactive-primary-hover: #246fa0;
+  --link-hover: var(--accent-hover);
   --interactive-focus: var(--ie-blue);
 
-  /* Signals & Diagrams */
-  --signal-warm: var(--ie-rust);
-  --signal-emphasis: var(--ie-rust-soft);
-  --signal-secondary: var(--ie-muted);
-  --diagram-node-primary: var(--ie-blue);
-  --diagram-node-attention: var(--ie-rust);
-  --diagram-node-verified: var(--ie-verified);
-  --diagram-edge-primary: var(--ie-ink);
-  --diagram-edge-secondary: var(--ie-muted);
-  --diagram-plane: var(--ie-surface-raised);
-  --ex-bg: var(--ie-surface);
-  --ex-border: var(--ie-rule);
-  --ex-text-main: var(--ie-ink);
-  --ex-text-muted: var(--ie-muted);
-  --ex-card-bg: var(--ie-surface);
-  --ex-blue-bg: var(--ie-blue-soft);
-  --ex-blue-stroke: var(--ie-blue);
-  --ex-blue-text: var(--ie-blue);
-  --ex-gray-bg: var(--ie-surface-raised);
-  --ex-gray-stroke: var(--ie-rule-strong);
-  --ex-gray-text: var(--ie-muted);
-
-  /* ---- Recovered token subsystems -------------------------------------
-     The CSS consolidation in d65c1b1 renamed the palette to --ie-* but left
-     42 references to the old names dangling. A bare var() of an undefined
-     property makes the whole declaration invalid, so those styles were being
-     silently dropped. These map the still-referenced subsystems onto the
-     semantic palette so they inherit light/dark correctly.
-     Values are pinned to preserve current rendering; tune deliberately. */
-
-  /* Exhibit colour families used by MDX diagrams, matching --ex-blue-*. */
-  --ex-green-bg: var(--ie-verified-soft);
-  --ex-green-stroke: var(--ie-verified);
-  --ex-green-text: var(--ie-verified);
-  --ex-rose-bg: var(--ie-rust-soft);
-  --ex-rose-stroke: var(--ie-rust);
-  --ex-rose-text: var(--ie-rust);
-  --ex-amber-bg: var(--ie-rust-soft);
-  --ex-amber-stroke: var(--ie-rust);
-  --ex-amber-text: var(--ie-rust);
-  --ex-purple-bg: var(--ie-blue-soft);
-  --ex-purple-stroke: var(--ie-blue);
-  --ex-purple-text: var(--ie-blue);
-  --ex-indigo-bg: var(--ie-blue-soft);
-  --ex-indigo-stroke: var(--ie-blue);
-  --ex-indigo-text: var(--ie-blue);
-
-  /* Studio panel chrome. Intended values recovered from the fallbacks that
-     AlgorithmFlow.astro still carries; StudioPanel.astro used them bare. */
-  --panel-bg: var(--ie-surface);
-  --panel-border: var(--ie-rule);
-  --panel-border-strong: var(--ie-rule-strong);
-  --panel-header-bg: var(--ie-surface-raised);
-  --panel-header-height: 2.75rem;
-  --panel-property-bg: var(--ie-surface-raised);
-  --panel-radius: var(--radius);
-  --panel-shadow: none;
-
-  /* The design language prefers rules and spatial grouping over shadows, and
-     these were rendering as no-shadow anyway. Pinned to that, not invented. */
+  /* The design language prefers rules and spatial grouping over shadows. */
   --shadow-sm: none;
-  --shadow-card: none;
-
-  /* Prose table cells. Previously invalid, so cells had no padding at all. */
-  --table-cell-pad-block: 0.6rem;
-  --table-cell-pad-inline: 0.85rem;
 
   /* Spacing Scale */
   --space-1: 0.25rem;   /* 4px */
@@ -193,16 +104,12 @@
   --radius-sm: 4px;
   --radius: 6px;
   --radius-card: 8px;
-  --radius-lg: 8px;
-  --radius-panel: 8px;
   --radius-pill: 999px;
 
   /* Layout Dimensions */
-  --page-max-width: 960px;
   --width-content: 960px;
   --max-width: 960px;
   --width-visual: 1180px;
-  --width-reading: 680px;
   --prose-max-width: 680px;
 
   /* Transitions */
@@ -248,10 +155,8 @@ html.dark {
   --brand-vscode: #38bdf8;
   --brand-docker: #38bdf8;
 
-
+  /* --link-hover and --interactive-primary-hover indirect through this. */
   --accent-hover: #fcd34d;
-  --link-hover: #fcd34d;
-  --interactive-primary-hover: #fcd34d;
 }
 
 /* ================================================================
@@ -409,7 +314,7 @@ li::marker {
   color: var(--ie-blue);
 }
 
-time, table, .label, .evidence-object {
+time, table, .label {
   font-variant-numeric: tabular-nums;
 }
 
@@ -579,85 +484,6 @@ article blockquote p:last-child {
    SVG System Diagram Classes
    ================================================================ */
 
-.sys-diagram {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.sys-diagram .node {
-  fill: var(--ex-card-bg);
-  stroke: var(--ex-text-main);
-  stroke-width: 1.8;
-}
-
-.sys-diagram .node-muted {
-  fill: var(--ex-gray-bg);
-  stroke: var(--ex-border);
-  stroke-width: 1.6;
-}
-
-.sys-diagram .node-signal {
-  fill: var(--ex-blue-bg);
-  stroke: var(--ex-blue-stroke);
-  stroke-width: 1.8;
-}
-
-.sys-diagram .rule {
-  stroke: var(--ex-border);
-  stroke-width: 1.2;
-}
-
-.sys-diagram .flow {
-  fill: none;
-  stroke: var(--ex-text-main);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.sys-diagram .flow-signal {
-  fill: none;
-  stroke: var(--ex-blue-stroke);
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.sys-diagram .flow-dashed {
-  fill: none;
-  stroke: var(--diagram-edge-secondary);
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 4 4;
-}
-
-.sys-diagram .label {
-  fill: var(--ex-text-muted);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.06em;
-}
-
-.sys-diagram .label-signal {
-  fill: var(--ex-blue-text);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-}
-
-.sys-diagram .plane > rect {
-  fill: var(--ex-gray-bg);
-  stroke: var(--ex-border);
-  stroke-width: 1;
-}
-
-.sys-diagram text {
-  dominant-baseline: central;
-}
-
 @media print {
   @page { margin: 18mm; }
 
@@ -671,9 +497,7 @@ article blockquote p:last-child {
   body > footer,
   .skip-link,
   .copy-code,
-  .export-bar,
-  .table-of-contents,
-  .visual-controls {
+  .toc-root {
     display: none !important;
   }
 
@@ -691,8 +515,7 @@ article blockquote p:last-child {
   }
 
   pre,
-  figure,
-  .exhibit {
+  figure {
     break-inside: avoid;
   }
 }

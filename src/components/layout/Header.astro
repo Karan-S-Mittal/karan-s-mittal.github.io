@@ -184,39 +184,46 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
 
   .main-nav {
     display: flex;
-    gap: 0.4rem;
+    gap: clamp(1rem, 2vw, 1.75rem);
     align-items: center;
   }
 
+  /* Current section is marked by a rule, not a filled pill. The accent is
+     reserved for links and hover so it still reads as emphasis elsewhere. */
   .main-nav a {
+    position: relative;
     display: inline-flex;
     min-height: 36px;
     align-items: center;
+    padding: 0.35rem 0.1rem;
     color: var(--ie-muted);
     font-family: var(--font-sans);
     font-size: var(--ie-type-ui);
     font-weight: 500;
     letter-spacing: -0.01em;
     text-decoration: none;
-    padding: 0.35rem 0.85rem;
-    border-radius: var(--radius-pill, 999px);
-    border: 1px solid transparent;
-    transition: all 120ms ease;
+    transition: color 120ms ease;
   }
 
   .main-nav a:hover {
     color: var(--ie-ink);
-    background: var(--ie-surface-raised);
-    border-color: var(--ie-rule);
     text-decoration: none;
   }
 
   .main-nav a.active {
     color: var(--ie-ink);
     font-weight: 600;
-    background: var(--ie-blue-soft);
-    border-color: color-mix(in srgb, var(--ie-blue) 40%, var(--ie-rule-strong));
     text-decoration: none;
+  }
+
+  .main-nav a.active::after {
+    position: absolute;
+    right: 0;
+    bottom: 0.2rem;
+    left: 0;
+    height: 1.5px;
+    background: var(--ie-ink);
+    content: '';
   }
 
   .header-right {
@@ -268,8 +275,7 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
     transition: all 120ms ease;
   }
 
-  .consult-cta:hover,
-  .consult-cta.active {
+  .consult-cta:hover {
     border-color: var(--ie-blue);
     background: var(--ie-blue);
     color: var(--ie-surface);

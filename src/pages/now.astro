@@ -69,7 +69,7 @@ const focusAreas = [
               <span class="index-num">{area.index}</span>
               <h2 id={`focus-${area.index}`}>{area.category}</h2>
             </div>
-            <span class={`status-pill ${area.status.toLowerCase().replace(/\s+/g, '-')}`}>
+            <span class={`status ${area.status.toLowerCase().replace(/\s+/g, '-')}`}>
               {area.status}
             </span>
           </div>
@@ -114,8 +114,10 @@ const focusAreas = [
 
   .now-card {
     display: grid;
-    grid-template-columns: minmax(13rem, 0.68fr) minmax(0, 1.32fr);
-    gap: clamp(2rem, 5vw, 4rem);
+    /* Index rail, not a column: the heading and status need little room, so
+       the reclaimed width goes to the entries themselves. */
+    grid-template-columns: minmax(10rem, 0.32fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 3vw, 2.75rem);
     padding: clamp(1.5rem, 3vw, 2rem) 0;
     border-bottom: 1px solid var(--ie-rule);
   }
@@ -149,7 +151,7 @@ const focusAreas = [
     letter-spacing: -0.015em;
   }
 
-  .status-pill {
+  .status {
     display: inline-flex;
     align-items: center;
     padding: 0;
@@ -160,38 +162,39 @@ const focusAreas = [
     text-transform: uppercase;
   }
 
-  .status-pill.active {
+  .status.active {
     color: var(--ie-blue);
   }
 
-  .status-pill.in-progress {
+  .status.in-progress {
     color: var(--ie-rust);
   }
 
-  .status-pill.exploring,
-  .status-pill.upcoming {
+  .status.exploring,
+  .status.upcoming {
     color: var(--ie-muted);
   }
 
   .focus-list {
+    display: grid;
+    /* Hold a readable measure; the rail freed width, not licence to run long. */
+    max-width: 68ch;
     margin: 0;
     padding: 0;
+    gap: 0.9rem;
     list-style: none;
-    display: grid;
-    gap: 0.75rem;
   }
 
   .focus-list li {
     display: flex;
     gap: 0.55rem;
     color: var(--ie-ink-secondary);
-    font-size: var(--ie-type-ui);
-    line-height: 1.55;
+    font-size: var(--ie-type-base);
+    line-height: 1.6;
   }
 
   .bullet {
-    color: var(--ie-blue);
-    font-weight: 600;
+    color: var(--ie-rule-strong);
     flex-shrink: 0;
   }
 

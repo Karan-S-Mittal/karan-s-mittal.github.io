@@ -11,7 +11,7 @@ const { year, count, unit = 'post' } = Astro.props;
 <section class="year-group" aria-labelledby={`year-${year}`}>
   <div class="year-header">
     <h2 id={`year-${year}`} class="year-label">{year}</h2>
-    <span class="year-count-pill" aria-hidden="true">{count} {unit}{count === 1 ? '' : 's'}</span>
+    <span class="year-count" aria-hidden="true">{count} {unit}{count === 1 ? '' : 's'}</span>
   </div>
   <div class="year-content">
     <slot />
@@ -48,18 +48,10 @@ const { year, count, unit = 'post' } = Astro.props;
     letter-spacing: 0.05em;
   }
 
-  .year-count-pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.15rem 0.55rem;
-    border-radius: var(--radius-pill, 999px);
-    background: var(--ie-surface-raised);
-    border: 1px solid var(--ie-rule);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-    font-weight: 500;
+  .year-count {
     color: var(--ie-muted);
-    letter-spacing: 0.02em;
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
   }
 
   .year-content {

@@ -6,9 +6,6 @@ tags: __TAGS__
 draft: __DRAFT__
 ---
 
-import Exhibit from '../../components/editorial/Exhibit.astro';
-import PrimaryVerification from '../../components/editorial/PrimaryVerification.astro';
-
 State the engineering question precisely. Separate observed behavior from inference, and name the system boundary being examined.
 
 ## 1. Premise
@@ -17,17 +14,7 @@ Define the terms and the narrow claim this essay will establish. Link the defini
 
 ## 2. Mechanism
 
-Explain the sequence, state, and invariants. Use an exhibit only when the visual materially clarifies the mechanism.
-
-<Exhibit
-  exhibit="01"
-  title="__EXHIBIT_TITLE__"
-  badge="EXPLANATORY MODEL"
-  caption="State what the visual shows and what it does not claim.">
-
-  {/* Import and render a token-compliant diagram component here. */}
-
-</Exhibit>
+Explain the sequence, state, and invariants. Add a figure only when the visual materially clarifies the mechanism; build it as a token-compliant component under `src/components/diagram/` and import it here.
 
 ## 3. Constraint
 
@@ -41,19 +28,10 @@ Tie each externally verifiable claim to a primary source: an official specificat
 
 Turn the mechanism into a bounded decision rule. State when the architecture applies, when it does not, and what must be measured locally.
 
-## Primary citations and verification ledger
+## Primary citations
 
-<PrimaryVerification
-  citations={[
-    {
-      id: "01",
-      badge: "PRIMARY SOURCE",
-      claim: "Replace with the exact claim this source supports.",
-      source: "Owning project or author",
-      title: "Specification, paper, or source permalink",
-      url: "https://example.com/replace-with-primary-source"
-    }
-  ]}
-/>
+List each externally verifiable claim against its primary source: an official
+specification, a source permalink pinned to a revision, a vendor architecture
+manual, or the original paper.
 
 {/* Keep distribution notes factual. Do not turn unverified numbers into hooks. */}

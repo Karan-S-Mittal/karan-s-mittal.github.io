@@ -6,33 +6,6 @@ import '@styles/practice.css';
 
 const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
 
-const evidence = [
-  {
-    register: '01 / Essays',
-    title: 'Writing',
-    description: 'Evidence-backed explanations of systems, protocols, and engineering trade-offs.',
-    href: '/writing',
-  },
-  {
-    register: '02 / Models',
-    title: 'Ideas',
-    description: 'Reusable visual models and working concepts for inspecting system behavior.',
-    href: '/ideas/',
-  },
-  {
-    register: '03 / Teaching',
-    title: 'Speaking',
-    description: 'Selected workshops, technical sessions, and community records.',
-    href: '/speaking',
-  },
-  {
-    register: '04 / Source',
-    title: 'GitHub',
-    description: 'Repositories and implementation work that can be inspected directly.',
-    href: 'https://github.com/karan-s-mittal',
-    external: true,
-  },
-];
 ---
 
 <Layout
@@ -54,10 +27,12 @@ const evidence = [
       <figure class="about-portrait">
         <div class="portrait-frame">
           <img
-            src="/profile-400.jpg"
+            src="/profile.jpg"
+            srcset="/profile-400.jpg 400w, /profile.jpg 800w"
+            sizes="(max-width: 880px) 100vw, 440px"
             alt="Karan Mittal speaking at a technical event"
-            width="400"
-            height="400"
+            width="800"
+            height="800"
           />
         </div>
         <figcaption>
@@ -115,7 +90,7 @@ const evidence = [
       </div>
 
       <div class="actions method-actions">
-        <a href="/work" class="action">Explore my work →</a>
+        <a href="/#proof" class="action">Explore my work →</a>
         <a href="/now" class="action secondary">What I’m working on now →</a>
       </div>
     </section>
@@ -132,13 +107,21 @@ const evidence = [
 
       <div class="history-narrative">
         <p>
-          I started in systems engineering with distributed storage, Linux internals, and data-intensive pipelines. The discipline of distributed consensus and transactional integrity made one principle clear: when complex systems fail, they rarely fail inside isolated algorithms—they fail at the unverified boundaries between subsystems and the gap between assumed state and operational reality.
+          I started in systems engineering with distributed storage, Linux internals, and
+          data-intensive pipelines. Distributed consensus and transactional integrity made one
+          principle clear: complex systems rarely fail inside isolated algorithms. They fail at the
+          unverified boundaries between subsystems, in the gap between assumed state and
+          operational reality. When machine learning moved into production, that same failure mode
+          amplified — teams treated probabilistic model output as an oracle rather than as an
+          unverified component.
         </p>
         <p>
-          As machine learning systems moved into production, that same failure mode amplified. Teams often treated probabilistic model outputs as an oracle rather than an unverified component. My work focused on grounding model decisions in explicit graph structures: capturing material lots, chemical regulations, and supplier claims as inspectable records where uncertainty has an explicit operational cost.
-        </p>
-        <p>
-          At <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a> and in independent advisory, the goal remains consistent: design systems whose boundaries can be inspected, whose state can be audited, and that engineering teams can own and operate with confidence.
+          My work since has been grounding those decisions in explicit graph structures: material
+          lots, chemical regulations, and supplier claims captured as inspectable records where
+          uncertainty carries an explicit operational cost. At
+          <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a> and in independent
+          advisory the goal is unchanged — systems whose boundaries can be inspected, whose state
+          can be audited, and that engineering teams can own and operate with confidence.
         </p>
       </div>
     </section>
@@ -183,41 +166,7 @@ const evidence = [
       </div>
     </section>
 
-    <!-- Section 03: Evidence Trail (Verification Checklist Ledger) -->
-    <section class="section evidence-section" aria-labelledby="evidence-title">
-      <div class="section-head">
-        <div>
-          <span class="register">03 / Evidence trail</span>
-          <h2 id="evidence-title">Inspect the work, not just the biography.</h2>
-        </div>
-      </div>
-      <p class="evidence-lead">
-        The public record is organized as an inspectable verification trail across writing, visual models, teaching, and implementation source.
-      </p>
-
-      <div class="evidence-ledger">
-        {evidence.map((item) => (
-          <a
-            href={item.href}
-            target={item.external ? '_blank' : undefined}
-            rel={item.external ? 'noopener' : undefined}
-            class="evidence-ledger-row"
-          >
-            <span class="evidence-index-badge">{item.register.split('/')[0].trim()}</span>
-            <div class="evidence-main">
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-            </div>
-            <span class="evidence-action">
-              <span>{item.external ? 'Inspect source' : 'View records'}</span>
-              <span aria-hidden="true">{item.external ? '↗' : '→'}</span>
-            </span>
-          </a>
-        ))}
-      </div>
-    </section>
-
-    <!-- Section 04: Closing CTA -->
+    <!-- Section 03: Closing CTA -->
     <section class="closing" aria-labelledby="about-closing-title">
       <span class="register">Work together</span>
       <h2 id="about-closing-title">Bring a problem worth solving.</h2>
@@ -227,7 +176,7 @@ const evidence = [
       </p>
       <div class="actions">
         <a href="/contact" class="action">Discuss your problem →</a>
-        <a href="/work" class="action secondary">Ways to work together →</a>
+        <a href="/#practice" class="action secondary">Ways to work together →</a>
       </div>
     </section>
   </main>
@@ -240,7 +189,7 @@ const evidence = [
   .about-hero {
     display: grid;
     min-height: auto;
-    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 340px);
+    grid-template-columns: minmax(0, 1.35fr) minmax(300px, 400px);
     align-items: center;
     gap: clamp(3rem, 7vw, 6rem);
     padding-block: clamp(4rem, 8vw, 6.5rem) clamp(3rem, 6vw, 5rem);
@@ -258,20 +207,17 @@ const evidence = [
   }
 
   .portrait-frame {
-    padding: 0.65rem;
-    border: 1px solid var(--ie-rule-strong);
-    background: var(--ie-surface);
     border-radius: var(--radius-sm, 4px);
-    box-shadow: 0 4px 20px -6px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
   }
 
   .portrait-frame img {
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 1;
+    aspect-ratio: 4 / 5;
     object-fit: cover;
-    border-radius: 2px;
+    object-position: 50% 28%;
     filter: saturate(0.92) contrast(1.02);
   }
 
@@ -332,21 +278,18 @@ const evidence = [
     align-items: center;
     justify-content: center;
     width: 2.25rem;
-    height: 2.25rem;
-    border: 1px solid var(--ie-blue);
-    background: var(--ie-blue-soft);
-    color: var(--ie-blue);
-    border-radius: 4px;
+    height: 1.75rem;
+    color: var(--ie-muted);
     font-family: var(--font-mono);
     font-size: var(--ie-type-label);
-    font-weight: 700;
+    font-variant-numeric: tabular-nums;
     flex-shrink: 0;
   }
 
   .step-spine-line {
     flex: 1;
-    width: 2px;
-    background: var(--ie-rule-strong);
+    width: 1px;
+    background: var(--ie-rule);
     margin-block: 0.5rem;
     min-height: 2rem;
   }
@@ -424,12 +367,12 @@ const evidence = [
     display: inline-flex;
     min-height: 44px;
     align-items: center;
-    color: var(--ie-blue);
+    color: var(--ie-ink-secondary);
     text-decoration: none;
   }
 
   .community-head-actions a:hover {
-    text-decoration: underline;
+    color: var(--ie-blue);
   }
 
   .community-lead {
@@ -500,87 +443,28 @@ const evidence = [
     gap: 0.25rem;
     font-family: var(--font-sans);
     font-size: var(--ie-type-ui);
-    color: var(--ie-blue);
+    color: var(--ie-ink-secondary);
     text-decoration: none;
-    padding: 0.5rem 0.75rem;
-    border-radius: var(--radius-sm, 4px);
-    transition: color 140ms ease, background-color 140ms ease;
+    padding: 0.5rem 0;
+    transition: color 140ms ease;
   }
 
   .community-link:hover {
-    background: var(--ie-blue-soft);
+    color: var(--ie-blue);
     text-decoration: none;
   }
 
   /* ================================================================
      4. Evidence Trail: Verification Checklist Ledger (Page Conclusion)
      ================================================================ */
-  .evidence-section {
-    padding-top: clamp(3.5rem, 7vw, 5.5rem);
-  }
 
-  .evidence-lead {
-    max-width: 72ch;
-    margin-bottom: 2rem;
-    color: var(--ie-ink-secondary);
-    font-size: var(--ie-type-body);
-    line-height: 1.65;
-  }
 
-  .evidence-ledger {
-    border-top: 1px solid var(--ie-rule-strong);
-  }
 
-  .evidence-ledger-row {
-    display: grid;
-    grid-template-columns: 2.75rem minmax(0, 1fr) auto;
-    gap: 1.25rem;
-    align-items: center;
-    padding: 1.35rem 0;
-    border-bottom: 1px solid var(--ie-rule);
-    text-decoration: none;
-    color: inherit;
-    transition: background-color 140ms ease;
-  }
 
-  .evidence-ledger-row:hover .evidence-main h3,
-  .evidence-ledger-row:hover .evidence-action {
-    color: var(--ie-blue);
-  }
 
-  .evidence-index-badge {
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    font-weight: 700;
-  }
 
-  .evidence-main h3 {
-    margin: 0 0 0.25rem;
-    font-size: var(--ie-type-h4);
-    color: var(--ie-ink);
-    transition: color 140ms ease;
-  }
 
-  .evidence-main p {
-    margin: 0;
-    color: var(--ie-ink-secondary);
-    font-size: var(--ie-type-small);
-    line-height: 1.55;
-    max-width: 66ch;
-  }
 
-  .evidence-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    color: var(--ie-muted);
-    font-family: var(--font-sans);
-    font-size: var(--ie-type-ui);
-    font-weight: 500;
-    white-space: nowrap;
-    transition: color 140ms ease;
-  }
 
   /* Responsive Adjustments */
   @media (max-width: 760px) {
@@ -604,26 +488,11 @@ const evidence = [
       grid-column: 2;
       margin-top: 0.35rem;
     }
-
-    .evidence-ledger-row {
-      grid-template-columns: 2.25rem 1fr;
-      gap: 0.85rem;
-      align-items: start;
-    }
-
-    .evidence-action {
-      grid-column: 2;
-      margin-top: 0.35rem;
-      color: var(--ie-blue);
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .community-ledger-row,
-    .evidence-ledger-row,
-    .community-link,
-    .evidence-main h3,
-    .evidence-action {
+    .community-link {
       transition: none;
     }
   }

@@ -5,27 +5,6 @@ import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
-import { remarkAutoTag } from './src/plugins/remarkAutoTag.js';
-import fs from 'node:fs';
-import fg from 'fast-glob';
-import matter from 'gray-matter';
-import { normalizeTag, tagSlug } from './src/utils/tags.js';
-
-const tagCounts = new Map();
-for (const file of fg.sync('src/content/blog/*.mdx', { ignore: ['src/content/blog/_*.mdx'] })) {
-  const { data } = matter(fs.readFileSync(file, 'utf8'));
-  if (data.draft === true) continue;
-  for (const tag of data.tags || []) {
-    const key = normalizeTag(tag);
-    tagCounts.set(key, (tagCounts.get(key) || 0) + 1);
-  }
-}
-
-const indexableTagPaths = new Set(
-  [...tagCounts]
-    .filter(([, count]) => count >= 2)
-    .map(([tag]) => `/topics/${tagSlug(tag)}/`),
-);
 
 // GitHub Pages user site config
 // If using a custom domain later, update 'site' to 'https://yourdomain.com'
@@ -41,17 +20,16 @@ export default defineConfig({
     sitemap({
       filter: (page) => {
         const pathname = new URL(page).pathname;
-        if (pathname === '/topics/') return indexableTagPaths.size > 0;
-        if (/^\/topics\/[^/]+\/$/.test(pathname)) return indexableTagPaths.has(pathname);
-        if (/^\/(?:blog|visuals|talks|tags|publications|diagrams|ideas|work)(?:\/.*)?\/?$/.test(pathname)) return false;
-        return !/^\/(?:contact|now|studio(?:\/.*)?|case-studies\/soft-architecture)\/?$/.test(pathname);
+        // Redirect stubs and retired sections stay out of the public sitemap.
+        if (/^\/(?:blog|visuals|talks|tags|topics|publications|diagrams|ideas|work)(?:\/.*)?\/?$/.test(pathname)) return false;
+        return !/^\/(?:contact|now)\/?$/.test(pathname);
       },
     }),
     mdx(),
   ],
   markdown: {
     processor: unified({
-      remarkPlugins: [remarkMath, remarkAutoTag],
+      remarkPlugins: [remarkMath],
       rehypePlugins: [
         rehypeSlug,
         rehypeKatex,

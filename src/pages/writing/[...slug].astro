@@ -5,7 +5,6 @@ import TableOfContents from '@components/layout/TableOfContents.astro';
 import RelatedPosts from '@components/content/RelatedPosts.astro';
 import PostCTA from '@components/content/PostCTA.astro';
 import { getReadingTime } from '@utils/readingTime';
-import { normalizeTag, tagSlug } from '@utils/tags.js';
 import 'katex/dist/katex.min.css';
 
 export async function getStaticPaths() {
@@ -27,15 +26,6 @@ const showToc = tocHeadings.length > 2;
 
 const readingTime = getReadingTime(post.body || '');
 
-const publishedPosts = (await getCollection('blog')).filter((entry) => !entry.data.draft);
-const tagCounts = publishedPosts.reduce<Record<string, number>>((counts, entry) => {
-  for (const tag of entry.data.tags) {
-    const key = normalizeTag(tag);
-    counts[key] = (counts[key] || 0) + 1;
-  }
-  return counts;
-}, {});
-
 const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
@@ -53,6 +43,8 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
       ? new URL(post.data.image, Astro.site).toString()
       : undefined
   }
+  imageWidth={post.data.image ? 1200 : undefined}
+  imageHeight={post.data.image ? 630 : undefined}
 >
   <main class="container post-layout instrumented-essay">
     <article class="post-content">
@@ -82,11 +74,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
 
           {post.data.tags.length > 0 && (
             <div class="post-tags">
-              {post.data.tags.map((tag) => (
-                tagCounts[normalizeTag(tag)] >= 2
-                  ? <a href={`/topics/${tagSlug(tag)}/`} class="tag">{tag}</a>
-                  : <span class="tag">{tag}</span>
-              ))}
+              {post.data.tags.map((tag) => <span class="tag">{tag}</span>)}
             </div>
           )}
         </div>
@@ -405,11 +393,11 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
 
 <style is:global>
   /* Prose rules target markdown-rendered content within the instrumented essay. */
-  .instrumented-essay .post-content > :is(p, ul, ol, blockquote, pre, h2, h3, h4, hr, table, .math-card, .formula-note, .katex-display) {
+  .instrumented-essay .post-content > :is(p, ul, ol, blockquote, pre, h2, h3, h4, hr, table, .katex-display) {
     max-width: 700px;
   }
 
-  .instrumented-essay .post-content > :is(.exhibit, .interactive-walkthrough, .verification-wrapper, .verification-ledger, figure) {
+  .instrumented-essay .post-content > figure {
     width: 100%;
     max-width: 1040px;
   }
@@ -555,15 +543,6 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     overflow-wrap: normal;
   }
 
-  .instrumented-essay .post-content .formula-note {
-    margin: 0 0 var(--space-5, 2rem);
-    padding-left: var(--space-3, 1rem);
-    border-left: 1px solid var(--ie-rule);
-    color: var(--ie-muted);
-    font-size: var(--ie-type-ui);
-    line-height: 1.6;
-  }
-
   .instrumented-essay .post-sidebar .toc-root {
     position: sticky;
     top: 5.5rem;
@@ -575,7 +554,6 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   }
 
   @media (max-width: 640px) {
-    .ex-canvas-frame { padding: 1rem; }
     .instrumented-essay .post-content .katex-display {
       padding: var(--space-3, 1rem);
       font-size: 0.88rem;
@@ -598,7 +576,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
       min-width: 10rem;
       padding: 0.65rem 0.75rem;
     }
-    .instrumented-essay .post-content > :is(.exhibit, .interactive-walkthrough, .verification-wrapper, .verification-ledger, figure) {
+    .instrumented-essay .post-content > figure {
       min-width: 0;
       max-width: 100%;
     }

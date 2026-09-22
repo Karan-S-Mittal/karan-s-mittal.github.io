@@ -1,0 +1,1412 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpenAI Codex vs Claude Code: Which AI Coding Agent Wins in 2026?</title>
+  <meta
+    name="description"
+    content="OpenAI Codex and Claude Code compared on coding models, product features, pricing, context, agent workflows, security, and real-world use cases in September 2026."
+  />
+  <meta name="author" content="Karan Mittal" />
+  <meta name="date" content="2026-09-09" />
+  <style>
+    :root {
+      --ie-canvas: #f8f9fc;
+      --ie-surface: #ffffff;
+      --ie-ink: #1a1a2e;
+      --ie-ink-secondary: #4a4a6a;
+      --ie-muted: #5b6470;
+      --ie-rule: #e8ecf4;
+      --ie-blue: #2676aa;
+      --ie-rust: #a63d17;
+      --ie-verified: #157f5f;
+      --ie-blue-soft: #eef6fb;
+      --ie-rust-soft: #fff5ef;
+      --ie-green-soft: #edf8f4;
+      --ie-shadow: rgba(26, 26, 46, 0.08);
+      --font-body: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+      --font-serif: "IBM Plex Serif", Georgia, serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      color: var(--ie-ink);
+      background: var(--ie-canvas);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ie-ink-secondary);
+      background: var(--ie-canvas);
+    }
+
+    a {
+      color: var(--ie-blue);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.16em;
+    }
+
+    a:hover { text-decoration-thickness: 2px; }
+
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 32px auto 72px;
+      background: var(--ie-surface);
+      border: 1px solid var(--ie-rule);
+      box-shadow: 0 18px 48px var(--ie-shadow);
+    }
+
+    .article-header,
+    .prose,
+    .sources {
+      width: min(760px, calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    .article-header {
+      padding: 72px 0 40px;
+      border-bottom: 1px solid var(--ie-rule);
+    }
+
+    .eyebrow,
+    .meta,
+    .figure-label,
+    .tag,
+    .source-id {
+      font-family: var(--font-mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--ie-blue);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: var(--ie-ink);
+      text-wrap: balance;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 7vw, 5.5rem);
+      font-weight: 500;
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+
+    h1 span { color: var(--ie-blue); }
+
+    .dek {
+      margin: 28px 0 20px;
+      max-width: 690px;
+      color: var(--ie-ink-secondary);
+      font-size: 1.2rem;
+      line-height: 1.55;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--ie-muted);
+      font-size: 0.68rem;
+    }
+
+    .prose { padding-top: 34px; }
+
+    section { margin: 0 0 54px; }
+
+    h2 {
+      margin: 0 0 20px;
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 4vw, 2.55rem);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+    }
+
+    h3 {
+      margin: 32px 0 10px;
+      font-size: 1.08rem;
+      line-height: 1.35;
+    }
+
+    p { margin: 0 0 18px; }
+
+    strong { color: var(--ie-ink); }
+
+    code {
+      padding: 0.08em 0.3em;
+      border: 1px solid var(--ie-rule);
+      border-radius: 4px;
+      color: var(--ie-ink);
+      background: var(--ie-canvas);
+      font-family: var(--font-mono);
+      font-size: 0.84em;
+      white-space: nowrap;
+    }
+
+    .answer {
+      margin: 40px 0 56px;
+      padding: 24px 26px;
+      border-top: 1.5px solid var(--ie-blue);
+      border-bottom: 1px solid var(--ie-rule);
+      background: linear-gradient(90deg, var(--ie-blue-soft), var(--ie-surface));
+    }
+
+    .answer .tag {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--ie-blue);
+      font-size: 0.66rem;
+      font-weight: 700;
+    }
+
+    .answer p {
+      margin: 0;
+      color: var(--ie-ink);
+      font-size: 1.1rem;
+      line-height: 1.55;
+    }
+
+    .claim-note {
+      padding: 18px 20px;
+      border-left: 3px solid var(--ie-rust);
+      background: var(--ie-rust-soft);
+      color: var(--ie-ink-secondary);
+      font-size: 0.94rem;
+    }
+
+    .exhibit {
+      width: min(1000px, calc(100% - 32px));
+      margin: 54px auto 64px;
+      padding: 20px;
+      border: 1px solid var(--ie-rule);
+      background: var(--ie-surface);
+      break-inside: avoid;
+    }
+
+    .figure-label {
+      margin: 0 0 10px;
+      color: var(--ie-blue);
+      font-size: 0.64rem;
+      font-weight: 700;
+    }
+
+    .exhibit h2 {
+      margin-bottom: 18px;
+      font-family: var(--font-body);
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .diagram {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--ie-rule);
+      background: var(--ie-canvas);
+    }
+
+    .diagram .plane { fill: var(--ie-surface); stroke: var(--ie-rule); stroke-width: 1.5; }
+    .diagram .plane-soft { fill: var(--ie-blue-soft); stroke: var(--ie-blue); stroke-width: 1.5; }
+    .diagram .plane-rust { fill: var(--ie-rust-soft); stroke: var(--ie-rust); stroke-width: 1.5; }
+    .diagram .plane-green { fill: var(--ie-green-soft); stroke: var(--ie-verified); stroke-width: 1.5; }
+    .diagram .wire { fill: none; stroke: var(--ie-blue); stroke-width: 1.5; }
+    .diagram .wire-muted { fill: none; stroke: var(--ie-muted); stroke-width: 1.5; }
+    .diagram .wire-rust { fill: none; stroke: var(--ie-rust); stroke-width: 1.5; }
+    .diagram .junction { fill: var(--ie-blue); }
+    .diagram .title { fill: var(--ie-ink); font-size: 18px; font-weight: 700; }
+    .diagram .label { fill: var(--ie-ink-secondary); font-size: 14px; }
+    .diagram .small { fill: var(--ie-muted); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; }
+    .diagram .small-blue { fill: var(--ie-blue); font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; }
+    .diagram .small-rust { fill: var(--ie-rust); font-family: var(--font-mono); font-size: 11px; font-weight: 700; }
+    .diagram .small-green { fill: var(--ie-verified); font-family: var(--font-mono); font-size: 11px; font-weight: 700; }
+    .diagram .wordmark { fill: var(--ie-ink); font-family: var(--font-mono); font-size: 11px; }
+
+    figcaption {
+      margin: 14px 2px 0;
+      color: var(--ie-muted);
+      font-size: 0.84rem;
+      line-height: 1.55;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin: 26px 0;
+    }
+
+    .comparison-grid article {
+      padding: 20px;
+      border-top: 2px solid var(--ie-blue);
+      background: var(--ie-canvas);
+    }
+
+    .comparison-grid h3 { margin-top: 0; }
+
+    .comparison-grid ul,
+    .method-list {
+      margin: 10px 0 0;
+      padding-left: 1.15rem;
+    }
+
+    .comparison-grid li,
+    .method-list li { margin-bottom: 8px; }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 26px 0;
+      border-top: 1px solid var(--ie-rule);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th,
+    td {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--ie-rule);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--ie-ink);
+      background: var(--ie-canvas);
+      font-size: 0.78rem;
+    }
+
+    td:first-child { color: var(--ie-ink); font-weight: 650; }
+
+    .faq { margin: 0; }
+
+    .faq dt {
+      margin-top: 22px;
+      color: var(--ie-ink);
+      font-weight: 700;
+    }
+
+    .faq dd { margin: 6px 0 0; }
+
+    .verdict-word {
+      color: var(--ie-blue);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .sources {
+      padding: 38px 0 56px;
+      border-top: 1px solid var(--ie-rule);
+    }
+
+    .sources h2 { font-size: 1.7rem; }
+
+    .sources ol {
+      margin: 0;
+      padding-left: 1.25rem;
+      font-size: 0.83rem;
+    }
+
+    .sources li { margin-bottom: 10px; }
+
+    .sources p {
+      color: var(--ie-muted);
+      font-size: 0.8rem;
+    }
+
+    .author-mark {
+      margin-top: 44px;
+      color: var(--ie-ink);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 760px) {
+      body { font-size: 16px; }
+      main { width: 100%; margin: 0; border: 0; box-shadow: none; }
+      .article-header { padding-top: 44px; }
+      .comparison-grid { grid-template-columns: 1fr; }
+      .exhibit { width: calc(100% - 20px); padding: 10px; }
+      .diagram .title { font-size: 16px; }
+      .diagram .label { font-size: 12px; }
+      .diagram .small,
+      .diagram .small-blue,
+      .diagram .small-rust,
+      .diagram .small-green { font-size: 9px; }
+    }
+
+    @media print {
+      @page { size: A4; margin: 16mm 14mm 18mm; }
+      html, body { background: var(--ie-surface); }
+      body { font-size: 10.5pt; line-height: 1.45; }
+      main { width: 100%; margin: 0; border: 0; box-shadow: none; }
+      .article-header,
+      .prose,
+      .sources { width: 100%; }
+      .article-header { padding-top: 0; }
+      h1 { font-size: 38pt; }
+      h2 { font-size: 22pt; }
+      a { color: var(--ie-ink); text-decoration: none; }
+      a::after { content: ""; }
+      .exhibit { width: 100%; margin: 24px 0; page-break-inside: avoid; }
+      section { break-inside: auto; }
+      h2, h3 { break-after: avoid; }
+      tr, .comparison-grid article, .answer { break-inside: avoid; }
+      table { font-size: 8.8pt; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="article-header">
+      <p class="eyebrow">Engineering note · verified 9 September 2026</p>
+      <h1>OpenAI Codex vs Claude Code: <span>Which AI Coding Agent Wins in 2026?</span></h1>
+      <p class="dek">
+        A versioned comparison of Codex with GPT-6 Astra and Claude Code with Claude Fable 5.1.
+        The models matter. So do the harnesses that decide what each model can see and do.
+      </p>
+      <p class="meta">Karan Mittal · Model pair and product behavior checked 9 September 2026</p>
+    </header>
+
+    <article>
+      <div class="prose">
+        <aside class="answer" aria-label="Quick answer">
+          <span class="tag">Quick answer</span>
+          <p>
+            No controlled test proves an overall winner between <strong>GPT-6 Astra in Codex</strong>
+            and <strong>Claude Fable 5.1 in Claude Code</strong>. Choose Codex for parallel worktrees,
+            cloud delegation, and review-after-execution. Choose Claude Code for terminal-led exploration
+            and communicating agent sessions. For complex coding, speed, or cost per completed task,
+            test both on the same repository and budget.
+          </p>
+        </aside>
+
+        <section id="introduction">
+          <h2>The comparison that matters in 2026</h2>
+          <p>
+            Coding assistants now operate on repositories, not just the active file. They search,
+            edit, execute tools, run tests, and return changes for review. This comparison therefore
+            evaluates two coupled systems: the selected model and the agent harness around it.
+          </p>
+          <p>
+            The short verdict is split. Codex has the cleaner path for parallel isolated delegation.
+            Claude Code has the cleaner path for a live terminal session and coordinated peer agents.
+            Model-level claims require a matched evaluation; product documentation alone cannot prove them.
+          </p>
+        </section>
+
+        <section id="scope">
+          <h2>Codex vs Claude Code at a glance</h2>
+          <p>
+            This article compares the named model pair in the current product surfaces. The OpenAI
+            side is <strong>GPT-6 Astra</strong> (<code>gpt-6-astra</code>) inside Codex. The Anthropic
+            side is <strong>Claude Fable 5.1</strong> (<code>claude-fable-5-1</code>) inside Claude
+            Code.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Layer</th>
+                  <th scope="col">OpenAI side</th>
+                  <th scope="col">Anthropic side</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Developer</td>
+                  <td>OpenAI</td>
+                  <td>Anthropic</td>
+                </tr>
+                <tr>
+                  <td>Pinned model</td>
+                  <td>GPT-6 Astra<br><code>gpt-6-astra</code></td>
+                  <td>Claude Fable 5.1<br><code>claude-fable-5-1</code></td>
+                </tr>
+                <tr>
+                  <td>Model context / output</td>
+                  <td>1.05M / 128K tokens</td>
+                  <td>1M / 128K tokens</td>
+                </tr>
+                <tr>
+                  <td>Reasoning control</td>
+                  <td><code>low</code> through <code>max</code></td>
+                  <td>Adaptive thinking; <code>high</code> default</td>
+                </tr>
+                <tr>
+                  <td>Local surfaces</td>
+                  <td>CLI, desktop, IDE</td>
+                  <td>CLI, desktop, VS Code, JetBrains</td>
+                </tr>
+                <tr>
+                  <td>Cloud / async</td>
+                  <td>Cloud tasks, worktrees, background delegation</td>
+                  <td>Web cloud sessions, background sessions, Remote Control</td>
+                </tr>
+                <tr>
+                  <td>Repository instructions</td>
+                  <td><code>AGENTS.md</code> hierarchy</td>
+                  <td><code>CLAUDE.md</code> hierarchy and imports</td>
+                </tr>
+                <tr>
+                  <td>Extensibility</td>
+                  <td>MCP, skills, plugins, subagents</td>
+                  <td>MCP, skills, hooks, plugins, subagents, agent teams</td>
+                </tr>
+                <tr>
+                  <td>Base API model price</td>
+                  <td>$10 input / $50 output per MTok</td>
+                  <td>$10 input / $50 output per MTok</td>
+                </tr>
+                <tr>
+                  <td>Best fit</td>
+                  <td>Parallel isolated tasks and later diff review</td>
+                  <td>Live repository work and coordinated sessions</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            The model details are not interchangeable. OpenAI documents a 1.05-million-token context
+            window, 128K maximum output, and five reasoning levels for GPT-6 Astra. Anthropic documents
+            a 1-million-token window, 128K maximum output, always-on adaptive thinking, and a default
+            <code>high</code> effort for Claude Fable 5.1. Both list the same base input and output price.
+            <sup><a href="#source-14">14</a></sup><sup><a href="#source-22">22</a></sup>
+          </p>
+          <p>
+            Product surfaces are a dated snapshot, not a promise that every feature exists on every
+            plan. A reproducible benchmark would also pin client builds, reasoning settings, repository
+            commits, permissions, and budgets.
+          </p>
+        </section>
+
+        <section id="products">
+          <h2>What are OpenAI Codex and Claude Code?</h2>
+          <div class="comparison-grid">
+            <article>
+              <h3>OpenAI Codex</h3>
+              <p>
+                Codex is an agentic software-engineering system available through a CLI, editor
+                integrations, a desktop app, and cloud execution. It can inspect repositories, edit
+                files, run commands and tests, use Git, and return a reviewable diff.
+              </p>
+              <p><strong>Best for:</strong> developers already using ChatGPT, teams dispatching several
+                independent tasks, and work that can run in an isolated checkout or cloud environment.</p>
+            </article>
+            <article>
+              <h3>Claude Code</h3>
+              <p>
+                Claude Code is an agentic coding system that began in the terminal and now also runs
+                in IDEs, a desktop app, and Anthropic-managed cloud sessions. It reads repository
+                context, edits files, runs commands and tests, and can delegate to subagents.
+              </p>
+              <p><strong>Best for:</strong> developers who want a terminal-centered loop, explicit
+                plan review, long repository sessions, or configurable hooks and agent teams.</p>
+            </article>
+          </div>
+          <p>
+            Both are full coding agents, not autocomplete engines. Both can explore, plan, edit, test,
+            diagnose failures, iterate, and present changes for review. The difference is how that loop
+            is exposed and coordinated.<sup><a href="#source-17">17</a></sup><sup><a href="#source-19">19</a></sup>
+          </p>
+        </section>
+
+        <section id="comparison">
+          <h2>Model result and agent result are different</h2>
+          <p>
+            A model produces the next response. A coding harness decides which context reaches that
+            model, which tools it may call, where commands run, how state survives, and how changes
+            return to a developer. Treating these layers as one product creates bad comparisons.
+          </p>
+          <p>
+            Claude Code exposes model selection by alias or exact model name. Codex keeps product
+            configuration separate from project instructions. Replacing GPT-6 Astra or Claude Fable
+            5.1 can change the result without changing either harness. A model benchmark is therefore
+            evidence about one configured run, not the whole product.
+            <sup><a href="#source-1">1</a></sup><sup><a href="#source-2">2</a></sup>
+          </p>
+        </section>
+      </div>
+
+      <figure class="exhibit" aria-labelledby="figure-1-title">
+        <p class="figure-label">Exhibit 01 · layer separation</p>
+        <h2 id="figure-1-title">The comparison has four layers</h2>
+        <svg class="diagram" viewBox="0 0 960 560" role="img" aria-labelledby="figure-1-svg-title figure-1-svg-desc">
+          <title id="figure-1-svg-title">Model, harness, surface, and execution-resource layers</title>
+          <desc id="figure-1-svg-desc">Two parallel stacks show selected models feeding Codex and Claude Code harnesses. Each harness reaches several user surfaces and then common execution resources such as files, shell commands, tests, Git, browsers, and MCP tools.</desc>
+          <defs>
+            <marker id="arrow-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ie-blue)" />
+            </marker>
+          </defs>
+
+          <text x="250" y="48" text-anchor="middle" class="small-blue">OPENAI STACK</text>
+          <text x="710" y="48" text-anchor="middle" class="small-blue">ANTHROPIC STACK</text>
+
+          <rect x="92" y="72" width="316" height="78" rx="12" class="plane" />
+          <text x="250" y="104" text-anchor="middle" class="title">GPT-6 Astra</text>
+          <text x="250" y="130" text-anchor="middle" class="label">gpt-6-astra</text>
+
+          <rect x="552" y="72" width="316" height="78" rx="12" class="plane" />
+          <text x="710" y="104" text-anchor="middle" class="title">Claude Fable 5.1</text>
+          <text x="710" y="130" text-anchor="middle" class="label">claude-fable-5-1</text>
+
+          <path d="M250 150 V188" class="wire" marker-end="url(#arrow-a)" />
+          <path d="M710 150 V188" class="wire" marker-end="url(#arrow-a)" />
+
+          <rect x="92" y="196" width="316" height="86" rx="12" class="plane-soft" />
+          <text x="250" y="230" text-anchor="middle" class="title">Codex harness</text>
+          <text x="250" y="256" text-anchor="middle" class="label">Chats · tasks · tools · approvals</text>
+
+          <rect x="552" y="196" width="316" height="86" rx="12" class="plane-soft" />
+          <text x="710" y="230" text-anchor="middle" class="title">Claude Code harness</text>
+          <text x="710" y="256" text-anchor="middle" class="label">Sessions · tools · permissions · hooks</text>
+
+          <path d="M250 282 V320" class="wire" marker-end="url(#arrow-a)" />
+          <path d="M710 282 V320" class="wire" marker-end="url(#arrow-a)" />
+
+          <rect x="92" y="328" width="316" height="82" rx="12" class="plane" />
+          <text x="250" y="360" text-anchor="middle" class="title">Execution surfaces</text>
+          <text x="250" y="386" text-anchor="middle" class="label">CLI · desktop · IDE · cloud</text>
+
+          <rect x="552" y="328" width="316" height="82" rx="12" class="plane" />
+          <text x="710" y="360" text-anchor="middle" class="title">Execution surfaces</text>
+          <text x="710" y="386" text-anchor="middle" class="label">CLI · desktop · IDE · web</text>
+
+          <path d="M250 410 V438 H480" class="wire" />
+          <path d="M710 410 V438 H480" class="wire" />
+          <circle cx="480" cy="438" r="3.5" class="junction" />
+          <path d="M480 438 V463" class="wire" marker-end="url(#arrow-a)" />
+
+          <rect x="132" y="470" width="696" height="62" rx="12" class="plane-green" />
+          <text x="480" y="497" text-anchor="middle" class="title">Execution resources</text>
+          <text x="480" y="520" text-anchor="middle" class="label">Files · shell · tests · Git · browser · MCP tools</text>
+
+          <rect x="814" y="524" width="118" height="24" rx="8" class="plane" />
+          <text x="873" y="540" text-anchor="middle" class="wordmark">karansmittal</text>
+        </svg>
+        <figcaption>
+          This article pins the top row: GPT-6 Astra versus Claude Fable 5.1. Claims about code quality,
+          cost, or autonomy must also name the harness, permissions, repository state, and test conditions.
+        </figcaption>
+      </figure>
+
+      <div class="prose">
+        <section id="models">
+          <h2>Coding model and reasoning</h2>
+          <p>
+            GPT-6 Astra is a general frontier model used for coding, computer use, research, and other
+            end-to-end work. Claude Fable 5.1 is Anthropic's high-capability model for demanding
+            reasoning and long-horizon agentic work. Both accept text and images and can produce up to
+            128K output tokens. Their reasoning controls are not equivalent: an Astra
+            <code>high</code> run and a Fable <code>high</code> run do not imply the same compute budget.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Model property</th>
+                  <th scope="col">GPT-6 Astra</th>
+                  <th scope="col">Claude Fable 5.1</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Reliable knowledge cutoff</td>
+                  <td>30 April 2026</td>
+                  <td>June 2026</td>
+                </tr>
+                <tr>
+                  <td>Thinking control</td>
+                  <td>Selectable <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code>, <code>max</code></td>
+                  <td>Adaptive, always on; <code>high</code> default</td>
+                </tr>
+                <tr>
+                  <td>Long-input caveat</td>
+                  <td>Prompts above 272K tokens use higher API rates</td>
+                  <td>Context is 1M by default at standard model rates</td>
+                </tr>
+                <tr>
+                  <td>Model-specific caveat</td>
+                  <td>One model serves coding and broader computer-use work</td>
+                  <td>Some cyber or biology requests may be refused or routed to an Opus fallback</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="claim-note">
+            <strong>Verdict:</strong> no primary source establishes a reasoning, debugging, speed, or
+            code-quality winner for this exact pair under matched conditions. The specifications explain
+            capacity and controls; they do not predict task success.
+          </p>
+          <p>
+            <sup><a href="#source-14">14</a></sup><sup><a href="#source-15">15</a></sup>
+            <sup><a href="#source-22">22</a></sup>
+          </p>
+        </section>
+
+        <section id="control-plane">
+          <h2>The harness changes how each model works</h2>
+          <p>
+            The old shorthand was simple: Codex was a remote worker; Claude Code lived in a local
+            terminal. That is no longer accurate. Codex runs local chats, Git worktrees, and isolated
+            cloud environments. Claude Code runs locally, through a desktop interface, through Remote
+            Control, and in Anthropic-managed cloud VMs.<sup><a href="#source-3">3</a></sup><sup><a href="#source-4">4</a></sup><sup><a href="#source-5">5</a></sup>
+          </p>
+          <p>
+            A more useful lens is the <strong>unit of coordination</strong>. Codex makes chats, tasks,
+            and worktrees explicit in its desktop and cloud workflows. Claude Code starts from a
+            session and can extend it with subagents or experimental agent teams. This is an
+            interpretation of the documented workflows, not a hard product limit.
+          </p>
+
+          <div class="comparison-grid">
+            <article>
+              <h3>Codex: task and worktree</h3>
+              <ul>
+                <li>A worktree gives a chat an independent checkout while Git metadata remains shared.</li>
+                <li>Several chats can run without editing the same working directory.</li>
+                <li>A cloud task can continue in a dedicated environment and return a diff for review.</li>
+              </ul>
+            </article>
+            <article>
+              <h3>Claude Code: session and team</h3>
+              <ul>
+                <li>A local session works against the active project and its configured tools.</li>
+                <li>Subagents isolate focused work and report a result to the caller.</li>
+                <li>Agent teams add independent sessions, a shared task list, and direct messaging.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+      </div>
+
+      <figure class="exhibit" aria-labelledby="figure-2-title">
+        <p class="figure-label">Exhibit 02 · coordination flow</p>
+        <h2 id="figure-2-title">Different primary paths, overlapping capabilities</h2>
+        <svg class="diagram" viewBox="0 0 960 650" role="img" aria-labelledby="figure-2-svg-title figure-2-svg-desc">
+          <title id="figure-2-svg-title">Codex and Claude Code coordination flows</title>
+          <desc id="figure-2-svg-desc">The Codex lane moves from a task into a chat and then local, worktree, or cloud execution before producing a diff for review. The Claude Code lane moves from instructions into a session, then tools and optional subagents or agent teams, before checkpoints and review. Both terminate at human review.</desc>
+          <defs>
+            <marker id="arrow-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ie-blue)" />
+            </marker>
+          </defs>
+
+          <rect x="42" y="42" width="416" height="526" rx="16" class="plane" />
+          <rect x="502" y="42" width="416" height="526" rx="16" class="plane" />
+          <text x="250" y="78" text-anchor="middle" class="small-blue">CODEX</text>
+          <text x="710" y="78" text-anchor="middle" class="small-blue">CLAUDE CODE</text>
+
+          <rect x="130" y="100" width="240" height="58" rx="11" class="plane-soft" />
+          <text x="250" y="135" text-anchor="middle" class="title">Task</text>
+          <path d="M250 158 V190" class="wire" marker-end="url(#arrow-b)" />
+
+          <rect x="130" y="198" width="240" height="58" rx="11" class="plane" />
+          <text x="250" y="233" text-anchor="middle" class="title">Chat / thread</text>
+          <path d="M250 256 V288 H126" class="wire" />
+          <path d="M250 288 H374" class="wire" />
+          <circle cx="250" cy="288" r="3.5" class="junction" />
+          <path d="M126 288 V314" class="wire" marker-end="url(#arrow-b)" />
+          <path d="M250 288 V314" class="wire" marker-end="url(#arrow-b)" />
+          <path d="M374 288 V314" class="wire" marker-end="url(#arrow-b)" />
+
+          <rect x="76" y="322" width="100" height="62" rx="10" class="plane" />
+          <text x="126" y="349" text-anchor="middle" class="title">Local</text>
+          <text x="126" y="370" text-anchor="middle" class="small">checkout</text>
+          <rect x="200" y="322" width="100" height="62" rx="10" class="plane-green" />
+          <text x="250" y="349" text-anchor="middle" class="title">Worktree</text>
+          <text x="250" y="370" text-anchor="middle" class="small-green">isolated</text>
+          <rect x="324" y="322" width="100" height="62" rx="10" class="plane" />
+          <text x="374" y="349" text-anchor="middle" class="title">Cloud</text>
+          <text x="374" y="370" text-anchor="middle" class="small">environment</text>
+
+          <path d="M126 384 V414 H250" class="wire" />
+          <path d="M374 384 V414 H250" class="wire" />
+          <path d="M250 384 V430" class="wire" marker-end="url(#arrow-b)" />
+          <rect x="130" y="438" width="240" height="64" rx="11" class="plane-soft" />
+          <text x="250" y="466" text-anchor="middle" class="title">Edit · test · diff</text>
+          <text x="250" y="488" text-anchor="middle" class="label">Background work can continue</text>
+
+          <rect x="590" y="100" width="240" height="58" rx="11" class="plane-soft" />
+          <text x="710" y="135" text-anchor="middle" class="title">Prompt + instructions</text>
+          <path d="M710 158 V190" class="wire" marker-end="url(#arrow-b)" />
+
+          <rect x="590" y="198" width="240" height="58" rx="11" class="plane" />
+          <text x="710" y="233" text-anchor="middle" class="title">Active session</text>
+          <path d="M710 256 V288 H586" class="wire" />
+          <path d="M710 288 H834" class="wire" />
+          <circle cx="710" cy="288" r="3.5" class="junction" />
+          <path d="M586 288 V314" class="wire" marker-end="url(#arrow-b)" />
+          <path d="M710 288 V314" class="wire" marker-end="url(#arrow-b)" />
+          <path d="M834 288 V314" class="wire" marker-end="url(#arrow-b)" />
+
+          <rect x="536" y="322" width="100" height="62" rx="10" class="plane" />
+          <text x="586" y="349" text-anchor="middle" class="title">Tools</text>
+          <text x="586" y="370" text-anchor="middle" class="small">local / web</text>
+          <rect x="660" y="322" width="100" height="62" rx="10" class="plane-green" />
+          <text x="710" y="349" text-anchor="middle" class="title">Subagent</text>
+          <text x="710" y="370" text-anchor="middle" class="small-green">isolated context</text>
+          <rect x="784" y="322" width="100" height="62" rx="10" class="plane-rust" />
+          <text x="834" y="349" text-anchor="middle" class="title">Team</text>
+          <text x="834" y="370" text-anchor="middle" class="small-rust">experimental</text>
+
+          <path d="M586 384 V414 H710" class="wire" />
+          <path d="M834 384 V414 H710" class="wire" />
+          <path d="M710 384 V430" class="wire" marker-end="url(#arrow-b)" />
+          <rect x="590" y="438" width="240" height="64" rx="11" class="plane-soft" />
+          <text x="710" y="466" text-anchor="middle" class="title">Inspect · edit · test</text>
+          <text x="710" y="488" text-anchor="middle" class="label">Steer, checkpoint, or continue</text>
+
+          <path d="M250 502 V598 H480" class="wire" />
+          <path d="M710 502 V598 H480" class="wire" />
+          <circle cx="480" cy="598" r="3.5" class="junction" />
+          <rect x="378" y="574" width="204" height="54" rx="11" class="plane-rust" />
+          <text x="480" y="606" text-anchor="middle" class="title">Human review</text>
+
+          <rect x="802" y="606" width="118" height="24" rx="8" class="plane" />
+          <text x="861" y="622" text-anchor="middle" class="wordmark">karansmittal</text>
+        </svg>
+        <figcaption>
+          Codex exposes local, worktree, and cloud paths around a task. Claude Code exposes a session
+          that can use tools, subagents, or an agent team. Both still end at a review boundary.
+        </figcaption>
+      </figure>
+
+      <div class="prose">
+        <section id="agent-loop">
+          <h2>Agentic coding capabilities</h2>
+          <p>
+            Both products implement the same broad control loop: understand the task, inspect the
+            repository, plan, edit, run tests, diagnose failures, iterate, and return a result. Neither
+            vendor documents a fundamentally different code-generation algorithm inside the harness.
+          </p>
+          <p>
+            The practical difference is interruption and isolation. Codex can place independent tasks
+            in separate worktrees or cloud environments, then concentrate review at the diff. Claude
+            Code keeps a strong live-session path, while subagents isolate narrower investigations and
+            report back. Agent teams allow peer sessions to coordinate directly, but remain experimental.
+          </p>
+        </section>
+
+        <section id="interfaces">
+          <h2>CLI and IDE experience</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Surface</th>
+                  <th scope="col">Codex</th>
+                  <th scope="col">Claude Code</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Terminal</td>
+                  <td>Interactive CLI plus non-interactive execution for scripts and CI</td>
+                  <td>Full-featured CLI, scripting, remote servers, and Agent SDK</td>
+                </tr>
+                <tr>
+                  <td>VS Code family</td>
+                  <td>VS Code, Cursor, and Windsurf extension</td>
+                  <td>VS Code and Cursor extension with inline diffs and plan review</td>
+                </tr>
+                <tr>
+                  <td>Other IDEs</td>
+                  <td>Xcode and JetBrains integrations</td>
+                  <td>JetBrains plugin for IntelliJ, PyCharm, WebStorm, Android Studio, and others</td>
+                </tr>
+                <tr>
+                  <td>State transfer</td>
+                  <td>Delegate longer work from the editor to Codex web</td>
+                  <td>Resume eligible web sessions in VS Code; Remote Control keeps execution local</td>
+                </tr>
+                <tr>
+                  <td>Review</td>
+                  <td>Focused diffs beside source, desktop review, or cloud task diff</td>
+                  <td>Inline or IDE diffs, plan comments, desktop diff viewer, web PR workflow</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Claude Code exposes more terminal-native controls. Codex exposes a broader direct path from
+            editor context into an isolated delegated task. Both cover mainstream IDE workflows.
+            <sup><a href="#source-17">17</a></sup><sup><a href="#source-19">19</a></sup>
+          </p>
+        </section>
+
+        <section id="extensions">
+          <h2>MCP, hooks, and tool integrations</h2>
+          <p>
+            Both support Model Context Protocol servers for issue trackers, documentation, databases,
+            browsers, design tools, and internal APIs. Codex shares local MCP configuration across its
+            desktop app, CLI, and IDE extension. Claude Code combines MCP with skills, lifecycle hooks,
+            subagents, and distributable plugins.
+          </p>
+          <div class="comparison-grid">
+            <article>
+              <h3>Codex extension model</h3>
+              <ul>
+                <li>STDIO and streamable HTTP MCP servers</li>
+                <li>Shared host configuration in <code>config.toml</code></li>
+                <li>Skills and plugins for reusable workflows</li>
+                <li>GitHub, GitLab, Slack, and Linear product integrations</li>
+              </ul>
+            </article>
+            <article>
+              <h3>Claude Code extension model</h3>
+              <ul>
+                <li>MCP servers and graphical connectors</li>
+                <li>Skills, agents, and hooks in <code>.claude/</code></li>
+                <li>Plugins package skills, agents, hooks, and MCP</li>
+                <li>GitHub Actions, GitLab CI/CD, Slack, Chrome, and custom APIs</li>
+              </ul>
+            </article>
+          </div>
+          <p>
+            An MCP logo on both products does not imply identical security. Each server adds tools,
+            credentials, and data paths that must be governed separately.
+            <sup><a href="#source-18">18</a></sup><sup><a href="#source-21">21</a></sup>
+          </p>
+        </section>
+
+        <section id="context">
+          <h2>Context is a storage system</h2>
+          <p>
+            “Which agent has memory?” is the wrong question. Ask what is stored, when it is loaded,
+            whether it is authoritative, and whether it survives compaction or a new session.
+          </p>
+
+          <h3>Codex</h3>
+          <p>
+            Codex reads an instruction chain from <code>AGENTS.md</code> files before work begins.
+            Guidance is assembled from global and project scopes, with files closer to the current
+            directory taking precedence. The default combined project-instruction limit is 32 KiB.
+            Separately, local Codex clients can maintain a local memory store. OpenAI explicitly says
+            that rules which must apply should remain in checked-in documentation, not memory alone.
+            <sup><a href="#source-6">6</a></sup><sup><a href="#source-7">7</a></sup>
+          </p>
+
+          <h3>Claude Code</h3>
+          <p>
+            Claude Code loads <code>CLAUDE.md</code> instructions and maintains machine-local auto
+            memory per project. Its documentation says that the first 200 lines or 25 KiB of
+            <code>MEMORY.md</code>, whichever comes first, are loaded at conversation start. Topic files
+            are retrieved on demand. The root <code>CLAUDE.md</code> is read again after compaction;
+            nested files reload when Claude next reads within their directory.
+            <sup><a href="#source-8">8</a></sup>
+          </p>
+
+          <p>
+            These systems are similar in purpose but different in mechanics. For dependable work,
+            durable project rules belong in version control. Generated memory is recall, not policy.
+          </p>
+          <p>
+            A July 2026 ablation tested 288 runs across 17 tasks and three repositories. It found no
+            measurable correctness gain from always-on or selectively retrieved context files for
+            either tested agent. That is not a reason to delete project instructions: the study tested
+            task correctness, not policy compliance, team consistency, or setup time. It is evidence
+            that a larger instruction file does not repair weak implementation reasoning.
+            <sup><a href="#source-24">24</a></sup>
+          </p>
+        </section>
+
+        <section id="delegation">
+          <h2>Cloud, autonomous coding, and parallelism</h2>
+          <p>
+            Both products can continue work away from the initiating terminal. Codex cloud runs a task
+            in a dedicated environment and returns changes for review. Claude Code web uses
+            Anthropic-managed VMs and can continue after the user disconnects. Remote Control is
+            different: its interface is remote, but the code still runs on the developer's machine.
+            <sup><a href="#source-4">4</a></sup><sup><a href="#source-5">5</a></sup>
+          </p>
+          <p>
+            Codex worktrees isolate file changes by checkout. Its subagents isolate reasoning and tool
+            work, then report results to the main chat. These mechanisms solve different interference
+            problems: one protects repository state; the other protects context.
+            <sup><a href="#source-3">3</a></sup><sup><a href="#source-9">9</a></sup>
+          </p>
+          <p>
+            Claude Code also has subagents with separate context windows. Agent teams go further:
+            each teammate is an independent session, teammates share a task list, and they can message
+            one another. Anthropic marks agent teams experimental and warns about coordination overhead
+            and higher token use.<sup><a href="#source-10">10</a></sup><sup><a href="#source-11">11</a></sup>
+          </p>
+          <p>
+            The practical choice is not “single agent or multi-agent.” Choose the isolation boundary:
+            checkout, context window, process, virtual machine, or review queue.
+          </p>
+        </section>
+
+        <section id="security">
+          <h2>Sandboxing and permissions are separate controls</h2>
+          <p>
+            Both products use operating-system controls on supported platforms. Both combine those
+            controls with permission or approval rules. The important difference is the enforcement
+            path, not a claim that one product is secure and the other is not.
+          </p>
+        </section>
+      </div>
+
+      <figure class="exhibit" aria-labelledby="figure-3-title">
+        <p class="figure-label">Exhibit 03 · enforcement boundary</p>
+        <h2 id="figure-3-title">A sandbox does not replace authorization</h2>
+        <svg class="diagram" viewBox="0 0 960 560" role="img" aria-labelledby="figure-3-svg-title figure-3-svg-desc">
+          <title id="figure-3-svg-title">Sandbox and permission enforcement paths in Codex and Claude Code</title>
+          <desc id="figure-3-svg-desc">The Codex path sends local commands through a constrained environment and invokes approval when an action exceeds the boundary. The Claude Code path first applies tool permissions. Bash commands then pass through an operating-system sandbox, while built-in file and other tools remain controlled through their permission systems.</desc>
+          <defs>
+            <marker id="arrow-c" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ie-blue)" />
+            </marker>
+          </defs>
+
+          <text x="238" y="48" text-anchor="middle" class="small-blue">CODEX LOCAL COMMAND PATH</text>
+          <text x="722" y="48" text-anchor="middle" class="small-blue">CLAUDE CODE TOOL PATH</text>
+
+          <rect x="78" y="72" width="320" height="58" rx="11" class="plane" />
+          <text x="238" y="107" text-anchor="middle" class="title">Agent requests an action</text>
+          <path d="M238 130 V164" class="wire" marker-end="url(#arrow-c)" />
+
+          <rect x="78" y="172" width="320" height="110" rx="13" class="plane-soft" />
+          <text x="238" y="204" text-anchor="middle" class="title">Constrained environment</text>
+          <text x="238" y="232" text-anchor="middle" class="label">Filesystem boundary</text>
+          <text x="238" y="256" text-anchor="middle" class="label">Network boundary</text>
+          <path d="M238 282 V316" class="wire" marker-end="url(#arrow-c)" />
+
+          <rect x="78" y="324" width="320" height="72" rx="11" class="plane-green" />
+          <text x="238" y="353" text-anchor="middle" class="title">Inside boundary</text>
+          <text x="238" y="378" text-anchor="middle" class="label">Run without another prompt</text>
+
+          <path d="M398 227 H438 V454 H398" class="wire-rust" marker-end="url(#arrow-c)" />
+          <text x="432" y="331" text-anchor="end" class="small-rust" transform="rotate(-90 432 331)">BOUNDARY CROSSED</text>
+          <rect x="78" y="426" width="320" height="72" rx="11" class="plane-rust" />
+          <text x="238" y="455" text-anchor="middle" class="title">Approval flow</text>
+          <text x="238" y="480" text-anchor="middle" class="label">User or managed policy decides</text>
+
+          <rect x="562" y="72" width="320" height="58" rx="11" class="plane" />
+          <text x="722" y="107" text-anchor="middle" class="title">Agent requests a tool call</text>
+          <path d="M722 130 V164" class="wire" marker-end="url(#arrow-c)" />
+
+          <rect x="562" y="172" width="320" height="72" rx="11" class="plane-rust" />
+          <text x="722" y="201" text-anchor="middle" class="title">Permission rules + hooks</text>
+          <text x="722" y="226" text-anchor="middle" class="label">Allow · ask · deny</text>
+
+          <path d="M722 244 V276 H626" class="wire" />
+          <path d="M722 276 H818" class="wire" />
+          <circle cx="722" cy="276" r="3.5" class="junction" />
+          <path d="M626 276 V308" class="wire" marker-end="url(#arrow-c)" />
+          <path d="M818 276 V308" class="wire" marker-end="url(#arrow-c)" />
+
+          <rect x="544" y="316" width="164" height="104" rx="11" class="plane-soft" />
+          <text x="626" y="346" text-anchor="middle" class="title">Bash</text>
+          <text x="626" y="372" text-anchor="middle" class="label">OS sandbox</text>
+          <text x="626" y="397" text-anchor="middle" class="small">FILESYSTEM · NETWORK</text>
+
+          <rect x="736" y="316" width="164" height="104" rx="11" class="plane" />
+          <text x="818" y="346" text-anchor="middle" class="title">Other tools</text>
+          <text x="818" y="372" text-anchor="middle" class="label">Own boundaries</text>
+          <text x="818" y="397" text-anchor="middle" class="small">READ · EDIT · MCP</text>
+
+          <path d="M626 420 V462 H722" class="wire" />
+          <path d="M818 420 V462 H722" class="wire" />
+          <circle cx="722" cy="462" r="3.5" class="junction" />
+          <rect x="618" y="438" width="208" height="60" rx="11" class="plane-green" />
+          <text x="722" y="474" text-anchor="middle" class="title">Permitted action runs</text>
+
+          <rect x="806" y="518" width="118" height="24" rx="8" class="plane" />
+          <text x="865" y="534" text-anchor="middle" class="wordmark">karansmittal</text>
+        </svg>
+        <figcaption>
+          OpenAI documents sandboxing and approvals as cooperating controls. Anthropic documents a
+          permission system for all tools and an OS sandbox specifically for Bash commands and their
+          child processes.<sup><a href="#source-12">12</a></sup><sup><a href="#source-13">13</a></sup>
+        </figcaption>
+      </figure>
+
+      <div class="prose">
+        <section id="benchmarks">
+          <h2>Code quality and performance</h2>
+          <p>
+            Vendor benchmarks support narrow claims about GPT-6 Astra or Claude Fable 5.1 under the
+            vendor's stated setup. They do not establish which model wins when both run the same task
+            through Codex and Claude Code. The result can change with context assembly, allowed tools,
+            network access, retry budget, tests, and human intervention.
+          </p>
+          <p>
+            “Code quality” also needs decomposition. Correctness can be tested against hidden cases.
+            Maintainability and architecture need a blinded review rubric. Test generation must be
+            scored against independent tests, or an agent can write a patch and a test that confirm the
+            same mistaken assumption. Refactoring needs behavioral equivalence checks, not diff size.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Evidence</th>
+                  <th scope="col">What it establishes</th>
+                  <th scope="col">What it does not establish</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>SWE-bench / SWE-bench Pro</td>
+                  <td>No cited run compares this exact model pair with one shared harness</td>
+                  <td>Overall Codex or Claude Code quality</td>
+                </tr>
+                <tr>
+                  <td>Terminal-Bench</td>
+                  <td>Vendor results describe each vendor's stated model setup</td>
+                  <td>A matched product-level winner</td>
+                </tr>
+                <tr>
+                  <td>Cross-model code review</td>
+                  <td>On 116 tasks, Opus 4.7 review raised GPT-5.5 drafts from 71.6% to 89.7%</td>
+                  <td>The result for GPT-6 Astra and Fable 5.1</td>
+                </tr>
+                <tr>
+                  <td>Context-file ablation</td>
+                  <td>Across 288 runs, context strategy did not measurably change correctness</td>
+                  <td>Policy adherence, onboarding time, or all repositories</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            The cross-review result was asymmetric: GPT-5.5 reviewing Opus 4.7 drafts reduced pass
+            rate from 91.4% to 82.8%. The reviewer could not run tests. The result supports one static
+            review workflow for an older pair; it is not a standing rule about Codex and Claude Code.
+            <sup><a href="#source-23">23</a></sup><sup><a href="#source-24">24</a></sup>
+          </p>
+          <p>A useful head-to-head test should fix:</p>
+          <ol class="method-list">
+            <li>the repository commit and task statement;</li>
+            <li>the model version and reasoning setting;</li>
+            <li>filesystem, network, and tool permissions;</li>
+            <li>the time or token budget and retry policy;</li>
+            <li>the hidden regression tests and review rubric.</li>
+          </ol>
+          <p>
+            Then report completion, regressions, wall time, tool calls, tokens, and human corrections.
+            Until such a test exists, claims such as “fewer semantic regressions” or “three times fewer
+            tokens” are anecdotes, not findings.
+          </p>
+        </section>
+
+        <section id="pricing">
+          <h2>Codex vs Claude Code pricing</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Cost layer</th>
+                  <th scope="col">Codex</th>
+                  <th scope="col">Claude Code</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Entry subscription</td>
+                  <td>Free; Go $8/month; Plus $20/month</td>
+                  <td>Pro $20/month</td>
+                </tr>
+                <tr>
+                  <td>Higher individual tier</td>
+                  <td>Pro from $100/month with 5× or 20× Plus limits</td>
+                  <td>Max from $100/month with 5× or 20× Pro usage</td>
+                </tr>
+                <tr>
+                  <td>Pinned-model API input</td>
+                  <td>GPT-6 Astra: $10/MTok</td>
+                  <td>Fable 5.1: $10/MTok</td>
+                </tr>
+                <tr>
+                  <td>Pinned-model API output</td>
+                  <td>GPT-6 Astra: $50/MTok</td>
+                  <td>Fable 5.1: $50/MTok</td>
+                </tr>
+                <tr>
+                  <td>Important variable</td>
+                  <td>Usage is shared with ChatGPT Work; inputs above 272K use higher API rates</td>
+                  <td>Usage varies by model and codebase; Fable cache reads cost $0.25/MTok</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            <strong>Which is cheaper?</strong> Codex has the lower published entry price. For the exact
+            model pair, headline API input and output prices are equal. Neither fact proves lower cost
+            per completed task. That requires measured tokens, cache hits, retries, cloud work, and
+            human correction on the same workload.<sup><a href="#source-16">16</a></sup>
+            <sup><a href="#source-20">20</a></sup><sup><a href="#source-25">25</a></sup>
+          </p>
+        </section>
+
+        <section id="use-cases">
+          <h2>Real-world use cases</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Use case</th>
+                  <th scope="col">Starting choice</th>
+                  <th scope="col">Why</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Large codebase</td>
+                  <td>Evaluate both</td>
+                  <td>Nominal context capacity does not measure repository understanding.</td>
+                </tr>
+                <tr>
+                  <td>Interactive debugging</td>
+                  <td>Claude Code</td>
+                  <td>The terminal session keeps inspection, commands, and steering in one loop.</td>
+                </tr>
+                <tr>
+                  <td>Large refactor</td>
+                  <td>Evaluate both</td>
+                  <td>Architecture quality is not established by current cross-vendor evidence.</td>
+                </tr>
+                <tr>
+                  <td>Greenfield feature</td>
+                  <td>Either</td>
+                  <td>Choose by review style: delegated diff or continuous session.</td>
+                </tr>
+                <tr>
+                  <td>Several independent tasks</td>
+                  <td>Codex</td>
+                  <td>Parallel chats can use independent Git worktrees or cloud environments.</td>
+                </tr>
+                <tr>
+                  <td>Terminal-first work</td>
+                  <td>Claude Code</td>
+                  <td>The CLI remains its most complete surface.</td>
+                </tr>
+                <tr>
+                  <td>IDE-first work</td>
+                  <td>Either</td>
+                  <td>Both support VS Code and JetBrains; Codex also documents Xcode integration.</td>
+                </tr>
+                <tr>
+                  <td>Unattended cloud work</td>
+                  <td>Codex</td>
+                  <td>Its worktree and cloud task boundary is explicit.</td>
+                </tr>
+                <tr>
+                  <td>Communicating workers</td>
+                  <td>Claude Code</td>
+                  <td>Agent teams share tasks and messages, but remain experimental.</td>
+                </tr>
+                <tr>
+                  <td>Cost-conscious start</td>
+                  <td>Codex</td>
+                  <td>It has a free tier and lower published entry plan.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="pros-cons">
+          <h2>Pros and cons</h2>
+          <div class="comparison-grid">
+            <article>
+              <h3>OpenAI Codex</h3>
+              <p><strong>Pros</strong></p>
+              <ul>
+                <li>Explicit worktree and cloud-task isolation</li>
+                <li>Wide desktop, CLI, IDE, web, and integration surface</li>
+                <li>Shared MCP configuration across local clients</li>
+                <li>Lower published subscription entry point</li>
+              </ul>
+              <p><strong>Cons</strong></p>
+              <ul>
+                <li>No controlled proof that Astra beats Fable 5.1 on production coding</li>
+                <li>Model, surface, and plan can change the experience</li>
+                <li>Very long Astra inputs cross a higher API pricing threshold</li>
+              </ul>
+            </article>
+            <article>
+              <h3>Claude Code</h3>
+              <p><strong>Pros</strong></p>
+              <ul>
+                <li>Deep terminal and IDE workflow</li>
+                <li>Hooks, skills, MCP, plugins, and explicit agent configuration</li>
+                <li>Subagents and direct agent-team coordination</li>
+                <li>Fable 5.1 has a 1M context window and 128K maximum output</li>
+              </ul>
+              <p><strong>Cons</strong></p>
+              <ul>
+                <li>Agent teams are experimental and add coordination cost</li>
+                <li>Fable 5.1 is documented as comparatively slow within Anthropic's lineup</li>
+                <li>Fable safeguards can affect some cybersecurity and biology work</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section id="decision">
+          <h2>Which one should you choose?</h2>
+          <div class="comparison-grid">
+            <article>
+              <h3>Choose Codex if</h3>
+              <ul>
+                <li>work splits into independent tasks;</li>
+                <li>isolated worktrees or cloud execution matter;</li>
+                <li>you prefer reviewing completed diffs;</li>
+                <li>your team already uses ChatGPT and OpenAI tools.</li>
+              </ul>
+            </article>
+            <article>
+              <h3>Choose Claude Code if</h3>
+              <ul>
+                <li>you work mainly from a terminal;</li>
+                <li>you want to steer investigation continuously;</li>
+                <li>hooks and agent configuration are central;</li>
+                <li>workers need a shared task list and direct messages.</li>
+              </ul>
+            </article>
+          </div>
+          <h3>Use both when the review is worth its cost</h3>
+          <p>
+            Independent review can expose different failure modes, but model diversity alone is not a
+            guarantee. A 2026 study found that the stronger reviewer helped the weaker writer in its
+            tested pair, while the reverse ordering introduced regressions. If you use both, preserve
+            the writer's tests, give the reviewer the requirement and diff, let it run tests, and keep
+            a human at the merge boundary.<sup><a href="#source-23">23</a></sup>
+          </p>
+        </section>
+
+        <section id="verdict">
+          <h2>Final verdict</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Category</th>
+                  <th scope="col">Verdict</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Overall coding</td><td>Unproven; run a repository evaluation</td></tr>
+                <tr><td>Code quality</td><td>Unproven for Astra vs Fable 5.1</td></tr>
+                <tr><td>Complex reasoning</td><td>Unproven under matched effort</td></tr>
+                <tr><td>Speed</td><td>Unproven under matched tasks and compute</td></tr>
+                <tr><td>Entry cost</td><td>Codex</td></tr>
+                <tr><td>Base API model price</td><td>Tie on input and output list price</td></tr>
+                <tr><td>Large repositories</td><td>Evaluate both; context size is not enough</td></tr>
+                <tr><td>Autonomous cloud coding</td><td>Codex</td></tr>
+                <tr><td>CLI experience</td><td>Claude Code</td></tr>
+                <tr><td>IDE workflow</td><td>Tie; different integrations</td></tr>
+                <tr><td>Communicating agent teams</td><td>Claude Code, experimental</td></tr>
+                <tr><td>Beginners</td><td>Codex for ChatGPT users; Claude Code for terminal users</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            <strong>So, which AI coding agent wins in 2026?</strong> There is no universal winner.
+            Codex is the stronger starting choice for parallel, isolated, review-after-execution work.
+            Claude Code is stronger for terminal-led exploration and coordinated agent sessions. Raw
+            coding quality between GPT-6 Astra and Claude Fable 5.1 remains unproven without a matched
+            evaluation on the same repository, permissions, tests, and budget.
+          </p>
+        </section>
+
+        <section id="faq">
+          <h2>Frequently asked questions</h2>
+          <dl class="faq">
+            <dt>Is Codex better than Claude Code?</dt>
+            <dd>For parallel worktrees and cloud delegation, it is the better starting choice. It is not proven better at code quality.</dd>
+
+            <dt>Is Claude Code better than OpenAI Codex?</dt>
+            <dd>For a continuous terminal loop and communicating agent sessions, it has the clearer workflow.</dd>
+
+            <dt>What is the main difference?</dt>
+            <dd>Codex emphasizes tasks and isolated execution. Claude Code emphasizes sessions, tools, and configurable coordination.</dd>
+
+            <dt>Which is better for complex coding?</dt>
+            <dd>No controlled primary evidence answers this for GPT-6 Astra versus Claude Fable 5.1.</dd>
+
+            <dt>Which is faster?</dt>
+            <dd>No defensible general answer exists without matching task, effort, environment, and network conditions.</dd>
+
+            <dt>Is Codex cheaper than Claude Code?</dt>
+            <dd>Codex has a lower entry subscription. The pinned models have the same base API input and output list prices.</dd>
+
+            <dt>Which is better for large codebases?</dt>
+            <dd>Test both. Context-window size does not measure retrieval quality, compaction behavior, or architectural correctness.</dd>
+
+            <dt>Can both run autonomously?</dt>
+            <dd>Yes. Both offer local and cloud paths, with different approval, isolation, and review boundaries.</dd>
+
+            <dt>Can you use both together?</dt>
+            <dd>Yes. Cross-model review can help, but the reviewer must be strong enough and should execute tests before recommending a merge.</dd>
+
+            <dt>Which should beginners choose?</dt>
+            <dd>Codex is easier to enter for an existing ChatGPT user. Claude Code fits a beginner who already works comfortably in a terminal.</dd>
+          </dl>
+        </section>
+      </div>
+    </article>
+
+    <footer class="sources">
+      <h2>Primary sources</h2>
+      <p>
+        Product behavior changes quickly. All links below were checked on 9 September 2026. Model names
+        are pinned; product features and prices are a dated snapshot. The only cross-vendor scores are
+        from named research with its older model pair and test limits stated in the text.
+      </p>
+      <ol>
+        <li id="source-1"><a href="https://code.claude.com/docs/en/model-config">Anthropic, “Model configuration”</a>.</li>
+        <li id="source-2"><a href="https://learn.chatgpt.com/docs/config-file/config-basic">OpenAI, “Config basics”</a>.</li>
+        <li id="source-3"><a href="https://learn.chatgpt.com/docs/environments/git-worktrees">OpenAI, “Worktrees”</a>.</li>
+        <li id="source-4"><a href="https://learn.chatgpt.com/docs/cloud">OpenAI, “Codex cloud”</a>.</li>
+        <li id="source-5"><a href="https://code.claude.com/docs/en/web-quickstart">Anthropic, “Claude Code on the web”</a>.</li>
+        <li id="source-6"><a href="https://learn.chatgpt.com/docs/agent-configuration/agents-md">OpenAI, “Custom instructions with AGENTS.md”</a>.</li>
+        <li id="source-7"><a href="https://learn.chatgpt.com/docs/customization/memories">OpenAI, “Memories”</a>.</li>
+        <li id="source-8"><a href="https://code.claude.com/docs/en/memory">Anthropic, “How Claude remembers your project”</a>.</li>
+        <li id="source-9"><a href="https://learn.chatgpt.com/docs/agent-configuration/subagents">OpenAI, “Subagents”</a>.</li>
+        <li id="source-10"><a href="https://code.claude.com/docs/en/sub-agents">Anthropic, “Create custom subagents”</a>.</li>
+        <li id="source-11"><a href="https://code.claude.com/docs/en/agent-teams">Anthropic, “Orchestrate teams of Claude Code sessions”</a>.</li>
+        <li id="source-12"><a href="https://learn.chatgpt.com/docs/sandboxing">OpenAI, “Sandbox”</a>.</li>
+        <li id="source-13"><a href="https://code.claude.com/docs/en/sandboxing">Anthropic, “Sandboxing”</a>.</li>
+        <li id="source-14"><a href="https://developers.openai.com/api/docs/models/gpt-6-astra">OpenAI, “GPT-6 Astra model”</a>.</li>
+        <li id="source-15"><a href="https://www.anthropic.com/claude/fable">Anthropic, “Claude Fable 5.1”</a>.</li>
+        <li id="source-16"><a href="https://learn.chatgpt.com/docs/pricing">OpenAI, “ChatGPT Work and Codex pricing”</a>.</li>
+        <li id="source-17"><a href="https://learn.chatgpt.com/docs/codex/ide">OpenAI, “Codex IDE extension”</a>.</li>
+        <li id="source-18"><a href="https://learn.chatgpt.com/docs/extend/mcp">OpenAI, “Model Context Protocol”</a>.</li>
+        <li id="source-19"><a href="https://code.claude.com/docs/en/platforms">Anthropic, “Platforms and integrations”</a>.</li>
+        <li id="source-20"><a href="https://code.claude.com/docs/en/costs">Anthropic, “Manage costs effectively”</a>.</li>
+        <li id="source-21"><a href="https://code.claude.com/docs/en/features-overview">Anthropic, “Extend Claude Code”</a>.</li>
+        <li id="source-22"><a href="https://platform.claude.com/docs/en/models/fable-5-1/overview">Anthropic, “Claude Fable 5.1 model specifications”</a>.</li>
+        <li id="source-23"><a href="https://arxiv.org/abs/2607.21656">Xiang et al., “Cross-Model LLM Code Review”</a>.</li>
+        <li id="source-24"><a href="https://arxiv.org/abs/2607.27250">Khatri, “Do Context Files Help Coding Agents?”</a>.</li>
+        <li id="source-25"><a href="https://claude.com/pricing">Anthropic, “Claude pricing”</a>.</li>
+      </ol>
+      <p class="author-mark">karansmittal</p>
+    </footer>
+  </main>
+</body>
+</html>

@@ -2,24 +2,16 @@
 import { getCollection } from 'astro:content';
 import { normalizeTag, tagSlug } from '@utils/tags.js';
 
+// Legacy /tags/* routes. Topic archives are retired (see AGENTS.md section 7),
+// so every tag resolves to the writing index rather than a missing page.
 export async function getStaticPaths() {
   const allPosts = await getCollection('blog');
-  const tagMap = new Map<string, typeof allPosts>();
+  const tags = new Set<string>();
   for (const post of allPosts) {
-    for (const tag of post.data.tags) {
-      const key = normalizeTag(tag);
-      if (!tagMap.has(key)) tagMap.set(key, []);
-      if (!tagMap.get(key)!.some((existing) => existing.id === post.id)) {
-        tagMap.get(key)!.push(post);
-      }
-    }
+    for (const tag of post.data.tags) tags.add(tagSlug(normalizeTag(tag)));
   }
-
-  return Array.from(tagMap.entries()).map(([tag]) => ({
-    params: { tag: tagSlug(tag) },
-  }));
+  return [...tags].map((tag) => ({ params: { tag } }));
 }
 
-const { tag } = Astro.params;
-return Astro.redirect(`/topics/${tag}/`, 301);
+return Astro.redirect('/writing/', 301);
 ---

@@ -1,7 +1,6 @@
 # Astro
 .astro/
 dist/
-public/generated/
 
 # Dependencies
 node_modules/
@@ -16,10 +15,8 @@ pnpm-debug.log*
 .env
 .env.production
 
-# Test outputs & temporary exports
+# Screenshot output from `npm run shot`
 test-results/
-output/
-tests/visual/__screenshots__/
 
 # macOS
 .DS_Store

@@ -1,7 +1,6 @@
 ---
 import Header from '@components/layout/Header.astro';
 import Footer from '@components/layout/Footer.astro';
-import SiteBackdrop from '@components/layout/SiteBackdrop.astro';
 import { SITE } from '../config';
 import '@styles/global.css';
 
@@ -9,6 +8,9 @@ interface Props {
   title: string;
   description?: string;
   image?: string;
+  /** Intrinsic size of `image`. Defaults to the square profile fallback. */
+  imageWidth?: number;
+  imageHeight?: number;
   type?: string;
   pubDate?: Date;
   robots?: string;
@@ -18,6 +20,8 @@ const {
   title,
   description = SITE.description,
   image = '/profile.jpg',
+  imageWidth,
+  imageHeight,
   type = "website",
   pubDate,
   robots,
@@ -30,6 +34,11 @@ const rssUrl = new URL('/rss.xml', siteBase).toString();
 const resolvedImage = image.startsWith('http://') || image.startsWith('https://')
   ? image
   : new URL(image, siteBase).toString();
+// The default share image is the 800x800 profile photo, not a 1200x630 card.
+// Declaring a landscape size for it made every non-article preview claim an
+// aspect ratio the file does not have.
+const ogWidth = imageWidth ?? 800;
+const ogHeight = imageHeight ?? 800;
 ---
 <!DOCTYPE html>
 <html lang="en" class="instrumented">
@@ -55,9 +64,9 @@ const resolvedImage = image.startsWith('http://') || image.startsWith('https://'
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:image" content={resolvedImage} />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:image:width" content={String(ogWidth)} />
+  <meta property="og:image:height" content={String(ogHeight)} />
+  <meta name="twitter:card" content={ogWidth / ogHeight >= 1.5 ? 'summary_large_image' : 'summary'} />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={resolvedImage} />
@@ -79,7 +88,6 @@ const resolvedImage = image.startsWith('http://') || image.startsWith('https://'
 </head>
 <body class="instrumented">
   <a class="skip-link" href="#main-content">Skip to content</a>
-  <SiteBackdrop />
   {chrome && <Header />}
   <div id="main-content">
     <slot />

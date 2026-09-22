@@ -42,7 +42,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
           <div class="brief-section">
             <p class="aside-label">What happens next</p>
             <p>I review messages personally. Response timing depends on current commitments, so include any real deadline. If there is a fit, we’ll clarify scope, useful outcomes, and next steps before agreeing on an engagement.</p>
-            <a class="engagement-link" href="/work#engagements">Explore ways to work together →</a>
+            <a class="engagement-link" href="/#practice">Explore ways to work together →</a>
           </div>
 
           <div class="brief-section quiet-route">
@@ -63,16 +63,14 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 
       <section class="form-panel" aria-label="Engineering conversation form">
         <div class="form-panel-head">
-          <div class="form-badge-row">
-            <span class="pill-badge">Start a conversation</span>
-          </div>
+          <p class="form-register">Start a conversation</p>
           <p>Use the form below or send an email. A high-level description is enough for the first conversation. The embedded form is provided by Tally under its <a href="https://tally.so/help/privacy-policy" target="_blank" rel="noopener">privacy notice</a>; do not include credentials, private keys, or regulated personal data.</p>
         </div>
 
         <div class="iframe-container" id="tally-container">
           <div class="form-skeleton" id="form-skeleton" role="status" aria-live="polite">
             <div class="skeleton-header">
-              <span class="skeleton-pill"></span>
+              <span class="skeleton-marker"></span>
               <span class="skeleton-status">Loading contact form…</span>
             </div>
             <div class="skeleton-line full"></div>
@@ -177,7 +175,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 
   .contact-layout {
     display: grid;
-    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
     gap: clamp(2rem, 4vw, 3.5rem);
     align-items: start;
     margin-top: clamp(1.5rem, 3vw, 2.5rem);
@@ -188,14 +186,11 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
   }
 
   .aside-brief-card {
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-card, 8px);
-    background: var(--ie-surface);
-    overflow: hidden;
+    border-top: 1px solid var(--ie-rule-strong);
   }
 
   .brief-section {
-    padding: 1.25rem 1.4rem;
+    padding: 1.35rem 0;
     border-bottom: 1px solid var(--ie-rule);
   }
 
@@ -213,10 +208,10 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 
   .aside-label {
     margin: 0 0 0.65rem;
-    color: var(--ie-blue);
-    font-family: var(--font-sans);
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
     font-size: var(--ie-type-label);
-    font-weight: 600;
+    font-weight: 500;
     letter-spacing: 0.055em;
     text-transform: uppercase;
   }
@@ -245,8 +240,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
   }
 
   .aside-list li span {
-    color: var(--ie-blue);
-    font-weight: 600;
+    color: var(--ie-rule-strong);
   }
 
   .route-links {
@@ -260,23 +254,20 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
+    padding: 0.35rem 0;
     min-height: 44px;
     overflow-wrap: anywhere;
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius, 6px);
-    background: var(--ie-surface-raised);
-    color: var(--ie-ink);
+    border-bottom: 1px solid var(--ie-rule);
+    color: var(--ie-ink-secondary);
     font-family: var(--font-sans);
     font-size: var(--ie-type-ui);
     text-decoration: none;
-    transition: border-color 120ms ease, color 120ms ease, background-color 120ms ease;
+    transition: color 120ms ease, border-color 120ms ease;
   }
 
   .route-link:hover {
-    border-color: var(--ie-blue);
-    background: var(--ie-blue-soft);
-    color: var(--ie-blue);
+    border-bottom-color: var(--ie-ink);
+    color: var(--ie-ink);
   }
 
   .route-link .arrow {
@@ -285,10 +276,8 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 
   .form-panel {
     min-height: 540px;
-    padding: clamp(1.25rem, 3vw, 2rem);
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-card, 8px);
-    background: var(--ie-surface);
+    border-top: 1px solid var(--ie-rule-strong);
+    padding-top: 1.35rem;
   }
 
   .form-panel-head {
@@ -297,32 +286,15 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     border-bottom: 1px solid var(--ie-rule);
   }
 
-  .form-badge-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .pill-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.2rem 0.65rem;
-    border-radius: var(--radius-pill, 999px);
-    background: var(--ie-blue-soft);
-    color: var(--ie-blue);
-    font-family: var(--font-sans);
-    font-size: var(--ie-type-micro);
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
-  .security-note {
+  .form-register {
+    display: block;
+    margin: 0 0 0.75rem;
     color: var(--ie-muted);
     font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
+    font-size: var(--ie-type-label);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .form-panel-head p {
@@ -367,11 +339,10 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     margin-bottom: 0.5rem;
   }
 
-  .skeleton-pill {
+  .skeleton-marker {
     width: 60px;
-    height: 18px;
-    border-radius: var(--radius-pill, 999px);
-    background: var(--ie-blue-soft);
+    height: 12px;
+    background: var(--ie-surface-raised);
     animation: shimmer 1.8s infinite ease-in-out;
   }
 

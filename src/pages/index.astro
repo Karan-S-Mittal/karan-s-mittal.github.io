@@ -2,603 +2,287 @@
 import Layout from '@layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { SITE } from '../config';
-import { problemScenarios, coreCapabilities } from '@data/practice';
+import { practiceAreas } from '@data/practice';
 import { externalWriting } from '@data/publications';
 import '@styles/practice.css';
 
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const featuredLocalPost = publishedPosts[0];
+const latestLocalPost = publishedPosts[0];
 const externalArticle = externalWriting[0];
+
+const monthYear = (value: Date) =>
+  value.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 ---
 
 <Layout title={SITE.title} description="Karan Mittal is a systems engineer building deterministic harnesses, evaluation boundaries, and persistent state for production AI agents and LLMOps.">
   <main class="practice-page home-page">
-    <!-- Hero Section -->
     <header class="home-hero" aria-labelledby="hero-heading">
-      <div class="hero-content">
-        <span class="hero-badge">Systems Engineering &bull; Production AI Agents</span>
-        <h1 id="hero-heading">Deterministic harnesses for production AI agents.</h1>
-        <p class="lead">
-          I build runtime execution sandboxes, evaluation boundaries, and persistent state for agentic systems where hallucination, state corruption, and silent failures are unacceptable.
-        </p>
-        <p class="hero-subtext">
-          Co-founder at <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a>. Operating at the intersection of LLMOps, memory architectures, and high-performance system runtimes.
-        </p>
-        <div class="hero-actions">
-          <a class="action" href="/contact">Discuss your problem &rarr;</a>
-          <a class="action secondary" href="#scenarios">Explore problem scenarios &darr;</a>
-        </div>
+      <h1 id="hero-heading">Deterministic harnesses for production AI agents.</h1>
+      <p class="lead">
+        I build runtime execution sandboxes, evaluation boundaries, and persistent state for
+        agentic systems where hallucination, state corruption, and silent failure are
+        unacceptable. Co-founder at <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a>.
+      </p>
+      <div class="hero-actions">
+        <a class="action" href="/contact">Discuss your problem &rarr;</a>
       </div>
     </header>
 
-    <!-- Section 01: Problem Scenarios -->
-    <section id="scenarios" class="section" aria-labelledby="scenarios-heading">
+    <section id="practice" class="section" aria-labelledby="practice-heading">
       <div class="section-header">
-        <span class="register">01 / Real-world problems</span>
-        <h2 id="scenarios-heading">Where production agent systems break down.</h2>
-        <p class="lead">
-          Proof-of-concept AI agents work in isolation. In production, they hallucinate tool parameters, blow context window limits, or leak state across sessions. Here is how we engineer around the failure modes.
-        </p>
+        <span class="register">01 / What I fix</span>
+        <h2 id="practice-heading">Where production agent systems break down.</h2>
       </div>
 
-      <div class="scenarios-grid">
-        {problemScenarios.map((scenario) => (
-          <article class="scenario-card" id={scenario.id}>
-            <div class="scenario-top">
-              <span class="scenario-tag">{scenario.tag}</span>
-              <h3 class="scenario-problem">"{scenario.problem}"</h3>
+      <ol class="practice-list">
+        {practiceAreas.map((area) => (
+          <li class="practice-item" id={area.id}>
+            <span class="practice-num" aria-hidden="true">{area.num}</span>
+            <div class="practice-body">
+              <h3 class="practice-problem">{area.problem}</h3>
+              <p class="practice-intervention">{area.intervention}</p>
             </div>
-
-            <div class="scenario-body">
-              <div class="scenario-point">
-                <span class="point-label">Failure mode</span>
-                <p>{scenario.symptom}</p>
-              </div>
-
-              <div class="scenario-point highlight">
-                <span class="point-label">Systems intervention</span>
-                <p>{scenario.intervention}</p>
-              </div>
-
-              <div class="scenario-point deliverable">
-                <span class="point-label">What you leave with</span>
-                <p>{scenario.deliverable}</p>
-              </div>
-            </div>
-          </article>
+          </li>
         ))}
-      </div>
+      </ol>
     </section>
 
-    <!-- Section 02: Core Capabilities -->
-    <section id="capabilities" class="section" aria-labelledby="capabilities-heading">
-      <div class="section-header">
-        <span class="register">02 / Core capabilities</span>
-        <h2 id="capabilities-heading">What I build for engineering teams.</h2>
-        <p class="lead">
-          Concrete systems deliverables for teams moving beyond brittle prompt chaining into audited, repeatable agent architectures.
-        </p>
-      </div>
-
-      <div class="capabilities-list">
-        {coreCapabilities.map((cap) => (
-          <div class="capability-item" id={cap.id}>
-            <div class="cap-meta">
-              <span class="cap-num">{cap.num}</span>
-            </div>
-            <div class="cap-content">
-              <h3 class="cap-title">{cap.title}</h3>
-              <p class="cap-desc">{cap.description}</p>
-              <div class="cap-artifacts">
-                <span class="artifacts-label">Key Deliverables:</span>
-                <ul class="artifacts-list">
-                  {cap.artifacts.map((art) => (
-                    <li>{art}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <!-- Section 03: Direct Proof of Work -->
     <section id="proof" class="section" aria-labelledby="proof-heading">
       <div class="section-header">
-        <span class="register">03 / Direct proof</span>
+        <span class="register">02 / Direct proof</span>
         <h2 id="proof-heading">Published systems research and public writing.</h2>
-        <p class="lead">
-          No vague claims. Read the architecture breakdowns, benchmark methodology, and systems evaluations.
-        </p>
       </div>
 
-      <div class="proof-cards-grid">
+      <ul class="proof-list">
         {externalArticle && (
-          <article class="proof-card featured">
-            <div class="proof-badge-row">
-              <span class="proof-badge-ext">PUBLISHED RESEARCH &bull; MEM0</span>
-              <time datetime={externalArticle.pubDate}>September 2026</time>
-            </div>
+          <li class="proof-item">
+            <p class="proof-meta">
+              <span>Published at {externalArticle.publication}</span>
+              <time datetime={externalArticle.pubDate}>
+                {monthYear(new Date(externalArticle.pubDate))}
+              </time>
+            </p>
             <h3 class="proof-title">
               <a href={externalArticle.href} target="_blank" rel="noopener">
-                {externalArticle.title}
+                {externalArticle.title}<span class="proof-mark" aria-hidden="true">&nearr;</span>
               </a>
             </h3>
             <p class="proof-desc">{externalArticle.description}</p>
-            <div class="proof-footer">
-              <a href={externalArticle.href} target="_blank" rel="noopener" class="proof-link">
-                <span>Read article at Mem0</span>
-                <span aria-hidden="true">&nearr;</span>
-              </a>
-            </div>
-          </article>
+          </li>
         )}
 
-        {featuredLocalPost && (
-          <article class="proof-card">
-            <div class="proof-badge-row">
-              <span class="proof-badge-local">SYSTEMS ESSAY</span>
-              <time datetime={featuredLocalPost.data.pubDate.toISOString()}>
-                {new Date(featuredLocalPost.data.pubDate).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}
+        {latestLocalPost && (
+          <li class="proof-item">
+            <p class="proof-meta">
+              <span>On-site essay</span>
+              <time datetime={latestLocalPost.data.pubDate.toISOString()}>
+                {monthYear(latestLocalPost.data.pubDate)}
               </time>
-            </div>
+            </p>
             <h3 class="proof-title">
-              <a href={`/writing/${featuredLocalPost.id}/`}>
-                {featuredLocalPost.data.title}
-              </a>
+              <a href={`/writing/${latestLocalPost.id}/`}>{latestLocalPost.data.title}</a>
             </h3>
-            <p class="proof-desc">{featuredLocalPost.data.description}</p>
-            <div class="proof-footer">
-              <a href={`/writing/${featuredLocalPost.id}/`} class="proof-link">
-                <span>Read technical essay</span>
-                <span aria-hidden="true">&rarr;</span>
-              </a>
-            </div>
-          </article>
+            <p class="proof-desc">{latestLocalPost.data.description}</p>
+          </li>
         )}
-      </div>
+      </ul>
 
       <div class="proof-actions">
-        <a href="/writing" class="proof-subaction">View all technical writing &rarr;</a>
-        <a href="/speaking" class="proof-subaction">View workshops &amp; conference talks &rarr;</a>
+        <a href="/writing/">All technical writing &rarr;</a>
+        <a href="/speaking/">Workshops &amp; conference talks &rarr;</a>
       </div>
     </section>
 
-    <!-- Closing Call to Action -->
     <section class="section closing" aria-labelledby="closing-heading">
       <span class="register">Start a conversation</span>
       <h2 id="closing-heading">What needs to work better?</h2>
       <p class="lead">
-        Describe the agent, pipeline, or systems problem, who it impacts, and what a reliable outcome looks like. A few sentences are enough to start.
+        Describe the agent, pipeline, or systems problem, who it impacts, and what a reliable
+        outcome looks like. A few sentences are enough to start.
       </p>
       <div class="actions">
-        <a href="/contact" class="action">Start an engineering conversation &rarr;</a>
+        <a href="/contact/" class="action">Start an engineering conversation &rarr;</a>
       </div>
     </section>
   </main>
 </Layout>
 
 <style>
+  /* ---- Hero -------------------------------------------------------- */
+
   .home-hero {
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    padding-block: clamp(3.5rem, 7vw, 6rem) clamp(3rem, 6vw, 4.5rem);
+    padding-block: clamp(4rem, 9vw, 7.5rem) clamp(3.5rem, 7vw, 5.5rem);
     border-bottom: 1px solid var(--ie-rule-strong);
-  }
-
-  .hero-content {
-    max-width: 840px;
-    margin-inline: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     text-align: center;
   }
 
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.25rem 0.85rem;
-    border: 1px solid var(--ie-rule-strong);
-    border-radius: var(--radius-pill, 999px);
-    background: var(--ie-surface);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-    font-weight: 600;
-    color: var(--ie-blue);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-bottom: 1.25rem;
-  }
-
-  .hero-content h1 {
-    font-size: clamp(2.2rem, 4.2vw, 3.6rem);
-    line-height: 1.1;
+  .home-hero h1 {
+    max-width: 18ch;
+    margin-bottom: 1.5rem;
+    font-size: clamp(2.35rem, 5.4vw, 3.9rem);
+    line-height: 1.04;
     letter-spacing: -0.035em;
-    margin-bottom: 1.25rem;
-    max-width: 24ch;
-    margin-inline: auto;
-    text-wrap: balance;
-    text-align: center;
   }
 
-  .hero-content .lead {
-    font-size: clamp(1.1rem, 1.6vw, 1.28rem);
-    line-height: 1.6;
-    margin-bottom: 1rem;
-    color: var(--ie-ink);
+  .home-hero .lead {
     max-width: 58ch;
-    margin-inline: auto;
-    text-wrap: pretty;
-    text-align: center;
+    margin-bottom: 0;
+    color: var(--ie-ink-secondary);
+    font-size: clamp(1.0625rem, 1.5vw, 1.1875rem);
+    line-height: 1.62;
   }
 
-  .hero-subtext {
-    font-size: var(--ie-type-ui);
-    color: var(--ie-muted);
-    line-height: 1.6;
-    margin-bottom: 2rem;
-    max-width: 64ch;
-    margin-inline: auto;
-    text-align: center;
+  .home-hero .lead a {
+    border-bottom: 1px solid var(--ie-rule-strong);
+    color: var(--ie-ink);
+    font-weight: 500;
   }
 
-  .hero-subtext a {
-    color: var(--ie-blue);
-    text-decoration: none;
-    background: var(--ie-blue-soft);
-    padding: 0.1em 0.4em;
-    border-radius: var(--radius-sm, 4px);
-    transition: background-color 120ms ease;
-  }
-
-  .hero-subtext a:hover {
-    background: color-mix(in srgb, var(--ie-blue-soft) 80%, var(--ie-blue));
+  .home-hero .lead a:hover {
+    border-bottom-color: var(--ie-ink);
   }
 
   .hero-actions {
-    display: flex;
-    justify-content: center;
-    gap: 0.85rem;
-    flex-wrap: wrap;
+    margin-top: 2.25rem;
   }
+
+  /* ---- Shared section header --------------------------------------- */
 
   .section-header {
-    max-width: 780px;
-    margin-bottom: 2rem;
+    max-width: 44ch;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
   }
 
-  /* Problem Scenarios */
-  .scenarios-grid {
+  .closing .lead,
+  .section-header .lead {
+    max-width: 62ch;
+  }
+
+  /* ---- 01 / What I fix --------------------------------------------- */
+
+  .practice-list {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--ie-rule);
+    list-style: none;
+  }
+
+  .practice-item {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 1.5rem;
+    align-items: start;
+    gap: 0 clamp(1.25rem, 3vw, 2.5rem);
+    padding-block: clamp(1.75rem, 3.5vw, 2.5rem);
+    border-bottom: 1px solid var(--ie-rule);
+    grid-template-columns: 3.5rem minmax(0, 1fr);
   }
 
-  .scenario-card {
-    display: flex;
-    flex-direction: column;
-    padding: 1.5rem;
-    background: var(--ie-surface);
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-card, 8px);
-    transition: border-color 150ms ease;
+  .practice-num {
+    padding-top: 0.35rem;
+    color: var(--ie-muted);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-label);
+    font-variant-numeric: tabular-nums;
   }
 
-  .scenario-card:hover {
-    border-color: var(--ie-rule-strong);
+  .practice-problem {
+    max-width: 24ch;
+    margin-bottom: 0.65rem;
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    line-height: 1.24;
+    letter-spacing: -0.02em;
   }
 
-  .scenario-top {
-    padding-bottom: 1rem;
-    margin-bottom: 1.25rem;
+  .practice-intervention {
+    max-width: 68ch;
+    margin: 0;
+    color: var(--ie-ink-secondary);
+  }
+
+  /* ---- 02 / Direct proof ------------------------------------------- */
+
+  .proof-list {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--ie-rule);
+    list-style: none;
+  }
+
+  .proof-item {
+    padding-block: clamp(1.75rem, 3.5vw, 2.5rem);
     border-bottom: 1px solid var(--ie-rule);
   }
 
-  .scenario-tag {
-    display: inline-flex;
-    align-items: center;
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-    font-weight: 700;
-    color: var(--ie-rust);
-    background: var(--ie-rust-soft);
-    border: 1px solid color-mix(in srgb, var(--ie-rust) 30%, transparent);
-    padding: 0.2rem 0.65rem;
-    border-radius: var(--radius-pill, 999px);
-    letter-spacing: 0.05em;
-    margin-bottom: 0.6rem;
-  }
-
-  .scenario-problem {
-    margin: 0;
-    font-family: var(--font-display);
-    font-size: var(--ie-type-h4);
-    font-weight: 600;
-    line-height: 1.3;
-    color: var(--ie-ink);
-  }
-
-  .scenario-body {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    flex: 1;
-  }
-
-  .scenario-point {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .point-label {
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-    font-weight: 600;
-    color: var(--ie-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  .scenario-point p {
-    margin: 0;
-    font-size: var(--ie-type-small);
-    line-height: 1.55;
-    color: var(--ie-ink-secondary);
-  }
-
-  .scenario-point.highlight {
-    padding: 0.75rem 0.85rem;
-    background: var(--ie-surface-raised);
-    border-left: 2px solid var(--ie-blue);
-    border-radius: 0 4px 4px 0;
-  }
-
-  .scenario-point.highlight .point-label {
-    color: var(--ie-blue);
-  }
-
-  .scenario-point.deliverable {
-    margin-top: auto;
-    padding-top: 0.75rem;
-    border-top: 1px dashed var(--ie-rule);
-  }
-
-  .scenario-point.deliverable .point-label {
-    color: var(--ie-verified);
-  }
-
-  /* Capabilities List */
-  .capabilities-list {
-    display: grid;
-    gap: 1.25rem;
-    margin-top: 1.5rem;
-  }
-
-  .capability-item {
-    display: grid;
-    grid-template-columns: 3.5rem minmax(0, 1fr);
-    gap: 1.25rem;
-    padding: 1.5rem;
-    background: var(--ie-surface);
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-card, 8px);
-    transition: border-color 150ms ease;
-  }
-
-  .capability-item:hover {
-    border-color: var(--ie-rule-strong);
-  }
-
-  .cap-meta {
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-h3);
-    font-weight: 700;
-    color: var(--ie-muted);
-    line-height: 1;
-    padding-top: 0.15rem;
-  }
-
-  .cap-title {
-    margin: 0 0 0.5rem;
-    font-family: var(--font-display);
-    font-size: var(--ie-type-h3);
-    font-weight: 600;
-    color: var(--ie-ink);
-  }
-
-  .cap-desc {
-    margin: 0 0 1rem;
-    font-size: var(--ie-type-base);
-    line-height: 1.6;
-    color: var(--ie-ink-secondary);
-    max-width: 68ch;
-  }
-
-  .cap-artifacts {
+  .proof-meta {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 0.85rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--ie-rule);
-  }
-
-  .artifacts-label {
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
+    gap: 0.5rem 1rem;
+    margin-bottom: 0.7rem;
     color: var(--ie-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  .artifacts-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 0.6rem;
-  }
-
-  .artifacts-list li {
     font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-    color: var(--ie-ink);
-    padding: 0.2rem 0.65rem;
-    background: var(--ie-blue-soft);
-    border: 1px solid color-mix(in srgb, var(--ie-blue) 30%, transparent);
-    border-radius: var(--radius-pill, 999px);
-  }
-
-  /* Proof Cards */
-  .proof-cards-grid {
-    display: grid;
-    grid-template-columns: 1.25fr 1fr;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-  }
-
-  .proof-card {
-    display: flex;
-    flex-direction: column;
-    padding: 1.75rem;
-    background: var(--ie-surface);
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-card, 8px);
-    transition: border-color 150ms ease;
-  }
-
-  .proof-card:hover {
-    border-color: var(--ie-blue);
-  }
-
-  .proof-card.featured {
-    border-color: var(--ie-rule-strong);
-  }
-
-  .proof-badge-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.85rem;
-  }
-
-  .proof-badge-ext,
-  .proof-badge-local {
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-    font-weight: 700;
-    padding: 0.25rem 0.65rem;
-    border-radius: var(--radius-pill, 999px);
-    letter-spacing: 0.05em;
-  }
-
-  .proof-badge-ext {
-    color: var(--ie-ink);
-    background: var(--ie-blue-soft);
-    border: 1px solid color-mix(in srgb, var(--ie-blue) 35%, transparent);
-  }
-
-  .proof-badge-local {
-    color: var(--ie-ink-secondary);
-    background: var(--ie-surface-raised);
-    border: 1px solid var(--ie-rule-strong);
-  }
-
-  .proof-badge-row time {
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-    color: var(--ie-muted);
+    font-size: var(--ie-type-label);
   }
 
   .proof-title {
-    margin: 0 0 0.65rem;
-    font-family: var(--font-display);
-    font-size: var(--ie-type-h3);
-    line-height: 1.3;
+    max-width: 34ch;
+    margin-bottom: 0.55rem;
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    line-height: 1.22;
+    letter-spacing: -0.02em;
   }
 
   .proof-title a {
     color: var(--ie-ink);
     text-decoration: none;
-    transition: color 140ms ease;
   }
 
   .proof-title a:hover {
     color: var(--ie-blue);
   }
 
+  .proof-mark {
+    margin-left: 0.3em;
+    color: var(--ie-muted);
+    font-size: 0.8em;
+  }
+
   .proof-desc {
-    margin: 0 0 1.25rem;
-    font-size: var(--ie-type-small);
-    line-height: 1.6;
+    max-width: 68ch;
+    margin: 0;
     color: var(--ie-ink-secondary);
-  }
-
-  .proof-footer {
-    margin-top: auto;
-  }
-
-  .proof-link,
-  .proof-subaction {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.4rem 0.9rem;
-    border: 1px solid var(--ie-rule-strong);
-    border-radius: var(--radius-pill, 999px);
-    background: var(--ie-surface-raised);
-    color: var(--ie-ink);
-    font-family: var(--font-sans);
-    font-size: var(--ie-type-ui);
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 140ms ease;
-  }
-
-  .proof-link:hover,
-  .proof-subaction:hover {
-    border-color: var(--ie-blue);
-    background: var(--ie-blue-soft);
-    color: var(--ie-ink);
-    text-decoration: none;
   }
 
   .proof-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--ie-rule);
+    gap: 0.75rem 2rem;
+    margin-top: 1.75rem;
   }
 
-  @media (max-width: 960px) {
-    .scenarios-grid {
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-    }
-
-    .proof-cards-grid {
-      grid-template-columns: 1fr;
-    }
+  .proof-actions a {
+    min-height: 44px;
+    align-content: center;
+    color: var(--ie-ink-secondary);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
   }
+
+  .proof-actions a:hover {
+    color: var(--ie-blue);
+  }
+
+  /* ---- Responsive --------------------------------------------------- */
 
   @media (max-width: 640px) {
-    .capability-item {
+    .practice-item {
+      gap: 0.5rem 0;
       grid-template-columns: 1fr;
-      gap: 0.5rem;
     }
 
-    .cap-meta {
+    .practice-num {
       padding-top: 0;
     }
   }

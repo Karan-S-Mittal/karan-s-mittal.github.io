@@ -16,7 +16,6 @@ interface UnifiedWritingItem {
   href: string;
   source: string;
   external: boolean;
-  tags: string[];
 }
 
 const localPosts: UnifiedWritingItem[] = allPosts
@@ -29,7 +28,6 @@ const localPosts: UnifiedWritingItem[] = allPosts
     href: `/writing/${post.id}/`,
     source: 'ON-SITE ESSAY',
     external: false,
-    tags: post.data.tags || [],
   }));
 
 const extEntries: UnifiedWritingItem[] = externalWriting.map((item) => ({
@@ -40,7 +38,6 @@ const extEntries: UnifiedWritingItem[] = externalWriting.map((item) => ({
   href: item.href,
   source: `PUBLISHED AT ${item.publication.toUpperCase()}`,
   external: true,
-  tags: ['Coding Agents', 'Harness Architecture', 'Evaluation'],
 }));
 
 const allWriting = [...localPosts, ...extEntries].sort(
@@ -61,15 +58,15 @@ const formatDate = (date: Date) =>
 
 <Layout
   title="Writing and systems notes | Karan Mittal"
-  description="Evidence-backed essays and technical publications on version control, AI systems, distributed infrastructure, and performance engineering."
+  description="Evidence-backed essays and technical publications on AI systems, agent harnesses, distributed infrastructure, and performance engineering."
 >
   <main class="container writing-page">
     <PageHeader
       label="Writing"
       title="Writing and systems notes."
-      description="Evidence-backed explanations of version control, AI systems, distributed infrastructure, and performance engineering."
+      description="Evidence-backed explanations of AI systems, agent harnesses, distributed infrastructure, and performance engineering."
       count={allWriting.length}
-      countLabel="published essays & articles"
+      countLabel="published piece"
     />
 
     <div class="archive-list" id="writing-timeline">
@@ -91,13 +88,6 @@ const formatDate = (date: Date) =>
                     </a>
                   </h3>
                   <p class="writing-card-desc">{item.description}</p>
-                  {item.tags.length > 0 && (
-                    <div class="writing-tags">
-                      {item.tags.map((tag) => (
-                        <span class="tag-pill">{tag}</span>
-                      ))}
-                    </div>
-                  )}
                 </article>
               ))}
             </div>
@@ -141,9 +131,9 @@ const formatDate = (date: Date) =>
   }
 
   .source-tag {
-    font-weight: 700;
-    color: var(--ie-blue);
-    letter-spacing: 0.04em;
+    color: var(--ie-muted);
+    font-weight: 500;
+    letter-spacing: 0.05em;
   }
 
   .meta-sep {
@@ -190,29 +180,8 @@ const formatDate = (date: Date) =>
     line-height: 1.62;
   }
 
-  .writing-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
 
-  .tag-pill {
-    padding: 0.2rem 0.65rem;
-    background: var(--ie-surface-raised);
-    border: 1px solid var(--ie-rule-strong);
-    border-radius: var(--radius-pill, 999px);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-    color: var(--ie-muted);
-    letter-spacing: 0.02em;
-    transition: all 120ms ease;
-  }
 
-  .tag-pill:hover {
-    background: var(--ie-blue-soft);
-    border-color: var(--ie-blue);
-    color: var(--ie-ink);
-  }
 
   .empty-blog-state {
     padding: 3rem 0;
