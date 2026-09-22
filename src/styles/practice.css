@@ -1,13 +1,14 @@
-/* Editorial layouts for the homepage and practice pages. */
+/* Editorial layouts for the homepage and About. Every vertical gap here
+   comes from the --gap-* scale in global.css; pick by relationship. */
 .practice-page {
   max-width: var(--width-content, 960px);
   margin-inline: auto;
-  padding: 0 var(--space-5, 1.5rem) 5rem;
+  padding: 0 var(--space-5, 1.5rem);
 }
 
 .practice-page .register {
   display: block;
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--gap-tight);
   color: var(--ie-muted);
   font-family: var(--font-sans);
   font-size: var(--ie-type-small);
@@ -28,13 +29,13 @@
 
 .practice-page h1 {
   max-width: 780px;
-  margin-bottom: 1.35rem;
+  margin-bottom: var(--gap-related);
   font-size: var(--ie-type-h1);
   line-height: 1.08;
 }
 
 .practice-page h2 {
-  margin-bottom: 0.85rem;
+  margin-bottom: var(--gap-related);
   font-size: var(--ie-type-h2);
   line-height: 1.15;
 }
@@ -55,6 +56,7 @@
 
 .practice-page .lead {
   max-width: 660px;
+  margin-bottom: 0;
   color: var(--ie-muted);
   font-size: var(--ie-type-body);
   line-height: 1.5;
@@ -69,11 +71,11 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem 1.75rem;
-  margin-top: 1.75rem;
+  margin-top: var(--gap-group);
 }
 
 .practice-page .section {
-  padding-top: clamp(5rem, 10vw, 8rem);
+  padding-top: var(--gap-section);
   scroll-margin-top: 5rem;
 }
 
@@ -82,7 +84,7 @@
   align-items: end;
   justify-content: space-between;
   gap: 1.5rem;
-  margin-bottom: 1.6rem;
+  margin-bottom: var(--gap-group);
 }
 
 .practice-page .section-head h2 { margin-bottom: 0; }
@@ -99,6 +101,12 @@
   font-family: var(--font-mono);
   font-size: var(--ie-type-label);
   line-height: 1.6;
+}
+
+/* A heading block's own trailing margin must not add to the gap token that
+   follows it. */
+.practice-page :is(.section-header, .section-intro, .section-head > div, .closing-copy) > :last-child {
+  margin-bottom: 0;
 }
 
 /* The closing call to action is separated by space alone (.section). */

@@ -15,12 +15,10 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
       label="Contact"
       title="What needs to work better?"
       description="Tell me about the problem, who it affects, and what a useful outcome would look like. A few sentences are enough to start."
-    />
-
-    <div class="contact-actions">
+    >
       <a class="button" href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>Email me</a>
       <a class="more-link" href="#tally-container">Use the contact form</a>
-    </div>
+    </PageHeader>
 
     <div class="contact-layout">
       <aside class="contact-aside" aria-label="Consulting guidance">
@@ -140,17 +138,6 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 </Layout>
 
 <style>
-  .contact-page {
-    padding-bottom: clamp(3rem, 6vw, 6rem);
-  }
-
-  .contact-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem 1.75rem;
-    margin-top: calc(-1 * var(--space-7));
-  }
   #tally-container { scroll-margin-top: 5rem; }
 
   .contact-layout {
@@ -158,7 +145,6 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
     gap: clamp(2rem, 4vw, 3.5rem);
     align-items: start;
-    margin-top: clamp(4rem, 8vw, 6rem);
   }
 
   .contact-aside {

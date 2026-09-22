@@ -101,6 +101,21 @@
   --space-9: 6rem;      /* 96px */
   --space-10: 8rem;     /* 128px */
 
+  /* Layout rhythm: six gaps, used everywhere a page stacks blocks.
+     Pick by relationship, never by eye:
+       tight    eyebrow → heading
+       related  heading → lead, lead → a short line that belongs to it
+       group    heading block → its content, content → its action links
+       block    page intro → page content, hero actions → hero figure
+       section  between major sections, and last section → footer
+       page-top header bar → first heading (same as a section) */
+  --gap-tight: 0.5rem;    /* 8px */
+  --gap-related: 1rem;    /* 16px */
+  --gap-group: 2.5rem;    /* 40px */
+  --gap-block: 4rem;      /* 64px */
+  --gap-section: 8rem;    /* 128px */
+  --page-top: var(--gap-section);
+
   /* Radius */
   --radius-sm: 4px;
   --radius: 6px;
@@ -118,6 +133,15 @@
   /* Transitions */
   --transition-fast: 120ms ease;
   --transition: 200ms ease;
+}
+
+/* Phones: the same six steps, compressed. */
+@media (max-width: 720px) {
+  :root {
+    --gap-group: 2rem;    /* 32px */
+    --gap-block: 3rem;    /* 48px */
+    --gap-section: 5rem;  /* 80px */
+  }
 }
 
 /* ================================================================
@@ -300,7 +324,7 @@ p a:hover, li a:hover, .post-standfirst a:hover, .lead a:hover {
    code, and data, so eyebrows are set in the sans. */
 .eyebrow {
   display: block;
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--gap-tight);
   color: var(--ie-muted);
   font-family: var(--font-sans);
   font-size: var(--ie-type-small);
@@ -455,12 +479,12 @@ pre:focus-within .copy-code { opacity: 1; }
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: var(--space-8) var(--space-5) var(--space-6);
+  padding: var(--page-top) var(--space-5) 0;
 }
 
 @media (max-width: 640px) {
   .container {
-    padding: var(--space-6) var(--space-4) var(--space-5);
+    padding-inline: var(--space-4);
   }
 }
 

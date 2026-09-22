@@ -25,12 +25,6 @@ const monthYear = (value: Date) =>
   <main class="practice-page home-page">
     <header class="home-hero" aria-labelledby="hero-heading">
       <h1 id="hero-heading">Knowledge systems that show their work.</h1>
-      <figure class="hero-figure">
-        <EvidenceTrail />
-        <figcaption class="dg-caption">
-          Illustrative. The answer carries the path that produced it, so anyone can check it.
-        </figcaption>
-      </figure>
       <p class="lead">
         I design graph-grounded knowledge systems and the evaluations that prove them, so
         every answer traces back to evidence and failures surface before users see them.
@@ -39,6 +33,12 @@ const monthYear = (value: Date) =>
         <a class="button" href="/contact/">Discuss your problem</a>
         <a class="more-link" href="#practice">What I fix</a>
       </div>
+      <figure class="hero-figure">
+        <EvidenceTrail />
+        <figcaption class="dg-caption">
+          Illustrative. The answer carries the path that produced it, so anyone can check it.
+        </figcaption>
+      </figure>
     </header>
 
     <section id="practice" class="section" aria-labelledby="practice-heading">
@@ -156,13 +156,13 @@ const monthYear = (value: Date) =>
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-block: clamp(5rem, 11vw, 9rem) 0;
+    padding-top: var(--page-top);
     text-align: center;
   }
 
   .home-hero h1 {
     max-width: 18ch;
-    margin-bottom: 1.25rem;
+    margin-bottom: var(--gap-related);
     font-size: var(--ie-type-display);
     line-height: 1.05;
     letter-spacing: -0.03em;
@@ -176,28 +176,28 @@ const monthYear = (value: Date) =>
     line-height: 1.45;
   }
 
-  /* Wider than the text column, like a product image under hero copy. The
-     hero is a centred flex column, so the overflow spreads evenly. */
-  .hero-figure {
-    width: min(1100px, calc(100vw - 3rem));
-    max-width: none;
-    margin: clamp(2.5rem, 5vw, 3.5rem) 0 clamp(2.5rem, 5vw, 3.5rem);
-  }
-
   .hero-actions {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     gap: 0.75rem 1.75rem;
-    margin-top: 2.25rem;
+    margin-top: var(--gap-group);
+  }
+
+  /* The hero's image: below the message, wider than the text column. The
+     hero is a centred flex column, so the overflow spreads evenly. */
+  .hero-figure {
+    width: min(1100px, calc(100vw - 3rem));
+    max-width: none;
+    margin: var(--gap-block) 0 0;
   }
 
   /* ---- Shared section header --------------------------------------- */
 
   .section-header {
     max-width: 720px;
-    margin-bottom: clamp(2rem, 4vw, 3rem);
+    margin-bottom: var(--gap-group);
   }
 
   .closing .lead,
@@ -253,6 +253,7 @@ const monthYear = (value: Date) =>
   }
 
   .practice-item {
+    margin: 0;
     display: grid;
     grid-template-columns: minmax(0, 1fr) 300px;
     align-items: center;
@@ -294,6 +295,7 @@ const monthYear = (value: Date) =>
   }
 
   .proof-item {
+    margin: 0;
     padding-block: clamp(1.75rem, 3.5vw, 2.5rem);
     border-bottom: 1px solid var(--ie-rule);
   }
@@ -344,6 +346,6 @@ const monthYear = (value: Date) =>
     display: flex;
     flex-wrap: wrap;
     gap: 0 2rem;
-    margin-top: 1.25rem;
+    margin-top: var(--gap-group);
   }
 </style>

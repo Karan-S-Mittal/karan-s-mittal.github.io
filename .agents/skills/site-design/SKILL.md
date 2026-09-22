@@ -9,7 +9,7 @@ The site should read like a well-edited Apple product page: a quiet field, confi
 
 ## Principles
 
-1. **Text-led, whitespace-led.** Separate sections with space (`.section` / `--space-*`), not lines. A hairline (`--ie-rule`) only divides items inside a list.
+1. **Text-led, whitespace-led.** Separate sections with space (`--gap-section`, see Spacing), not lines. A hairline (`--ie-rule`) only divides items inside a list.
 2. **Blue means clickable.** `--ie-blue` marks links, `.more-link`, and the `.button` fill (`--ie-button`). Nothing decorative is blue. Header nav links are `--ie-ink-secondary` and turn ink on hover or when current.
 3. **One button per page.** A single `.button` (blue rounded square, `--radius-control`, squircle where supported) for the page's main action. Every other action is a `.more-link` (blue text followed by a ›).
 4. **No chrome on pages.** No cards, tiles, tinted bands, pills, chips, badges, shadows, glassmorphism, or decorative backdrops. Soft tiles exist only inside diagrams.
@@ -38,7 +38,27 @@ The legacy names `--ie-type-micro`, `label`, `ui` and `h4` are aliases of these 
 ## Layout
 
 - Pages use `.container` (960px) or `.practice-page`. Diagrams may run wider (up to about 1100px) when they sit in a centred hero.
-- Vertical rhythm: `.section` provides large top padding (5–8rem). Don't add rules between sections.
+
+### Spacing: six gaps, chosen by relationship
+
+Every vertical gap between blocks comes from these tokens (`global.css`), never from a literal value or by eye:
+
+| Token | Desktop / phone | Between |
+| --- | --- | --- |
+| `--gap-tight` | 8 | eyebrow → heading |
+| `--gap-related` | 16 | heading → lead; a line that belongs to the one above it |
+| `--gap-group` | 40 / 32 | heading block → its content; content → its actions or `›` links; lead → buttons |
+| `--gap-block` | 64 / 48 | page intro (`PageHeader`) → page content; hero actions → hero figure |
+| `--gap-section` | 128 / 80 | major sections (`.section` / `.pub-section`); last section → footer |
+| `--page-top` | 128 / 80 | header bar → first heading on every page |
+
+Rules:
+- Related things must sit closer than unrelated things. A lead belongs directly under its headline; never put a figure between them.
+- A heading block's last child has no bottom margin, so only the gap token separates it from what follows.
+- Never pull an element up with a negative margin. Put page-intro actions in `PageHeader`'s slot.
+- List items inside ruled lists reset the browser's `li` margin (`margin: 0`).
+- To check, measure the rendered gaps, not the CSS. Every gap between blocks should be one of the values above.
+- Don't add rules between sections.
 - Lists (practice items, publications, talks, community) are rows separated by `--ie-rule` hairlines, with a hairline above the first row.
 - Every layout must hold at 390px wide: grids collapse to one column, and nothing may cause horizontal scroll.
 
@@ -48,7 +68,7 @@ Reuse these before writing anything new:
 
 - **Global classes** (`global.css`): `.button`, `.more-link`, `.eyebrow`, `.container`.
 - **Page parts** (`src/components/`):
-  - `content/PageHeader.astro`: label, h1 and lead for every inner page.
+  - `content/PageHeader.astro`: label, h1, lead and an optional actions slot for every inner page. It owns the `--gap-block` below it.
   - `content/YearGroup.astro`: a year heading over a list.
   - `content/TalkCard.astro`: one talk row.
   - `layout/Header.astro`: a solid 52px bar with centred nav and Contact as a blue link. No blur.

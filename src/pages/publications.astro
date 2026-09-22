@@ -80,13 +80,13 @@ const title = headline[0].toUpperCase() + headline.slice(1);
       label="Publications"
       title={title}
       description="Public work on knowledge systems, LLM evaluation, and graph-grounded retrieval."
-    />
-
-    <nav class="section-index" aria-label="On this page">
-      {sections.map((section) => (
-        <a href={`#${section.id}`}>{section.label}</a>
-      ))}
-    </nav>
+    >
+      <nav class="section-index" aria-label="On this page">
+        {sections.map((section) => (
+          <a class="more-link" href={`#${section.id}`}>{section.label}</a>
+        ))}
+      </nav>
+    </PageHeader>
 
     <section id="writing" class="pub-section" aria-labelledby="writing-heading">
       <h2 id="writing-heading">Writing</h2>
@@ -160,43 +160,35 @@ const title = headline[0].toUpperCase() + headline.slice(1);
 </Layout>
 
 <style>
-  .publications-page {
-    padding-bottom: clamp(3rem, 6vw, 6rem);
-  }
-
   .section-index {
     display: flex;
     flex-wrap: wrap;
     gap: 0 1.75rem;
-    margin-top: calc(-1 * var(--space-7));
   }
 
-  .section-index a {
-    display: inline-flex;
-    min-height: 44px;
-    align-items: center;
-    color: var(--ie-blue);
-    font-size: var(--ie-type-base);
-  }
-
-  .section-index a:hover {
-    text-decoration: underline;
-    text-underline-offset: 0.18em;
-  }
-
+  /* Sections sit --gap-section apart; the first follows the page intro,
+     which already supplies --gap-block. */
   .pub-section {
-    padding-top: clamp(4rem, 8vw, 6rem);
+    padding-top: var(--gap-section);
     scroll-margin-top: 4rem;
   }
 
+  .pub-section:first-of-type {
+    padding-top: 0;
+  }
+
   .pub-section > h2 {
-    margin: 0 0 1.25rem;
+    margin: 0 0 var(--gap-group);
     font-size: var(--ie-type-h2);
+  }
+
+  .pub-section > h2:has(+ .pub-intro) {
+    margin-bottom: var(--gap-related);
   }
 
   .pub-intro {
     max-width: 620px;
-    margin: -0.5rem 0 2rem;
+    margin: 0 0 var(--gap-group);
     color: var(--ie-muted);
     font-size: var(--ie-type-body);
     line-height: 1.5;
@@ -266,11 +258,7 @@ const title = headline[0].toUpperCase() + headline.slice(1);
     color: var(--ie-muted);
   }
 
-  .pub-closing {
-    padding-top: clamp(5rem, 10vw, 8rem);
-  }
-
   .pub-closing h2 {
-    margin-bottom: 1.25rem;
+    margin-bottom: var(--gap-related);
   }
 </style>
