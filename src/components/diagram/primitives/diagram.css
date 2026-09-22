@@ -1,0 +1,128 @@
+/*
+ * Shared figure grammar (see .agents/skills/diagram-craft/SKILL.md).
+ * Borderless soft tiles, hairline connectors, one blue active path.
+ * Every colour is a token so both themes work.
+ */
+
+.dg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: var(--font-diagram);
+}
+
+.dg-tile {
+  fill: var(--ie-surface-raised);
+}
+
+.dg-tile--active {
+  fill: var(--ie-blue-soft);
+}
+
+.dg-tile--ok {
+  fill: var(--ie-verified-soft);
+}
+
+.dg-tile--stop {
+  fill: var(--ie-rust-soft);
+}
+
+.dg-label {
+  fill: var(--ie-ink);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.dg-label--muted {
+  fill: var(--ie-muted);
+  font-weight: 400;
+}
+
+.dg-label--lg {
+  font-size: 15px;
+}
+
+.dg-sub {
+  fill: var(--ie-muted);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.dg-label--ok {
+  fill: var(--ie-verified);
+}
+
+.dg-label--stop {
+  fill: var(--ie-rust);
+}
+
+.dg-line {
+  fill: none;
+  stroke: var(--ie-rule-strong);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dg-line--active {
+  stroke: var(--ie-blue);
+}
+
+.dg-line--stop {
+  stroke: var(--ie-rust);
+}
+
+.dg-arrow {
+  fill: none;
+  stroke: var(--ie-blue);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dg-arrow--stop {
+  stroke: var(--ie-rust);
+}
+
+.dg-check {
+  fill: none;
+  stroke: var(--ie-verified);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Draw-on: active paths trace in once when the figure enters view. Without
+   JavaScript, or under reduced motion, data-draw is never set to "pending",
+   so the figure renders fully drawn. */
+.dg-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+[data-draw='pending'] .dg-draw {
+  stroke-dashoffset: 1;
+}
+
+[data-draw='done'] .dg-draw {
+  transition: stroke-dashoffset 900ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dg-caption {
+  margin-top: 0.75rem;
+  color: var(--ie-muted);
+  font-family: var(--font-sans);
+  font-size: var(--ie-type-caption);
+  line-height: 1.5;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

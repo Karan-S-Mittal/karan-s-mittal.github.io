@@ -1,9 +1,7 @@
 ---
 /**
- * Button.astro — spec §8.3 / §25
- * Primary: blue surface, white text, 8px radius, subtle 1px lift on hover.
- * Secondary: transparent, hairline border, ink text, blue hover.
- * No scale, no bounce, no glow. Full state contract incl. focus-visible + reduced-motion (global kill-switch).
+ * Button.astro — component form of the global .button control.
+ * Primary: blue fill, white text, rounded square. Secondary: hairline, blue text.
  */
 interface Props {
   href?: string;
@@ -31,27 +29,26 @@ const Tag = href ? 'a' : 'button';
 </Tag>
 
 <style>
+  /* Mirrors the global .button / .more-link pair: one blue rounded square,
+     and a quiet secondary. No lift, shadow, or glow. */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-height: 44px;
     gap: var(--space-2);
-    padding: 0.55rem 1.4rem;
+    padding: 0.6rem 1.25rem;
     font-family: var(--font-sans);
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.4;
-    border-radius: var(--radius-pill);
+    font-size: var(--ie-type-base);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    border-radius: var(--radius-control);
+    corner-shape: squircle;
     border: 1px solid transparent;
     cursor: pointer;
     text-decoration: none;
-    transition:
-      background-color var(--transition-fast),
-      color var(--transition-fast),
-      border-color var(--transition-fast),
-      box-shadow var(--transition-fast),
-      transform var(--transition-fast);
+    transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
   }
 
   .btn:focus-visible {
@@ -59,48 +56,27 @@ const Tag = href ? 'a' : 'button';
     outline-offset: 3px;
   }
 
-  /* Primary — Apple Dodger Blue */
   .btn-primary {
-    background: var(--accent);
-    color: #ffffff;
-    font-weight: 600;
-    box-shadow: 0 1px 3px rgba(0, 113, 227, 0.24);
+    background: var(--ie-button);
+    color: #fff;
   }
 
-  @media (hover: hover) {
-    .btn-primary:hover:not(.btn-disabled) {
-      background: var(--accent-hover);
-      color: #ffffff;
-      text-decoration: none;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 113, 227, 0.32);
-    }
-
-    .btn-secondary:hover:not(.btn-disabled) {
-      background: rgba(0, 0, 0, 0.04);
-      color: var(--text);
-      border-color: rgba(0, 0, 0, 0.2);
-      text-decoration: none;
-      transform: translateY(-1px);
-    }
+  .btn-primary:hover:not(.btn-disabled) {
+    background: var(--ie-button-hover);
+    color: #fff;
+    text-decoration: none;
   }
 
-  .btn-primary:active:not(.btn-disabled) {
-    transform: translateY(0);
-    box-shadow: none;
-  }
-
-  /* Secondary — Apple neutral frosted / hairline border */
   .btn-secondary {
-    background: var(--bg-elevated);
-    color: var(--text);
-    border-color: rgba(0, 0, 0, 0.12);
-    box-shadow: var(--shadow-sm);
+    background: transparent;
+    color: var(--ie-blue);
+    border-color: var(--ie-rule-strong);
   }
 
-  .btn-secondary:active:not(.btn-disabled) {
-    transform: translateY(0);
-    background: var(--ie-rule);
+  .btn-secondary:hover:not(.btn-disabled) {
+    border-color: var(--ie-blue);
+    color: var(--ie-blue);
+    text-decoration: none;
   }
 
   .btn-disabled {

@@ -7,9 +7,11 @@
  * test-results/. Pass a selector to frame a single figure instead of the page.
  *
  * Usage:
- *   npm run shot <route> [selector]
+ *   npm run shot <route> [selector] [--mobile]
  *   npm run shot /about/
  *   npm run shot /about/ "figure"
+ *   npm run shot -- / --mobile   (390×844 phone viewport, files prefixed m-;
+ *                                npm needs the -- to pass the flag through)
  */
 import http from 'node:http';
 import fs from 'node:fs';
@@ -22,8 +24,9 @@ const distDir = path.join(root, 'dist');
 const outDir = path.join(root, 'test-results');
 const PORT = 4399;
 
-const route = process.argv[2] || '/';
-const selector = process.argv[3];
+const args = process.argv.slice(2);
+const mobile = args.includes('--mobile');
+const [route = '/', selector] = args.filter((arg) => arg !== '--mobile');
 
 if (!fs.existsSync(distDir)) {
   console.error('❌ No dist/ directory. Run `npm run build` first.');
@@ -59,13 +62,13 @@ const server = http.createServer((req, res) => {
 });
 
 // Route -> a filename safe to use in test-results/.
-const name = route.replace(/^\/|\/$/g, '').replace(/[^a-z0-9]+/gi, '-') || 'home';
+const name = (mobile ? 'm-' : '') + (route.replace(/^\/|\/$/g, '').replace(/[^a-z0-9]+/gi, '-') || 'home');
 
 server.listen(PORT, async () => {
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage({
-      viewport: { width: 1280, height: 900 },
+      viewport: mobile ? { width: 390, height: 844 } : { width: 1280, height: 900 },
       deviceScaleFactor: 2,
     });
     const response = await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle' });

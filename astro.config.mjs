@@ -4,7 +4,6 @@ import mdx from '@astrojs/mdx';
 import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import rehypeSlug from 'rehype-slug';
 
 // GitHub Pages user site config
 // If using a custom domain later, update 'site' to 'https://yourdomain.com'
@@ -16,24 +15,19 @@ export default defineConfig({
   // without downloading every page on initial load.
   prefetch: { defaultStrategy: 'viewport', prefetchAll: false },
   integrations: [
-    // Keep redirect stubs and internal studio tooling out of the public sitemap.
     sitemap({
-      filter: (page) => {
-        const pathname = new URL(page).pathname;
-        // Redirect stubs and retired sections stay out of the public sitemap.
-        if (/^\/(?:blog|visuals|talks|tags|topics|publications|diagrams|ideas|work)(?:\/.*)?\/?$/.test(pathname)) return false;
-        return !/^\/(?:contact|now)\/?$/.test(pathname);
-      },
+      // Redirect stubs and the two low-value pages stay out of the sitemap.
+      filter: (page) => !/^\/(?:blog|talks|tags|topics|publications|contact|now)(?:\/.*)?\/?$/
+        .test(new URL(page).pathname),
     }),
     mdx(),
   ],
   markdown: {
+    // Astro 7 defaults to the Sätteri processor. KaTeX needs the unified
+    // pipeline, so opt into it explicitly via @astrojs/markdown-remark.
     processor: unified({
       remarkPlugins: [remarkMath],
-      rehypePlugins: [
-        rehypeSlug,
-        rehypeKatex,
-      ],
+      rehypePlugins: [rehypeKatex],
     }),
     shikiConfig: {
       theme: 'github-dark',

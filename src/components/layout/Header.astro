@@ -8,8 +8,7 @@ interface NavItem {
 }
 
 const nav: NavItem[] = [
-  { href: '/writing/', label: 'Writing' },
-  { href: '/speaking/', label: 'Speaking' },
+  { href: '/publications/', label: 'Publications', activePaths: ['/publications/', '/writing/'] },
   { href: '/about/', label: 'About' },
   { href: '/now/', label: 'Now' },
 ];
@@ -29,7 +28,6 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
     <div class="header-left">
       <a href="/" class="brand" aria-label="Karan Mittal Home">
         <span class="brand-name">Karan Mittal</span>
-        <span class="brand-role">Engineer-scientist</span>
       </a>
     </div>
 
@@ -43,18 +41,18 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
 
     <div class="header-right">
       <details class="mobile-nav">
-        <summary>Index</summary>
+        <summary aria-label="Menu">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+            <line x1="4" y1="9" x2="20" y2="9"></line>
+            <line x1="4" y1="15" x2="20" y2="15"></line>
+          </svg>
+        </summary>
         <nav class="mobile-nav-panel" aria-label="Mobile primary navigation">
           {nav.map(item => (
             <a href={item.href} class={isActive(item) ? 'active' : ''} aria-current={isActive(item) ? 'page' : undefined}>
               <span>{item.label}</span>
-              <span aria-hidden="true">↗</span>
             </a>
           ))}
-          <a href="/contact/" class="mobile-nav-contact">
-            <span>Discuss your problem</span>
-            <span aria-hidden="true">→</span>
-          </a>
         </nav>
       </details>
 
@@ -121,25 +119,19 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
 </script>
 
 <style>
+  /* Solid, not frosted: the header is a plain band with one hairline. */
   header {
     position: sticky;
     top: 0;
     z-index: 20;
-    background: color-mix(in srgb, var(--ie-canvas) 96%, transparent);
+    background: var(--ie-canvas);
     border-bottom: 1px solid var(--ie-rule);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     transition: background-color 120ms ease, border-color 120ms ease;
-  }
-
-  :global(html.dark) header {
-    background: color-mix(in srgb, var(--ie-canvas) 96%, transparent);
-    border-bottom-color: var(--ie-rule);
   }
 
   .header-inner {
     max-width: var(--width-visual, 1180px);
-    min-height: 64px;
+    min-height: 52px;
     margin: 0 auto;
     padding: 0 var(--space-5, 1.5rem);
     display: flex;
@@ -150,86 +142,60 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
 
   .header-left {
     display: flex;
+    flex: 1;
     align-items: center;
   }
 
   .brand {
     display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
+    align-items: center;
+    min-height: 44px;
     text-decoration: none;
   }
 
   .brand-name {
     font-family: var(--font-display);
     font-size: var(--ie-type-h4);
-    font-weight: 700;
+    font-weight: 600;
     color: var(--ie-ink);
-    letter-spacing: -0.025em;
-    white-space: nowrap;
-  }
-
-  .brand-role {
-    display: inline-block;
-    padding-left: 0.75rem;
-    border-left: 1px solid var(--ie-rule);
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    letter-spacing: -0.02em;
     white-space: nowrap;
   }
 
   .main-nav {
     display: flex;
-    gap: clamp(1rem, 2vw, 1.75rem);
+    gap: clamp(1.25rem, 2.5vw, 2.25rem);
     align-items: center;
   }
 
-  /* Current section is marked by a rule, not a filled pill. The accent is
-     reserved for links and hover so it still reads as emphasis elsewhere. */
   .main-nav a {
-    position: relative;
     display: inline-flex;
-    min-height: 36px;
+    min-height: 44px;
     align-items: center;
-    padding: 0.35rem 0.1rem;
-    color: var(--ie-muted);
+    color: var(--ie-ink-secondary);
     font-family: var(--font-sans);
     font-size: var(--ie-type-ui);
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: -0.01em;
     text-decoration: none;
     transition: color 120ms ease;
   }
 
-  .main-nav a:hover {
+  .main-nav a:hover,
+  .main-nav a.active {
     color: var(--ie-ink);
-    text-decoration: none;
   }
 
   .main-nav a.active {
-    color: var(--ie-ink);
     font-weight: 600;
-    text-decoration: none;
-  }
-
-  .main-nav a.active::after {
-    position: absolute;
-    right: 0;
-    bottom: 0.2rem;
-    left: 0;
-    height: 1.5px;
-    background: var(--ie-ink);
-    content: '';
   }
 
   .header-right {
     display: flex;
+    flex: 1;
     align-items: center;
-    gap: 0.75rem;
+    justify-content: flex-end;
+    gap: 0.5rem;
   }
 
   .theme-toggle-btn {
@@ -238,18 +204,15 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
     justify-content: center;
     width: 44px;
     height: 44px;
-    border: 1px solid var(--ie-rule);
-    border-radius: 5px;
+    border: 0;
     background: transparent;
     color: var(--ie-muted);
     cursor: pointer;
-    transition: all 120ms ease;
+    transition: color 120ms ease;
   }
 
   .theme-toggle-btn:hover {
-    border-color: var(--ie-rule-strong);
     color: var(--ie-ink);
-    background: var(--ie-surface-raised);
   }
 
   .sun-icon { display: none; }
@@ -262,38 +225,26 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    padding: 0.4rem 0.8rem;
-    border: 1px solid var(--ie-ink);
-    border-radius: 5px;
-    background: var(--ie-ink);
-    color: var(--ie-canvas);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    color: var(--ie-blue);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
+    font-weight: 400;
+    letter-spacing: -0.01em;
     text-decoration: none;
-    transition: all 120ms ease;
   }
 
   .consult-cta:hover {
-    border-color: var(--ie-blue);
-    background: var(--ie-blue);
-    color: var(--ie-surface);
+    color: var(--ie-blue);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
   }
 
   .mobile-nav {
     display: none;
   }
 
-  @media (max-width: 1080px) {
-    .brand-role {
-      display: none;
-    }
-  }
-
-  @media (max-width: 900px) {
+  @media (max-width: 760px) {
     .header-inner {
-      min-height: 56px;
       padding: 0 var(--space-4, 1rem);
     }
 
@@ -301,27 +252,18 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
       display: none;
     }
 
-    .consult-cta {
-      display: none;
-    }
-
     .mobile-nav {
       display: block;
-      order: 2;
+      order: 3;
     }
 
     .mobile-nav summary {
       display: inline-flex;
-      min-width: 54px;
-      min-height: 44px;
+      width: 44px;
+      height: 44px;
       align-items: center;
       justify-content: center;
-      border: 1px solid var(--ie-rule-strong);
-      border-radius: 5px;
       color: var(--ie-ink);
-      font-family: var(--font-mono);
-      font-size: var(--ie-type-label);
-      font-weight: 600;
       cursor: pointer;
       list-style: none;
     }
@@ -330,23 +272,16 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
       display: none;
     }
 
-    .mobile-nav[open] summary {
-      border-color: var(--ie-blue);
-      background: var(--ie-blue-soft);
-      color: var(--ie-blue);
-    }
-
     .mobile-nav-panel {
       position: fixed;
-      top: 56px;
+      top: 53px;
       right: 0;
+      bottom: 0;
       left: 0;
-      display: grid;
-      padding: 0.6rem 1rem 1rem;
-      border-top: 1px solid var(--ie-rule);
-      border-bottom: 1px solid var(--ie-rule-strong);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 1.5rem 2rem;
       background: var(--ie-canvas);
-      box-shadow: 0 16px 32px color-mix(in srgb, var(--ie-ink) 8%, transparent);
     }
 
     .mobile-nav:not([open]) .mobile-nav-panel {
@@ -355,35 +290,22 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
 
     .mobile-nav-panel a {
       display: flex;
-      min-height: 46px;
+      min-height: 52px;
       align-items: center;
-      justify-content: space-between;
       border-bottom: 1px solid var(--ie-rule);
-      color: var(--ie-ink-secondary);
-      font-family: var(--font-mono);
-      font-size: var(--ie-type-ui);
+      color: var(--ie-ink);
+      font-family: var(--font-display);
+      font-size: var(--ie-type-h3);
+      font-weight: 600;
+      letter-spacing: -0.02em;
       text-decoration: none;
     }
 
     .mobile-nav-panel a.active {
-      color: var(--ie-ink);
-      font-weight: 600;
-      background: var(--ie-blue-soft);
-      border-radius: var(--radius-sm, 4px);
-      padding-inline: 0.5rem;
+      color: var(--ie-muted);
     }
 
-    .mobile-nav-panel .mobile-nav-contact {
-      margin-top: 0.6rem;
-      padding-inline: 0.8rem;
-      border: 1px solid var(--ie-ink);
-      border-radius: 5px;
-      background: var(--ie-ink);
-      color: var(--ie-canvas);
-    }
-
-    .theme-toggle-btn {
-      order: 1;
-    }
+    .consult-cta { order: 1; }
+    .theme-toggle-btn { order: 2; }
   }
 </style>

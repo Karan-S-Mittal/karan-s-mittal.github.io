@@ -1,36 +1,35 @@
-@import '@fontsource/plus-jakarta-sans/latin-500.css';
+/* Two weights per family: 400 for reading, 600 for emphasis. Mono is for
+   dates and code only, so it needs just the regular cut. */
 @import '@fontsource/plus-jakarta-sans/latin-600.css';
-@import '@fontsource/plus-jakarta-sans/latin-700.css';
-@import '@fontsource/plus-jakarta-sans/latin-800.css';
 @import '@fontsource/inter/latin-400.css';
-@import '@fontsource/inter/latin-500.css';
 @import '@fontsource/inter/latin-600.css';
-@import '@fontsource/inter/latin-700.css';
 @import '@fontsource/jetbrains-mono/latin-400.css';
-@import '@fontsource/jetbrains-mono/latin-500.css';
-@import '@fontsource/jetbrains-mono/latin-600.css';
 
 /* ================================================================
-   Design Tokens — Soft Architecture v1
-   Authentic clean paper canvas, anchor blue accent, deep ink structure.
+   Design Tokens — Soft Architecture v2
+   Apple-clean: white field, neutral greys, one blue for everything
+   clickable. Whitespace separates sections; rules only divide list items.
    ================================================================ */
 
 :root {
   color-scheme: light;
 
-  /* Semantic Color Palette — Minimal Neutral Monochromatic */
-  --ie-canvas: #f9f9f8;
+  /* Semantic Color Palette — neutral greys, single blue accent */
+  --ie-canvas: #ffffff;
   --ie-surface: #ffffff;
   /* Third-party Tally form supplies dark text independently of the site theme. */
   --ie-embed-surface: #ffffff;
-  --ie-surface-raised: #f2f2f0;
-  --ie-ink: #111111;
-  --ie-ink-secondary: #444444;
-  --ie-muted: #666666;
-  --ie-rule: #e5e5e2;
-  --ie-rule-strong: #d1d1cc;
-  --ie-blue: #b45309;
-  --ie-blue-soft: #fef3c7;
+  --ie-surface-raised: #f5f5f7;
+  --ie-ink: #1d1d1f;
+  --ie-ink-secondary: #424245;
+  --ie-muted: #6e6e73;
+  --ie-rule: #e8e8ed;
+  --ie-rule-strong: #d2d2d7;
+  --ie-blue: #0066cc;
+  --ie-blue-soft: #e8f1fb;
+  /* Button fill: holds 4.5:1 against white text in both themes. */
+  --ie-button: #0066cc;
+  --ie-button-hover: #0058b0;
   --ie-rust: #9a3412;
   --ie-rust-soft: #ffedd5;
   --ie-verified: #15803d;
@@ -61,26 +60,28 @@
 
   /* Mechanistic & Memory Layout Tokens */
 
-  /* Standardized Typography Scale */
-  --ie-type-micro: 0.75rem;    /* 12px: badges, dots, offset readouts */
-  --ie-type-label: 0.8125rem;  /* 13px: metadata, tags, dates, diagram secondary */
-  --ie-type-ui: 0.875rem;      /* 14px: buttons, nav links, controls, box headers */
-  --ie-type-small: 0.9375rem;  /* 15px: card descriptions, captions */
-  --ie-type-base: 1rem;        /* 16px: standard base UI / lead */
-  --ie-type-body: 1.125rem;    /* 18px: essay reading prose & hero lead */
-  --ie-type-h4: 1.0625rem;     /* 17px: sub-headers, box titles */
-  --ie-type-h3: 1.25rem;       /* 20px: card and panel titles */
-  --ie-type-h2: clamp(1.4rem, 2.4vw, 1.85rem); /* 22.4–29.6px: major section titles */
-  --ie-type-h1: clamp(2rem, 3.8vw, 2.75rem);   /* 32–44px: page display titles */
+  /* Type scale: eight sizes in total. Several legacy token names alias the
+     same step so components keep working while the scale stays small.
+       13 caption · 15 small · 17 body · 19 lead · 22 title · h2 · h1 · display */
+  --ie-type-caption: 0.8125rem; /* 13px: dates, captions, footer */
+  --ie-type-micro: var(--ie-type-caption);
+  --ie-type-label: var(--ie-type-caption);
+  --ie-type-small: 0.9375rem;  /* 15px: nav, eyebrows, secondary text, buttons */
+  --ie-type-ui: var(--ie-type-small);
+  --ie-type-base: 1.0625rem;   /* 17px: body */
+  --ie-type-h4: var(--ie-type-base);
+  --ie-type-body: 1.1875rem;   /* 19px: page leads */
+  --ie-type-h3: 1.375rem;      /* 22px: list-item titles */
+  --ie-type-display: clamp(2.5rem, 6vw, 4.5rem); /* homepage hero only */
+  --ie-type-h2: clamp(1.75rem, 3.2vw, 2.5rem); /* 28–40px: section headlines */
+  --ie-type-h1: clamp(2.25rem, 5vw, 3.5rem);   /* 36–56px: page headlines */
 
   /* Legacy & Semantic Mapping */
   --bg-elevated: var(--ie-surface);
   --text: var(--ie-ink);
   --accent: var(--ie-blue);
-  /* Derived from the accent so it tracks the palette. The previous literal
-     #246fa0 was a steel blue left over from the pre-amber palette, so every
-     primary button and link hover jumped hue in light mode. */
-  --accent-hover: color-mix(in oklab, var(--ie-blue) 78%, var(--ie-ink));
+  /* Derived from the accent so it tracks the palette. */
+  --accent-hover: color-mix(in oklab, var(--ie-blue) 82%, #000);
   --link: var(--ie-blue);
   --link-hover: var(--accent-hover);
   --interactive-focus: var(--ie-blue);
@@ -104,7 +105,9 @@
   --radius-sm: 4px;
   --radius: 6px;
   --radius-card: 8px;
-  --radius-pill: 999px;
+  /* The one control shape: an Apple-style rounded square. Browsers that
+     support corner-shape render it as a true squircle. */
+  --radius-control: 12px;
 
   /* Layout Dimensions */
   --width-content: 960px;
@@ -124,17 +127,19 @@
 :root.dark,
 html.dark {
   color-scheme: dark;
-  --ie-canvas: #111111;
-  --ie-surface: #191919;
+  --ie-canvas: #000000;
+  --ie-surface: #1d1d1f;
   --ie-embed-surface: #ffffff;
-  --ie-surface-raised: #242424;
-  --ie-ink: #f5f5f4;
-  --ie-ink-secondary: #d6d3d1;
-  --ie-muted: #a8a29e;
-  --ie-rule: #292524;
-  --ie-rule-strong: #44403c;
-  --ie-blue: #f59e0b;
-  --ie-blue-soft: #2e2008;
+  --ie-surface-raised: #1d1d1f;
+  --ie-ink: #f5f5f7;
+  --ie-ink-secondary: #d2d2d7;
+  --ie-muted: #a1a1a6;
+  --ie-rule: #2c2c2e;
+  --ie-rule-strong: #424245;
+  --ie-blue: #2997ff;
+  --ie-blue-soft: #0b2540;
+  --ie-button: #0071e3;
+  --ie-button-hover: #0062c4;
   --ie-rust: #fb923c;
   --ie-rust-soft: #381e0d;
   --ie-verified: #4ade80;
@@ -155,8 +160,8 @@ html.dark {
   --brand-vscode: #38bdf8;
   --brand-docker: #38bdf8;
 
-  /* --link-hover and --interactive-primary-hover indirect through this. */
-  --accent-hover: #fcd34d;
+  /* --link-hover indirects through this. */
+  --accent-hover: #6bb8ff;
 }
 
 /* ================================================================
@@ -180,8 +185,9 @@ body {
   font-family: var(--font-sans);
   background-color: var(--ie-canvas);
   color: var(--ie-ink);
-  line-height: 1.72;
-  font-size: 18px;
+  line-height: 1.6;
+  font-size: 17px;
+  letter-spacing: -0.011em;
   font-feature-settings: 'ss01' on, 'ss03' on;
   text-rendering: optimizeLegibility;
   transition: background-color 140ms ease, color 140ms ease;
@@ -191,12 +197,6 @@ body {
 body > footer {
   position: relative;
   z-index: 1;
-}
-
-@media (max-width: 720px) {
-  body {
-    font-size: 17px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -231,17 +231,17 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: var(--ie-type-h1);
-  font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
   margin-bottom: var(--space-4);
 }
 
 h2 {
   font-size: var(--ie-type-h2);
-  font-weight: 650;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.018em;
   margin: var(--space-7) 0 var(--space-3);
 }
 
@@ -285,19 +285,85 @@ a:hover {
   text-decoration: none;
 }
 
-/* Inline text links get a soft, subtle pill highlight on hover instead of an underline */
-p a, li a, .post-standfirst a, .lead a {
-  padding: 0.1em 0.35em;
-  margin: -0.1em -0.1em;
-  border-radius: var(--radius-sm, 4px);
-  background: transparent;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+/* Inline text links: blue, underlined on hover only. */
+p a:hover, li a:hover, .post-standfirst a:hover, .lead a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
 }
 
-p a:hover, li a:hover, .post-standfirst a:hover, .lead a:hover {
-  background: var(--ie-blue-soft);
-  color: var(--ie-ink);
+/* ================================================================
+   Shared controls
+   ================================================================ */
+
+/* Small sentence-case label above a heading. Mono is reserved for dates,
+   code, and data, so eyebrows are set in the sans. */
+.eyebrow {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--ie-muted);
+  font-family: var(--font-sans);
+  font-size: var(--ie-type-small);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+}
+
+/* The one button: blue fill, rounded square. One per page. */
+.button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  padding: 0.6rem 1.25rem;
+  border: 0;
+  border-radius: var(--radius-control);
+  corner-shape: squircle;
+  background: var(--ie-button);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: var(--ie-type-base);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
   text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.button:hover {
+  background: var(--ie-button-hover);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Everything else that navigates: a blue text link with a chevron. */
+.more-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.15em;
+  color: var(--ie-blue);
+  font-family: var(--font-sans);
+  font-size: var(--ie-type-base);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.more-link::after {
+  content: '\203A';
+  font-size: 1.2em;
+  line-height: 1;
+  transform: translateY(-0.04em);
+}
+
+.more-link:hover {
+  color: var(--ie-blue);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 ul, ol {
@@ -311,7 +377,7 @@ li {
 }
 
 li::marker {
-  color: var(--ie-blue);
+  color: var(--ie-muted);
 }
 
 time, table, .label {
@@ -367,7 +433,7 @@ pre code {
   min-height: 44px;
   font-size: var(--ie-type-micro);
   font-family: var(--font-sans);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ie-muted);
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -407,7 +473,7 @@ pre:focus-within .copy-code { opacity: 1; }
   background: var(--ie-ink);
   color: var(--ie-canvas);
   font-size: var(--ie-type-ui);
-  font-weight: 500;
+  font-weight: 600;
   border-radius: var(--radius);
   text-decoration: none;
   transform: translateY(-200%);
@@ -422,8 +488,8 @@ article blockquote {
   padding: 0 0 0 var(--space-5);
   border-left: 3px solid var(--ie-blue);
   color: var(--ie-ink-secondary);
-  font-size: 1.35rem;
-  font-weight: 500;
+  font-size: var(--ie-type-body);
+  font-weight: 400;
   line-height: 1.45;
 }
 

@@ -1,0 +1,191 @@
+---
+/**
+ * Homepage hero figure: a question, the knowledge graph it resolves against,
+ * and an answer that carries its evidence path. Illustrative data.
+ *
+ * Two layouts share one grammar: a horizontal figure for wide screens and a
+ * vertical one below 860px, so labels never render smaller than 12px.
+ */
+import '../primitives/diagram.css';
+
+interface Tile {
+  x: number;
+  y: number;
+  w: number;
+  label: string;
+  active?: boolean;
+}
+
+const H = 44; // graph tile height, both layouts
+
+const wideTiles: Tile[] = [
+  { x: 260, y: 40, w: 110, label: 'Supplier Y' },
+  { x: 260, y: 128, w: 110, label: 'Supplier X', active: true },
+  { x: 420, y: 40, w: 110, label: 'Lot 17' },
+  { x: 420, y: 128, w: 110, label: 'Lot 42', active: true },
+  { x: 420, y: 228, w: 110, label: 'Cert C-7', active: true },
+  { x: 580, y: 16, w: 110, label: 'Batch 3' },
+  { x: 580, y: 88, w: 110, label: 'Batch 7', active: true },
+  { x: 580, y: 168, w: 110, label: 'Batch 9', active: true },
+];
+
+// [path, active, draw-order]. Rounded bends use quadratic corners (r ≈ 7).
+const wideLines: [string, boolean, number][] = [
+  ['M200 150 H258', true, 0],
+  ['M370 150 H420', true, 1],
+  ['M370 62 H420', false, 0],
+  ['M530 150 H548 Q555 150 555 143 V117 Q555 110 562 110 H580', true, 2],
+  ['M530 150 H548 Q555 150 555 157 V183 Q555 190 562 190 H580', true, 2],
+  ['M475 172 V228', true, 2],
+  ['M530 62 H548 Q555 62 555 55 V45 Q555 38 562 38 H580', false, 0],
+  ['M690 110 H712 Q720 110 720 118 V147 Q720 155 728 155 H748', true, 3],
+  ['M690 190 H712 Q720 190 720 182 V163 Q720 155 728 155 H748', true, 3],
+  ['M530 250 H712 Q720 250 720 242 V163', true, 3],
+];
+
+const narrowTiles: Tile[] = [
+  { x: 20, y: 120, w: 150, label: 'Supplier X', active: true },
+  { x: 190, y: 120, w: 150, label: 'Supplier Y' },
+  { x: 20, y: 200, w: 150, label: 'Lot 42', active: true },
+  { x: 190, y: 200, w: 150, label: 'Lot 17' },
+  { x: 20, y: 280, w: 75, label: 'Batch 7', active: true },
+  { x: 105, y: 280, w: 75, label: 'Batch 9', active: true },
+  { x: 190, y: 280, w: 75, label: 'Cert C-7', active: true },
+  { x: 275, y: 280, w: 65, label: 'Batch 3' },
+];
+
+const narrowLines: [string, boolean, number][] = [
+  ['M95 86 V118', true, 0],
+  ['M95 164 V200', true, 1],
+  ['M265 164 V200', false, 0],
+  ['M95 244 V256 Q95 262 89 262 H64 Q57.5 262 57.5 268 V280', true, 2],
+  ['M95 244 V256 Q95 262 101 262 H136 Q142.5 262 142.5 268 V280', true, 2],
+  ['M95 244 V256 Q95 262 101 262 H221 Q227.5 262 227.5 268 V280', true, 2],
+  ['M265 244 V256 Q265 262 271 262 H301 Q307.5 262 307.5 268 V280', false, 0],
+  ['M57.5 324 V338 Q57.5 344 64 344 H136 Q142.5 344 142.5 350 V378', true, 3],
+  ['M142.5 324 V378', true, 3],
+  ['M227.5 324 V338 Q227.5 344 221 344 H149 Q142.5 344 142.5 350', true, 3],
+];
+
+const delay = (order: number) => `transition-delay: ${order * 220}ms`;
+const description =
+  'The question "Which batches used supplier X’s resin?" resolves against a knowledge graph. ' +
+  'The evidence path runs from Supplier X to Lot 42, which feeds Batch 7 and Batch 9 and is covered by certificate C-7. ' +
+  'Supplier Y, Lot 17 and Batch 3 are in the graph but not on the path. ' +
+  'The answer, Batches 7 and 9, cites Lot 42, purchase order 1187 and certificate C-7 as its sources.';
+---
+
+<div class="evidence-trail" data-draw>
+  <svg class="dg dg-wide" viewBox="0 0 960 280" role="img" aria-labelledby="et-title et-desc">
+    <title id="et-title">An answer that carries its evidence trail</title>
+    <desc id="et-desc">{description}</desc>
+
+    <rect class="dg-tile" x="0" y="106" width="200" height="88" rx="14" />
+    <text class="dg-sub" x="20" y="130">Question</text>
+    <text class="dg-label dg-label--lg" x="20" y="154">Which batches used</text>
+    <text class="dg-label dg-label--lg" x="20" y="174">supplier X’s resin?</text>
+
+    {wideLines.map(([d, active, order]) => (
+      <path
+        class:list={['dg-line', { 'dg-line--active dg-draw': active }]}
+        d={d}
+        pathLength={active ? 1 : undefined}
+        style={active ? delay(order) : undefined}
+      />
+    ))}
+    <path class="dg-arrow" d="M252 145 L258 150 L252 155" />
+    <path class="dg-arrow" d="M742 150 L748 155 L742 160" />
+
+    {wideTiles.map((t) => (
+      <g>
+        <rect class:list={['dg-tile', { 'dg-tile--active': t.active }]} x={t.x} y={t.y} width={t.w} height={H} rx="12" />
+        <text class:list={['dg-label', { 'dg-label--muted': !t.active }]} x={t.x + t.w / 2} y={t.y + H / 2} text-anchor="middle" dominant-baseline="central">{t.label}</text>
+      </g>
+    ))}
+
+    <rect class="dg-tile" x="750" y="100" width="210" height="110" rx="14" />
+    <text class="dg-sub" x="770" y="126">Answer</text>
+    <text class="dg-label dg-label--lg" x="770" y="150">Batches 7 and 9</text>
+    <path class="dg-check" d="M770 171 l3.5 3.5 l6.5 -7.5" />
+    <text class="dg-sub" x="788" y="176">Lot 42 · PO 1187</text>
+    <path class="dg-check" d="M770 193 l3.5 3.5 l6.5 -7.5" />
+    <text class="dg-sub" x="788" y="198">Cert C-7</text>
+  </svg>
+
+  <svg class="dg dg-narrow" viewBox="0 0 360 490" role="img" aria-labelledby="etn-title etn-desc">
+    <title id="etn-title">An answer that carries its evidence trail</title>
+    <desc id="etn-desc">{description}</desc>
+
+    <rect class="dg-tile" x="20" y="0" width="320" height="86" rx="14" />
+    <text class="dg-sub" x="40" y="24">Question</text>
+    <text class="dg-label dg-label--lg" x="40" y="48">Which batches used</text>
+    <text class="dg-label dg-label--lg" x="40" y="68">supplier X’s resin?</text>
+
+    {narrowLines.map(([d, active, order]) => (
+      <path
+        class:list={['dg-line', { 'dg-line--active dg-draw': active }]}
+        d={d}
+        pathLength={active ? 1 : undefined}
+        style={active ? delay(order) : undefined}
+      />
+    ))}
+    <path class="dg-arrow" d="M90 112 L95 118 L100 112" />
+    <path class="dg-arrow" d="M137.5 372 L142.5 378 L147.5 372" />
+
+    {narrowTiles.map((t) => (
+      <g>
+        <rect class:list={['dg-tile', { 'dg-tile--active': t.active }]} x={t.x} y={t.y} width={t.w} height={H} rx="12" />
+        <text class:list={['dg-label', { 'dg-label--muted': !t.active }]} x={t.x + t.w / 2} y={t.y + H / 2} text-anchor="middle" dominant-baseline="central">{t.label}</text>
+      </g>
+    ))}
+
+    <rect class="dg-tile" x="20" y="380" width="320" height="110" rx="14" />
+    <text class="dg-sub" x="40" y="406">Answer</text>
+    <text class="dg-label dg-label--lg" x="40" y="430">Batches 7 and 9</text>
+    <path class="dg-check" d="M40 451 l3.5 3.5 l6.5 -7.5" />
+    <text class="dg-sub" x="58" y="456">Lot 42 · PO 1187</text>
+    <path class="dg-check" d="M40 473 l3.5 3.5 l6.5 -7.5" />
+    <text class="dg-sub" x="58" y="478">Cert C-7</text>
+  </svg>
+</div>
+
+<script is:inline>
+  // Runs during parsing so the path is hidden before first paint, then traces
+  // in once the figure is on screen. Skipped under reduced motion.
+  (function () {
+    var fig = document.currentScript && document.currentScript.previousElementSibling;
+    if (!fig || !('IntersectionObserver' in window)) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    fig.setAttribute('data-draw', 'pending');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        requestAnimationFrame(function () { fig.setAttribute('data-draw', 'done'); });
+        io.disconnect();
+      });
+    }, { threshold: 0.3 });
+    io.observe(fig);
+  })();
+</script>
+
+<style>
+  .evidence-trail {
+    width: 100%;
+  }
+
+  .dg-narrow {
+    display: none;
+    max-width: 420px;
+    margin-inline: auto;
+  }
+
+  @media (max-width: 860px) {
+    .dg-wide {
+      display: none;
+    }
+
+    .dg-narrow {
+      display: block;
+    }
+  }
+</style>

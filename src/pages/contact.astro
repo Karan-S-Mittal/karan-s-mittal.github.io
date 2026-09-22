@@ -7,8 +7,8 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 ---
 
 <Layout
-  title="Start a Conversation | Karan Mittal"
-  description="Start a consulting, collaboration, or technical conversation with Karan Mittal."
+  title="Contact | Karan Mittal"
+  description="Start a conversation with Karan Mittal about a knowledge system, an LLM evaluation, or a talk."
 >
   <main class="container contact-page">
     <PageHeader
@@ -18,31 +18,25 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     />
 
     <div class="contact-actions">
-      <a class="email-action" href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>Email me →</a>
-      <a href="#tally-container">Use the contact form ↓</a>
+      <a class="button" href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>Email me</a>
+      <a class="more-link" href="#tally-container">Use the contact form</a>
     </div>
 
     <div class="contact-layout">
       <aside class="contact-aside" aria-label="Consulting guidance">
         <div class="aside-brief-card">
           <div class="brief-section">
-            <p class="aside-label">A useful first note</p>
-            <p>Describe what is happening, its impact on the team or organisation, and any timing or constraints that matter. You do not need a finished brief or a chosen technology.</p>
-          </div>
-
-          <div class="brief-section">
             <p class="aside-label">Engagement scope</p>
             <ul class="aside-list">
-              <li><span>→</span> System reviews and problem diagnosis</li>
-              <li><span>→</span> Design, implementation, and handover</li>
-              <li><span>→</span> Technical advisory, speaking, and workshops</li>
+              <li>Reviews of existing knowledge and retrieval systems</li>
+              <li>Knowledge graph and evaluation design, build, and handover</li>
+              <li>Technical advisory, talks, and workshops</li>
             </ul>
           </div>
 
           <div class="brief-section">
             <p class="aside-label">What happens next</p>
             <p>I review messages personally. Response timing depends on current commitments, so include any real deadline. If there is a fit, we’ll clarify scope, useful outcomes, and next steps before agreeing on an engagement.</p>
-            <a class="engagement-link" href="/#practice">Explore ways to work together →</a>
           </div>
 
           <div class="brief-section quiet-route">
@@ -63,8 +57,8 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 
       <section class="form-panel" aria-label="Engineering conversation form">
         <div class="form-panel-head">
-          <p class="form-register">Start a conversation</p>
-          <p>Use the form below or send an email. A high-level description is enough for the first conversation. The embedded form is provided by Tally under its <a href="https://tally.so/help/privacy-policy" target="_blank" rel="noopener">privacy notice</a>; do not include credentials, private keys, or regulated personal data.</p>
+          <p class="form-register">Contact form</p>
+          <p>The form is provided by Tally under its <a href="https://tally.so/help/privacy-policy" target="_blank" rel="noopener">privacy notice</a>.</p>
         </div>
 
         <div class="iframe-container" id="tally-container">
@@ -150,26 +144,12 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     padding-bottom: clamp(3rem, 6vw, 6rem);
   }
 
-  .contact-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
-  .email-action {
-    display: inline-flex;
+  .contact-actions {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    min-height: 44px;
-    padding: 0.65rem 1.15rem;
-    border: 1px solid var(--ie-ink);
-    background: var(--ie-ink);
-    color: var(--ie-canvas);
-    border-radius: var(--radius, 4px);
-    font-family: var(--font-sans);
-    font-size: var(--ie-type-ui);
-    font-weight: 500;
-    text-decoration: none;
-    transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
-  }
-  .email-action:hover {
-    border-color: var(--ie-blue);
-    background: var(--ie-blue);
-    color: var(--ie-surface);
+    gap: 0.75rem 1.75rem;
+    margin-top: calc(-1 * var(--space-7));
   }
   #tally-container { scroll-margin-top: 5rem; }
 
@@ -178,7 +158,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
     gap: clamp(2rem, 4vw, 3.5rem);
     align-items: start;
-    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+    margin-top: clamp(4rem, 8vw, 6rem);
   }
 
   .contact-aside {
@@ -186,7 +166,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
   }
 
   .aside-brief-card {
-    border-top: 1px solid var(--ie-rule-strong);
+    border-top: 1px solid var(--ie-rule);
   }
 
   .brief-section {
@@ -198,29 +178,20 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     border-bottom: 0;
   }
 
-  .engagement-link {
-    display: inline-block;
-    margin-top: 0.8rem;
-    font-family: var(--font-sans);
-    font-size: var(--ie-type-ui);
-    font-weight: 500;
-  }
-
   .aside-label {
-    margin: 0 0 0.65rem;
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    font-weight: 500;
-    letter-spacing: 0.055em;
-    text-transform: uppercase;
+    margin: 0 0 0.5rem;
+    color: var(--ie-ink);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-small);
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   .brief-section p:not(.aside-label) {
     margin: 0;
     color: var(--ie-ink-secondary);
-    font-size: var(--ie-type-ui);
-    line-height: 1.6;
+    font-size: var(--ie-type-small);
+    line-height: 1.55;
   }
 
   .aside-list {
@@ -232,15 +203,10 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
   }
 
   .aside-list li {
-    display: flex;
-    gap: 0.5rem;
+    margin: 0;
     color: var(--ie-ink-secondary);
-    font-size: var(--ie-type-ui);
+    font-size: var(--ie-type-small);
     line-height: 1.5;
-  }
-
-  .aside-list li span {
-    color: var(--ie-rule-strong);
   }
 
   .route-links {
@@ -257,26 +223,20 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     padding: 0.35rem 0;
     min-height: 44px;
     overflow-wrap: anywhere;
-    border-bottom: 1px solid var(--ie-rule);
-    color: var(--ie-ink-secondary);
+    color: var(--ie-blue);
     font-family: var(--font-sans);
-    font-size: var(--ie-type-ui);
+    font-size: var(--ie-type-small);
     text-decoration: none;
-    transition: color 120ms ease, border-color 120ms ease;
   }
 
-  .route-link:hover {
-    border-bottom-color: var(--ie-ink);
-    color: var(--ie-ink);
-  }
-
-  .route-link .arrow {
-    color: var(--ie-muted);
+  .route-link:hover span:first-child {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
   }
 
   .form-panel {
     min-height: 540px;
-    border-top: 1px solid var(--ie-rule-strong);
+    border-top: 1px solid var(--ie-rule);
     padding-top: 1.35rem;
   }
 
@@ -288,16 +248,15 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 
   .form-register {
     display: block;
-    margin: 0 0 0.75rem;
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    margin: 0 0 0.5rem;
+    color: var(--ie-ink);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-small);
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
-  .form-panel-head p {
+  .form-panel-head p:not(.form-register) {
     margin: 0;
     color: var(--ie-ink-secondary);
     font-size: var(--ie-type-ui);
@@ -306,7 +265,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 
   .iframe-container {
     background: var(--ie-embed-surface);
-    border-radius: var(--radius, 6px);
+    border-radius: var(--radius-control);
     position: relative;
     width: 100%;
     min-height: 380px;
@@ -322,7 +281,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     padding: 1.5rem;
     background: var(--ie-surface);
     border: 1px solid var(--ie-rule);
-    border-radius: var(--radius, 6px);
+    border-radius: var(--radius-control);
     transition: opacity 280ms ease, visibility 280ms ease;
   }
 
@@ -348,9 +307,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 
   .skeleton-status {
     color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-    letter-spacing: 0.06em;
+    font-size: var(--ie-type-caption);
   }
 
   .skeleton-line {
@@ -366,7 +323,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 
   .skeleton-box {
     height: 120px;
-    border-radius: var(--radius, 6px);
+    border-radius: var(--radius-control);
     background: var(--ie-surface-raised);
     border: 1px solid var(--ie-rule);
     margin-top: 0.5rem;
@@ -376,7 +333,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
   .skeleton-button {
     width: 130px;
     height: 36px;
-    border-radius: var(--radius, 6px);
+    border-radius: var(--radius-control);
     background: var(--ie-surface-raised);
     border: 1px solid var(--ie-rule);
     animation: shimmer 1.8s infinite ease-in-out;
@@ -393,7 +350,7 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
     display: block;
     width: 100%;
     border: 0;
-    border-radius: var(--radius, 6px);
+    border-radius: var(--radius-control);
   }
 
   .form-error,

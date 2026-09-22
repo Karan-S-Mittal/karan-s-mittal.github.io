@@ -13,5 +13,5 @@ export async function getStaticPaths() {
   return [...tags].map((tag) => ({ params: { tag } }));
 }
 
-return Astro.redirect('/writing/', 301);
+return Astro.redirect('/publications/', 301);
 ---

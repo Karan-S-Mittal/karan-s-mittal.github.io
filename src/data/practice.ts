@@ -2,12 +2,17 @@
  * The three failure modes this practice exists to fix.
  *
  * Deliberately compressed: one problem line, one intervention line. Detail
- * belongs in a conversation, not on the homepage.
+ * belongs in a conversation, not on the homepage. Agents are one application
+ * of graph-grounded verification, not the headline.
  */
+
+/** The small figures drawn by src/components/diagram/home/PracticeGlyph.astro. */
+export type GlyphKind = 'provenance' | 'evaluation' | 'verification';
 
 export interface PracticeArea {
   id: string;
-  num: string;
+  /** Which small figure sits beside the item on the homepage. */
+  diagram: GlyphKind;
   /** The failure as a team would describe it. */
   problem: string;
   /** What gets built in response. */
@@ -16,24 +21,24 @@ export interface PracticeArea {
 
 export const practiceAreas: PracticeArea[] = [
   {
-    id: 'reliability',
-    num: '01',
-    problem: 'Agents hallucinate tool calls and break in production.',
+    id: 'traceability',
+    diagram: 'provenance',
+    problem: 'Answers can’t be traced back to evidence.',
     intervention:
-      'Deterministic state machines, schema-enforced tool routing, sandboxed execution, and regression gates that run on every prompt or model change.',
+      'Knowledge graphs that keep provenance on every entity and claim — source, version, and confidence — so any answer can be walked back to the records behind it.',
   },
   {
-    id: 'state',
-    num: '02',
-    problem: 'Multi-agent state leaks across sessions and handoffs deadlock.',
+    id: 'evaluation',
+    diagram: 'evaluation',
+    problem: 'No one can say whether the model is getting better or worse.',
     intervention:
-      'A tiered memory plane — episodic recall, session compaction, semantic retrieval — with explicit supervisor-worker protocols and loop-breakers.',
+      'Evaluation suites built from real questions and graded against ground truth, run as a regression gate on every prompt, model, or data change.',
   },
   {
-    id: 'scale',
-    num: '03',
-    problem: 'Inference cost and p99 latency scale out of control.',
+    id: 'agents',
+    diagram: 'verification',
+    problem: 'Agents act on claims no one has checked.',
     intervention:
-      'Semantic caching, prompt distillation, context-budget pruning, and dynamic routing between frontier and compact models.',
+      'Graph-grounded verification between retrieval and action: what an agent is about to rely on is checked against the knowledge graph before the tool call goes through.',
   },
 ];

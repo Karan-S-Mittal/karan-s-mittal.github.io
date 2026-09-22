@@ -5,11 +5,11 @@ description: Write and revise evidence-backed engineering essays for Karan Mitta
 
 # Engineering essays
 
-Explain the mechanism, the constraint, and what the evidence supports. `AGENTS.md` owns voice and design tokens; do not restate a palette here.
+Explain the mechanism, the constraint, and what the evidence supports. `AGENTS.md` owns voice; the [site-design skill](../site-design/SKILL.md) owns page styling; do not restate a palette here.
 
 ## Author
 
-Scaffold with `npm run new`, which fills `src/content/blog/_template.mdx`. Essays live in the `blog` collection and publish under `/writing/<slug>/`. Preserve the structure of existing articles unless the request calls for restructuring.
+Scaffold with `npm run new`, which fills `src/content/blog/_template.mdx`. Essays live in the `blog` collection, publish under `/writing/<slug>/`, and are listed automatically in the Writing section of `/publications/` and on the homepage. Preserve the structure of existing articles unless the request calls for restructuring.
 
 Frontmatter is validated by `src/content.config.ts`. Beyond the scaffolded fields:
 
@@ -29,7 +29,7 @@ Equations use KaTeX (`remark-math` + `rehype-katex`, already wired). Define ever
 
 ## Illustrate only when it earns the space
 
-Build visuals with the sibling [diagram-craft skill](../diagram-craft/SKILL.md) and import the component into the article. Caption it with a plain `<figure>`/`<figcaption>`; never copy diagram markup into the MDX. There is no `<Exhibit>` component any more.
+Build visuals with the sibling [diagram-craft skill](../diagram-craft/SKILL.md) in its Apple-style grammar (soft tiles, hairlines, one blue path) and import the component into the article. Caption it with a plain `<figure>` and `<figcaption class="dg-caption">`; never copy diagram markup into the MDX. There is no `<Exhibit>` component any more.
 
 Show physical slots, indices, buffers, and state changes when those are central to the explanation. Keep entity names and visual encodings consistent across figures. An interactive control has to reveal a meaningful change — otherwise use a static figure.
 
@@ -43,6 +43,7 @@ Run `npm run build`, then inspect the rendered page and its figures in both them
 
 ```
 npm run shot /writing/<slug>/
+npm run shot -- /writing/<slug>/ --mobile
 ```
 
 Read the PNGs it writes to `test-results/`. Report unresolved source or rendering gaps specifically rather than glossing them.

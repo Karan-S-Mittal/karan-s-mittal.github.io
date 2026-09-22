@@ -1,19 +1,18 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import Button from '@components/editorial/Button.astro';
 ---
 
 <Layout title="Page not found | Karan Mittal" description="This path does not resolve." robots="noindex, follow">
   <main class="container lost">
-    <p class="label">404 / Unresolved</p>
+    <p class="eyebrow">Error 404</p>
     <h1>This path does not resolve.</h1>
     <p class="lost-copy">
       The page you asked for was moved, renamed, or never existed.
       The rest of the site is intact.
     </p>
     <div class="lost-actions">
-      <Button href="/">Back to the homepage</Button>
-      <Button href="/writing" variant="secondary">Read the essays</Button>
+      <a class="button" href="/">Back to the homepage</a>
+      <a class="more-link" href="/publications/">Browse publications</a>
     </div>
   </main>
 </Layout>
@@ -32,6 +31,7 @@ import Button from '@components/editorial/Button.astro';
   .lost-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-3);
+    align-items: center;
+    gap: var(--space-3) var(--space-6);
   }
 </style>

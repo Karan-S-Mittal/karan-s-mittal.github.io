@@ -4,46 +4,40 @@ import PageHeader from '@components/content/PageHeader.astro';
 import { formatTalkDate } from '@utils/date';
 
 // Bump this date whenever this page's content is edited.
-const lastUpdated = new Date('2026-09-22');
+const lastUpdated = new Date('2026-09-23');
 
 const focusAreas = [
   {
     index: '01',
     category: 'Building',
-    status: 'ACTIVE',
     items: [
       { text: 'Co-founding and leading systems engineering at ', link: { text: 'Dextar.co', url: 'https://dextar.co' } },
       { text: 'Graph-grounded traceability and evidence screening pipelines for complex manufacturing supply chains' },
-      { text: 'Deterministic retrieval layers and bounded agent workflows for enterprise knowledge systems' },
+      { text: 'Knowledge systems that combine graph structure with LLM retrieval, where every answer carries its provenance' },
     ],
   },
   {
     index: '02',
     category: 'Investigating',
-    status: 'RESEARCH',
     items: [
-      { text: 'Git object storage, packfile delta compression limits, and quarantine mechanics under heavy concurrent write load' },
-      { text: 'CI runner container isolation boundaries: evaluating when image definitions fail to guarantee reproducible builds' },
-      { text: 'Code-review protocol topology: comparing commit-trailer Change-Id models against branch PR state machines' },
+      { text: 'Knowledge systems: when graph structure beats vector similarity for retrieval, and how to combine the two' },
+      { text: 'LLM evaluation: building ground-truth suites from real questions, and measuring where automated graders disagree with people' },
+      { text: 'Graph theory: what the structure of a knowledge graph reveals about missing or contradictory facts' },
     ],
   },
   {
     index: '03',
     category: 'Teaching',
-    status: 'ACTIVE',
     items: [
       { text: 'Organizing hands-on AI systems and LLMOps workshops at ', link: { text: 'MLIndore', url: 'https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/' } },
       { text: 'Mentoring engineers in systems architecture and distributed systems at ', link: { text: 'CodeVipassana', url: 'https://www.codevipassana.dev/' } },
-      { text: 'Hosting distributed systems and cloud infrastructure technical masterclasses with ', link: { text: 'GDG Cloud Indore', url: 'https://gdg.community.dev/gdg-cloud-indore/' } },
+      { text: 'Running distributed systems and cloud infrastructure workshops with ', link: { text: 'GDG Cloud Indore', url: 'https://gdg.community.dev/gdg-cloud-indore/' } },
     ],
   },
   {
     index: '04',
-    category: 'Changed My Mind About',
-    status: 'PERSPECTIVE',
+    category: 'Changed my mind about',
     items: [
-      { text: 'Review platforms vs protocols: moved from treating GitHub pull requests as universal to recognizing review identity as an independent protocol that should not be fused to Git object storage' },
-      { text: 'Containerization as reproducible builds: an OCI image configures layers and environments, but cannot guarantee deterministic reproducibility without content-addressed inputs and network isolation' },
       { text: 'General-purpose agent loops: shifted from open-ended autonomous agent workflows to bounded, specialized paths backed by explicit graph-grounded verification gates' },
     ],
   },
@@ -57,35 +51,24 @@ const focusAreas = [
   <main class="container now-page">
     <PageHeader
       label="Now"
-      title="Current systems focus and priorities."
-      description="A living snapshot of current work, public writing, systems research, and community activity."
+      title="What I’m focused on now."
+      description="Current work, research, and community activity. Updated when something changes."
     />
 
     <div class="now-grid">
       {focusAreas.map((area) => (
         <section class="now-card" aria-labelledby={`focus-${area.index}`}>
-          <div class="card-header">
-            <div class="header-left">
-              <span class="index-num">{area.index}</span>
-              <h2 id={`focus-${area.index}`}>{area.category}</h2>
-            </div>
-            <span class={`status ${area.status.toLowerCase().replace(/\s+/g, '-')}`}>
-              {area.status}
-            </span>
-          </div>
+          <h2 id={`focus-${area.index}`}>{area.category}</h2>
 
           <ul class="focus-list">
             {area.items.map((item) => (
               <li>
-                <span class="bullet" aria-hidden="true">→</span>
-                <span>
-                  {item.text}
-                  {item.link && (
-                    <a href={item.link.url} target={item.link.url.startsWith('http') ? '_blank' : undefined} rel={item.link.url.startsWith('http') ? 'noopener' : undefined}>
-                      {item.link.text}
-                    </a>
-                  )}
-                </span>
+                {item.text}
+                {item.link && (
+                  <a href={item.link.url} target={item.link.url.startsWith('http') ? '_blank' : undefined} rel={item.link.url.startsWith('http') ? 'noopener' : undefined}>
+                    {item.link.text}
+                  </a>
+                )}
               </li>
             ))}
           </ul>
@@ -108,132 +91,58 @@ const focusAreas = [
 
   .now-grid {
     display: grid;
-    border-top: 1px solid var(--ie-rule-strong);
-    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+    border-top: 1px solid var(--ie-rule);
   }
 
   .now-card {
     display: grid;
-    /* Index rail, not a column: the heading and status need little room, so
-       the reclaimed width goes to the entries themselves. */
+    /* Heading rail on the left; the width goes to the entries. */
     grid-template-columns: minmax(10rem, 0.32fr) minmax(0, 1fr);
     gap: clamp(1.5rem, 3vw, 2.75rem);
-    padding: clamp(1.5rem, 3vw, 2rem) 0;
+    padding: clamp(1.75rem, 3.5vw, 2.5rem) 0;
     border-bottom: 1px solid var(--ie-rule);
   }
 
-  .card-header {
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .header-left {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-  }
-
-  .index-num {
-    color: var(--ie-blue);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-    font-weight: 600;
-  }
-
-  .card-header h2 {
+  .now-card h2 {
     margin: 0;
     color: var(--ie-ink);
     font-family: var(--font-display);
     font-size: var(--ie-type-h3);
     font-weight: 600;
     letter-spacing: -0.015em;
-  }
-
-  .status {
-    display: inline-flex;
-    align-items: center;
-    padding: 0;
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .status.active {
-    color: var(--ie-blue);
-  }
-
-  .status.in-progress {
-    color: var(--ie-rust);
-  }
-
-  .status.exploring,
-  .status.upcoming {
-    color: var(--ie-muted);
+    line-height: 1.3;
   }
 
   .focus-list {
     display: grid;
-    /* Hold a readable measure; the rail freed width, not licence to run long. */
-    max-width: 68ch;
+    max-width: 64ch;
     margin: 0;
     padding: 0;
-    gap: 0.9rem;
+    gap: 1rem;
     list-style: none;
   }
 
   .focus-list li {
-    display: flex;
-    gap: 0.55rem;
+    margin: 0;
     color: var(--ie-ink-secondary);
-    font-size: var(--ie-type-base);
-    line-height: 1.6;
-  }
-
-  .bullet {
-    color: var(--ie-rule-strong);
-    flex-shrink: 0;
-  }
-
-  .focus-list a {
-    color: var(--ie-blue);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    font-size: var(--ie-type-h4);
+    line-height: 1.55;
   }
 
   .now-meta-footer {
-    margin-top: clamp(2.5rem, 5vw, 4.5rem);
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--ie-rule);
-    text-align: center;
+    margin-top: 1.5rem;
   }
 
   .now-meta-footer p {
     margin: 0;
     color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
-  }
-
-  .now-meta-footer a {
-    color: var(--ie-ink-secondary);
-  }
-
-  .now-meta-footer a:hover {
-    color: var(--ie-blue);
+    font-size: var(--ie-type-ui);
   }
 
   @media (max-width: 680px) {
     .now-card {
       grid-template-columns: 1fr;
-      gap: 1.15rem;
-    }
-
-    .card-header {
-      gap: 0.55rem;
+      gap: 1rem;
     }
   }
 </style>

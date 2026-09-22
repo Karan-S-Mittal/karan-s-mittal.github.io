@@ -1,93 +1,57 @@
 ---
 name: diagram-craft
-description: Turn a supplied sketch, Mermaid flow, or plain-language system description into a token-compliant Astro diagram component for Karan Mittal's studio, verified in light and dark mode.
+description: Turn a supplied sketch, Mermaid flow, or plain-language system description into an Apple-style, token-compliant Astro/SVG figure for Karan Mittal's site (soft borderless tiles, hairline connectors, one blue active path), verified in light, dark and phone widths. Use for homepage figures and essay figures.
 ---
 
-# Diagrams for Karan Mittal
+# Figures for Karan Mittal
 
-Take the supplied flow and build a finished visual. Choose sensible defaults and proceed; ask only when missing information changes the meaning.
+Take the supplied flow and build a finished figure in the house style. Choose sensible defaults and proceed; ask only when missing information would change the meaning. Page-level rules (tokens, type, controls) live in the sibling [site-design skill](../site-design/SKILL.md).
 
-## What you deliver
+## The look: Apple-inspired
 
-One reusable Astro component under `src/components/diagram/`, grouped by topic when it belongs to an essay:
+Think of an apple.com feature diagram: calm tiles on a clean field, thin lines, one path that matters highlighted, and nothing else competing for attention.
 
-```
-src/components/diagram/<topic>/<DiagramName>.astro
-```
+- **Tiles:** borderless rounded rectangles filled with `--ie-surface-raised`, radius 12–14 (10 for small figures). No strokes, shadows or gradients.
+- **The path that matters:** tiles on it use `--ie-blue-soft` and its connectors use `--ie-blue`. Everything off the path stays grey, and its labels drop to `--ie-muted` at weight 400.
+- **Successful end state:** `--ie-verified-soft` tile with a `--ie-verified` label, or a small check glyph (`.dg-check`) beside a line of text.
+- **Failure branch:** `--ie-rust-soft` tile with a `--ie-rust` label and a rust connector. Use **at most one** per figure.
+- **Connectors:** 1.5px, round caps and joins, and rounded bends (quadratic corners, r ≈ 6–7). Grey (`--ie-rule-strong`) by default. Arrowheads are small open chevrons, used only where the direction isn't already obvious. No junction pins and no bordered label chips.
+- **Labels:** `--font-diagram` (Inter). Titles at weight 600 in `--ie-ink`, 14–15px in viewBox units. Sub-labels at weight 400 in `--ie-muted`, 13px. Branch labels sit as plain muted text beside the line. Keep them to one or two words; no paragraphs and no emoji.
+- **No chrome inside the canvas:** no inner headers, category badges, legends in boxes or frames. The `<figcaption>` carries the context.
 
-The essay imports it and captions it with a plain figure:
+## Shared building blocks
 
-```astro
-import DiagramName from '../../components/diagram/<topic>/<DiagramName>.astro';
+- `src/components/diagram/primitives/diagram.css` holds the grammar as classes: `.dg`, `.dg-tile(--active|--ok|--stop)`, `.dg-label(--lg|--muted|--ok|--stop)`, `.dg-sub`, `.dg-line(--active|--stop)`, `.dg-arrow(--stop)`, `.dg-check`, `.dg-draw`, `.dg-caption` and `.sr-only`. Import it and reuse the classes; add a class there rather than styling colours inside a component.
+- **Reference implementations:**
+  - `src/components/diagram/home/EvidenceTrail.astro`: the hero. Wide and narrow layouts, draw-on motion, data-driven tiles and lines.
+  - `src/components/diagram/home/PracticeGlyph.astro`: small three- or four-step figures with a single stop branch.
 
-<figure>
-  <DiagramName />
-  <figcaption>
-    A useful decomposition of responsibilities, not a claim that every hosting
-    platform implements four identical services.
-  </figcaption>
-</figure>
-```
+## Workflow: sketch first
 
-There are no standalone diagram pages and no `<Exhibit>` wrapper. `/diagrams/`, `/visuals/`, and `VisualPage.astro` went in 812969a; `Exhibit.astro` and `VisualAttribution.astro` went with the site's only essay. Do not recreate them reflexively — build figure chrome only if a specific essay needs it. A diagram earns its place inside an essay.
+1. **Draft a text sketch** of nodes, relationships and direction, and mark which path is active, which state is verified, and which (if any) is the stop.
+2. **Review it with Karan** before writing code: topology, labels, and where it sits on the page.
+3. **Build the component** at `src/components/diagram/<topic>/<Name>.astro`. Keep tile and line data in frontmatter arrays and render them with maps, as the reference components do.
 
-**The repository currently contains no reference diagram.** Both prior implementations were deleted. Read `src/styles/global.css` for the tokens and follow the geometry rules below rather than looking for an existing component to copy.
+## Rules that keep it working
 
-## Workflow: ASCII blueprint first
-
-1. **Draft a block schematic** in box-drawing ASCII: nodes, relationships, and direction only. No category banners, method tags, or explanatory headers inside the diagram.
-2. **Review it with the author.** Align on topology, labels, junctions, and semantic tokens before generating code.
-3. **Build the component** from the approved blueprint.
-
-## Draw it
-
-Preserve the supplied nodes, relationships, direction, and meaning. Shorten labels without silently dropping steps. Pick the simplest composition that works: flow, layered architecture, timeline, or comparison.
-
-**Block focus.** The canvas starts directly with the top-level blocks. No inner headers, subtitles, category meta-badges, substrate banners, or runtime footers — the `<figcaption>` and the surrounding prose supply the title and context.
-
-**Text discipline.** Keep text inside blocks punchy and high-signal: single-line tags, tokens, or chips, never paragraphs. Stop inline `<code>` badges from wrapping with `code { white-space: nowrap; }`.
-
-**Icons, never emoji.** Emoji break visual discipline and dark-mode contrast.
-- Monoline glyphs: `@lucide/astro`, `stroke-width={1.5}`, `currentColor`, 14–16px.
-- Vendor marks: `src/components/diagram/icons/BrandIcon.astro`.
-- Find either with `npm run icon <keyword>` — flags `-b` (brand), `-l` (lucide), `-e` (exact), `-n <limit>`.
-
-**Typography.** `var(--font-diagram)` for node titles, descriptions, and labels. `var(--font-mono)` for metrics, code tokens, and tags. Sizes from the `--ie-type-*` scale. Never a serif heading inside a diagram.
-
-**Color.** Every color resolves through `var(--ie-*)` or `var(--brand-*)`. `npm run build` fails on a raw hex in `src/components/diagram/**`, and a hex would not survive the theme switch anyway. If you need a color no token provides, add it to both the light and dark blocks of `src/styles/global.css` first.
-
-| Role | Token |
-| --- | --- |
-| Canvas / surface / raised | `--ie-canvas`, `--ie-surface`, `--ie-surface-raised` |
-| Text hierarchy | `--ie-ink`, `--ie-ink-secondary`, `--ie-muted` |
-| Boundaries | `--ie-rule`, `--ie-rule-strong` |
-| Active flow, emphasis | `--ie-blue` |
-| Confirmed / verified state | `--ie-verified` |
-| Constraint, caveat, failure | `--ie-rust` |
-
-`--ie-blue` is the accent slot, not a literal hue — it currently resolves to amber. Name the token, never the color you see.
-
-At most **one** rust constraint node per diagram: the human gate, the budget threshold, the thing that actually binds.
-
-**Connectors.**
-- 1.5px strokes, stealth blueprint arrowheads, tidy bends, rounded fillets (R=10–14px).
-- Arrowhead markers: 8×8 viewBox, `refX="7"` (or `6.5`), `refY="4"`, `markerWidth="6"`, `markerHeight="6"`, `stroke-width="1.5"`, round caps and joins. Compute coordinates so tips snap to node borders without clipping or gaps.
-- Labels on arrows sit on an opaque chip so the line never runs through the text: `background: var(--ie-surface)`, `border: 1px solid var(--ie-rule-strong)`, `color: var(--ie-ink)`, `font-size: 0.6875rem`, `font-weight: 600`. Never faint muted text, never sub-10px. (This is the one place a bordered chip is allowed — it is legibility, not decoration. Page UI carries none.)
-- T-junction pins (`r="3"`) only at real splits and merges.
-- Allow 70–80px minimum for horizontal bridge labels. Align downward bus branches to the exact centers of the columns below.
-
-**Canvas.** Transparent or a clean `var(--ie-surface)` plane, with no frame, badge, or inner header. Mark interaction-only controls `data-export-ignore`.
-
-**Accessibility.** Every diagram needs a text explanation — the `<figcaption>` or surrounding prose. No meaning carried by color alone.
+- **Colour:** only `var(--ie-*)` / `var(--brand-*)` through the shared classes. No raw hex anywhere in `src/components/diagram/**`. If no token fits, add one to both the light and dark blocks of `global.css` first.
+- **Legibility:** text must never render below 12px. Work out the scale (rendered width ÷ viewBox width). If a figure would shrink below that on phones, give it a narrow layout: a second `<svg>` switched by a media query, as `EvidenceTrail` does below 860px.
+- **Motion (optional, the hero only by default):** the active path traces in once when the figure enters view. Give the paths `pathLength="1"` and the `.dg-draw` class, set `data-draw` on the wrapper, and use a small inline script that sets `pending` and then `done`, skipped under `prefers-reduced-motion`. Without JavaScript the figure renders fully drawn. No looping animation.
+- **Accessibility:** use `role="img"` with `<title>`/`<desc>` (or an `aria-label`) that explains the whole figure in words. No meaning may be carried by colour alone: stops and ends are also labelled ("Block", "Stop", "Ship").
+- **Placement:**
+  - In an essay, wrap the figure in a plain `<figure>` with a `<figcaption class="dg-caption">` that states what it shows and what it doesn't claim.
+  - On the homepage, figures can illustrate the practice.
+  - Never build a diagram gallery, `/diagrams/` or `/visuals/` page.
+  - Mark illustrative data as illustrative.
 
 ## Verify before delivering
 
-1. `npm run build` — runs `studio:check`, which fails on raw hex and unbundled fonts in `src/components/diagram/**`.
-2. `npm run shot <route> [selector]` — writes light and dark screenshots to `test-results/`. Frame the figure to inspect it closely:
-   ```
-   npm run shot /writing/<slug>/ "figure"
-   ```
-3. **Read both PNGs.** Check label legibility, no clipped or overlapping text, complete connector paths, correct branch alignment, and that hierarchy survives the theme flip.
-4. Report the component path and what you verified.
-
-Runtime tokens live in `src/styles/global.css`. This skill is the delivery source of truth — do not write a second diagram specification that can drift from it.
+1. Run `npm run build`.
+2. Run `grep -rnE "#[0-9a-fA-F]{3,6}\b" src/components/diagram`. It must return nothing (in-page `href="#…"` anchors aside).
+3. Run `npm run shot <route> "<figure selector>"` and `npm run shot -- <route> --mobile`. Read the light, dark and phone PNGs and check:
+   - labels are legible and not clipped
+   - connectors meet tile edges
+   - the active path clearly reads as blue
+   - the narrow layout is the one used on phones
+   - there is no overflow warning
+4. Report the component path and what you checked.

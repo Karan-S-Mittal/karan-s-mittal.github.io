@@ -1,0 +1,141 @@
+---
+/**
+ * Small figure beside each "What I fix" item. Same grammar as EvidenceTrail:
+ * soft tiles, hairlines, blue for the path that succeeds, a green end state,
+ * and one rust stop.
+ */
+import '../primitives/diagram.css';
+import type { GlyphKind } from '@data/practice';
+
+interface Props {
+  kind: GlyphKind;
+}
+
+const { kind } = Astro.props;
+
+interface Tile {
+  x: number;
+  y: number;
+  w: number;
+  label: string;
+  /** ok = the successful end state; stop = the one failure branch. */
+  tone?: 'ok' | 'stop';
+}
+
+interface Figure {
+  height: number;
+  tiles: Tile[];
+  lines: { d: string; tone: 'active' | 'stop' }[];
+  arrows: { d: string; tone: 'active' | 'stop' }[];
+  branchLabel?: { x: number; y: number; text: string };
+  desc: string;
+}
+
+const T = 36; // tile height
+const right = (x: number, y: number) => `M${x - 5} ${y - 4.5} L${x} ${y} L${x - 5} ${y + 4.5}`;
+const down = (x: number, y: number) => `M${x - 4.5} ${y - 5} L${x} ${y} L${x + 4.5} ${y - 5}`;
+
+const figures: Record<GlyphKind, Figure> = {
+  provenance: {
+    height: 40,
+    tiles: [
+      { x: 0, y: 2, w: 66, label: 'Answer' },
+      { x: 84, y: 2, w: 66, label: 'Claim' },
+      { x: 168, y: 2, w: 66, label: 'Record' },
+      { x: 252, y: 2, w: 68, label: 'Source', tone: 'ok' },
+    ],
+    lines: [
+      { d: 'M66 20 H82', tone: 'active' },
+      { d: 'M150 20 H166', tone: 'active' },
+      { d: 'M234 20 H250', tone: 'active' },
+    ],
+    arrows: [
+      { d: right(82, 20), tone: 'active' },
+      { d: right(166, 20), tone: 'active' },
+      { d: right(250, 20), tone: 'active' },
+    ],
+    desc: 'An answer links to the claim it rests on, the claim to its record, and the record to a verified source.',
+  },
+  evaluation: {
+    height: 124,
+    tiles: [
+      { x: 0, y: 2, w: 70, label: 'Change' },
+      { x: 104, y: 2, w: 112, label: 'Eval suite' },
+      { x: 250, y: 2, w: 70, label: 'Ship', tone: 'ok' },
+      { x: 104, y: 86, w: 112, label: 'Block', tone: 'stop' },
+    ],
+    lines: [
+      { d: 'M70 20 H102', tone: 'active' },
+      { d: 'M216 20 H248', tone: 'active' },
+      { d: 'M160 38 V84', tone: 'stop' },
+    ],
+    arrows: [
+      { d: right(102, 20), tone: 'active' },
+      { d: right(248, 20), tone: 'active' },
+      { d: down(160, 84), tone: 'stop' },
+    ],
+    branchLabel: { x: 170, y: 66, text: 'regression' },
+    desc: 'Every change passes through the evaluation suite. Passing changes ship; a regression is blocked.',
+  },
+  verification: {
+    height: 124,
+    tiles: [
+      { x: 0, y: 2, w: 56, label: 'Agent' },
+      { x: 82, y: 2, w: 124, label: 'Check vs graph' },
+      { x: 230, y: 2, w: 90, label: 'Tool call', tone: 'ok' },
+      { x: 82, y: 86, w: 124, label: 'Stop', tone: 'stop' },
+    ],
+    lines: [
+      { d: 'M56 20 H80', tone: 'active' },
+      { d: 'M206 20 H228', tone: 'active' },
+      { d: 'M144 38 V84', tone: 'stop' },
+    ],
+    arrows: [
+      { d: right(80, 20), tone: 'active' },
+      { d: right(228, 20), tone: 'active' },
+      { d: down(144, 84), tone: 'stop' },
+    ],
+    branchLabel: { x: 154, y: 66, text: 'unsupported' },
+    desc: 'Before an agent acts, what it relies on is checked against the knowledge graph. Supported claims proceed; unsupported ones stop.',
+  },
+};
+
+const fig = figures[kind];
+---
+
+<svg class="dg practice-glyph" viewBox={`0 0 320 ${fig.height}`} role="img" aria-label={fig.desc}>
+  {fig.lines.map((line) => (
+    <path class:list={['dg-line', line.tone === 'stop' ? 'dg-line--stop' : 'dg-line--active']} d={line.d} />
+  ))}
+  {fig.arrows.map((arrow) => (
+    <path class:list={['dg-arrow', { 'dg-arrow--stop': arrow.tone === 'stop' }]} d={arrow.d} />
+  ))}
+  {fig.branchLabel && (
+    <text class="dg-sub" x={fig.branchLabel.x} y={fig.branchLabel.y}>{fig.branchLabel.text}</text>
+  )}
+  {fig.tiles.map((t) => (
+    <g>
+      <rect
+        class:list={['dg-tile', { 'dg-tile--ok': t.tone === 'ok', 'dg-tile--stop': t.tone === 'stop' }]}
+        x={t.x}
+        y={t.y}
+        width={t.w}
+        height={T}
+        rx="10"
+      />
+      <text
+        class:list={['dg-label', { 'dg-label--ok': t.tone === 'ok', 'dg-label--stop': t.tone === 'stop' }]}
+        x={t.x + t.w / 2}
+        y={t.y + T / 2}
+        text-anchor="middle"
+        dominant-baseline="central"
+      >{t.label}</text>
+    </g>
+  ))}
+</svg>
+
+<style>
+  .practice-glyph {
+    max-width: 320px;
+  }
+</style>

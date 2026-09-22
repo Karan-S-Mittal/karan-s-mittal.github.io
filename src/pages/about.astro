@@ -9,13 +9,13 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
 ---
 
 <Layout
-  title="About Karan Mittal | Engineer-scientist"
-  description="Karan Mittal is an engineer-scientist, Dextar co-founder, and community organiser focused on solving useful problems and building systems that last."
+  title="About | Karan Mittal"
+  description="Karan Mittal is an independent engineer building graph-grounded knowledge systems and LLM evaluations, co-founder of Dextar, and a community organiser in Indore."
 >
   <main class="practice-page about-page">
     <section class="about-hero" aria-labelledby="about-title">
       <div class="about-hero-copy">
-        <span class="register">About / Karan Mittal</span>
+        <span class="register">About</span>
         <h1 id="about-title">An engineer-scientist, invested in the outcome.</h1>
         <p class="lead">
           I like understanding difficult problems and building stable systems that actually solve
@@ -36,8 +36,7 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
           />
         </div>
         <figcaption>
-          <span class="register">Karan Mittal &bull; Technical session</span>
-          Hands-on systems workshop on agent architectures and retrieval boundaries.
+          Leading a hands-on systems workshop on agent architectures and retrieval boundaries.
         </figcaption>
       </figure>
     </section>
@@ -45,13 +44,14 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
     <!-- Section 01: Working Method (Stepped Vertical Narrative with Accent Spine) -->
     <section class="section about-method" aria-labelledby="method-title">
       <div class="section-intro method-intro">
-        <span class="register">01 / Working Method</span>
+        <span class="register">Working method</span>
         <h2 id="method-title">The problem comes before the tool.</h2>
         <p class="lead">
-          I’m co-founder of <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a>.
-          My core engineering focus is graph-grounded systems, distributed data infrastructure, and
-          model evaluation boundaries—applied in practice to enterprise knowledge platforms,
-          semiconductor supply chain traceability, and biomedical data workflows.
+          I work independently with teams building knowledge systems: graph-grounded retrieval,
+          LLM evaluation, and the data infrastructure beneath them. I also co-founded
+          <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a>, and my research
+          is in graph theory. The work has taken me through enterprise knowledge platforms,
+          semiconductor supply chain traceability, and biomedical data.
         </p>
       </div>
 
@@ -60,7 +60,6 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
           <li class="method-spine-step">
             <div class="step-spine-indicator">
               <span class="step-spine-pin">01</span>
-              <span class="step-spine-line" aria-hidden="true"></span>
             </div>
             <div class="step-spine-content">
               <h3>Understand the operating reality.</h3>
@@ -70,7 +69,6 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
           <li class="method-spine-step">
             <div class="step-spine-indicator">
               <span class="step-spine-pin">02</span>
-              <span class="step-spine-line" aria-hidden="true"></span>
             </div>
             <div class="step-spine-content">
               <h3>Build from evidence.</h3>
@@ -90,15 +88,15 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
       </div>
 
       <div class="actions method-actions">
-        <a href="/#proof" class="action">Explore my work →</a>
-        <a href="/now" class="action secondary">What I’m working on now →</a>
+        <a href="/publications/" class="more-link">Writing and talks</a>
+        <a href="/now/" class="more-link">What I’m working on now</a>
       </div>
     </section>
 
     <!-- Section: Personal Intellectual History -->
     <section class="section about-history" aria-labelledby="history-title">
       <div class="section-intro">
-        <span class="register">Foundations &bull; Intellectual History</span>
+        <span class="register">Background</span>
         <h2 id="history-title">From distributed storage to inspectable graphs.</h2>
         <p class="lead">
           My perspective is shaped by engineering at the boundary between low-level infrastructure and high-consequence decision systems.
@@ -118,8 +116,7 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
         <p>
           My work since has been grounding those decisions in explicit graph structures: material
           lots, chemical regulations, and supplier claims captured as inspectable records where
-          uncertainty carries an explicit operational cost. At
-          <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a> and in independent
+          uncertainty carries an explicit operational cost. At <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a> and in independent
           advisory the goal is unchanged — systems whose boundaries can be inspected, whose state
           can be audited, and that engineering teams can own and operate with confidence.
         </p>
@@ -130,12 +127,12 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
     <section class="section community-section" id="community" aria-labelledby="community-title">
       <div class="section-head">
         <div>
-          <span class="register">02 / Community & teaching</span>
+          <span class="register">Community and teaching</span>
           <h2 id="community-title">Helping people build is part of the work.</h2>
         </div>
         <div class="community-head-actions">
-          <a href="/speaking">Selected talks & workshops →</a>
-          <a href={linkedin.href} target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a class="more-link" href="/publications/#talks">Talks and workshops</a>
+          <a class="more-link" href={linkedin.href} target="_blank" rel="noopener">LinkedIn</a>
         </div>
       </div>
       <p class="community-lead">
@@ -146,9 +143,6 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
       <div class="community-ledger">
         {communitiesData.communities.map((community) => (
           <article class="community-ledger-row">
-            <div class="community-logo-wrap">
-              <img src={community.logo} alt="" width="36" height="36" loading="lazy" />
-            </div>
             <div class="community-main">
               <h3>{community.name}</h3>
               <p>{community.description}</p>
@@ -157,7 +151,6 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
               {community.links.map((link) => (
                 <a href={link.url} target="_blank" rel="noopener" class="community-link">
                   <span>{link.label}</span>
-                  <span aria-hidden="true">↗</span>
                 </a>
               ))}
             </div>
@@ -167,16 +160,16 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
     </section>
 
     <!-- Section 03: Closing CTA -->
-    <section class="closing" aria-labelledby="about-closing-title">
+    <section class="section closing" aria-labelledby="about-closing-title">
       <span class="register">Work together</span>
       <h2 id="about-closing-title">Bring a problem worth solving.</h2>
       <p class="lead">
-        I work with teams that need help understanding a difficult system, building a useful
-        solution, or making progress through an uncertain technical decision.
+        I work with teams whose knowledge systems have to be trusted: answers that trace back to
+        evidence, evaluations that catch regressions, and graphs that stay correct as the data
+        changes.
       </p>
       <div class="actions">
-        <a href="/contact" class="action">Discuss your problem →</a>
-        <a href="/#practice" class="action secondary">Ways to work together →</a>
+        <a href="/contact/" class="button">Discuss your problem</a>
       </div>
     </section>
   </main>
@@ -192,8 +185,7 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
     grid-template-columns: minmax(0, 1.35fr) minmax(300px, 400px);
     align-items: center;
     gap: clamp(3rem, 7vw, 6rem);
-    padding-block: clamp(4rem, 8vw, 6.5rem) clamp(3rem, 6vw, 5rem);
-    border-bottom: 1px solid var(--ie-rule-strong);
+    padding-block: clamp(4rem, 8vw, 6.5rem) 0;
   }
 
   .about-hero-copy .lead {
@@ -207,7 +199,8 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
   }
 
   .portrait-frame {
-    border-radius: var(--radius-sm, 4px);
+    border-radius: 18px;
+    corner-shape: squircle;
     overflow: hidden;
   }
 
@@ -229,15 +222,11 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
     line-height: 1.55;
   }
 
-  .about-portrait figcaption .register {
-    margin-bottom: 0.25rem;
-  }
-
   /* ================================================================
      2. Working Method: Stepped Vertical Narrative with Accent Spine
      ================================================================ */
   .about-method {
-    padding-top: clamp(3.5rem, 7vw, 5.5rem);
+    padding-top: clamp(5rem, 10vw, 8rem);
   }
 
   .method-intro {
@@ -280,18 +269,11 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
     width: 2.25rem;
     height: 1.75rem;
     color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-small);
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
     flex-shrink: 0;
-  }
-
-  .step-spine-line {
-    flex: 1;
-    width: 1px;
-    background: var(--ie-rule);
-    margin-block: 0.5rem;
-    min-height: 2rem;
   }
 
   .step-spine-content {
@@ -313,18 +295,8 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
   }
 
   .method-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-    margin-top: 0.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--ie-rule);
     max-width: 820px;
-  }
-
-  .about-history {
-    padding-top: clamp(2.5rem, 5vw, 4rem);
-    border-top: 1px solid var(--ie-rule);
+    margin-top: 0;
   }
 
   .history-narrative {
@@ -338,81 +310,39 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
   .history-narrative p {
     margin: 0;
     color: var(--ie-ink-secondary);
-    font-size: var(--ie-type-base);
-    line-height: 1.72;
-  }
-
-  .history-narrative a {
-    color: var(--ie-blue);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    font-size: var(--ie-type-h4);
+    line-height: 1.6;
   }
 
   /* ================================================================
      3. Community: Dense Single-Line Ledger
      ================================================================ */
-  .community-section {
-    padding-top: clamp(3.5rem, 7vw, 5.5rem);
-  }
-
   .community-head-actions {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
-    font-family: var(--font-sans);
-    font-size: var(--ie-type-ui);
-  }
-
-  .community-head-actions a {
-    display: inline-flex;
-    min-height: 44px;
-    align-items: center;
-    color: var(--ie-ink-secondary);
-    text-decoration: none;
-  }
-
-  .community-head-actions a:hover {
-    color: var(--ie-blue);
+    gap: 1.5rem;
   }
 
   .community-lead {
     max-width: 72ch;
     margin-bottom: 2rem;
     color: var(--ie-ink-secondary);
-    font-size: var(--ie-type-body);
-    line-height: 1.65;
+    font-size: var(--ie-type-h4);
+    line-height: 1.6;
   }
 
   .community-ledger {
-    border-top: 1px solid var(--ie-rule-strong);
+    border-top: 1px solid var(--ie-rule);
   }
 
   .community-ledger-row {
     display: grid;
-    grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 1.25rem;
     align-items: center;
     padding: 1.25rem 0;
     border-bottom: 1px solid var(--ie-rule);
     transition: background-color 140ms ease;
-  }
-
-  .community-logo-wrap {
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--ie-surface);
-    border: 1px solid var(--ie-rule);
-    border-radius: var(--radius-sm, 4px);
-    overflow: hidden;
-  }
-
-  .community-logo-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
   }
 
   .community-main h3 {
@@ -443,28 +373,19 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
     gap: 0.25rem;
     font-family: var(--font-sans);
     font-size: var(--ie-type-ui);
-    color: var(--ie-ink-secondary);
-    text-decoration: none;
-    padding: 0.5rem 0;
-    transition: color 140ms ease;
-  }
-
-  .community-link:hover {
     color: var(--ie-blue);
     text-decoration: none;
   }
 
-  /* ================================================================
-     4. Evidence Trail: Verification Checklist Ledger (Page Conclusion)
-     ================================================================ */
+  .community-link::after {
+    content: '\2197';
+    font-size: 0.85em;
+  }
 
-
-
-
-
-
-
-
+  .community-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
 
   /* Responsive Adjustments */
   @media (max-width: 760px) {
@@ -479,20 +400,14 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
     }
 
     .community-ledger-row {
-      grid-template-columns: 2.5rem 1fr;
-      gap: 0.85rem;
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
       align-items: start;
-    }
-
-    .community-links {
-      grid-column: 2;
-      margin-top: 0.35rem;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .community-ledger-row,
-    .community-link {
+    .community-ledger-row {
       transition: none;
     }
   }

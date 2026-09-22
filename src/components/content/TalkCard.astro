@@ -84,8 +84,8 @@ const footnote = [talk.event, talk.org, talk.venue, talk.audience && `Audience: 
   }
 
   .talk-type {
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-weight: 600;
   }
 
   .talk-title {
@@ -93,7 +93,7 @@ const footnote = [talk.event, talk.org, talk.venue, talk.audience && `Audience: 
     margin: 0 0 0.5rem;
     color: var(--ie-ink);
     font-family: var(--font-display);
-    font-size: clamp(1.15rem, 2vw, 1.4rem);
+    font-size: var(--ie-type-h3);
     font-weight: 600;
     letter-spacing: -0.015em;
     line-height: 1.28;
@@ -118,16 +118,17 @@ const footnote = [talk.event, talk.org, talk.venue, talk.audience && `Audience: 
     max-width: 68ch;
     margin: 0 0 0.6rem;
     color: var(--ie-ink-secondary);
-    line-height: 1.62;
+    font-size: var(--ie-type-h4);
+    line-height: 1.55;
   }
 
   .talk-footnote {
     max-width: 72ch;
     margin: 0;
     color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    line-height: 1.6;
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
+    line-height: 1.55;
   }
 
   .talk-links {
@@ -138,13 +139,14 @@ const footnote = [talk.event, talk.org, talk.venue, talk.audience && `Audience: 
   }
 
   .talk-links a {
-    color: var(--ie-ink-secondary);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
+    color: var(--ie-blue);
+    font-family: var(--font-sans);
+    font-size: var(--ie-type-ui);
     text-decoration: none;
   }
 
   .talk-links a:hover {
-    color: var(--ie-blue);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
   }
 </style>
