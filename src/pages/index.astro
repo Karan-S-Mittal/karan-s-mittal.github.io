@@ -17,7 +17,7 @@ const externalArticle = externalWriting[0];
     <!-- Hero Section -->
     <header class="home-hero" aria-labelledby="hero-heading">
       <div class="hero-content">
-        <span class="register">Systems Engineering &bull; Production AI Agents</span>
+        <span class="hero-badge">Systems Engineering &bull; Production AI Agents</span>
         <h1 id="hero-heading">Deterministic harnesses for production AI agents.</h1>
         <p class="lead">
           I build runtime execution sandboxes, evaluation boundaries, and persistent state for agentic systems where hallucination, state corruption, and silent failures are unacceptable.
@@ -25,7 +25,7 @@ const externalArticle = externalWriting[0];
         <p class="hero-subtext">
           Co-founder at <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a>. Operating at the intersection of LLMOps, memory architectures, and high-performance system runtimes.
         </p>
-        <div class="actions">
+        <div class="hero-actions">
           <a class="action" href="/contact">Discuss your problem &rarr;</a>
           <a class="action secondary" href="#scenarios">Explore problem scenarios &darr;</a>
         </div>
@@ -182,40 +182,90 @@ const externalArticle = externalWriting[0];
 
 <style>
   .home-hero {
-    padding-block: clamp(3rem, 6vw, 5rem) clamp(2.5rem, 5vw, 3.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-block: clamp(3.5rem, 7vw, 6rem) clamp(3rem, 6vw, 4.5rem);
     border-bottom: 1px solid var(--ie-rule-strong);
   }
 
   .hero-content {
-    max-width: 820px;
+    max-width: 840px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 
-  .hero-content h1 {
-    font-size: clamp(2rem, 3.8vw, 3.4rem);
-    line-height: 1.1;
-    letter-spacing: -0.03em;
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.85rem;
+    border: 1px solid var(--ie-rule-strong);
+    border-radius: var(--radius-pill, 999px);
+    background: var(--ie-surface);
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-micro);
+    font-weight: 600;
+    color: var(--ie-blue);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     margin-bottom: 1.25rem;
   }
 
+  .hero-content h1 {
+    font-size: clamp(2.2rem, 4.2vw, 3.6rem);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    margin-bottom: 1.25rem;
+    max-width: 24ch;
+    margin-inline: auto;
+    text-wrap: balance;
+    text-align: center;
+  }
+
   .hero-content .lead {
-    font-size: clamp(1.1rem, 1.6vw, 1.3rem);
-    line-height: 1.55;
+    font-size: clamp(1.1rem, 1.6vw, 1.28rem);
+    line-height: 1.6;
     margin-bottom: 1rem;
     color: var(--ie-ink);
+    max-width: 58ch;
+    margin-inline: auto;
+    text-wrap: pretty;
+    text-align: center;
   }
 
   .hero-subtext {
     font-size: var(--ie-type-ui);
     color: var(--ie-muted);
     line-height: 1.6;
-    margin-bottom: 1.75rem;
-    max-width: 68ch;
+    margin-bottom: 2rem;
+    max-width: 64ch;
+    margin-inline: auto;
+    text-align: center;
   }
 
   .hero-subtext a {
     color: var(--ie-blue);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    text-decoration: none;
+    background: var(--ie-blue-soft);
+    padding: 0.1em 0.4em;
+    border-radius: var(--radius-sm, 4px);
+    transition: background-color 120ms ease;
+  }
+
+  .hero-subtext a:hover {
+    background: color-mix(in srgb, var(--ie-blue-soft) 80%, var(--ie-blue));
+  }
+
+  .hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
   }
 
   .section-header {
