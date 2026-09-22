@@ -55,6 +55,9 @@ const featuredDiagrams = diagrams.filter((d) =>
         <div class="story-intro-meta">
           <span class="register">Worked system example &bull; Traceability in practice</span>
           <p class="story-intro-note">Follow one controlled component through four dependency stages.</p>
+          <a href="/diagrams/semiconductor-traceability/" class="mobile-model-shortcut">
+            <span>View complete model &rarr;</span>
+          </a>
         </div>
 
         <article class="story-step" data-story-stage="1">
@@ -120,34 +123,46 @@ const featuredDiagrams = diagrams.filter((d) =>
           <h2 id="proof-heading">Inspect the work behind the claim.</h2>
         </div>
       </div>
-      <div class="proof-ledger">
-        <a href={externalWriting[0].href} target="_blank" rel="noopener" class="proof-row">
-          <span class="proof-index">01</span>
-          <div>
-            <span class="register">Published at {externalWriting[0].publication}</span>
-            <h3>{externalWriting[0].title}</h3>
-            <p>{externalWriting[0].description}</p>
+      <div class="proof-feature-wrap">
+        <article class="proof-feature-card">
+          <div class="proof-feature-meta">
+            <span class="proof-tag">FLAGSHIP ESSAY &bull; PRIMARY RECORD</span>
+            <span class="proof-pub">Published at {externalWriting[0].publication}</span>
           </div>
-          <span class="proof-action">Read article ↗</span>
-        </a>
-        <a href="/speaking" class="proof-row">
-          <span class="proof-index">02</span>
-          <div>
-            <span class="register">Talks & workshops</span>
-            <h3>Technical ideas tested in public.</h3>
-            <p>Recorded sessions and hands-on workshops on agent systems, retrieval, and engineering practice.</p>
+          <h3 class="proof-feature-title">
+            <a href={externalWriting[0].href} target="_blank" rel="noopener">
+              {externalWriting[0].title}
+            </a>
+          </h3>
+          <p class="proof-feature-desc">{externalWriting[0].description}</p>
+          <div class="proof-feature-footer">
+            <a href={externalWriting[0].href} target="_blank" rel="noopener" class="proof-feature-cta">
+              <span>Read article at {externalWriting[0].publication}</span>
+              <span aria-hidden="true">&nearr;</span>
+            </a>
           </div>
-          <span class="proof-action">View speaking →</span>
-        </a>
-        <a href="/diagrams/semiconductor-traceability/" class="proof-row">
-          <span class="proof-index">03</span>
-          <div>
-            <span class="register">Reusable visual</span>
-            <h3>Semiconductor traceability graph.</h3>
-            <p>Inspect the complete dependency model and export the attributed visual.</p>
-          </div>
-          <span class="proof-action">Open diagram →</span>
-        </a>
+        </article>
+
+        <div class="proof-supporting-grid">
+          <a href="/speaking" class="proof-supporting-card">
+            <span class="proof-supporting-index">02</span>
+            <div>
+              <span class="register">Talks &amp; workshops</span>
+              <h4>Technical ideas tested in public.</h4>
+              <p>Recorded sessions and hands-on workshops on agent systems, retrieval, and engineering practice.</p>
+            </div>
+            <span class="proof-supporting-cta">View speaking &rarr;</span>
+          </a>
+          <a href="/diagrams/semiconductor-traceability/" class="proof-supporting-card">
+            <span class="proof-supporting-index">03</span>
+            <div>
+              <span class="register">Reusable visual</span>
+              <h4>Semiconductor traceability graph.</h4>
+              <p>Inspect the complete dependency model and export the attributed visual.</p>
+            </div>
+            <span class="proof-supporting-cta">Open diagram &rarr;</span>
+          </a>
+        </div>
       </div>
     </section>
 

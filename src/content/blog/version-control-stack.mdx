@@ -6,6 +6,8 @@ updatedDate: 2026-09-20
 tags: ["Systems Engineering", "DevOps", "Architecture", "Git"]
 draft: false
 featured: true
+image: "/social/version-control-stack.png"
+heroCaption: "Functional decomposition of developer platform boundaries: object storage, collaboration policy, and runner execution."
 ---
 
 import Exhibit from '../../components/editorial/Exhibit.astro';
@@ -16,6 +18,11 @@ import CodeReviewTopologies from '../../components/diagram/version-control/CodeR
 “Version control” often names several systems at once: Git’s local data model, the server boundary that accepts or rejects ref updates, a review database, and an execution plane for CI jobs. Treating those systems as one product hides the boundaries that matter during migration, incident response, and security review.
 
 This essay builds a narrower model. It separates four responsibilities and ties each factual claim to Git documentation, a review protocol’s own documentation, an official project guide, or a published specification.
+
+> **What this model changes in practice:**
+> - **Migration:** Identify every piece of state that must move—Git objects and refs transfer cleanly, but review threads, approval rules, and CI definitions reside in separate operational databases.
+> - **Security:** Locate the authoritative mutation boundary—server-side `pre-receive` quarantine hooks and forge branch protections enforce policy, not client-side assertions.
+> - **Operations:** Identify the subsystem that owns a failure—distinguish Git transport drops from runner queue starvation and database lock contention.
 
 ## 1. Git stores objects; refs make history reachable
 
