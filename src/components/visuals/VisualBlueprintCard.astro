@@ -12,27 +12,31 @@ import VisualMicroSchematic from './VisualMicroSchematic.astro';
 
 interface Props {
   slug: string;
-  index: number | string;
+  index?: number | string;
+  canonicalId?: string;
   title: string;
   desc: string;
   category?: string;
   href: string;
   archetype?: 'loop' | 'pipeline' | 'memory' | 'tree' | 'hierarchy' | 'comparison';
   variant?: 'hero' | 'default';
+  modelStatus?: 'explanatory' | 'specification' | 'comparison';
 }
 
 const {
   slug,
   index,
+  canonicalId,
   title,
   desc,
   category = 'SYSTEMS TOPOLOGY',
   href,
   archetype,
   variant = 'default',
+  modelStatus,
 } = Astro.props;
 
-const formattedIndex = typeof index === 'number' ? `ARC-${String(index).padStart(2, '0')}` : index;
+const formattedIndex = canonicalId || (typeof index === 'number' ? `ARC-${String(index).padStart(2, '0')}` : index || '');
 ---
 
 <article class:list={['visual-card', `variant-${variant}`]} data-search={`${title} ${desc} ${category}`.toLowerCase()} data-archetype={archetype || 'pipeline'}>
@@ -51,7 +55,7 @@ const formattedIndex = typeof index === 'number' ? `ARC-${String(index).padStart
         <span class="meta-id">{formattedIndex}</span>
         <span class="meta-sep" aria-hidden="true">&bull;</span>
         <span class="meta-category">{category}</span>
-        <span class="meta-export">3&times; PNG EXPORT</span>
+        <span class="meta-status">{modelStatus ? `${modelStatus.toUpperCase()} MODEL` : 'SYSTEM MODEL'}</span>
       </div>
 
       <h3 class="card-title">{title}</h3>
@@ -154,15 +158,17 @@ const formattedIndex = typeof index === 'number' ? `ARC-${String(index).padStart
     text-transform: uppercase;
   }
 
+  .meta-status,
   .meta-export {
     margin-left: auto;
     font-size: var(--ie-type-micro);
+    font-family: var(--font-mono);
     color: var(--ie-muted);
-    padding: 0.15rem 0.35rem;
+    padding: 0.15rem 0.4rem;
     border: 1px solid var(--ie-rule);
     border-radius: 3px;
     background: var(--ie-surface-raised);
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
   }
 
   .card-title {

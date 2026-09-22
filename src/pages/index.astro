@@ -5,6 +5,7 @@ import { SITE } from '../config';
 import VisualMicroSchematic from '@components/visuals/VisualMicroSchematic.astro';
 import HeroWorkflowGraph from '@components/visuals/HeroWorkflowGraph.astro';
 import { externalWriting } from '@data/publications';
+import { diagrams } from '@data/diagrams';
 import '@styles/practice.css';
 
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
@@ -17,28 +18,9 @@ const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('e
   timeZone: 'UTC',
 });
 
-const featuredDiagrams: Array<{
-  slug: string;
-  title: string;
-  desc: string;
-  badge: string;
-  archetype: 'hierarchy' | 'comparison';
-}> = [
-  {
-    slug: 'developer-platform-stack',
-    title: 'Developer Platform Stack',
-    desc: 'A functional model separating Git storage, collaboration policy, CI execution, and optional remote workspaces.',
-    badge: 'SYSTEM ARCHITECTURE',
-    archetype: 'hierarchy',
-  },
-  {
-    slug: 'code-review-topologies',
-    title: 'Three Code Review Topologies',
-    desc: 'A comparison of review identity and revision flow across branch, Change-Id, and email patch-series workflows.',
-    badge: 'REVIEW PROTOCOL',
-    archetype: 'comparison',
-  },
-];
+const featuredDiagrams = diagrams.filter((d) =>
+  ['developer-platform-stack', 'code-review-topologies'].includes(d.slug)
+);
 ---
 
 <Layout title={SITE.title} description={SITE.description}>
@@ -71,7 +53,7 @@ const featuredDiagrams: Array<{
 
       <div class="story-steps">
         <div class="story-intro-meta">
-          <span class="register">Case study &bull; Traceability in practice</span>
+          <span class="register">Worked system example &bull; Traceability in practice</span>
           <p class="story-intro-note">Follow one controlled component through four dependency stages.</p>
         </div>
 
@@ -179,12 +161,12 @@ const featuredDiagrams: Array<{
       </div>
       <div class="featured-blueprints-grid">
         {featuredDiagrams.map((diagram) => (
-          <a href={`/diagrams/${diagram.slug}/`} class="blueprint-showcase-card">
-            <VisualMicroSchematic slug={diagram.slug === 'developer-platform-stack' ? 'platform-stack' : diagram.slug} archetype={diagram.archetype} />
+          <a href={diagram.href} class="blueprint-showcase-card">
+            <VisualMicroSchematic slug={diagram.slug === 'developer-platform-stack' ? 'platform-stack' : diagram.slug} archetype={diagram.previewArchetype} />
             <div class="blueprint-card-info">
-              <span class="register">{diagram.badge}</span>
+              <span class="register">{diagram.canonicalId} &bull; {diagram.category}</span>
               <h3>{diagram.title}</h3>
-              <p>{diagram.desc}</p>
+              <p>{diagram.description}</p>
               <span class="blueprint-card-cta">Inspect diagram →</span>
             </div>
           </a>

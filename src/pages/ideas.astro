@@ -2,30 +2,7 @@
 import Layout from '@layouts/Layout.astro';
 import PageHeader from '@components/content/PageHeader.astro';
 import VisualBlueprintCard from '@components/visuals/VisualBlueprintCard.astro';
-
-const diagrams = [
-  {
-    slug: 'semiconductor-traceability',
-    title: 'Semiconductor Traceability Graph',
-    desc: 'Supplier, material, PFAS evidence, quality cost, and agent-review boundaries in one inspectable dependency graph.',
-    category: 'GRAPH ENGINEERING',
-    archetype: 'pipeline' as const,
-  },
-  {
-    slug: 'developer-platform-stack',
-    title: 'Developer Platform Stack Hierarchy',
-    desc: 'A functional model separating Git storage, collaboration policy, CI execution, and optional remote workspaces.',
-    category: 'SYSTEMS ARCHITECTURE',
-    archetype: 'hierarchy' as const,
-  },
-  {
-    slug: 'code-review-topologies',
-    title: 'Three Code Review Topologies',
-    desc: 'A comparison of review identity and revision flow across branch, Change-Id, and email patch-series workflows.',
-    category: 'REVIEW PROTOCOLS',
-    archetype: 'comparison' as const,
-  },
-];
+import { diagrams } from '@data/diagrams';
 ---
 
 <Layout
@@ -55,12 +32,13 @@ const diagrams = [
           <div class="featured-blueprint">
             <VisualBlueprintCard
               slug={diagrams[0].slug}
-              index={1}
+              canonicalId={diagrams[0].canonicalId}
               title={diagrams[0].title}
-              desc={diagrams[0].desc}
+              desc={diagrams[0].description}
               category={diagrams[0].category}
-              href={`/diagrams/${diagrams[0].slug}/`}
-              archetype={diagrams[0].archetype}
+              href={diagrams[0].href}
+              archetype={diagrams[0].previewArchetype}
+              modelStatus={diagrams[0].modelStatus}
               variant="hero"
             />
           </div>
@@ -70,12 +48,13 @@ const diagrams = [
               <div class:list={['supporting-col', index === 0 ? 'col-wide' : 'col-narrow']}>
                 <VisualBlueprintCard
                   slug={diagram.slug}
-                  index={index + 2}
+                  canonicalId={diagram.canonicalId}
                   title={diagram.title}
-                  desc={diagram.desc}
+                  desc={diagram.description}
                   category={diagram.category}
-                  href={`/diagrams/${diagram.slug}/`}
-                  archetype={diagram.archetype}
+                  href={diagram.href}
+                  archetype={diagram.previewArchetype}
+                  modelStatus={diagram.modelStatus}
                 />
               </div>
             ))}

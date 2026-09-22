@@ -1,20 +1,19 @@
 ---
 import VisualPage from '@layouts/VisualPage.astro';
 import PlatformStackHierarchy from '@components/diagram/version-control/PlatformStackHierarchy.astro';
+import { getDiagramBySlug } from '@data/diagrams';
 
-const title = 'Developer Platform Stack Hierarchy';
-const description = 'A functional model separating Git storage, collaboration policy, CI execution, and optional remote workspaces.';
-const explanation = 'Read from the source-control foundation upward. Each layer adds a different responsibility—object storage, collaboration policy, automated execution, and development environments—without implying that every platform implements all four layers or uses these exact boundaries.';
+const diagram = getDiagramBySlug('developer-platform-stack')!;
 ---
 
 <VisualPage
-  title={title}
-  description={description}
-  explanation={explanation}
-  targetId="platform-stack-export"
-  filename="platform-stack-hierarchy"
-  category="SYSTEMS ARCHITECTURE"
-  drawingNo="VCS-01"
+  title={diagram.title}
+  description={diagram.description}
+  explanation={diagram.explanation}
+  targetId={diagram.targetId}
+  filename={diagram.filename}
+  category={diagram.category}
+  drawingNo={diagram.canonicalId}
 >
   <div class="visual-wrapper">
     <PlatformStackHierarchy id="platform-stack-diagram" />

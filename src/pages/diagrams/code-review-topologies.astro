@@ -1,20 +1,19 @@
 ---
 import VisualPage from '@layouts/VisualPage.astro';
 import CodeReviewTopologies from '@components/diagram/version-control/CodeReviewTopologies.astro';
+import { getDiagramBySlug } from '@data/diagrams';
 
-const title = 'Three Code Review Topologies';
-const description = 'A comparison of review identity and revision flow across branch, Change-Id, and email patch-series workflows.';
-const explanation = 'Read each column as a distinct review topology rather than a maturity ranking. The diagram compares where review identity lives, how revisions are represented, and how accepted work reaches the target history; individual hosting services and projects can vary.';
+const diagram = getDiagramBySlug('code-review-topologies')!;
 ---
 
 <VisualPage
-  title={title}
-  description={description}
-  explanation={explanation}
-  targetId="code-review-export"
-  filename="code-review-topologies"
-  category="REVIEW PROTOCOLS"
-  drawingNo="VCS-02"
+  title={diagram.title}
+  description={diagram.description}
+  explanation={diagram.explanation}
+  targetId={diagram.targetId}
+  filename={diagram.filename}
+  category={diagram.category}
+  drawingNo={diagram.canonicalId}
 >
   <div class="visual-wrapper">
     <CodeReviewTopologies id="code-review-diagram" />

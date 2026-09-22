@@ -62,12 +62,16 @@ const { id = 'code-review-topologies' } = Astro.props;
           <span class="metric-val">All commits aggregated</span>
         </div>
         <div class="metric-row">
-          <span class="metric-label">State Tracking</span>
-          <span class="metric-val">Branch pair + platform record</span>
+          <span class="metric-label">Revision Identity</span>
+          <span class="metric-val">Branch tip update</span>
         </div>
         <div class="metric-row">
-          <span class="metric-label">Bisection Hygiene</span>
-          <span class="metric-val warn">Depends on merge strategy</span>
+          <span class="metric-label">State Tracking</span>
+          <span class="metric-val">Branch pair + PR record</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Accepted History</span>
+          <span class="metric-val">Merge, squash, or rebase</span>
         </div>
       </div>
     </div>
@@ -116,12 +120,16 @@ const { id = 'code-review-topologies' } = Astro.props;
           <span class="metric-val">One change across patch sets</span>
         </div>
         <div class="metric-row">
-          <span class="metric-label">State Tracking</span>
-          <span class="metric-val">Commit trailer ID</span>
+          <span class="metric-label">Revision Identity</span>
+          <span class="metric-val">Change-Id trailer</span>
         </div>
         <div class="metric-row">
-          <span class="metric-label">Bisection Hygiene</span>
-          <span class="metric-val good">Commit-scoped review</span>
+          <span class="metric-label">State Tracking</span>
+          <span class="metric-val">Patch set series</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Accepted History</span>
+          <span class="metric-val">Linear validated commits</span>
         </div>
       </div>
     </div>
@@ -156,12 +164,16 @@ const { id = 'code-review-topologies' } = Astro.props;
           <span class="metric-val">Patch or patch series</span>
         </div>
         <div class="metric-row">
-          <span class="metric-label">State Tracking</span>
-          <span class="metric-val">Message-ID & In-Reply-To</span>
+          <span class="metric-label">Revision Identity</span>
+          <span class="metric-val">Message-ID threading</span>
         </div>
         <div class="metric-row">
-          <span class="metric-label">Bisection Hygiene</span>
-          <span class="metric-val good">Depends on accepted commits</span>
+          <span class="metric-label">State Tracking</span>
+          <span class="metric-val">In-Reply-To thread</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Accepted History</span>
+          <span class="metric-val">Applied mbox series</span>
         </div>
       </div>
     </div>
