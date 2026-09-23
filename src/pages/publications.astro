@@ -65,9 +65,9 @@ const sections = [
   { id: 'software', label: 'Software', show: software.length > 0 },
 ].filter((section) => section.show);
 
-// The headline names only the sections that exist ("Writing and talks.").
+// The headline names only the sections that exist ("Writing and talks").
 const kinds = sections.map((section) => section.id);
-const headline = `${kinds.slice(0, -1).join(', ')}${kinds.length > 2 ? ',' : ''}${kinds.length > 1 ? ' and ' : ''}${kinds.at(-1)}.`;
+const headline = `${kinds.slice(0, -1).join(', ')}${kinds.length > 2 ? ',' : ''}${kinds.length > 1 ? ' and ' : ''}${kinds.at(-1)}`;
 const title = headline[0].toUpperCase() + headline.slice(1);
 ---
 
@@ -77,7 +77,6 @@ const title = headline[0].toUpperCase() + headline.slice(1);
 >
   <main class="container publications-page">
     <PageHeader
-      label="Publications"
       title={title}
       description="Public work on knowledge systems, LLM evaluation, and graph-grounded retrieval."
     >
@@ -148,8 +147,7 @@ const title = headline[0].toUpperCase() + headline.slice(1);
     )}
 
     <section class="pub-section pub-closing" aria-labelledby="speaking-invite">
-      <p class="eyebrow">Invite me to speak</p>
-      <h2 id="speaking-invite">Teaching from direct systems practice.</h2>
+      <h2 id="speaking-invite">Invite me to speak</h2>
       <p class="pub-intro">
         For a conference session or a workshop with your team, tell me about the audience and
         what you would like them to understand or build.

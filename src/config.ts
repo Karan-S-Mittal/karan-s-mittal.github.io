@@ -4,7 +4,7 @@
  */
 export const SITE = {
   name: 'Karan Mittal',
-  title: 'Karan Mittal | Knowledge systems that show their work',
+  title: 'Karan Mittal',
   description:
     'Karan Mittal builds graph-grounded knowledge systems and LLM evaluations: answers that trace back to evidence, and failures caught before they reach users.',
   url: 'https://karan-s-mittal.github.io',

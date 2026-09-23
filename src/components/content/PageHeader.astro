@@ -1,11 +1,12 @@
 ---
 /**
- * Page intro: eyebrow, headline, lead, and optional actions (the default
- * slot). The page's .container supplies --page-top above; this block owns
+ * Page intro: an optional eyebrow, headline, lead, and optional actions (the
+ * default slot). Give a label only when it adds something the headline and
+ * the nav don't already say. The page's .container supplies --page-top above; this block owns
  * --gap-block below, so every inner page starts and settles the same way.
  */
 interface Props {
-  label: string;
+  label?: string;
   title: string;
   description?: string;
   headingLevel?: 'h1' | 'h2';
@@ -17,7 +18,7 @@ const hasActions = Astro.slots.has('default');
 ---
 
 <header class="page-header">
-  <p class="page-register">{label}</p>
+  {label && <p class="page-register">{label}</p>}
   <Heading>{title}</Heading>
   {description && (
     <p class="lead">{description}</p>

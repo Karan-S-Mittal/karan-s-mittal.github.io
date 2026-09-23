@@ -23,21 +23,21 @@ export const practiceAreas: PracticeArea[] = [
   {
     id: 'traceability',
     diagram: 'provenance',
-    problem: 'Answers can’t be traced back to evidence.',
+    problem: 'Answers can’t be traced back to evidence',
     intervention:
       'Knowledge graphs that keep provenance on every entity and claim — source, version, and confidence — so any answer can be walked back to the records behind it.',
   },
   {
     id: 'evaluation',
     diagram: 'evaluation',
-    problem: 'No one can say whether the model is getting better or worse.',
+    problem: 'No one can say whether the model is getting better or worse',
     intervention:
       'Evaluation suites built from real questions and graded against ground truth, run as a regression gate on every prompt, model, or data change.',
   },
   {
     id: 'agents',
     diagram: 'verification',
-    problem: 'Agents act on claims no one has checked.',
+    problem: 'Agents act on claims no one has checked',
     intervention:
       'Graph-grounded verification between retrieval and action: what an agent is about to rely on is checked against the knowledge graph before the tool call goes through.',
   },
