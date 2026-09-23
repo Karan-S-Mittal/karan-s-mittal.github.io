@@ -2,46 +2,22 @@
 import Layout from '@layouts/Layout.astro';
 import PageHeader from '@components/content/PageHeader.astro';
 import { formatTalkDate } from '@utils/date';
+import { nowAreas } from '@data/now';
+import { execFileSync } from 'node:child_process';
 
-// Bump this date whenever this page's content is edited.
-const lastUpdated = new Date('2026-09-23');
+// The page is only as current as its content, so the date comes from the
+// last commit that touched src/data/now.ts. The deploy checks out full
+// history for this. The constant covers a checkout without git.
+function lastCommitDate(file: string, fallback: string): string {
+  try {
+    const date = execFileSync('git', ['log', '-1', '--format=%cs', '--', file], { encoding: 'utf8' }).trim();
+    return date || fallback;
+  } catch {
+    return fallback;
+  }
+}
 
-const focusAreas = [
-  {
-    index: '01',
-    category: 'Building',
-    items: [
-      { text: 'Co-founding and leading systems engineering at ', link: { text: 'Dextar.co', url: 'https://dextar.co' } },
-      { text: 'Graph-grounded traceability and evidence screening pipelines for complex manufacturing supply chains' },
-      { text: 'Knowledge systems that combine graph structure with LLM retrieval, where every answer carries its provenance' },
-    ],
-  },
-  {
-    index: '02',
-    category: 'Investigating',
-    items: [
-      { text: 'Knowledge systems: when graph structure beats vector similarity for retrieval, and how to combine the two' },
-      { text: 'LLM evaluation: building ground-truth suites from real questions, and measuring where automated graders disagree with people' },
-      { text: 'Graph theory: what the structure of a knowledge graph reveals about missing or contradictory facts' },
-    ],
-  },
-  {
-    index: '03',
-    category: 'Teaching',
-    items: [
-      { text: 'Organizing hands-on AI systems and LLMOps workshops at ', link: { text: 'MLIndore', url: 'https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/' } },
-      { text: 'Mentoring engineers in systems architecture and distributed systems at ', link: { text: 'CodeVipassana', url: 'https://www.codevipassana.dev/' } },
-      { text: 'Running distributed systems and cloud infrastructure workshops with ', link: { text: 'GDG Cloud Indore', url: 'https://gdg.community.dev/gdg-cloud-indore/' } },
-    ],
-  },
-  {
-    index: '04',
-    category: 'Changed my mind about',
-    items: [
-      { text: 'General-purpose agent loops: shifted from open-ended autonomous agent workflows to bounded, specialized paths backed by explicit graph-grounded verification gates' },
-    ],
-  },
-];
+const lastUpdated = lastCommitDate('src/data/now.ts', '2026-09-23');
 ---
 
 <Layout
@@ -51,14 +27,14 @@ const focusAreas = [
   <main class="container now-page">
     <PageHeader
       label="Now"
-      title="What I’m focused on now."
-      description="Current work, research, and community activity. Updated when something changes."
+      title="What I’m focused on now"
+      description="Current work, research, and community activity. I update this page in the first week of each month."
     />
 
     <div class="now-grid">
-      {focusAreas.map((area) => (
-        <section class="now-card" aria-labelledby={`focus-${area.index}`}>
-          <h2 id={`focus-${area.index}`}>{area.category}</h2>
+      {nowAreas.map((area) => (
+        <section class="now-card" aria-labelledby={`focus-${area.id}`}>
+          <h2 id={`focus-${area.id}`}>{area.category}</h2>
 
           <ul class="focus-list">
             {area.items.map((item) => (
@@ -78,7 +54,7 @@ const focusAreas = [
 
     <footer class="now-meta-footer">
       <p>
-        Updated <time datetime={lastUpdated.toISOString()}>{formatTalkDate(lastUpdated.toISOString().slice(0, 10))}</time> · Based on the <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now page movement</a> by Derek Sivers.
+        Updated <time datetime={lastUpdated}>{formatTalkDate(lastUpdated)}</time> · Based on the <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now page movement</a> by Derek Sivers.
       </p>
     </footer>
   </main>

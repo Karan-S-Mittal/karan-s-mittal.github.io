@@ -1,0 +1,49 @@
+---
+import Layout from '@layouts/Layout.astro';
+import PageHeader from '@components/content/PageHeader.astro';
+import { SITE } from '../config';
+
+// Phones download or print raw XML when you tap rss.xml, so the footer link
+// lands here instead and the feed URL is one tap to copy.
+const feedUrl = new URL('/rss.xml', Astro.site ?? SITE.url).toString();
+---
+
+<Layout
+  title="RSS | Karan Mittal"
+  description="Follow Karan Mittal's writing and talks in any RSS reader."
+>
+  <main class="container feed-page">
+    <PageHeader
+      label="RSS"
+      title="Follow by RSS"
+      description="New essays, articles published elsewhere, and talks, in one feed. Paste the address into any RSS reader, such as NetNewsWire, Feedly or Inoreader."
+    >
+      <p class="feed-url"><code>{feedUrl}</code></p>
+      <button class="button" type="button" id="copy-feed" data-url={feedUrl}>Copy feed address</button>
+      <a class="more-link" href="/rss.xml">Open the raw feed</a>
+    </PageHeader>
+  </main>
+</Layout>
+
+<script is:inline>
+  (function () {
+    var button = document.getElementById('copy-feed');
+    if (!button) return;
+    button.addEventListener('click', function () {
+      var url = button.getAttribute('data-url') || '';
+      navigator.clipboard.writeText(url).then(
+        function () { button.textContent = 'Copied'; },
+        function () { button.textContent = 'Copy failed. Select the address above'; }
+      );
+    });
+  })();
+</script>
+
+<style>
+  /* Sits on its own line above the button, inside the header's actions. */
+  .feed-url {
+    flex-basis: 100%;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+</style>

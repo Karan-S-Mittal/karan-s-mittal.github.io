@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- KM monogram: the K's upper arm and the M's first stem end in two nodes joined by an edge. -->
+  <rect width="32" height="32" rx="8" fill="#1d1d1f"/>
+  <path d="M6 9v14M12.5 9L6 16l6.5 7M18.5 23V9l3.75 7.5L26 9v14" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12.5 9h6" stroke="#2997ff" stroke-width="1.6"/>
+  <g fill="#2997ff"><circle cx="12.5" cy="9" r="2.3"/><circle cx="18.5" cy="9" r="2.3"/></g>
+</svg>

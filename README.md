@@ -44,7 +44,7 @@ scripts/            capture-page.js (shot), new-post.js, find-icon.js
 - **Add a talk:** add an entry to `src/data/talks.json`.
 - **Add a repo:** add an entry to `software` in `src/data/publications.ts`. The Software section appears on `/publications/` once the list isn't empty.
 - **Write an essay:** run `npm run new`, write it in `src/content/blog/`, and set `draft: false` to publish.
-- **Update /now:** edit `src/pages/now.astro` and change `lastUpdated`.
+- **Update /now:** edit `src/data/now.ts` in the first week of each month. The page's date is that file's last commit date.
 
 ## Design rules
 

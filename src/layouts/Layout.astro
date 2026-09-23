@@ -50,9 +50,12 @@ const ogHeight = imageHeight ?? 800;
        site's dark mode is also toggleable via a `.dark` class on <html> with a localStorage
        preference, which `prefers-color-scheme` cannot see — an explicit user override won't be
        reflected in the browser chrome color. Not scriptable; accepted limitation. -->
-  <meta name="theme-color" content="#f9f9f8" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
   <title>{title}</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <meta name="description" content={description} />
   {robots && <meta name="robots" content={robots} />}
   <link rel="canonical" href={canonicalURL} />
