@@ -33,7 +33,7 @@ const lastUpdated = lastCommitDate('src/data/now.ts', '2026-09-23');
 
     <div class="now-grid">
       {nowAreas.map((area) => (
-        <section class="now-card" aria-labelledby={`focus-${area.id}`}>
+        <section class="rail now-card" aria-labelledby={`focus-${area.id}`}>
           <h2 id={`focus-${area.id}`}>{area.category}</h2>
 
           <ul class="focus-list">
@@ -66,11 +66,10 @@ const lastUpdated = lastCommitDate('src/data/now.ts', '2026-09-23');
     border-top: 1px solid var(--ie-rule);
   }
 
+  /* Each area is a rail row: the heading on the left, the entries on the
+     right. Stacked on phones, the heading sits close to its entries. */
   .now-card {
-    display: grid;
-    /* Heading rail on the left; the width goes to the entries. */
-    grid-template-columns: minmax(10rem, 0.32fr) minmax(0, 1fr);
-    gap: clamp(1.5rem, 3vw, 2.75rem);
+    row-gap: var(--gap-related);
     padding: clamp(1.75rem, 3.5vw, 2.5rem) 0;
     border-bottom: 1px solid var(--ie-rule);
   }
@@ -109,12 +108,5 @@ const lastUpdated = lastCommitDate('src/data/now.ts', '2026-09-23');
     margin: 0;
     color: var(--ie-muted);
     font-size: var(--ie-type-ui);
-  }
-
-  @media (max-width: 680px) {
-    .now-card {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
   }
 </style>

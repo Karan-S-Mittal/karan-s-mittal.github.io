@@ -1,0 +1,49 @@
+---
+/**
+ * The KM monogram: the K's upper arm and the M's first stem end in two nodes
+ * joined by an edge. public/favicon.svg and the PNG icons are the same
+ * drawing in fixed colours; change them together.
+ */
+interface Props {
+  size?: number;
+}
+
+const { size = 28 } = Astro.props;
+---
+
+<svg class="mark" viewBox="0 0 32 32" width={size} height={size} aria-hidden="true" focusable="false">
+  <rect class="mark-tile" width="32" height="32" rx="8" />
+  <path class="mark-letters" d="M6 9v14M12.5 9L6 16l6.5 7M18.5 23V9l3.75 7.5L26 9v14" />
+  <path class="mark-edge" d="M12.5 9h6" />
+  <circle class="mark-node" cx="12.5" cy="9" r="2.3" />
+  <circle class="mark-node" cx="18.5" cy="9" r="2.3" />
+</svg>
+
+<style>
+  .mark {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  /* Inverts with the theme: an ink tile on light, a light tile on dark. */
+  .mark-tile {
+    fill: var(--ie-ink);
+  }
+
+  .mark-letters {
+    fill: none;
+    stroke: var(--ie-canvas);
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .mark-edge {
+    stroke: var(--ie-blue);
+    stroke-width: 1.6;
+  }
+
+  .mark-node {
+    fill: var(--ie-blue);
+  }
+</style>

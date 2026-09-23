@@ -113,7 +113,7 @@
   --gap-related: 1rem;    /* 16px */
   --gap-group: 2.5rem;    /* 40px */
   --gap-block: 4rem;      /* 64px */
-  --gap-section: 8rem;    /* 128px */
+  --gap-section: 6rem;    /* 96px */
   --page-top: var(--gap-section);
 
   /* Radius */
@@ -124,10 +124,11 @@
      support corner-shape render it as a true squircle. */
   --radius-control: 12px;
 
-  /* Layout Dimensions */
-  --width-content: 960px;
-  --max-width: 960px;
-  --width-visual: 1180px;
+  /* Layout Dimensions. One page width for the header, every section and the
+     footer, so the whole site shares one left edge. Text measure is capped
+     in ch on the text itself, never by a narrower centred column. */
+  --width-page: 1200px;
+  --gutter: 1.5rem;       /* 24px; 16px on phones */
   --prose-max-width: 680px;
 
   /* Transitions */
@@ -135,12 +136,18 @@
   --transition: 200ms ease;
 }
 
-/* Phones: the same six steps, compressed. */
+/* Phones: the same six steps, compressed; the side gutter narrows below 640px. */
 @media (max-width: 720px) {
   :root {
     --gap-group: 2rem;    /* 32px */
     --gap-block: 3rem;    /* 48px */
-    --gap-section: 5rem;  /* 80px */
+    --gap-section: 4rem;  /* 64px */
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --gutter: 1rem;       /* 16px */
   }
 }
 
@@ -476,15 +483,52 @@ pre:focus-within .copy-code { opacity: 1; }
    Layout Containers & Common Classes
    ================================================================ */
 
+.wrap,
 .container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: var(--page-top) var(--space-5) 0;
+  max-width: var(--width-page);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
 
-@media (max-width: 640px) {
-  .container {
-    padding-inline: var(--space-4);
+/* An inner page: the page width plus the standard gap under the header. */
+.container {
+  padding-top: var(--page-top);
+}
+
+/* A full-width section. Alternate plain and tinted bands; the change of
+   ground is the divider, so bands carry no rules. */
+.band {
+  padding-block: var(--gap-section);
+}
+
+.band--tint {
+  background: var(--ie-surface-raised);
+}
+
+/* A tinted last band runs straight into the (also tinted) footer. */
+body:has(main > .band--tint:last-child) > footer {
+  margin-top: 0;
+  border-top: 1px solid var(--ie-rule);
+}
+
+/* Rail section: title on the left, content on the right. */
+.rail {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.3fr) minmax(0, 1fr);
+  gap: var(--gap-group) clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.rail-title {
+  margin: 0;
+  font-size: var(--ie-type-h2);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 720px) {
+  .rail {
+    grid-template-columns: 1fr;
   }
 }
 

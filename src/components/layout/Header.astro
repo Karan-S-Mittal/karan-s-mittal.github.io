@@ -1,4 +1,6 @@
 ---
+import Mark from './Mark.astro';
+
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 interface NavItem {
@@ -26,7 +28,8 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
 <header id="site-header">
   <div class="header-inner">
     <div class="header-left">
-      <a href="/" class="brand" aria-label="Karan Mittal Home">
+      <a href="/" class="brand" aria-label="Karan Mittal, home">
+        <Mark />
         <span class="brand-name">Karan Mittal</span>
       </a>
     </div>
@@ -130,10 +133,10 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
   }
 
   .header-inner {
-    max-width: var(--width-visual, 1180px);
+    max-width: var(--width-page);
     min-height: 52px;
     margin: 0 auto;
-    padding: 0 var(--space-5, 1.5rem);
+    padding: 0 var(--gutter);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -149,13 +152,14 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
   .brand {
     display: flex;
     align-items: center;
+    gap: 0.625rem;
     min-height: 44px;
     text-decoration: none;
   }
 
   .brand-name {
     font-family: var(--font-display);
-    font-size: var(--ie-type-h4);
+    font-size: var(--ie-type-h3);
     font-weight: 600;
     color: var(--ie-ink);
     letter-spacing: -0.02em;
@@ -244,10 +248,6 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
   }
 
   @media (max-width: 760px) {
-    .header-inner {
-      padding: 0 var(--space-4, 1rem);
-    }
-
     .main-nav {
       display: none;
     }

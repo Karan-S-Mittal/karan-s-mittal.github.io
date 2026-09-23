@@ -1,9 +1,11 @@
 /* Editorial layouts for the homepage and About. Every vertical gap here
-   comes from the --gap-* scale in global.css; pick by relationship. */
+   comes from the --gap-* scale in global.css; pick by relationship.
+   About sits in the page width directly; the homepage is built from
+   full-width .band sections, each with its own .wrap. */
 .practice-page {
-  max-width: var(--width-content, 960px);
+  max-width: var(--width-page);
   margin-inline: auto;
-  padding: 0 var(--space-5, 1.5rem);
+  padding-inline: var(--gutter);
 }
 
 .practice-page .register {
@@ -113,10 +115,6 @@
 
 .practice-page .closing > * {
   max-width: 62ch;
-}
-
-@media (max-width: 840px) {
-  .practice-page { padding-inline: 1.25rem; }
 }
 
 @media (max-width: 680px) {
