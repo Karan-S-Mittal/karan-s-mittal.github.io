@@ -37,7 +37,7 @@ export const nowAreas: NowArea[] = [
     id: 'teaching',
     category: 'Teaching',
     items: [
-      { text: 'Organizing hands-on AI systems and LLMOps workshops at ', link: { text: 'MLIndore', url: 'https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/' } },
+      { text: 'Organizing hands-on AI systems and LLMOps workshops at ', link: { text: 'ML Indore', url: 'https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/' } },
       { text: 'Mentoring engineers in systems architecture and distributed systems at ', link: { text: 'CodeVipassana', url: 'https://www.codevipassana.dev/' } },
       { text: 'Running distributed systems and cloud infrastructure workshops with ', link: { text: 'GDG Cloud Indore', url: 'https://gdg.community.dev/gdg-cloud-indore/' } },
     ],
