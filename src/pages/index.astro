@@ -52,12 +52,12 @@ const monthYear = (value: Date) =>
 
         <figure class="hero-portrait">
           <img
-            src="/profile.jpg"
-            srcset="/profile-400.jpg 400w, /profile.jpg 800w"
+            src="/portrait.jpg"
+            srcset="/portrait-320.jpg 320w, /portrait.jpg 480w"
             sizes="(max-width: 720px) 200px, 380px"
             alt="Karan Mittal speaking on stage at a Google Developer Groups DevFest"
-            width="800"
-            height="800"
+            width="480"
+            height="600"
             fetchpriority="high"
           />
         </figure>
@@ -225,6 +225,8 @@ const monthYear = (value: Date) =>
     margin: 0;
   }
 
+  /* The hairline holds the frame when the photo's edge is as light as the
+     page (the projector screen behind the speaker). */
   .hero-portrait img {
     display: block;
     width: 100%;
@@ -233,7 +235,8 @@ const monthYear = (value: Date) =>
     border-radius: 18px;
     corner-shape: squircle;
     object-fit: cover;
-    object-position: 46% 30%;
+    outline: 1px solid var(--ie-rule-strong);
+    outline-offset: -1px;
   }
 
   /* Phones: a small portrait above the name, so the first screen shows

@@ -26,12 +26,12 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
       <figure class="about-portrait">
         <div class="portrait-frame">
           <img
-            src="/profile.jpg"
-            srcset="/profile-400.jpg 400w, /profile.jpg 800w"
-            sizes="(max-width: 880px) 100vw, 440px"
+            src="/portrait.jpg"
+            srcset="/portrait-320.jpg 320w, /portrait.jpg 480w"
+            sizes="(max-width: 760px) 320px, 400px"
             alt="Karan Mittal speaking at a technical event"
-            width="800"
-            height="800"
+            width="480"
+            height="600"
           />
         </div>
         <figcaption>
@@ -197,6 +197,8 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
     border-radius: 18px;
     corner-shape: squircle;
     overflow: hidden;
+    outline: 1px solid var(--ie-rule-strong);
+    outline-offset: -1px;
   }
 
   .portrait-frame img {
@@ -205,7 +207,6 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
     height: auto;
     aspect-ratio: 4 / 5;
     object-fit: cover;
-    object-position: 50% 28%;
     filter: saturate(0.92) contrast(1.02);
   }
 
