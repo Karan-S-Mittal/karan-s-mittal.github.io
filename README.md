@@ -26,12 +26,12 @@ npm run dev        # http://localhost:4321
 
 ```
 src/
-  pages/            index, about, now, contact, publications (+ redirects)
+  pages/            index, about, now, contact, publications, feed (+ redirects)
   components/
     content/        PageHeader, YearGroup, TalkCard, essay parts
     layout/         Header, Footer, TableOfContents
     diagram/        figures: home/ (hero + practice), primitives/diagram.css
-  data/             practice.ts, publications.ts (writing + software), talks.json, communities.json
+  data/             practice.ts, publications.ts (writing + software), now.ts, talks.json, communities.json
   content/blog/     essays (MDX), published at /writing/<slug>/
   styles/           global.css (all design tokens), practice.css
 scripts/            capture-page.js (shot), new-post.js, find-icon.js
@@ -48,7 +48,7 @@ scripts/            capture-page.js (shot), new-post.js, find-icon.js
 
 ## Design rules
 
-The site follows one design system: neutral greys, blue only for things you can click, spacing instead of dividers, and Apple-style figures. The rules live in:
+The site follows one design system: neutral greys, blue only for things you can click, one 1200px page width with rail sections on alternating bands, and Apple-style figures. The favicon (`public/favicon.svg`, plus 32px and 180px PNGs) is the same KM monogram as `src/components/layout/Mark.astro`. The rules live in:
 
 - [`.agents/skills/site-design/SKILL.md`](.agents/skills/site-design/SKILL.md): pages, type, spacing, copy
 - [`.agents/skills/diagram-craft/SKILL.md`](.agents/skills/diagram-craft/SKILL.md): figures

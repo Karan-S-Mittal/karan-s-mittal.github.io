@@ -23,7 +23,7 @@ Think of an apple.com feature diagram: calm tiles on a clean field, thin lines, 
 
 - `src/components/diagram/primitives/diagram.css` holds the grammar as classes: `.dg`, `.dg-tile(--active|--ok|--stop)`, `.dg-label(--lg|--muted|--ok|--stop)`, `.dg-sub`, `.dg-line(--active|--stop)`, `.dg-arrow(--stop)`, `.dg-check`, `.dg-draw`, `.dg-caption` and `.sr-only`. Import it and reuse the classes; add a class there rather than styling colours inside a component.
 - **Reference implementations:**
-  - `src/components/diagram/home/EvidenceTrail.astro`: the hero. Wide and narrow layouts, draw-on motion, data-driven tiles and lines.
+  - `src/components/diagram/home/EvidenceTrail.astro`: the homepage "What I fix" lead figure. Wide and narrow layouts, draw-on motion, data-driven tiles and lines.
   - `src/components/diagram/home/PracticeGlyph.astro`: small three- or four-step figures with a single stop branch.
 
 ## Workflow: sketch first
@@ -36,7 +36,7 @@ Think of an apple.com feature diagram: calm tiles on a clean field, thin lines, 
 
 - **Colour:** only `var(--ie-*)` / `var(--brand-*)` through the shared classes. No raw hex anywhere in `src/components/diagram/**`. If no token fits, add one to both the light and dark blocks of `global.css` first.
 - **Legibility:** text must never render below 12px. Work out the scale (rendered width ÷ viewBox width). If a figure would shrink below that on phones, give it a narrow layout: a second `<svg>` switched by a media query, as `EvidenceTrail` does below 860px.
-- **Motion (optional, the hero only by default):** the active path traces in once when the figure enters view. Give the paths `pathLength="1"` and the `.dg-draw` class, set `data-draw` on the wrapper, and use a small inline script that sets `pending` and then `done`, skipped under `prefers-reduced-motion`. Without JavaScript the figure renders fully drawn. No looping animation.
+- **Motion (optional, the homepage lead figure only by default):** the active path traces in once when the figure enters view. Give the paths `pathLength="1"` and the `.dg-draw` class, set `data-draw` on the wrapper, and use a small inline script that sets `pending` and then `done`, skipped under `prefers-reduced-motion`. Without JavaScript the figure renders fully drawn. No looping animation.
 - **Accessibility:** use `role="img"` with `<title>`/`<desc>` (or an `aria-label`) that explains the whole figure in words. No meaning may be carried by colour alone: stops and ends are also labelled ("Block", "Stop", "Ship").
 - **Placement:**
   - In an essay, wrap the figure in a plain `<figure>` with a `<figcaption class="dg-caption">` that states what it shows and what it doesn't claim.

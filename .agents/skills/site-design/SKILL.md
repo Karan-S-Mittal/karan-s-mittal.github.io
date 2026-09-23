@@ -1,19 +1,19 @@
 ---
 name: site-design
-description: Page UI rules for Karan Mittal's Astro site — the Apple-clean design system (neutral greys, blue for clickable only, whitespace-led layout, eight-size type scale, one button per page). Use whenever adding or changing a page, section, component, header/footer, or site copy. Figures use diagram-craft; essays use explanatory-studio.
+description: Page UI rules for Karan Mittal's Astro site — the Apple-clean design system (neutral greys, blue for clickable only, one 1200px page width with a single left edge, rail sections on alternating bands, eight-size type scale, one button per page). Use whenever adding or changing a page, section, component, header/footer, or site copy. Figures use diagram-craft; essays use explanatory-studio.
 ---
 
 # Site design: Apple-clean
 
-The site should read like a well-edited Apple product page: a quiet field, confident type, generous space, and colour only where you can click. Follow this skill for any page, section, component, or copy change. `src/styles/global.css` holds the values; this file holds the rules. Refer to token names, never to the hex values behind them.
+The site should read like a well-edited Apple product page with a person behind it: a quiet field, confident type, one left edge, and colour only where you can click. Karan himself (name, photo, role, communities) is on the first screen. Follow this skill for any page, section, component, or copy change. `src/styles/global.css` holds the values; this file holds the rules. Refer to token names, never to the hex values behind them.
 
 ## Principles
 
-1. **Text-led, whitespace-led.** Separate sections with space (`--gap-section`, see Spacing), not lines. A hairline (`--ie-rule`) only divides items inside a list.
+1. **One edge, one width.** Header, sections and footer share `--width-page` through `.wrap`, so everything starts at the same left x. Sections are full-width `.band`s; alternate plain and `.band--tint` to give the page structure. A hairline (`--ie-rule`) only divides items inside a list.
 2. **Blue means clickable.** `--ie-blue` marks links, `.more-link`, and the `.button` fill (`--ie-button`). Nothing decorative is blue. Header nav links are `--ie-ink-secondary` and turn ink on hover or when current.
 3. **One button per page.** A single `.button` (blue rounded square, `--radius-control`, squircle where supported) for the page's main action. Every other action is a `.more-link` (blue text followed by a ›).
-4. **No chrome on pages.** No cards, tiles, tinted bands, pills, chips, badges, shadows, glassmorphism, or decorative backdrops. Soft tiles exist only inside diagrams.
-5. **Quiet labels.** A section label is an `.eyebrow` (or `.register` / `PageHeader` `label`): short, sentence case, semibold sans, `--ie-muted`. Never uppercase, never numbered, never accent-coloured.
+4. **Bands, not boxes.** The tinted band is the only surface on a page. No cards, tiles, pills, chips, badges, shadows, glassmorphism, or decorative backdrops. Soft tiles exist only inside diagrams.
+5. **Titles do the labelling.** In a rail section the left-column title names the section, so it gets no eyebrow. Use an `.eyebrow` (or `PageHeader` `label`) only where it adds information the headline doesn't. It is short, sentence case, semibold sans, `--ie-muted`; never uppercase, numbered, or accent-coloured.
 6. **Dark mode keeps the hierarchy.** Every colour comes from a token that has both a light and a dark value.
 
 ## Type
@@ -37,7 +37,10 @@ The legacy names `--ie-type-micro`, `label`, `ui` and `h4` are aliases of these 
 
 ## Layout
 
-- Pages use `.container` (960px) or `.practice-page`. Diagrams may run wider (up to about 1100px) when they sit in a centred hero.
+- **Page width.** `--width-page` (1200px) is the only page width. `.wrap` applies it with the side gutter; `.container` is `.wrap` plus `--page-top`. The header, the footer and every band use it. Never centre a narrower column inside it: cap the *measure* with `max-width` in `ch` on text instead (about 64ch for body, 52ch for leads).
+- **Rail sections.** `.rail` puts the section title in a left column (about 30%) and the content in the right. It collapses to one column at 720px. Use it for homepage sections, `/now/` and any list page. Figures sit in the content column.
+- **Bands.** `.band` is a full-width section with `--gap-section` padding top and bottom; `.band--tint` fills it with `--ie-surface-raised`. Alternate plain and tinted; never put two tinted bands next to each other. When the last band is tinted it runs into the footer (the footer drops its top gap).
+- **Heroes are left-aligned** on the page edge: text on the left, the portrait on the right, stacking on phones. No centred heroes.
 
 ### Spacing: six gaps, chosen by relationship
 
@@ -48,9 +51,9 @@ Every vertical gap between blocks comes from these tokens (`global.css`), never 
 | `--gap-tight` | 8 | eyebrow → heading |
 | `--gap-related` | 16 | heading → lead; a line that belongs to the one above it |
 | `--gap-group` | 40 / 32 | heading block → its content; content → its actions or `›` links; lead → buttons |
-| `--gap-block` | 64 / 48 | page intro (`PageHeader`) → page content; hero actions → hero figure |
-| `--gap-section` | 128 / 80 | major sections (`.section` / `.pub-section`); last section → footer |
-| `--page-top` | 128 / 80 | header bar → first heading on every page |
+| `--gap-block` | 64 / 48 | page intro (`PageHeader`) → page content; a section's lead figure → the list below it |
+| `--gap-section` | 96 / 64 | band padding (`.band`); major sections (`.section` / `.pub-section`); last section → footer |
+| `--page-top` | 96 / 64 | header bar → first heading on every page |
 
 Rules:
 - Related things must sit closer than unrelated things. A lead belongs directly under its headline; never put a figure between them.
@@ -58,7 +61,7 @@ Rules:
 - Never pull an element up with a negative margin. Put page-intro actions in `PageHeader`'s slot.
 - List items inside ruled lists reset the browser's `li` margin (`margin: 0`).
 - To check, measure the rendered gaps, not the CSS. Every gap between blocks should be one of the values above.
-- Don't add rules between sections.
+- Don't add rules between sections; the band change is the divider.
 - Lists (practice items, publications, talks, community) are rows separated by `--ie-rule` hairlines, with a hairline above the first row.
 - Every layout must hold at 390px wide: grids collapse to one column, and nothing may cause horizontal scroll.
 
@@ -66,18 +69,20 @@ Rules:
 
 Reuse these before writing anything new:
 
-- **Global classes** (`global.css`): `.button`, `.more-link`, `.eyebrow`, `.container`.
+- **Global classes** (`global.css`): `.button`, `.more-link`, `.eyebrow`, `.wrap`, `.container`, `.band`, `.band--tint`, `.rail`.
 - **Page parts** (`src/components/`):
   - `content/PageHeader.astro`: label, h1, lead and an optional actions slot for every inner page. It owns the `--gap-block` below it.
   - `content/YearGroup.astro`: a year heading over a list.
   - `content/TalkCard.astro`: one talk row.
-  - `layout/Header.astro`: a solid 52px bar with centred nav and Contact as a blue link. No blur.
+  - `layout/Header.astro`: a solid 52px bar: the `Mark` and name on the left, centred nav, Contact as a blue link. No blur.
+  - `layout/Mark.astro`: the KM monogram (two nodes joined by an edge). `public/favicon.svg` and the PNG icons are the same drawing; change them together.
   - `layout/Footer.astro`: small grey text links on `--ie-surface-raised`.
 - **Page styles:** `src/styles/practice.css`, shared by the homepage and About.
 - **Data** (`src/data/`):
   - `practice.ts`: the three "What I fix" items and their figure kinds.
   - `publications.ts`: external writing, plus `software`, which renders only when it isn't empty.
-  - `talks.json` and `communities.json`.
+  - `talks.json` and `communities.json`. Community logos (`public/logos/*.png`) may appear as one quiet row at a fixed height, with no tile or border around them.
+  - `now.ts`: the /now content; its date is the file's last commit.
 - **Figures:** `src/components/diagram/**`, built with the diagram-craft skill.
 
 ## Information architecture
@@ -93,17 +98,18 @@ Reuse these before writing anything new:
 - **Voice:** calm, exact, first person, and sentence case everywhere, including headings, buttons, labels and titles.
 - **Honest labels:** call a thing what it is. Don't use words like "research", "masterclass" or "case study" unless that is literally what it is. Never add placeholder, speculative or invented entries.
 - **Brevity:** one idea per sentence and one purpose per section. Say something once per page.
+- **Headlines** have no trailing full stop. Avoid slogan-shaped one-liners, tidy lists of three, and paired dashes: they read as generated. Give each lead one concrete detail (a domain, a number, an event).
 
 ## Checklist for a new page or section
 
-1. Reuse `PageHeader` and the global controls; add no new colours or sizes.
-2. One `.button`, `.more-link` for everything else, and an `.eyebrow` label.
-3. Sections separated by space; hairlines only inside lists.
+1. Reuse `PageHeader`, `.wrap`, `.band` and `.rail`; add no new colours or sizes.
+2. One `.button`, `.more-link` for everything else. An eyebrow only if it adds information.
+3. One left edge; sections separated by bands or space; hairlines only inside lists.
 4. Mono only on `<time>` and code.
 5. Links go where their label says.
 
 ## Verify
 
 1. Run `npm run build`.
-2. Run `npm run shot <route>` and `npm run shot -- <route> --mobile`. Read the light, dark and phone PNGs in `test-results/` yourself.
+2. Run `npm run shot <route>` and `npm run shot -- <route> --mobile`. Read the light, dark and phone PNGs in `test-results/` yourself. Check that the header name, the headline and every section title share one left edge.
 3. Check contrast when you introduce a new colour pairing. Text on its background must reach 4.5:1.
