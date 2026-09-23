@@ -25,7 +25,7 @@ Read the relevant skill before changing anything, and don't restate its rules el
 The non-negotiables:
 - **Values:** design values live only in `src/styles/global.css` as tokens with light and dark values. No raw hex in components.
 - **Blue:** blue marks clickable things (and the active path in figures). One `.button` per page; `.more-link` for everything else.
-- **Layout:** one page width (`--width-page` via `.wrap`) and one left edge for header, sections and footer. Sections are full-width bands, alternating plain and tinted, with rail titles on the left. Vertical gaps come from the `--gap-*` scale. Hairlines divide list items only. No cards, pills, badges, glass or backdrops.
+- **Layout:** one page width (`--width-page` via `.wrap`) and one left edge for header, sections and footer. Sections are full-width bands, alternating plain and tinted; on the homepage each one stacks its title above its content. The header scrolls away (not sticky). Vertical gaps come from the `--gap-*` scale. Hairlines divide list items only. No cards, pills, badges, glass or backdrops.
 - **Type:** eight sizes; weights 400 and 600; sentence-case labels; mono for dates and code only.
 
 ## 4. Verify
@@ -51,11 +51,11 @@ The non-negotiables:
 
 **Homepage**, from top to bottom, one band each:
 - hero (plain): Karan's name, role line, lead and actions on the left; his photo on the right
-- recent work (tinted): community logos, the Mem0 article and the latest talks
-- "What I fix" (plain): the `EvidenceTrail` figure, then three items from `src/data/practice.ts`, each with a `PracticeGlyph`
+- recent work (tinted): community icons, then the Mem0 article and the latest talks in three columns
+- "What I fix" (plain): the `EvidenceTrail` figure, then three items from `src/data/practice.ts` in three columns, each with a `PracticeGlyph`
 - closing (tinted): one question and one contact link
 
-**Design.** Apple-clean with the blue accent, which Karan likes: keep it. After friends' feedback (2026-09-23) the layout was widened to one 1200px edge with rail sections and tinted bands, and Karan was moved onto the first screen. Don't reintroduce centred heroes, eyebrows above every headline, or headlines ending in full stops. Don't bring back removed patterns either: uppercase mono labels, pills or chips, blueprint-style diagrams, decorative backdrops, a diagram gallery, topic archives.
+**Design.** Apple-clean with the blue accent, which Karan likes: keep it. After friends' feedback (2026-09-23) the layout was widened to one 1200px edge with stacked sections on tinted bands, and Karan was moved onto the first screen. Don't reintroduce centred heroes, eyebrows above every headline, or headlines ending in full stops. Don't bring back removed patterns either: uppercase mono labels, pills or chips, blueprint-style diagrams, decorative backdrops, a diagram gallery, topic archives.
 
 **Waiting on Karan:** the IO Connect photo (goes in `public/photos/`, replaces `profile.jpg` in the hero and as the share image).
 

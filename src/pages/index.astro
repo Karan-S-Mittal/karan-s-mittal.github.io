@@ -65,84 +65,82 @@ const monthYear = (value: Date) =>
     </section>
 
     <section class="band band--tint" aria-labelledby="recent-heading">
-      <div class="wrap rail">
-        <h2 id="recent-heading" class="rail-title">Recent work</h2>
+      <div class="wrap">
+        <h2 id="recent-heading" class="section-header">Recent work</h2>
 
-        <div class="recent-body">
-          <ul class="community-list" aria-label="Communities">
-            {communities.map((community) => (
-              <li>
-                <a class="community" href={community.links[0].url} target="_blank" rel="noopener">
-                  <img src={community.icon} alt="" width="44" height="44" loading="lazy" />
-                  <span class="community-text">
-                    <span class="community-name">{community.name}</span>
-                    <span class="community-role">{community.role}</span>
-                  </span>
+        <ul class="community-list" aria-label="Communities">
+          {communities.map((community) => (
+            <li>
+              <a class="community" href={community.links[0].url} target="_blank" rel="noopener">
+                <img src={community.icon} alt="" width="44" height="44" loading="lazy" />
+                <span class="community-text">
+                  <span class="community-name">{community.name}</span>
+                  <span class="community-role">{community.role}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <ul class="columns proof-list">
+          {latestLocalPost && (
+            <li class="proof-item">
+              <p class="proof-meta">
+                <span>Essay</span>
+                <time datetime={latestLocalPost.data.pubDate.toISOString()}>
+                  {monthYear(latestLocalPost.data.pubDate)}
+                </time>
+              </p>
+              <h3 class="proof-title">
+                <a href={`/writing/${latestLocalPost.id}/`}>{latestLocalPost.data.title}</a>
+              </h3>
+              <p class="proof-desc">{latestLocalPost.data.description}</p>
+            </li>
+          )}
+
+          {externalArticle && (
+            <li class="proof-item">
+              <p class="proof-meta">
+                <span>Published at {externalArticle.publication}</span>
+                <time datetime={externalArticle.pubDate}>
+                  {monthYear(new Date(externalArticle.pubDate))}
+                </time>
+              </p>
+              <h3 class="proof-title">
+                <a href={externalArticle.href} target="_blank" rel="noopener">
+                  {externalArticle.title}<span class="proof-mark" aria-hidden="true">&nbsp;&nearr;</span>
                 </a>
-              </li>
-            ))}
-          </ul>
+              </h3>
+              <p class="proof-desc">{externalArticle.description}</p>
+            </li>
+          )}
 
-          <ul class="proof-list">
-            {latestLocalPost && (
-              <li class="proof-item">
-                <p class="proof-meta">
-                  <span>Essay</span>
-                  <time datetime={latestLocalPost.data.pubDate.toISOString()}>
-                    {monthYear(latestLocalPost.data.pubDate)}
-                  </time>
-                </p>
-                <h3 class="proof-title">
-                  <a href={`/writing/${latestLocalPost.id}/`}>{latestLocalPost.data.title}</a>
-                </h3>
-                <p class="proof-desc">{latestLocalPost.data.description}</p>
-              </li>
-            )}
+          {recentTalks.map((talk) => (
+            <li class="proof-item">
+              <p class="proof-meta">
+                <span>{talk.type === 'workshop' ? 'Workshop' : 'Talk'} · {talk.event}</span>
+                <time datetime={talk.date}>{monthYear(new Date(talk.date))}</time>
+              </p>
+              <h3 class="proof-title">
+                {talk.links[0]
+                  ? <a href={talk.links[0].url} target="_blank" rel="noopener">{talk.title}<span class="proof-mark" aria-hidden="true">&nbsp;&nearr;</span></a>
+                  : talk.title}
+              </h3>
+              <p class="proof-desc">{talk.description}</p>
+            </li>
+          ))}
+        </ul>
 
-            {externalArticle && (
-              <li class="proof-item">
-                <p class="proof-meta">
-                  <span>Published at {externalArticle.publication}</span>
-                  <time datetime={externalArticle.pubDate}>
-                    {monthYear(new Date(externalArticle.pubDate))}
-                  </time>
-                </p>
-                <h3 class="proof-title">
-                  <a href={externalArticle.href} target="_blank" rel="noopener">
-                    {externalArticle.title}<span class="proof-mark" aria-hidden="true">&nbsp;&nearr;</span>
-                  </a>
-                </h3>
-                <p class="proof-desc">{externalArticle.description}</p>
-              </li>
-            )}
-
-            {recentTalks.map((talk) => (
-              <li class="proof-item">
-                <p class="proof-meta">
-                  <span>{talk.type === 'workshop' ? 'Workshop' : 'Talk'} at {talk.event} · {talk.org}</span>
-                  <time datetime={talk.date}>{monthYear(new Date(talk.date))}</time>
-                </p>
-                <h3 class="proof-title">
-                  {talk.links[0]
-                    ? <a href={talk.links[0].url} target="_blank" rel="noopener">{talk.title}<span class="proof-mark" aria-hidden="true">&nbsp;&nearr;</span></a>
-                    : talk.title}
-                </h3>
-                <p class="proof-desc">{talk.description}</p>
-              </li>
-            ))}
-          </ul>
-
-          <div class="actions">
-            <a class="more-link" href="/publications/">All writing and talks</a>
-          </div>
+        <div class="actions">
+          <a class="more-link" href="/publications/">All writing and talks</a>
         </div>
       </div>
     </section>
 
     <section id="practice" class="band" aria-labelledby="practice-heading">
       <div class="wrap">
-        <div class="rail">
-          <h2 id="practice-heading" class="rail-title">What I fix</h2>
+        <div class="section-header">
+          <h2 id="practice-heading">What I fix</h2>
           <p class="lead">
             I design graph-grounded knowledge systems and the evaluations that prove them, so every
             answer traces back to evidence and failures surface before users see them.
@@ -156,16 +154,14 @@ const monthYear = (value: Date) =>
           </figcaption>
         </figure>
 
-        <ol class="practice-list">
+        <ol class="columns practice-list">
           {practiceAreas.map((area) => (
             <li class="practice-item" id={area.id}>
-              <div class="practice-body">
-                <h3 class="practice-problem">{area.problem}</h3>
-                <p class="practice-intervention">{area.intervention}</p>
-              </div>
               <div class="practice-figure">
                 <PracticeGlyph kind={area.diagram} />
               </div>
+              <h3 class="practice-problem">{area.problem}</h3>
+              <p class="practice-intervention">{area.intervention}</p>
             </li>
           ))}
         </ol>
@@ -251,15 +247,19 @@ const monthYear = (value: Date) =>
       order: -1;
       width: 200px;
     }
+
+    .hero-role {
+      font-size: var(--ie-type-base);
+    }
   }
 
-  /* ---- Rail sections ------------------------------------------------ */
+  /* ---- Sections: title, then content, on the page edge -------------- */
 
-  .rail-title {
-    margin: 0;
+  .section-header {
+    margin-bottom: var(--gap-group);
   }
 
-  .rail .lead {
+  .section-header .lead {
     max-width: 58ch;
   }
 
@@ -314,17 +314,41 @@ const monthYear = (value: Date) =>
     font-size: var(--ie-type-small);
   }
 
-  .proof-list {
+  /* Three columns, side by side, so each section fits on about one screen. */
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: clamp(1.5rem, 3vw, 3rem);
+    row-gap: var(--gap-group);
     margin: 0;
     padding: 0;
-    border-top: 1px solid var(--ie-rule-strong);
     list-style: none;
   }
 
-  .proof-item {
+  .columns > li {
     margin: 0;
-    padding-block: clamp(1.5rem, 3vw, 2rem);
-    border-bottom: 1px solid var(--ie-rule-strong);
+    padding-top: var(--gap-related);
+    border-top: 1px solid var(--ie-rule-strong);
+  }
+
+  /* The glyphs differ in height, so practice items are subgrids: the
+     titles and text start on the same line in every column. */
+  .practice-list > li {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+  }
+
+  @media (max-width: 900px) {
+    .columns {
+      grid-template-columns: 1fr;
+    }
+
+    .practice-list > li {
+      grid-row: auto;
+      grid-template-rows: none;
+    }
   }
 
   .proof-meta {
@@ -374,31 +398,9 @@ const monthYear = (value: Date) =>
     margin: var(--gap-block) 0;
   }
 
-  .practice-list {
-    margin: 0;
-    padding: 0;
-    border-top: 1px solid var(--ie-rule);
-    list-style: none;
-  }
-
-  .practice-item {
-    margin: 0;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 300px;
-    align-items: center;
-    gap: 1.25rem clamp(2rem, 5vw, 4rem);
-    padding-block: clamp(1.75rem, 3.5vw, 2.5rem);
-    border-bottom: 1px solid var(--ie-rule);
-  }
-
-  @media (max-width: 760px) {
-    .practice-item {
-      grid-template-columns: 1fr;
-    }
-
-    .practice-figure {
-      max-width: 320px;
-    }
+  .practice-figure {
+    max-width: 320px;
+    margin-bottom: var(--gap-related);
   }
 
   .practice-problem {

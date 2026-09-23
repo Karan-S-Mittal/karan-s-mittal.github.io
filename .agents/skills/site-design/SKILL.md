@@ -1,6 +1,6 @@
 ---
 name: site-design
-description: Page UI rules for Karan Mittal's Astro site — the Apple-clean design system (neutral greys, blue for clickable only, one 1200px page width with a single left edge, rail sections on alternating bands, eight-size type scale, one button per page). Use whenever adding or changing a page, section, component, header/footer, or site copy. Figures use diagram-craft; essays use explanatory-studio.
+description: Page UI rules for Karan Mittal's Astro site — the Apple-clean design system (neutral greys, blue for clickable only, one 1200px page width with a single left edge, stacked sections on alternating bands, eight-size type scale, one button per page). Use whenever adding or changing a page, section, component, header/footer, or site copy. Figures use diagram-craft; essays use explanatory-studio.
 ---
 
 # Site design: Apple-clean
@@ -13,7 +13,7 @@ The site should read like a well-edited Apple product page with a person behind 
 2. **Blue means clickable.** `--ie-blue` marks links, `.more-link`, and the `.button` fill (`--ie-button`). Nothing decorative is blue. Header nav links are `--ie-ink-secondary` and turn ink on hover or when current.
 3. **One button per page.** A single `.button` (blue rounded square, `--radius-control`, squircle where supported) for the page's main action. Every other action is a `.more-link` (blue text followed by a ›).
 4. **Bands, not boxes.** The tinted band is the only surface on a page. No cards, tiles, pills, chips, badges, shadows, glassmorphism, or decorative backdrops. Soft tiles exist only inside diagrams.
-5. **Titles do the labelling.** In a rail section the left-column title names the section, so it gets no eyebrow. Use an `.eyebrow` (or `PageHeader` `label`) only where it adds information the headline doesn't. It is short, sentence case, semibold sans, `--ie-muted`; never uppercase, numbered, or accent-coloured.
+5. **Titles do the labelling.** A section title names the section, so it gets no eyebrow. Use an `.eyebrow` (or `PageHeader` `label`) only where it adds information the headline doesn't. It is short, sentence case, semibold sans, `--ie-muted`; never uppercase, numbered, or accent-coloured.
 6. **Dark mode keeps the hierarchy.** Every colour comes from a token that has both a light and a dark value.
 
 ## Type
@@ -38,7 +38,9 @@ The legacy names `--ie-type-micro`, `label`, `ui` and `h4` are aliases of these 
 ## Layout
 
 - **Page width.** `--width-page` (1200px) is the only page width. `.wrap` applies it with the side gutter; `.container` is `.wrap` plus `--page-top`. The header, the footer and every band use it. Never centre a narrower column inside it: cap the *measure* with `max-width` in `ch` on text instead (about 64ch for body, 52ch for leads).
-- **Rail sections.** `.rail` puts the section title in a left column (about 30%) and the content in the right. It collapses to one column at 720px. Use it for homepage sections, `/now/` and any list page. Figures sit in the content column.
+- **Sections stack.** On the homepage every section is the same shape: title (and lead) on the page edge, then its content below. Don't mix a side title with full-width content in one section; the eye loses the structure and sections seem to run into each other.
+- **Parallel items in columns.** Three items of the same kind (recent work, the practice rows) sit side by side in three columns, so a section fits on about one laptop screen. They stack below 900px.
+- **Rail rows.** `.rail` puts a short heading in a left column and its entries on the right. Use it for list pages such as `/now/`, not for homepage sections. It collapses to one column at 720px.
 - **Bands.** `.band` is a full-width section with `--gap-section` padding top and bottom; `.band--tint` fills it with `--ie-surface-raised`. Alternate plain and tinted; never put two tinted bands next to each other. When the last band is tinted it runs into the footer (the footer drops its top gap).
 - **Heroes are left-aligned** on the page edge: text on the left, the portrait on the right, stacking on phones. No centred heroes.
 
@@ -74,7 +76,7 @@ Reuse these before writing anything new:
   - `content/PageHeader.astro`: label, h1, lead and an optional actions slot for every inner page. It owns the `--gap-block` below it.
   - `content/YearGroup.astro`: a year heading over a list.
   - `content/TalkCard.astro`: one talk row.
-  - `layout/Header.astro`: a solid 52px bar: the `Mark` and name on the left, centred nav, Contact as a blue link. No blur.
+  - `layout/Header.astro`: a solid 52px bar: the `Mark` and name on the left, centred nav, Contact as a blue link. No blur, and not sticky: it scrolls away with the page, because a fixed bar sliding over tinted bands reads as overlapping sections.
   - `layout/Mark.astro`: the KM monogram (two nodes joined by an edge). `public/favicon.svg` and the PNG icons are the same drawing; change them together.
   - `layout/Footer.astro`: small grey text links on `--ie-surface-raised`.
 - **Page styles:** `src/styles/practice.css`, shared by the homepage and About.

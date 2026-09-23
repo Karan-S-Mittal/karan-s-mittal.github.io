@@ -122,10 +122,11 @@ function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {
 </script>
 
 <style>
-  /* Solid, not frosted: the header is a plain band with one hairline. */
+  /* A plain bar with one hairline that scrolls away with the page. It is not
+     sticky: a fixed white bar sliding over the tinted bands reads as one
+     section overlapping the next. z-index keeps the phone menu on top. */
   header {
-    position: sticky;
-    top: 0;
+    position: relative;
     z-index: 20;
     background: var(--ie-canvas);
     border-bottom: 1px solid var(--ie-rule);
