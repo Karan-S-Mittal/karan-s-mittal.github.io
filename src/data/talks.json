@@ -1,6 +1,24 @@
 {
   "talks": [
     {
+      "id": "paper-reading-pagedattention-2026",
+      "title": "Stop Wasting GPU VRAM — PagedAttention & vLLM Architecture",
+      "description": "Led the group through the PagedAttention paper (Kwon et al., SOSP 2023): how vLLM pages the KV cache like virtual memory instead of reserving GPU memory for it up front.",
+      "date": "2026-08-11",
+      "year": "2026",
+      "event": "Paper Reading Club",
+      "org": "ML Indore",
+      "community": "mlindore",
+      "venue": "Online",
+      "role": "Facilitator",
+      "type": "walkthrough",
+      "tags": ["Paper Reading Club", "ML Indore", "vLLM"],
+      "links": [
+        { "label": "Event page", "url": "https://www.commudle.com/communities/machine-learning-indore/events/paper-reading-club-stop-wasting-gpu-vram-pagedattention-vllm-architecture" },
+        { "label": "Paper", "url": "https://arxiv.org/abs/2309.06180" }
+      ]
+    },
+    {
       "id": "agentverse-rag-2026",
       "title": "Agentverse: The Scholar's Grimoire — Building Knowledge Engines with RAG",
       "description": "A hands-on session exploring how to build deterministic retrieval systems using GraphRAG, ADK, and Neo4j. Part of the Build with AI initiative by ML Indore & GDG Indore.",
