@@ -5,6 +5,7 @@ import { SITE } from '../config';
 import { practiceAreas } from '@data/practice';
 import { externalWriting } from '@data/publications';
 import talksData from '@data/talks.json';
+import { talkTypeLabel, type Talk } from '../types/talks';
 import communitiesData from '@data/communities.json';
 import EvidenceTrail from '@components/diagram/home/EvidenceTrail.astro';
 import PracticeGlyph from '@components/diagram/home/PracticeGlyph.astro';
@@ -120,7 +121,7 @@ const monthYear = (value: Date) =>
             <li class="proof-item">
               <p class="proof-meta">
                 <time datetime={talk.date}>{monthYear(new Date(talk.date))}</time>
-                <span>{talk.type === 'workshop' ? 'Workshop' : 'Talk'} · {talk.event}</span>
+                <span>{talkTypeLabel[talk.type as Talk['type']]} · {talk.event}</span>
               </p>
               <h3 class="proof-title">
                 {talk.links[0]

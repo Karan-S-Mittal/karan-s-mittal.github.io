@@ -1,5 +1,5 @@
 ---
-import type { Talk } from '../../types/talks';
+import { talkTypeLabel, type Talk } from '../../types/talks';
 import { formatTalkDate } from '../../utils/date';
 import CommunityIcon from './CommunityIcon.astro';
 
@@ -10,13 +10,6 @@ interface Props {
 
 const { talk, searchText } = Astro.props;
 const formattedDate = formatTalkDate(talk.date);
-
-const typeLabel: Record<Talk['type'], string> = {
-  talk: 'Session',
-  workshop: 'Workshop',
-  panel: 'Panel',
-  keynote: 'Keynote',
-};
 
 // The title carries the primary link, so the row needs no button. Anything
 // left over trails the entry as plain text links.
@@ -41,7 +34,7 @@ const footnote = [talk.event, talk.org, talk.venue, talk.audience && `Audience: 
     <p class="talk-meta">
       <time datetime={talk.date}>{formattedDate}</time>
       <span aria-hidden="true" class="meta-sep">·</span>
-      <span class="talk-type">{typeLabel[talk.type]}</span>
+      <span class="talk-type">{talkTypeLabel[talk.type]}</span>
     </p>
 
     <h3 class="talk-title">

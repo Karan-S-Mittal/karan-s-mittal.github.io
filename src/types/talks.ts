@@ -15,7 +15,7 @@ export interface Talk {
   community?: string;
   venue: string;
   role: string;
-  type: 'talk' | 'workshop' | 'panel' | 'keynote';
+  type: 'talk' | 'workshop' | 'panel' | 'keynote' | 'walkthrough';
   tags: string[];
   links: TalkLink[];
   slides?: string;
@@ -27,3 +27,12 @@ export interface Talk {
 export interface TalksData {
   talks: Talk[];
 }
+
+// How each kind of session is named wherever a talk is listed.
+export const talkTypeLabel: Record<Talk['type'], string> = {
+  talk: 'Talk',
+  workshop: 'Workshop',
+  panel: 'Panel',
+  keynote: 'Keynote',
+  walkthrough: 'Walkthrough',
+};

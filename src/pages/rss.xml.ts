@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import { SITE } from '../config';
 import { externalWriting } from '@data/publications';
 import talksData from '@data/talks.json';
+import { talkTypeLabel, type Talk } from '../types/talks';
 
 // Everything listed on /publications/: essays, articles published elsewhere,
 // and talks. Newest first.
@@ -25,7 +26,7 @@ export async function GET(context: APIContext) {
   const talks = talksData.talks.map((talk) => ({
     title: talk.title,
     pubDate: new Date(talk.date),
-    description: `${talk.type === 'workshop' ? 'Workshop' : 'Talk'} at ${talk.event}, ${talk.org}. ${talk.description}`,
+    description: `${talkTypeLabel[talk.type as Talk['type']]} at ${talk.event}, ${talk.org}. ${talk.description}`,
     link: talk.links[0]?.url ?? `/publications/#talks`,
   }));
 
