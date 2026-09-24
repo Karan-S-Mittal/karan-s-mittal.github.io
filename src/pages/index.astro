@@ -8,6 +8,7 @@ import talksData from '@data/talks.json';
 import communitiesData from '@data/communities.json';
 import EvidenceTrail from '@components/diagram/home/EvidenceTrail.astro';
 import PracticeGlyph from '@components/diagram/home/PracticeGlyph.astro';
+import CommunityIcon from '@components/content/CommunityIcon.astro';
 import '@styles/practice.css';
 
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
@@ -72,7 +73,7 @@ const monthYear = (value: Date) =>
           {communities.map((community) => (
             <li>
               <a class="community" href={community.links[0].url} target="_blank" rel="noopener">
-                <img src={community.icon} alt="" width="44" height="44" loading="lazy" />
+                <CommunityIcon id={community.id} />
                 <span class="community-text">
                   <span class="community-name">{community.name}</span>
                   <span class="community-role">{community.role}</span>
@@ -86,10 +87,10 @@ const monthYear = (value: Date) =>
           {latestLocalPost && (
             <li class="proof-item">
               <p class="proof-meta">
-                <span>Essay</span>
                 <time datetime={latestLocalPost.data.pubDate.toISOString()}>
                   {monthYear(latestLocalPost.data.pubDate)}
                 </time>
+                <span>Essay</span>
               </p>
               <h3 class="proof-title">
                 <a href={`/writing/${latestLocalPost.id}/`}>{latestLocalPost.data.title}</a>
@@ -101,10 +102,10 @@ const monthYear = (value: Date) =>
           {externalArticle && (
             <li class="proof-item">
               <p class="proof-meta">
-                <span>Published at {externalArticle.publication}</span>
                 <time datetime={externalArticle.pubDate}>
                   {monthYear(new Date(externalArticle.pubDate))}
                 </time>
+                <span>Published at {externalArticle.publication}</span>
               </p>
               <h3 class="proof-title">
                 <a href={externalArticle.href} target="_blank" rel="noopener">
@@ -118,8 +119,8 @@ const monthYear = (value: Date) =>
           {recentTalks.map((talk) => (
             <li class="proof-item">
               <p class="proof-meta">
-                <span>{talk.type === 'workshop' ? 'Workshop' : 'Talk'} · {talk.event}</span>
                 <time datetime={talk.date}>{monthYear(new Date(talk.date))}</time>
+                <span>{talk.type === 'workshop' ? 'Workshop' : 'Talk'} · {talk.event}</span>
               </p>
               <h3 class="proof-title">
                 {talk.links[0]
@@ -268,10 +269,12 @@ const monthYear = (value: Date) =>
 
   /* ---- Recent work -------------------------------------------------- */
 
+  /* A free row, not the three-column grid below it: lined up with the
+     columns, each community would read as the heading of the item under it. */
   .community-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-    gap: var(--gap-related) 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-related) 3rem;
     margin: 0 0 var(--gap-group);
     padding: 0;
     list-style: none;
@@ -290,14 +293,6 @@ const monthYear = (value: Date) =>
   }
 
   /* The hairline keeps a dark logo visible on the dark band. */
-  .community img {
-    flex-shrink: 0;
-    border-radius: 10px;
-    corner-shape: squircle;
-    outline: 1px solid var(--ie-rule-strong);
-    outline-offset: -1px;
-  }
-
   .community-text {
     display: flex;
     flex-direction: column;
