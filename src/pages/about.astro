@@ -1,6 +1,7 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import communitiesData from '@data/communities.json';
+import CommunityIcon from '@components/content/CommunityIcon.astro';
 import { SOCIALS } from '../config';
 import '@styles/practice.css';
 
@@ -139,6 +140,7 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
       <div class="community-ledger">
         {communitiesData.communities.map((community) => (
           <article class="community-ledger-row">
+            <CommunityIcon id={community.id} />
             <div class="community-main">
               <h3>{community.name}</h3>
               <p>{community.description}</p>
@@ -250,14 +252,12 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
   .step-spine-indicator {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .step-spine-pin {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 2.25rem;
     height: 1.75rem;
     color: var(--ie-muted);
     font-family: var(--font-sans);
@@ -335,7 +335,7 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
 
   .community-ledger-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: 44px minmax(0, 1fr) auto;
     gap: 1.25rem;
     align-items: center;
     padding: 1.25rem 0;
@@ -397,9 +397,13 @@ const linkedin = SOCIALS.find((social) => social.label === 'LinkedIn')!;
     }
 
     .community-ledger-row {
-      grid-template-columns: 1fr;
-      gap: 0.35rem;
+      grid-template-columns: 44px minmax(0, 1fr);
+      gap: 0.35rem 1rem;
       align-items: start;
+    }
+
+    .community-links {
+      grid-column: 2;
     }
   }
 
