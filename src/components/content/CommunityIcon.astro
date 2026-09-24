@@ -1,0 +1,33 @@
+---
+import communitiesData from '@data/communities.json';
+
+interface Props {
+  id: string;
+  size?: number;
+}
+
+// A community's square icon, used as the avatar beside its name or its talks.
+const { id, size = 44 } = Astro.props;
+const community = communitiesData.communities.find((entry) => entry.id === id);
+---
+
+{community && (
+  <img
+    class="community-icon"
+    src={community.icon}
+    alt=""
+    width={size}
+    height={size}
+    loading="lazy"
+  />
+)}
+
+<style>
+  .community-icon {
+    flex-shrink: 0;
+    border-radius: 10px;
+    corner-shape: squircle;
+    outline: 1px solid var(--ie-rule-strong);
+    outline-offset: -1px;
+  }
+</style>

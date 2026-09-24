@@ -11,6 +11,8 @@ export interface Talk {
   year: string;
   event: string;
   org: string;
+  // Id in communities.json when the talk was hosted by one of Karan's communities.
+  community?: string;
   venue: string;
   role: string;
   type: 'talk' | 'workshop' | 'panel' | 'keynote';
