@@ -57,7 +57,7 @@ The non-negotiables:
 
 **Design.** Apple-clean with the blue accent, which Karan likes: keep it. After friends' feedback (2026-09-23) the layout was widened to one 1200px edge with stacked sections on tinted bands, and Karan was moved onto the first screen. Don't reintroduce centred heroes, eyebrows above every headline, or headlines ending in full stops. Don't bring back removed patterns either: uppercase mono labels, pills or chips, blueprint-style diagrams, decorative backdrops, a diagram gallery, topic archives.
 
-**Waiting on Karan:** the IO Connect photo (goes in `public/photos/`, replaces `profile.jpg` in the hero and as the share image).
+**Photos.** The hero and the default share image are a selfie from Google I/O Connect India (July 2026), where Karan attended (he didn't speak, so it isn't a talk). Web crops live in `public/photos/`; the original was mirrored by the phone and has been flipped so signage reads, and metadata (including GPS) is stripped. About still uses `portrait.jpg`, the speaking photo.
 
 **Open work is proof, which Karan supplies:**
 - a public repo
