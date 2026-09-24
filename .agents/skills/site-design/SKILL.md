@@ -84,7 +84,7 @@ Reuse these before writing anything new:
   - `content/AccentTitle.astro`: renders a list title with its short name in blue. Use it for every list title (talks, writing, recent work) so the rule applies the same way everywhere.
   - `content/CommunityIcon.astro`: a community's square icon with its 1px outline. It's the only place that icon is styled.
   - `layout/Header.astro`: a solid 52px bar: the `Mark` and name on the left, centred nav, Contact as a blue link. No blur, and not sticky: it scrolls away with the page, because a fixed bar sliding over tinted bands reads as overlapping sections.
-  - `layout/Mark.astro`: the KM monogram (two nodes joined by an edge). `public/favicon.svg` and the PNG icons are the same drawing; change them together.
+  - `layout/Mark.astro`: the 8 mark, a flat two-tone redraw of `docs/brand/symbol.png`: blue top loop and front strand, ink bottom loop cut away where the blue crosses. `public/favicon.svg` (switches colours with the browser theme), `favicon-32.png` (on a white tile) and `apple-touch-icon.png` are the same drawing; change them together. The 3D render and the lockups in `docs/brand/` are for large uses off the site; the tagline in them never appears on the site.
   - `layout/Footer.astro`: small grey text links on `--ie-surface-raised`.
 - **Page styles:** `src/styles/practice.css`, shared by the homepage and About.
 - **Data** (`src/data/`):

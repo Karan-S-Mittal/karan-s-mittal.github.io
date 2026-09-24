@@ -1,7 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- KM monogram: the K's upper arm and the M's first stem end in two nodes joined by an edge. -->
-  <rect width="32" height="32" rx="8" fill="#1d1d1f"/>
-  <path d="M6 9v14M12.5 9L6 16l6.5 7M18.5 23V9l3.75 7.5L26 9v14" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M12.5 9h6" stroke="#2997ff" stroke-width="1.6"/>
-  <g fill="#2997ff"><circle cx="12.5" cy="9" r="2.3"/><circle cx="18.5" cy="9" r="2.3"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- The 8 mark, as in src/components/layout/Mark.astro: blue top loop crossing in front of an ink bottom loop. -->
+  <style>
+    .back { stroke: #1d1d1f; }
+    .front { stroke: #0066cc; }
+    @media (prefers-color-scheme: dark) {
+      .back { stroke: #f5f5f7; }
+      .front { stroke: #2997ff; }
+    }
+  </style>
+  <mask id="cut" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+    <rect width="64" height="64" fill="#fff"/>
+    <path d="M45.1 37.1C41 32.7 25.8 27.7 21.8 23.2" fill="none" stroke="#000" stroke-width="11"/>
+  </mask>
+  <g fill="none" stroke-width="7">
+    <path class="back" d="M42.2 23.2C38.2 27.7 23 32.7 18.9 37.1A16 12 0 1 0 45.1 37.1" mask="url(#cut)"/>
+    <path class="front" d="M45.1 37.1C41 32.7 25.8 27.7 21.8 23.2A12.5 10 0 1 1 42.2 23.2"/>
+  </g>
 </svg>

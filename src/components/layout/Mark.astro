@@ -1,22 +1,30 @@
 ---
 /**
- * The KM monogram: the K's upper arm and the M's first stem end in two nodes
- * joined by an edge. public/favicon.svg and the PNG icons are the same
- * drawing in fixed colours; change them together.
+ * The 8 mark: one ribbon that loops twice. The top loop and the strand that
+ * crosses in front are blue; the bottom loop is ink and is cut away where the
+ * blue passes over it. A flat redraw of docs/brand/symbol.png so it stays
+ * sharp at 16–32px. public/favicon.svg and the PNG icons are the same drawing
+ * in fixed colours; change them together.
  */
 interface Props {
+  /** Height in px; the width follows the glyph, so its left edge sits on the page edge. */
   size?: number;
 }
 
-const { size = 28 } = Astro.props;
+const { size = 26 } = Astro.props;
+const width = Math.round((size * 40) / 58);
+const maskId = `mark-cut-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
-<svg class="mark" viewBox="0 0 32 32" width={size} height={size} aria-hidden="true" focusable="false">
-  <rect class="mark-tile" width="32" height="32" rx="8" />
-  <path class="mark-letters" d="M6 9v14M12.5 9L6 16l6.5 7M18.5 23V9l3.75 7.5L26 9v14" />
-  <path class="mark-edge" d="M12.5 9h6" />
-  <circle class="mark-node" cx="12.5" cy="9" r="2.3" />
-  <circle class="mark-node" cx="18.5" cy="9" r="2.3" />
+<svg class="mark" viewBox="12 3 40 58" width={width} height={size} aria-hidden="true" focusable="false">
+  <defs>
+    <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff" />
+      <path d="M45.1 37.1C41 32.7 25.8 27.7 21.8 23.2" fill="none" stroke="#000" stroke-width="11" />
+    </mask>
+  </defs>
+  <path class="mark-back" d="M42.2 23.2C38.2 27.7 23 32.7 18.9 37.1A16 12 0 1 0 45.1 37.1" mask={`url(#${maskId})`} />
+  <path class="mark-front" d="M45.1 37.1C41 32.7 25.8 27.7 21.8 23.2A12.5 10 0 1 1 42.2 23.2" />
 </svg>
 
 <style>
@@ -25,25 +33,17 @@ const { size = 28 } = Astro.props;
     flex-shrink: 0;
   }
 
-  /* Inverts with the theme: an ink tile on light, a light tile on dark. */
-  .mark-tile {
-    fill: var(--ie-ink);
-  }
-
-  .mark-letters {
+  .mark path {
     fill: none;
-    stroke: var(--ie-canvas);
-    stroke-width: 2.6;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+    stroke-width: 7;
   }
 
-  .mark-edge {
+  /* Ink inverts with the theme; the blue stays the site's blue. */
+  .mark-back {
+    stroke: var(--ie-ink);
+  }
+
+  .mark-front {
     stroke: var(--ie-blue);
-    stroke-width: 1.6;
-  }
-
-  .mark-node {
-    fill: var(--ie-blue);
   }
 </style>

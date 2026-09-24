@@ -48,7 +48,7 @@ scripts/            capture-page.js (shot), new-post.js, find-icon.js
 
 ## Design rules
 
-The site follows one design system: neutral greys, blue only for things you can click, one 1200px page width with rail sections on alternating bands, and Apple-style figures. The favicon (`public/favicon.svg`, plus 32px and 180px PNGs) is the same KM monogram as `src/components/layout/Mark.astro`. The rules live in:
+The site follows one design system: neutral greys, blue only for things you can click, one 1200px page width with rail sections on alternating bands, and Apple-style figures. The favicon (`public/favicon.svg`, plus 32px and 180px PNGs) is the same 8 mark as `src/components/layout/Mark.astro`, a flat redraw of the masters in `docs/brand/`. The rules live in:
 
 - [`.agents/skills/site-design/SKILL.md`](.agents/skills/site-design/SKILL.md): pages, type, spacing, copy
 - [`.agents/skills/diagram-craft/SKILL.md`](.agents/skills/diagram-craft/SKILL.md): figures
