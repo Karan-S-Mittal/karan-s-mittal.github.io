@@ -10,6 +10,7 @@ import communitiesData from '@data/communities.json';
 import EvidenceTrail from '@components/diagram/home/EvidenceTrail.astro';
 import PracticeGlyph from '@components/diagram/home/PracticeGlyph.astro';
 import CommunityIcon from '@components/content/CommunityIcon.astro';
+import AccentTitle from '@components/content/AccentTitle.astro';
 import '@styles/practice.css';
 
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
@@ -94,7 +95,7 @@ const monthYear = (value: Date) =>
                 <span>Essay</span>
               </p>
               <h3 class="proof-title">
-                <a href={`/writing/${latestLocalPost.id}/`}>{latestLocalPost.data.title}</a>
+                <a href={`/writing/${latestLocalPost.id}/`}><AccentTitle title={latestLocalPost.data.title} /></a>
               </h3>
               <p class="proof-desc">{latestLocalPost.data.description}</p>
             </li>
@@ -110,7 +111,7 @@ const monthYear = (value: Date) =>
               </p>
               <h3 class="proof-title">
                 <a href={externalArticle.href} target="_blank" rel="noopener">
-                  {externalArticle.title}<span class="proof-mark" aria-hidden="true">&nbsp;&nearr;</span>
+                  <AccentTitle title={externalArticle.title} /><span class="proof-mark" aria-hidden="true">&nbsp;&nearr;</span>
                 </a>
               </h3>
               <p class="proof-desc">{externalArticle.description}</p>
@@ -125,7 +126,7 @@ const monthYear = (value: Date) =>
               </p>
               <h3 class="proof-title">
                 {talk.links[0]
-                  ? <a href={talk.links[0].url} target="_blank" rel="noopener">{talk.title}<span class="proof-mark" aria-hidden="true">&nbsp;&nearr;</span></a>
+                  ? <a href={talk.links[0].url} target="_blank" rel="noopener"><AccentTitle title={talk.title} /><span class="proof-mark" aria-hidden="true">&nbsp;&nearr;</span></a>
                   : talk.title}
               </h3>
               <p class="proof-desc">{talk.description}</p>

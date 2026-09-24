@@ -4,6 +4,7 @@ import Layout from '@layouts/Layout.astro';
 import PageHeader from '@components/content/PageHeader.astro';
 import YearGroup from '@components/content/YearGroup.astro';
 import TalkCard from '@components/content/TalkCard.astro';
+import AccentTitle from '@components/content/AccentTitle.astro';
 import { externalWriting, software } from '@data/publications';
 import talksData from '@data/talks.json';
 import type { Talk } from '../types/talks';
@@ -107,7 +108,7 @@ const title = headline[0].toUpperCase() + headline.slice(1);
                   </p>
                   <h3 class="pub-title">
                     <a href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener' : undefined}>
-                      {item.title}{item.external && <span class="ext-mark" aria-hidden="true">&nbsp;&nearr;</span>}
+                      <AccentTitle title={item.title} />{item.external && <span class="ext-mark" aria-hidden="true">&nbsp;&nearr;</span>}
                     </a>
                   </h3>
                   <p class="pub-desc">{item.description}</p>

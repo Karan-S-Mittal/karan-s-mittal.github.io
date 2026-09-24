@@ -1,0 +1,28 @@
+---
+interface Props {
+  title: string;
+}
+
+// Picks out the short name in a list title ("Agentverse: The Scholar's
+// Grimoire") in blue, leaving the rest in ink. Titles are links, so the blue
+// still marks something clickable. Only a name of up to three words before
+// ": " or " — " qualifies; any other title stays plain, so the blue falls
+// unevenly down a list instead of repeating on every row.
+const MAX_WORDS = 3;
+const { title } = Astro.props;
+const colon = title.indexOf(': ');
+const dash = title.indexOf(' — ');
+const cuts = [colon >= 0 ? colon + 1 : -1, dash].filter((cut) => cut > 0);
+const cut = cuts.length ? Math.min(...cuts) : -1;
+const name = cut > 0 ? title.slice(0, cut) : '';
+const lead = name && name.split(/\s+/).length <= MAX_WORDS ? name : '';
+const rest = lead ? title.slice(lead.length) : title;
+---
+
+{lead && <span class="title-accent">{lead}</span>}{rest}
+
+<style>
+  .title-accent {
+    color: var(--ie-blue);
+  }
+</style>

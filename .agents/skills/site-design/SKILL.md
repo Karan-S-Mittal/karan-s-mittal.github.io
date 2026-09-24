@@ -10,7 +10,7 @@ The site should read like a well-edited Apple product page with a person behind 
 ## Principles
 
 1. **One edge, one width.** Header, sections and footer share `--width-page` through `.wrap`, so everything starts at the same left x. Sections are full-width `.band`s; alternate plain and `.band--tint` to give the page structure. A hairline (`--ie-rule`) only divides items inside a list.
-2. **Blue means clickable.** `--ie-blue` marks links, `.more-link`, and the `.button` fill (`--ie-button`). Nothing decorative is blue. Header nav links are `--ie-ink-secondary` and turn ink on hover or when current.
+2. **Blue means clickable.** `--ie-blue` marks links, `.more-link`, and the `.button` fill (`--ie-button`). Nothing decorative is blue. Header nav links are `--ie-ink-secondary` and turn ink on hover or when current. List titles are links, so `AccentTitle` may pick out a short name in them (up to three words before ": " or " — ", as in "Agentverse:") in blue. Titles without one stay ink, so the accent falls unevenly down a list. Keep it to list titles: never whole titles, and never headlines.
 3. **One button per page.** A single `.button` (blue rounded square, `--radius-control`, squircle where supported) for the page's main action. Every other action is a `.more-link` (blue text followed by a ›).
 4. **Bands, not boxes.** The tinted band is the only surface on a page. No cards, tiles, pills, chips, badges, shadows, glassmorphism, or decorative backdrops. Soft tiles exist only inside diagrams.
 5. **Titles do the labelling.** A section title names the section, so it gets no eyebrow. Use an `.eyebrow` (or `PageHeader` `label`) only where it adds information the headline doesn't. It is short, sentence case, semibold sans, `--ie-muted`; never uppercase, numbered, or accent-coloured.
@@ -81,6 +81,7 @@ Reuse these before writing anything new:
   - `content/PageHeader.astro`: label, h1, lead and an optional actions slot for every inner page. It owns the `--gap-block` below it.
   - `content/YearGroup.astro`: one rail row, with the year on the left and its entries on the right. Consecutive groups share hairlines.
   - `content/TalkCard.astro`: one talk row. The community icon sits in a fixed 36px column, which stays empty when the talk wasn't hosted by one of Karan's communities, so every row's text starts at the same edge.
+  - `content/AccentTitle.astro`: renders a list title with its short name in blue. Use it for every list title (talks, writing, recent work) so the rule applies the same way everywhere.
   - `content/CommunityIcon.astro`: a community's square icon with its 1px outline. It's the only place that icon is styled.
   - `layout/Header.astro`: a solid 52px bar: the `Mark` and name on the left, centred nav, Contact as a blue link. No blur, and not sticky: it scrolls away with the page, because a fixed bar sliding over tinted bands reads as overlapping sections.
   - `layout/Mark.astro`: the KM monogram (two nodes joined by an edge). `public/favicon.svg` and the PNG icons are the same drawing; change them together.
