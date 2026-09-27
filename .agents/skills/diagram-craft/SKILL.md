@@ -23,8 +23,8 @@ Think of an apple.com feature diagram: calm tiles on a clean field, thin lines, 
 
 - `src/components/diagram/primitives/diagram.css` holds the grammar as classes: `.dg`, `.dg-tile(--active|--ok|--stop)`, `.dg-label(--lg|--muted|--ok|--stop)`, `.dg-sub`, `.dg-line(--active|--stop)`, `.dg-arrow(--stop)`, `.dg-check`, `.dg-draw`, `.dg-caption` and `.sr-only`. Import it and reuse the classes; add a class there rather than styling colours inside a component.
 - **Reference implementations:**
-  - `src/components/diagram/home/EvidenceTrail.astro`: the homepage "What I fix" lead figure. Wide and narrow layouts, draw-on motion, data-driven tiles and lines.
-  - `src/components/diagram/home/PracticeGlyph.astro`: small three- or four-step figures with a single stop branch.
+  - `src/components/diagram/home/EvidenceTrail.astro`: the flow figure Karan likes best, and the reference for the look. Wide and narrow layouts, draw-on motion, data-driven tiles and lines. It is off the homepage now; reuse it in an essay or as the model for new flow figures.
+  - `src/components/diagram/home/PracticeChart.astro`: small charts (line against a target, score across versions with one rust regression, a network with one blue path) in the same grammar. Each sits on one `.dg-panel` so it reads on a tinted band; `.dg-grid`, `.dg-dot` and `.dg-line--dashed` are the chart classes.
 
 ## Workflow: sketch first
 

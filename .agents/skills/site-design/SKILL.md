@@ -44,7 +44,7 @@ The legacy names `--ie-type-micro`, `label`, `ui` and `h4` are aliases of these 
 
 - **Page width.** `--width-page` (1200px) is the only page width. `.wrap` applies it with the side gutter; `.container` is `.wrap` plus `--page-top`. The header, the footer and every band use it. Never centre a narrower column inside it: cap the *measure* with `max-width` in `ch` on text instead (about 64ch for body, 52ch for leads).
 - **Sections stack.** On the homepage every section is the same shape: title (and lead) on the page edge, then its content below. Don't mix a side title with full-width content in one section; the eye loses the structure and sections seem to run into each other.
-- **Parallel items in columns.** Three items of the same kind (recent work, the practice rows) sit side by side in three columns, so a section fits on about one laptop screen. They stack below 900px.
+- **Parallel items in columns.** Three items of the same kind (writing and talks, the practice rows) sit side by side in three columns, so a section fits on about one laptop screen. They stack below 900px.
 - **Rail rows.** `.rail` puts a short heading in a left column and its entries on the right. Use it for list pages (the areas on `/now/`, the years on `/publications/` through `YearGroup`), not for homepage sections. It collapses to one column at 720px.
 - **Bands.** `.band` is a full-width section with `--gap-section` padding top and bottom; `.band--tint` fills it with `--ie-surface-raised`. Alternate plain and tinted; never put two tinted bands next to each other. When the last band is tinted it runs into the footer (the footer drops its top gap).
 - **Heroes are left-aligned** on the page edge: text on the left, the portrait on the right, stacking on phones. No centred heroes.
@@ -81,14 +81,14 @@ Reuse these before writing anything new:
   - `content/PageHeader.astro`: label, h1, lead and an optional actions slot for every inner page. It owns the `--gap-block` below it.
   - `content/YearGroup.astro`: one rail row, with the year on the left and its entries on the right. Consecutive groups share hairlines.
   - `content/TalkCard.astro`: one talk row. The community icon sits in a fixed 36px column, which stays empty when the talk wasn't hosted by one of Karan's communities, so every row's text starts at the same edge.
-  - `content/AccentTitle.astro`: renders a list title with its short name in blue. Use it for every list title (talks, writing, recent work) so the rule applies the same way everywhere.
+  - `content/AccentTitle.astro`: renders a list title with its short name in blue. Use it for every list title (talks, writing, the homepage writing and talks band) so the rule applies the same way everywhere.
   - `content/CommunityIcon.astro`: a community's square icon with its 1px outline. It's the only place that icon is styled.
   - `layout/Header.astro`: a solid 52px bar: the `Mark` and name on the left, centred nav, Contact as a blue link. No blur, and not sticky: it scrolls away with the page, because a fixed bar sliding over tinted bands reads as overlapping sections.
   - `layout/Mark.astro`: the 8 mark, a flat two-tone redraw of `docs/brand/symbol.png`: blue top loop and front strand, ink bottom loop cut away where the blue crosses. `public/favicon.svg` (switches colours with the browser theme), `favicon-32.png` (on a white tile) and `apple-touch-icon.png` are the same drawing; change them together. The 3D render and the lockups in `docs/brand/` are for large uses off the site; the tagline in them never appears on the site.
   - `layout/Footer.astro`: small grey text links on `--ie-surface-raised`.
 - **Page styles:** `src/styles/practice.css`, shared by the homepage and About.
 - **Data** (`src/data/`):
-  - `practice.ts`: the three "What I fix" items and their figure kinds.
+  - `practice.ts`: the three "What I build" items and their chart kinds.
   - `publications.ts`: external writing, plus `software`, which renders only when it isn't empty.
   - `communities.json`: Karan's communities. Their icons appear in three places, always through `CommunityIcon`: a free-flowing row on the homepage (never locked to the column grid below it), the avatar column on talk rows, and the About community list.
   - `talks.json`: one entry per session. Set `community` only when one of Karan's own communities hosted it; never to suggest a connection that isn't there. `type` names what he did (`talk`, `workshop`, `panel`, `keynote`, `walkthrough`), and `talkTypeLabel` in `src/types/talks.ts` holds the single label map for every page and the RSS feed. Order `links` by strength of proof: the organiser's event page first (it names him), then the paper, slides or his own post (for example LinkedIn). The title links to the first one.
@@ -97,14 +97,14 @@ Reuse these before writing anything new:
 
 ## Information architecture
 
-- The nav is **Publications · About · Now**, with Contact as the standing action.
+- The nav is **Writing and talks · About**, with Contact as the standing action. The nav label matches the page's headline. Now lives in the footer until it has real items.
 - `/publications/` holds Writing, Talks and Software. `/writing/`, `/speaking/`, `/talks/`, `/blog/`, `/tags/` and `/topics/` only redirect there.
 - Essays live at `/writing/<slug>/`.
 - Don't add sections or nav items for content that doesn't exist yet.
 
 ## Copy
 
-- **Position:** graph-grounded knowledge systems and LLM evaluation, with graph theory research. AI agents are one application, not the headline. Karan is hired independently; Dextar is a credential, not the offer.
+- **Position:** data visualisation expert. The work is dashboards in Plotly Dash and Streamlit, charts that explain models, and graph and network views; the proof is Plotly, Lam Research and UsefulBI. Clients are the main reader. Dextar (co-founder and CTO) is a credential, not the offer.
 - **Voice:** calm, exact, first person, and sentence case everywhere, including headings, buttons, labels and titles.
 - **Honest labels:** call a thing what it is. Don't use words like "research", "masterclass" or "case study" unless that is literally what it is. Never add placeholder, speculative or invented entries.
 - **Brevity:** one idea per sentence and one purpose per section. Say something once per page.

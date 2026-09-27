@@ -1,6 +1,6 @@
 # karan-s-mittal.github.io
 
-Karan Mittal's personal site: graph-grounded knowledge systems, LLM evaluation, writing and talks. Live at **https://karan-s-mittal.github.io**.
+Karan Mittal's personal site: data visualisation, writing and talks. Live at **https://karan-s-mittal.github.io**.
 
 It's a static [Astro](https://astro.build) site. Every push to `main` deploys to GitHub Pages.
 
