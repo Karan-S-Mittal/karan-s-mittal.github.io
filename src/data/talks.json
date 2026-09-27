@@ -21,41 +21,41 @@
     {
       "id": "agentverse-rag-2026",
       "title": "Agentverse: The Scholar's Grimoire — Building Knowledge Engines with RAG",
-      "description": "A hands-on session exploring how to build deterministic retrieval systems using GraphRAG, ADK, and Neo4j. Part of the Build with AI initiative by ML Indore & GDG Indore.",
+      "description": "A hands-on session on building deterministic retrieval systems with GraphRAG, ADK and Neo4j.",
       "date": "2026-02-21",
       "year": "2026",
       "event": "Build with AI",
-      "org": "ML Indore & GDG Indore",
+      "org": "ML Indore and GDG Indore",
       "community": "mlindore",
-      "venue": "SiyaTech Ventures, Indore",
+      "venue": "Siya Tech Ventures, Indore",
       "role": "Speaker",
       "type": "workshop",
-      "tags": ["Build with AI", "ML Indore & GDG Indore", "SiyaTech Ventures"],
+      "tags": ["Build with AI", "ML Indore and GDG Indore", "Siya Tech Ventures"],
       "links": [
-        { "label": "Event Details", "url": "https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/" }
+        { "label": "Event page", "url": "https://gdg.community.dev/events/details/google-gdg-indore-presents-build-with-ai-hands-on-ai-agents-amp-llmops-workshop-ml-indore-amp-gdg-indore/" }
       ]
     },
     {
       "id": "cloud-bytes-ccd-intro-2025",
       "title": "Cloud Bytes: Your CCD 2025 Intro",
-      "description": "An exclusive online session introducing cloud technologies and giving a sneak peek into Cloud Community Days 2025 Indore. Organised by GDG Cloud Indore in collaboration with GDG On Campus chapters.",
+      "description": "An online session introducing cloud technologies ahead of Cloud Community Days Indore 2025.",
       "date": "2025-07-02",
       "year": "2025",
       "event": "Cloud Bytes",
-      "org": "GDG Cloud Indore & GDG On Campus",
+      "org": "GDG Cloud Indore and GDG on Campus",
       "community": "gdg-cloud-indore",
       "venue": "Online",
       "role": "Speaker",
       "type": "talk",
-      "tags": ["GDG Cloud Indore", "GDG On Campus"],
+      "tags": ["GDG Cloud Indore", "GDG on Campus"],
       "links": [
-        { "label": "Event Details", "url": "https://gdg.community.dev/events/details/google-gdg-cloud-indore-presents-cloud-bytes-your-ccd-2025-intro/" }
+        { "label": "Event page", "url": "https://gdg.community.dev/events/details/google-gdg-cloud-indore-presents-cloud-bytes-your-ccd-2025-intro/" }
       ]
     },
     {
       "id": "cloud-community-days-2025",
       "title": "Cloud Community Days Indore 2025",
-      "description": "Spoke on cloud-native AI architecture and MLOps infrastructure at Cloud Community Days Indore. Hosted at Marriott Hotel, Indore.",
+      "description": "Spoke on cloud-native AI architecture and MLOps infrastructure.",
       "date": "2025-07-12",
       "year": "2025",
       "event": "Cloud Community Days",
@@ -66,30 +66,30 @@
       "type": "talk",
       "tags": ["GDG Cloud Indore"],
       "links": [
-        { "label": "Event Details", "url": "https://konfhub.com/ccd-2025-indore" }
+        { "label": "Event page", "url": "https://konfhub.com/ccd-2025-indore" }
       ]
     },
     {
       "id": "build-with-ai-workshop-2-2025",
       "title": "Build with AI Indore — Workshop 2",
-      "description": "Hands-on workshop on AI agents and LLM systems at scale. Part of the Build with AI series by ML Indore in collaboration with Google for Developers.",
+      "description": "A hands-on workshop on AI agents and LLM systems at scale, in collaboration with Google for Developers.",
       "date": "2025-04-26",
       "year": "2025",
       "event": "Build with AI",
       "org": "ML Indore",
       "community": "mlindore",
-      "venue": "Siya Tech Ventures, Atulya IT Park",
+      "venue": "Siya Tech Ventures, Indore",
       "role": "Speaker",
       "type": "workshop",
       "tags": ["ML Indore"],
       "links": [
-        { "label": "Event Details", "url": "https://www.commudle.com/communities/machine-learning-indore/events/build-with-ai-indore-workshop-2" }
+        { "label": "Event page", "url": "https://www.commudle.com/communities/machine-learning-indore/events/build-with-ai-indore-workshop-2" }
       ]
     },
     {
       "id": "build-with-ai-ips-2025",
       "title": "Build with AI — GDG on Campus IPS Academy",
-      "description": "Speaker at the Build with AI campus event at IPS Academy Indore, introducing students to Google AI tools including AI Studio, Gemini, and Gemma.",
+      "description": "Introduced students to Google AI tools, including AI Studio, Gemini and Gemma.",
       "date": "2025-03-31",
       "year": "2025",
       "event": "Build with AI",
@@ -99,7 +99,7 @@
       "type": "workshop",
       "tags": ["GDG on Campus", "IPS Academy"],
       "links": [
-        { "label": "Event Details", "url": "https://gdg.community.dev/events/details/google-gdg-on-campus-ips-academy-indore-india-presents-build-with-ai-1/" }
+        { "label": "Event page", "url": "https://gdg.community.dev/events/details/google-gdg-on-campus-ips-academy-indore-india-presents-build-with-ai-1/" }
       ]
     }
   ]

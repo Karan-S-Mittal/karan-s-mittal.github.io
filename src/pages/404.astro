@@ -2,17 +2,16 @@
 import Layout from '@layouts/Layout.astro';
 ---
 
-<Layout title="Page not found | Karan Mittal" description="This path does not resolve." robots="noindex, follow">
+<Layout title="Page not found | Karan Mittal" description="The page you asked for isn’t here." robots="noindex, follow">
   <main class="container lost">
     <p class="eyebrow">Error 404</p>
-    <h1>This path does not resolve</h1>
+    <h1>Page not found</h1>
     <p class="lost-copy">
-      The page you asked for was moved, renamed, or never existed.
-      The rest of the site is intact.
+      It may have moved, or the link may be mistyped.
     </p>
     <div class="lost-actions">
       <a class="button" href="/">Back to the homepage</a>
-      <a class="more-link" href="/publications/">Browse publications</a>
+      <a class="more-link" href="/publications/">Writing and talks</a>
     </div>
   </main>
 </Layout>
@@ -25,6 +24,8 @@ import Layout from '@layouts/Layout.astro';
   .lost-copy {
     max-width: 46ch;
     margin-bottom: var(--gap-group);
+    color: var(--ie-muted);
+    font-size: var(--ie-type-body);
   }
   .lost-actions {
     display: flex;

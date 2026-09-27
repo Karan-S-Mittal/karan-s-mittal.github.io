@@ -38,7 +38,7 @@ There are eight sizes. Use the tokens and never add a literal size:
 | `--ie-type-h1` | fluid | page headlines |
 | `--ie-type-display` | fluid | homepage hero only |
 
-The legacy names `--ie-type-micro`, `label`, `ui` and `h4` are aliases of these steps. Headlines use weight 600 with slightly negative letter-spacing. Leads sit in `--ie-muted` directly under the headline.
+Headlines use weight 600 with slightly negative letter-spacing. Leads sit in `--ie-muted` directly under the headline.
 
 ## Layout
 
@@ -108,6 +108,7 @@ Reuse these before writing anything new:
 - **Voice:** calm, exact, first person, and sentence case everywhere, including headings, buttons, labels and titles.
 - **Honest labels:** call a thing what it is. Don't use words like "research", "masterclass" or "case study" unless that is literally what it is. Never add placeholder, speculative or invented entries.
 - **Brevity:** one idea per sentence and one purpose per section. Say something once per page.
+- **Lists in prose** take no serial (Oxford) comma ("talks, workshops and essays"), except where an item already contains "and" and the comma prevents a misreading.
 - **Headlines** have no trailing full stop. Avoid slogan-shaped one-liners, tidy lists of three, and paired dashes: they read as generated. Give each lead one concrete detail (a domain, a number, an event).
 
 ## Checklist for a new page or section

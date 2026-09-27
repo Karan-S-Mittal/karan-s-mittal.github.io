@@ -5,7 +5,7 @@ export const externalWriting = [
     pubDate: '2026-09-17',
     href: 'https://mem0.ai/blog/openai-codex-vs-claude-code-which-ai-coding-agent-wins-in-2026',
     description:
-      'A systems-level comparison of coding-agent harnesses: context assembly, execution boundaries, memory, supervision, and review workflow.',
+      'A systems-level comparison of coding-agent harnesses: context assembly, execution boundaries, memory, supervision and review workflow.',
   },
 ] as const;
 
