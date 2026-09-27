@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import { normalizeTag, tagSlug } from '@utils/tags.js';
 
-// Legacy /tags/* routes. Topic archives are retired (see AGENTS.md section 7),
+// Legacy /tags/* routes. Topic archives are retired (see AGENTS.md, Current state),
 // so every tag resolves to the writing index rather than a missing page.
 export async function getStaticPaths() {
   const allPosts = await getCollection('blog');

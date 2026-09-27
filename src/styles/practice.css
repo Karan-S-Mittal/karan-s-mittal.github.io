@@ -41,7 +41,7 @@
   margin: 0 0 1rem;
   color: var(--ie-ink-secondary);
   font-family: var(--font-sans);
-  font-size: var(--ie-type-h4);
+  font-size: var(--ie-type-base);
   line-height: 1.55;
 }
 
@@ -84,13 +84,13 @@
   flex-shrink: 0;
   align-content: center;
   font-family: var(--font-sans);
-  font-size: var(--ie-type-ui);
+  font-size: var(--ie-type-small);
 }
 
 .practice-page time {
   color: var(--ie-muted);
   font-family: var(--font-mono);
-  font-size: var(--ie-type-label);
+  font-size: var(--ie-type-caption);
   line-height: 1.6;
 }
 
