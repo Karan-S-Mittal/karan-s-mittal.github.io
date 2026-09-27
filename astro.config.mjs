@@ -16,9 +16,11 @@ export default defineConfig({
   prefetch: { defaultStrategy: 'viewport', prefetchAll: false },
   integrations: [
     sitemap({
-      // Redirect stubs and the two low-value pages stay out of the sitemap.
-      filter: (page) => !/^\/(?:blog|talks|tags|topics|publications|contact|now)(?:\/.*)?\/?$/
-        .test(new URL(page).pathname),
+      // Only real pages: the legacy routes that just redirect stay out.
+      filter: (page) => {
+        const path = new URL(page).pathname;
+        return !/^\/(?:blog|talks|speaking|tags|topics)(?:\/|$)/.test(path) && path !== '/writing/';
+      },
     }),
     mdx(),
   ],
