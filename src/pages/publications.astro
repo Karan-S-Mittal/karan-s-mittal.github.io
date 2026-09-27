@@ -1,4 +1,5 @@
 ---
+import { formatDate } from '@utils/date';
 import { getCollection } from 'astro:content';
 import Layout from '@layouts/Layout.astro';
 import PageHeader from '@components/content/PageHeader.astro';
@@ -62,13 +63,10 @@ const talksByYear = talks.reduce<Record<string, Talk[]>>((acc, talk) => {
 }, {});
 const talkYears = Object.keys(talksByYear).sort((a, b) => Number(b) - Number(a));
 
-const formatDate = (date: Date) =>
-  date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
-
 const sections = [
-  { id: 'writing', label: 'Writing', show: true },
-  { id: 'talks', label: 'Talks', show: talks.length > 0 },
-  { id: 'software', label: 'Software', show: software.length > 0 },
+  { id: 'writing', show: true },
+  { id: 'talks', show: talks.length > 0 },
+  { id: 'software', show: software.length > 0 },
 ].filter((section) => section.show);
 
 // The headline names only the sections that exist ("Writing and talks").
@@ -78,20 +76,14 @@ const title = headline[0].toUpperCase() + headline.slice(1);
 ---
 
 <Layout
-  title="Publications | Karan Mittal"
-  description="Writing, talks, and workshops by Karan Mittal on knowledge systems, LLM evaluation, and graph-grounded retrieval."
+  title="Writing and talks | Karan Mittal"
+  description="Writing, talks, and workshops by Karan Mittal."
 >
   <main class="container publications-page">
     <PageHeader
       title={title}
-      description="Public work on knowledge systems, LLM evaluation, and graph-grounded retrieval."
-    >
-      <nav class="section-index" aria-label="On this page">
-        {sections.map((section) => (
-          <a class="more-link" href={`#${section.id}`}>{section.label}</a>
-        ))}
-      </nav>
-    </PageHeader>
+      description="Articles, talks and workshops, most of them for the communities I help run."
+    />
 
     <section id="writing" class="pub-section" aria-labelledby="writing-heading">
       <h2 id="writing-heading">Writing</h2>
@@ -163,17 +155,12 @@ const title = headline[0].toUpperCase() + headline.slice(1);
         For a conference session or a workshop with your team, tell me about the audience and
         what you would like them to understand or build.
       </p>
-      <a href="/contact/" class="button">Inquire about speaking</a>
+      <a href="/contact/" class="button">Enquire about speaking</a>
     </section>
   </main>
 </Layout>
 
 <style>
-  .section-index {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 1.75rem;
-  }
 
   /* Sections sit --gap-section apart; the first follows the page intro,
      which already supplies --gap-block. */

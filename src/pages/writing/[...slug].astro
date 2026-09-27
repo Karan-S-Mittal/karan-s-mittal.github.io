@@ -1,4 +1,5 @@
 ---
+import { formatDate } from '@utils/date';
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import Layout from '@layouts/Layout.astro';
 import TableOfContents from '@components/layout/TableOfContents.astro';
@@ -26,11 +27,7 @@ const showToc = tocHeadings.length > 2;
 
 const readingTime = getReadingTime(post.body || '');
 
-const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+const formattedDate = formatDate(post.data.pubDate);
 ---
 
 <Layout
@@ -38,6 +35,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   description={post.data.description}
   type="article"
   pubDate={post.data.pubDate}
+  canonical={post.data.firstPublished?.url}
   image={
     post.data.image
       ? new URL(post.data.image, Astro.site).toString()
@@ -58,7 +56,17 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
               <>
                 <span aria-hidden="true" class="meta-sep">·</span>
                 <span class="updated">
-                  Updated {post.data.updatedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  Updated <time datetime={post.data.updatedDate.toISOString()}>{formatDate(post.data.updatedDate)}</time>
+                </span>
+              </>
+            )}
+            {post.data.firstPublished && (
+              <>
+                <span>
+                  <span aria-hidden="true" class="meta-sep">·</span> First published on{' '}
+                  <a href={post.data.firstPublished.url} target="_blank" rel="noopener">
+                    {post.data.firstPublished.site}
+                  </a>
                 </span>
               </>
             )}
@@ -127,9 +135,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
       <PostCTA />
 
       <footer class="post-footer">
-        <p class="back-link">
-          <a href="/publications/">← All publications</a>
-        </p>
+        <a class="more-link" href="/publications/">All writing and talks</a>
       </footer>
     </article>
 
@@ -180,10 +186,13 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     gap: 0.45rem;
     flex-wrap: wrap;
     margin-bottom: 1.25rem;
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    letter-spacing: 0.02em;
+    font-size: var(--ie-type-small);
     color: var(--ie-muted);
+  }
+
+  .post-meta time {
+    font-family: var(--font-mono);
+    font-size: var(--ie-type-caption);
   }
   .meta-sep {
     color: var(--ie-rule-strong);
@@ -284,24 +293,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   }
 
   .post-footer {
-    max-width: 700px;
-    margin-top: var(--space-8, 4rem);
-    padding-top: var(--space-5, 2rem);
-    border-top: 1px solid var(--ie-rule-strong);
-  }
-  .back-link {
-    margin: 0;
-  }
-  .back-link a {
-    font-size: var(--ie-type-ui);
-    font-weight: 600;
-    color: var(--ie-blue);
-    text-decoration: none;
-    transition: opacity 120ms ease;
-  }
-  .back-link a:hover {
-    opacity: 0.85;
-    text-decoration: underline;
+    margin-top: var(--gap-group);
   }
 
   @media (max-width: 1100px) {

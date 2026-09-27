@@ -1,0 +1,170 @@
+---
+/**
+ * Small illustrative chart above each "What I build" item. Same grammar as
+ * EvidenceTrail: one soft panel, hairlines, the data that matters in blue,
+ * at most one rust mark, and a one-time draw-on for the blue line.
+ *
+ * The viewBox is 280 wide so 13px labels stay at 12px or more in the
+ * narrowest three-column layout (about 260px per column).
+ */
+import '../primitives/diagram.css';
+import type { ChartKind } from '@data/practice';
+
+interface Props {
+  kind: ChartKind;
+}
+
+const { kind } = Astro.props;
+
+const W = 280;
+const H = 180;
+const id = `pc-${kind}`;
+
+type Point = [number, number];
+const toPath = (points: Point[]) =>
+  points.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
+
+// Weekly metric: 12 weeks of on-time orders against a 90% target.
+const weekly = [84, 85, 83, 86, 87, 86, 88, 89, 88, 91, 92, 94];
+const metricY = (v: number) => 150 - ((v - 80) / 16) * 100;
+const metricPoints: Point[] = weekly.map((v, i) => [16 + (i * 248) / 11, metricY(v)]);
+const metricLast = metricPoints[metricPoints.length - 1];
+
+// Model versions: evaluation score per release; v6 is the regression.
+const scores = [0.79, 0.8, 0.84, 0.84, 0.89, 0.76, 0.87];
+const scoreY = (v: number) => 140 - ((v - 0.72) / 0.2) * 92;
+const scorePoints: Point[] = scores.map((v, i) => [56 + i * 34.7, scoreY(v)]);
+const regression = 5;
+
+// Network: four records on the path from customer to supplier, six others.
+const nodes: Record<string, Point> = {
+  customer: [36, 118],
+  order: [104, 80],
+  lot: [176, 118],
+  supplier: [244, 76],
+  a: [44, 62],
+  b: [150, 50],
+  c: [120, 152],
+  d: [214, 154],
+  e: [258, 128],
+  f: [200, 44],
+};
+const pathNodes = ['customer', 'order', 'lot', 'supplier'];
+const otherEdges: [string, string][] = [
+  ['customer', 'a'], ['a', 'order'], ['order', 'b'], ['b', 'f'],
+  ['customer', 'c'], ['c', 'lot'], ['lot', 'd'], ['lot', 'e'], ['e', 'supplier'],
+];
+const labels: { node: string; dy: number; text: string }[] = [
+  { node: 'customer', dy: 26, text: 'Customer' },
+  { node: 'order', dy: -16, text: 'Order' },
+  { node: 'lot', dy: 26, text: 'Lot' },
+  { node: 'supplier', dy: -16, text: 'Supplier' },
+];
+
+const titles: Record<ChartKind, string> = {
+  metric: 'A weekly metric against its target',
+  versions: 'Evaluation score across model versions',
+  network: 'A path through connected records',
+};
+const descriptions: Record<ChartKind, string> = {
+  metric:
+    'Illustrative line chart of orders shipped on time over twelve weeks. The line starts at 84%, stays under the 90% target until week 10, and ends at 94% in week 12.',
+  versions:
+    'Illustrative line chart of an evaluation score for model versions 1 to 7. The score rises from 0.79 to 0.89 at version 5, drops to 0.76 at version 6, a regression, and recovers to 0.87 at version 7.',
+  network:
+    'Illustrative network of ten records. One path is highlighted: from a customer to an order, from the order to a lot, and from the lot to a supplier. The other six records are connected but not on the path.',
+};
+---
+
+<div class="practice-chart" data-draw>
+  <svg class="dg" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby={`${id}-title ${id}-desc`}>
+    <title id={`${id}-title`}>{titles[kind]}</title>
+    <desc id={`${id}-desc`}>{descriptions[kind]}</desc>
+    <rect class="dg-panel" width={W} height={H} rx="14" />
+
+    {kind === 'metric' && (
+      <g>
+        <text class="dg-sub" x="16" y="28">On-time orders</text>
+        <text class="dg-label dg-label--lg" x="264" y="28" text-anchor="end">94%</text>
+        <path class="dg-line dg-line--dashed" d={`M16 ${metricY(90)} H264`} />
+        <text class="dg-sub" x="16" y={metricY(90) - 8}>Target 90%</text>
+        <path class="dg-line dg-line--active dg-draw" pathLength="1" d={toPath(metricPoints)} />
+        <circle class="dg-dot dg-dot--active" cx={metricLast[0]} cy={metricLast[1]} r="5" />
+        <text class="dg-sub" x="16" y="170">Week 1</text>
+        <text class="dg-sub" x="264" y="170" text-anchor="end">Week 12</text>
+      </g>
+    )}
+
+    {kind === 'versions' && (
+      <g>
+        <text class="dg-sub" x="16" y="28">Eval score</text>
+        {[0.8, 0.9].map((v) => (
+          <g>
+            <path class="dg-grid" d={`M52 ${scoreY(v)} H268`} />
+            <text class="dg-sub" x="16" y={scoreY(v) + 4}>{v.toFixed(2)}</text>
+          </g>
+        ))}
+        <path class="dg-line dg-line--active dg-draw" pathLength="1" d={toPath(scorePoints)} />
+        {scorePoints.map(([x, y], i) => (
+          <circle
+            class:list={['dg-dot', i === regression ? 'dg-dot--stop' : 'dg-dot--active']}
+            cx={x}
+            cy={y}
+            r={i === regression ? 5.5 : 4}
+          />
+        ))}
+        <text class="dg-sub dg-label--stop" x={scorePoints[regression][0]} y={scorePoints[regression][1] + 22} text-anchor="middle">Regression</text>
+        {scorePoints.map(([x], i) => (
+          <text class="dg-sub" x={x} y="170" text-anchor="middle">v{i + 1}</text>
+        ))}
+      </g>
+    )}
+
+    {kind === 'network' && (
+      <g>
+        <text class="dg-sub" x="16" y="28">Connected records</text>
+        {otherEdges.map(([from, to]) => (
+          <path class="dg-line" d={`M${nodes[from][0]} ${nodes[from][1]} L${nodes[to][0]} ${nodes[to][1]}`} />
+        ))}
+        <path class="dg-line dg-line--active dg-draw" pathLength="1" d={toPath(pathNodes.map((n) => nodes[n]))} />
+        {Object.entries(nodes).map(([name, [x, y]]) => (
+          <circle
+            class:list={['dg-dot', { 'dg-dot--active': pathNodes.includes(name) }]}
+            cx={x}
+            cy={y}
+            r={pathNodes.includes(name) ? 6 : 4.5}
+          />
+        ))}
+        {labels.map(({ node, dy, text }) => (
+          <text class="dg-label" x={nodes[node][0]} y={nodes[node][1] + dy} text-anchor="middle">{text}</text>
+        ))}
+      </g>
+    )}
+  </svg>
+</div>
+
+<script is:inline>
+  // Same draw-on as EvidenceTrail: hidden before first paint, traced once
+  // on screen, skipped under reduced motion or without JavaScript.
+  (function () {
+    var fig = document.currentScript && document.currentScript.previousElementSibling;
+    if (!fig || !('IntersectionObserver' in window)) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    fig.setAttribute('data-draw', 'pending');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        requestAnimationFrame(function () { fig.setAttribute('data-draw', 'done'); });
+        io.disconnect();
+      });
+    }, { threshold: 0.3 });
+    io.observe(fig);
+  })();
+</script>
+
+<style>
+  .practice-chart {
+    width: 100%;
+    max-width: 420px;
+  }
+</style>

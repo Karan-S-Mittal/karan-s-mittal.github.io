@@ -28,6 +28,36 @@
   fill: var(--ie-rust-soft);
 }
 
+/* A chart's plot panel. Canvas-coloured so it reads on a tinted band. */
+.dg-panel {
+  fill: var(--ie-canvas);
+}
+
+.dg-grid {
+  fill: none;
+  stroke: var(--ie-rule);
+  stroke-width: 1;
+}
+
+.dg-line--dashed {
+  stroke-dasharray: 3 5;
+}
+
+/* Data points and network nodes. The ring separates overlapping marks. */
+.dg-dot {
+  fill: var(--ie-rule-strong);
+  stroke: var(--ie-canvas);
+  stroke-width: 2;
+}
+
+.dg-dot--active {
+  fill: var(--ie-blue);
+}
+
+.dg-dot--stop {
+  fill: var(--ie-rust);
+}
+
 .dg-label {
   fill: var(--ie-ink);
   font-size: 14px;

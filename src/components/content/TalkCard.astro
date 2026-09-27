@@ -1,6 +1,6 @@
 ---
 import { talkTypeLabel, type Talk } from '../../types/talks';
-import { formatTalkDate } from '../../utils/date';
+import { formatDate } from '../../utils/date';
 import CommunityIcon from './CommunityIcon.astro';
 import AccentTitle from './AccentTitle.astro';
 
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const { talk, searchText } = Astro.props;
-const formattedDate = formatTalkDate(talk.date);
+const formattedDate = formatDate(talk.date);
 
 // The title carries the primary link, so the row needs no button. Anything
 // left over trails the entry as plain text links.

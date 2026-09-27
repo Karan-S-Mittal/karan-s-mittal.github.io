@@ -19,6 +19,9 @@ const blog = defineCollection({
     image: z.string().optional(),
     /** Editorial caption describing the hero visual. */
     heroCaption: z.string().optional(),
+    /** Where the essay first appeared (e.g. Medium). Shown in the meta line
+     *  and used as the canonical URL, so search engines credit the original. */
+    firstPublished: z.object({ site: z.string(), url: z.string().url() }).optional(),
   }),
 });
 

@@ -1,109 +1,56 @@
 ---
 /**
  * PostCTA.astro
- * End-of-essay consultation call to action, rendered automatically by the
- * post layout so it can never again be forgotten on an individual post.
- * Primary action routes to /contact; secondary action explains engagement options.
+ * End-of-essay call to action, rendered by the essay layout so no post can
+ * forget it. It holds the page's one `.button` (to /contact); the second
+ * action is a `.more-link` to "What I build" on the homepage. Space alone
+ * separates it from the essay: no rule, no eyebrow.
  */
-import Button from '@components/editorial/Button.astro';
 
 interface Props {
-  /** Overrides the default prompt line. Keep it in the engineer-scientist register. */
+  /** Overrides the default prompt line. Keep it calm and specific. */
   prompt?: string;
   /** Overrides the default heading. */
   heading?: string;
 }
 
 const {
-  heading = 'Working on a system like this?',
-  prompt = 'If this resembles a problem your team is facing, I can help investigate what is happening, work through the options, and build a solution the team can run.',
+  heading = 'Working with data like this?',
+  prompt = 'If your team has data like this that people can’t read yet, I can build the view and hand it over.',
 } = Astro.props;
-
 ---
 
 <section class="post-cta" aria-labelledby="post-cta-heading">
-  <div class="post-cta-inner">
-    <p class="post-cta-eyebrow">Work together</p>
-    <h2 id="post-cta-heading">{heading}</h2>
-    <p class="post-cta-prompt">{prompt}</p>
-
-    <div class="post-cta-actions">
-      <Button href="/contact">Start a conversation &rarr;</Button>
-      <Button href="/#practice" variant="secondary">
-        Ways to work together &rarr;
-      </Button>
-    </div>
+  <h2 id="post-cta-heading">{heading}</h2>
+  <p class="post-cta-prompt">{prompt}</p>
+  <div class="post-cta-actions">
+    <a class="button" href="/contact/">Start a conversation</a>
+    <a class="more-link" href="/#practice">What I build</a>
   </div>
-
-  {
-    Astro.slots.has('default') && (
-      /*
-        Reserved slot for a future email-subscribe form. The site owner has
-        not yet chosen an email provider (e.g. Buttondown, ConvertKit); once
-        one is picked, pass a <SubscribeForm /> (or similar) as a child of
-        <PostCTA> and it will render here without any redesign of this
-        component. Deliberately empty until then — no placeholder input.
-      */
-      <div class="post-cta-subscribe">
-        <slot />
-      </div>
-    )
-  }
 </section>
 
 <style>
   .post-cta {
-    max-width: var(--prose-max-width);
-    margin-top: var(--space-8, 4rem);
-    padding-top: 2.5rem;
-    border-top: 2px solid var(--ie-blue);
-  }
-
-  .post-cta-inner {
     max-width: 62ch;
-  }
-
-  .post-cta-eyebrow {
-    margin: 0 0 0.6rem;
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    font-weight: 600;
-    letter-spacing: 0.055em;
-    text-transform: uppercase;
+    margin-top: var(--gap-section);
   }
 
   .post-cta h2 {
-    margin: 0 0 0.85rem;
-    color: var(--ie-ink);
-    font-family: var(--font-display);
-    font-size: var(--ie-type-h2);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+    margin: 0 0 var(--gap-related);
+    font-size: var(--ie-type-h3);
   }
 
   .post-cta-prompt {
-    margin: 0 0 1.75rem;
-    color: var(--ie-ink-secondary);
+    margin: 0;
+    color: var(--ie-muted);
     font-size: var(--ie-type-body);
-    line-height: 1.68;
   }
 
   .post-cta-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
     align-items: center;
-  }
-
-  .post-cta-subscribe:empty {
-    display: none;
-  }
-
-  .post-cta-subscribe:not(:empty) {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--ie-rule);
+    gap: 0.5rem 1.75rem;
+    margin-top: var(--gap-group);
   }
 </style>

@@ -15,21 +15,24 @@ interface Props {
   pubDate?: Date;
   robots?: string;
   chrome?: boolean;
+  /** Absolute URL of the original when this page republishes it. */
+  canonical?: string;
 }
 const {
   title,
   description = SITE.description,
-  image = '/photos/io-connect-2026-share.jpg',
+  image = '/photos/karan-mittal-share.jpg',
   imageWidth,
   imageHeight,
   type = "website",
   pubDate,
   robots,
   chrome = true,
+  canonical,
 } = Astro.props;
 
 const siteBase = Astro.site || SITE.url;
-const canonicalURL = new URL(Astro.url.pathname, siteBase);
+const canonicalURL = canonical ? new URL(canonical) : new URL(Astro.url.pathname, siteBase);
 const rssUrl = new URL('/rss.xml', siteBase).toString();
 const resolvedImage = image.startsWith('http://') || image.startsWith('https://')
   ? image

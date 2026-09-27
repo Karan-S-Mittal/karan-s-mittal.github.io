@@ -10,9 +10,8 @@ interface NavItem {
 }
 
 const nav: NavItem[] = [
-  { href: '/publications/', label: 'Publications', activePaths: ['/publications/', '/writing/'] },
+  { href: '/publications/', label: 'Writing and talks', activePaths: ['/publications/', '/writing/'] },
   { href: '/about/', label: 'About' },
-  { href: '/now/', label: 'Now' },
 ];
 
 function isActive(item: Pick<NavItem, 'href' | 'activePaths'>) {

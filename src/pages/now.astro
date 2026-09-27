@@ -1,7 +1,7 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import PageHeader from '@components/content/PageHeader.astro';
-import { formatTalkDate } from '@utils/date';
+import { formatDate } from '@utils/date';
 import { nowAreas } from '@data/now';
 import { execFileSync } from 'node:child_process';
 
@@ -22,12 +22,12 @@ const lastUpdated = lastCommitDate('src/data/now.ts', '2026-09-23');
 
 <Layout
   title="Now | Karan Mittal"
-  description="A living snapshot of Karan Mittal's current systems engineering focus, research, and priorities."
+  description="What Karan Mittal is working on and teaching this month."
 >
   <main class="container now-page">
     <PageHeader
       title="What I’m focused on now"
-      description="Current work, research, and community activity. I update this page in the first week of each month."
+      description="Current work and community activity. I update this page in the first week of each month."
     />
 
     <div class="now-grid">
@@ -53,7 +53,7 @@ const lastUpdated = lastCommitDate('src/data/now.ts', '2026-09-23');
 
     <footer class="now-meta-footer">
       <p>
-        Updated <time datetime={lastUpdated}>{formatTalkDate(lastUpdated)}</time> · Based on the <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now page movement</a> by Derek Sivers.
+        Updated <time datetime={lastUpdated}>{formatDate(lastUpdated)}</time> · Based on the <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now page movement</a> by Derek Sivers.
       </p>
     </footer>
   </main>

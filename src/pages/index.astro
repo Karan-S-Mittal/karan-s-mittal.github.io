@@ -1,20 +1,21 @@
 ---
-import Layout from '@layouts/Layout.astro';
-import { getCollection } from 'astro:content';
-import { SITE } from '../config';
-import { practiceAreas } from '@data/practice';
-import { externalWriting } from '@data/publications';
-import talksData from '@data/talks.json';
-import { talkTypeLabel, type Talk } from '../types/talks';
-import communitiesData from '@data/communities.json';
-import EvidenceTrail from '@components/diagram/home/EvidenceTrail.astro';
-import PracticeGlyph from '@components/diagram/home/PracticeGlyph.astro';
-import CommunityIcon from '@components/content/CommunityIcon.astro';
-import AccentTitle from '@components/content/AccentTitle.astro';
-import '@styles/practice.css';
+import Layout from "@layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { SITE } from "../config";
+import { practiceAreas } from "@data/practice";
+import { externalWriting } from "@data/publications";
+import talksData from "@data/talks.json";
+import { talkTypeLabel, type Talk } from "../types/talks";
+import communitiesData from "@data/communities.json";
+import PracticeChart from "@components/diagram/home/PracticeChart.astro";
+import CommunityIcon from "@components/content/CommunityIcon.astro";
+import AccentTitle from "@components/content/AccentTitle.astro";
+import { formatMonthYear } from "@utils/date";
+import "@styles/practice.css";
 
-const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const publishedPosts = (
+  await getCollection("blog", ({ data }) => !data.draft)
+).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 const latestLocalPost = publishedPosts[0];
 const externalArticle = externalWriting[0];
 const recentTalks = [...talksData.talks]
@@ -22,13 +23,11 @@ const recentTalks = [...talksData.talks]
   .slice(0, latestLocalPost ? 1 : 2);
 
 // Most visible community first.
-const communityOrder = ['gdg-cloud-indore', 'mlindore', 'codevipassana'];
+const communityOrder = ["gdg-cloud-indore", "mlindore", "codevipassana"];
 const communities = [...communitiesData.communities].sort(
-  (a, b) => communityOrder.indexOf(a.id) - communityOrder.indexOf(b.id)
+  (a, b) => communityOrder.indexOf(a.id) - communityOrder.indexOf(b.id),
 );
 
-const monthYear = (value: Date) =>
-  value.toLocaleDateString('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 ---
 
 <Layout title={SITE.title} description={SITE.description}>
@@ -37,28 +36,35 @@ const monthYear = (value: Date) =>
       <div class="wrap hero-grid">
         <div class="hero-copy">
           <h1 id="hero-heading">Karan Mittal</h1>
-          <p class="hero-role">
-            <span>Independent engineer · Co-founder of Dextar</span>
-            <span>Organiser, GDG Cloud Indore and ML Indore</span>
-          </p>
+          <ul class="hero-role">
+            <li>Data visualisation expert</li>
+            <li>
+              Co-founder and CTO, <a
+                href="https://dextar.co"
+                target="_blank"
+                rel="noopener">Dextar</a
+              >
+            </li>
+            <li>Organiser, ML Indore and GDG Cloud Indore</li>
+          </ul>
           <p class="lead">
-            I build knowledge graphs and LLM evaluations for teams whose answers have to hold up.
-            At <a href="https://dextar.co" target="_blank" rel="noopener">Dextar</a> that means
-            tracing material lots and supplier claims through semiconductor supply chains, so every
-            answer points back to the record behind it.
+            I’ve built data apps in Plotly Dash since 2019, including a year as
+            a software engineer at Plotly. After that I built analytics for
+            semiconductor manufacturing at Lam Research and for oncology teams in
+            life sciences.
           </p>
           <div class="actions">
-            <a class="button" href="/contact/">Discuss your problem</a>
+            <a class="button" href="/contact/">Discuss your project</a>
             <a class="more-link" href="/publications/">Writing and talks</a>
           </div>
         </div>
 
         <figure class="hero-portrait">
           <img
-            src="/photos/io-connect-2026.jpg"
-            srcset="/photos/io-connect-2026-320.jpg 320w, /photos/io-connect-2026.jpg 480w"
+            src="/photos/karan-mittal.jpg"
+            srcset="/photos/karan-mittal-320.jpg 320w, /photos/karan-mittal.jpg 480w"
             sizes="(max-width: 720px) 200px, 380px"
-            alt="Karan Mittal at Google I/O Connect India, July 2026"
+            alt="Karan Mittal"
             width="480"
             height="600"
             fetchpriority="high"
@@ -67,71 +73,129 @@ const monthYear = (value: Date) =>
       </div>
     </section>
 
-    <section class="band band--tint" aria-labelledby="recent-heading">
+    <section id="practice" class="band band--tint" aria-labelledby="practice-heading">
       <div class="wrap">
-        <h2 id="recent-heading" class="section-header">Recent work</h2>
+        <div class="section-header">
+          <h2 id="practice-heading">What I build</h2>
+          <p class="lead">
+            Most of my work starts with data that’s hard to read and ends with
+            something a team opens every week.
+          </p>
+        </div>
+
+        <ol class="columns practice-list">
+          {
+            practiceAreas.map((area) => (
+              <li class="practice-item" id={area.id}>
+                <div class="practice-figure">
+                  <PracticeChart kind={area.chart} />
+                </div>
+                <h3 class="practice-problem">{area.problem}</h3>
+                <p class="practice-intervention">{area.intervention}</p>
+              </li>
+            ))
+          }
+        </ol>
+        <p class="practice-caption">The charts use illustrative data.</p>
+      </div>
+    </section>
+
+    <section class="band" aria-labelledby="recent-heading">
+      <div class="wrap">
+        <h2 id="recent-heading" class="section-header">Writing and talks</h2>
 
         <ul class="community-list" aria-label="Communities">
-          {communities.map((community) => (
-            <li>
-              <a class="community" href={community.links[0].url} target="_blank" rel="noopener">
-                <CommunityIcon id={community.id} />
-                <span class="community-text">
-                  <span class="community-name">{community.name}</span>
-                  <span class="community-role">{community.role}</span>
-                </span>
-              </a>
-            </li>
-          ))}
+          {
+            communities.map((community) => (
+              <li>
+                <a
+                  class="community"
+                  href={community.links[0].url}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <CommunityIcon id={community.id} />
+                  <span class="community-text">
+                    <span class="community-name">{community.name}</span>
+                    <span class="community-role">{community.role}</span>
+                  </span>
+                </a>
+              </li>
+            ))
+          }
         </ul>
 
         <ul class="columns proof-list">
-          {latestLocalPost && (
-            <li class="proof-item">
-              <p class="proof-meta">
-                <time datetime={latestLocalPost.data.pubDate.toISOString()}>
-                  {monthYear(latestLocalPost.data.pubDate)}
-                </time>
-                <span>Essay</span>
-              </p>
-              <h3 class="proof-title">
-                <a href={`/writing/${latestLocalPost.id}/`}><AccentTitle title={latestLocalPost.data.title} /></a>
-              </h3>
-              <p class="proof-desc">{latestLocalPost.data.description}</p>
-            </li>
-          )}
+          {
+            latestLocalPost && (
+              <li class="proof-item">
+                <p class="proof-meta">
+                  <time datetime={latestLocalPost.data.pubDate.toISOString()}>
+                    {formatMonthYear(latestLocalPost.data.pubDate)}
+                  </time>
+                  <span>Essay</span>
+                </p>
+                <h3 class="proof-title">
+                  <a href={`/writing/${latestLocalPost.id}/`}>
+                    <AccentTitle title={latestLocalPost.data.title} />
+                  </a>
+                </h3>
+                <p class="proof-desc">{latestLocalPost.data.description}</p>
+              </li>
+            )
+          }
 
-          {externalArticle && (
-            <li class="proof-item">
-              <p class="proof-meta">
-                <time datetime={externalArticle.pubDate}>
-                  {monthYear(new Date(externalArticle.pubDate))}
-                </time>
-                <span>Published at {externalArticle.publication}</span>
-              </p>
-              <h3 class="proof-title">
-                <a href={externalArticle.href} target="_blank" rel="noopener">
-                  <AccentTitle title={externalArticle.title} /><span class="proof-mark" aria-hidden="true">&nbsp;&nearr;</span>
-                </a>
-              </h3>
-              <p class="proof-desc">{externalArticle.description}</p>
-            </li>
-          )}
+          {
+            externalArticle && (
+              <li class="proof-item">
+                <p class="proof-meta">
+                  <time datetime={externalArticle.pubDate}>
+                    {formatMonthYear(externalArticle.pubDate)}
+                  </time>
+                  <span>Published at {externalArticle.publication}</span>
+                </p>
+                <h3 class="proof-title">
+                  <a href={externalArticle.href} target="_blank" rel="noopener">
+                    <>
+                      <AccentTitle title={externalArticle.title} />
+                      <span class="proof-mark" aria-hidden="true">
+                        &nbsp;&nearr;
+                      </span>
+                    </>
+                  </a>
+                </h3>
+                <p class="proof-desc">{externalArticle.description}</p>
+              </li>
+            )
+          }
 
-          {recentTalks.map((talk) => (
-            <li class="proof-item">
-              <p class="proof-meta">
-                <time datetime={talk.date}>{monthYear(new Date(talk.date))}</time>
-                <span>{talkTypeLabel[talk.type as Talk['type']]} · {talk.event}</span>
-              </p>
-              <h3 class="proof-title">
-                {talk.links[0]
-                  ? <a href={talk.links[0].url} target="_blank" rel="noopener"><AccentTitle title={talk.title} /><span class="proof-mark" aria-hidden="true">&nbsp;&nearr;</span></a>
-                  : talk.title}
-              </h3>
-              <p class="proof-desc">{talk.description}</p>
-            </li>
-          ))}
+          {
+            recentTalks.map((talk) => (
+              <li class="proof-item">
+                <p class="proof-meta">
+                  <time datetime={talk.date}>
+                    {formatMonthYear(talk.date)}
+                  </time>
+                  <span>
+                    {talkTypeLabel[talk.type as Talk["type"]]} · {talk.event}
+                  </span>
+                </p>
+                <h3 class="proof-title">
+                  {talk.links[0] ? (
+                    <a href={talk.links[0].url} target="_blank" rel="noopener">
+                      <AccentTitle title={talk.title} />
+                      <span class="proof-mark" aria-hidden="true">
+                        &nbsp;&nearr;
+                      </span>
+                    </a>
+                  ) : (
+                    talk.title
+                  )}
+                </h3>
+                <p class="proof-desc">{talk.description}</p>
+              </li>
+            ))
+          }
         </ul>
 
         <div class="actions">
@@ -140,43 +204,12 @@ const monthYear = (value: Date) =>
       </div>
     </section>
 
-    <section id="practice" class="band" aria-labelledby="practice-heading">
-      <div class="wrap">
-        <div class="section-header">
-          <h2 id="practice-heading">What I fix</h2>
-          <p class="lead">
-            I design graph-grounded knowledge systems and the evaluations that prove them, so every
-            answer traces back to evidence and failures surface before users see them.
-          </p>
-        </div>
-
-        <figure class="fix-figure">
-          <EvidenceTrail />
-          <figcaption class="dg-caption">
-            Illustrative. The answer carries the path that produced it, so anyone can check it.
-          </figcaption>
-        </figure>
-
-        <ol class="columns practice-list">
-          {practiceAreas.map((area) => (
-            <li class="practice-item" id={area.id}>
-              <div class="practice-figure">
-                <PracticeGlyph kind={area.diagram} />
-              </div>
-              <h3 class="practice-problem">{area.problem}</h3>
-              <p class="practice-intervention">{area.intervention}</p>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
-
     <section class="band band--tint" aria-labelledby="closing-heading">
       <div class="wrap">
         <h2 id="closing-heading">What needs to work better?</h2>
         <p class="lead">
-          Describe the system, who relies on it, and what a trustworthy answer would look like.
-          A few sentences are enough to start.
+          Describe the data, who relies on it, and what they need to see. A
+          few sentences are enough to start.
         </p>
         <div class="actions">
           <a href="/contact/" class="more-link">Start a conversation</a>
@@ -214,10 +247,13 @@ const monthYear = (value: Date) =>
     font-size: var(--ie-type-body);
     font-weight: 600;
     line-height: 1.4;
+    list-style: none;
+    padding: 0;
   }
 
-  .hero-role span {
-    display: block;
+  .hero-role li {
+    margin: 0;
+    color: inherit;
   }
 
   .home-hero .lead {
@@ -269,7 +305,7 @@ const monthYear = (value: Date) =>
     max-width: 58ch;
   }
 
-  /* ---- Recent work -------------------------------------------------- */
+  /* ---- Writing and talks -------------------------------------------- */
 
   /* A free row, not the three-column grid below it: lined up with the
      columns, each community would read as the heading of the item under it. */
@@ -392,15 +428,16 @@ const monthYear = (value: Date) =>
     color: var(--ie-ink-secondary);
   }
 
-  /* ---- What I fix: the figure runs the full page width -------------- */
-
-  .fix-figure {
-    margin: var(--gap-block) 0;
-  }
+  /* ---- What I build: a small chart above each item ------------------ */
 
   .practice-figure {
-    max-width: 320px;
     margin-bottom: var(--gap-related);
+  }
+
+  .practice-caption {
+    margin: var(--gap-group) 0 0;
+    color: var(--ie-muted);
+    font-size: var(--ie-type-caption);
   }
 
   .practice-problem {

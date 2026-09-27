@@ -6,7 +6,7 @@ export const SITE = {
   name: 'Karan Mittal',
   title: 'Karan Mittal',
   description:
-    'Karan Mittal builds graph-grounded knowledge systems and LLM evaluations: answers that trace back to evidence, and failures caught before they reach users.',
+    'Karan Mittal is a data visualisation expert. He builds dashboards in Plotly Dash and Streamlit, charts that explain models, and views of knowledge graphs.',
   url: 'https://karan-s-mittal.github.io',
   author: 'Karan Mittal',
   email: 'karanshyammittal@gmail.com',

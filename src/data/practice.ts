@@ -1,44 +1,43 @@
 /**
- * The three failure modes this practice exists to fix.
+ * The three kinds of work under "What I build" on the homepage.
  *
- * Deliberately compressed: one problem line, one intervention line. Detail
- * belongs in a conversation, not on the homepage. Agents are one application
- * of graph-grounded verification, not the headline.
+ * Deliberately compressed: one title line, one description line. Detail
+ * belongs in a conversation, not on the homepage.
  */
 
-/** The small figures drawn by src/components/diagram/home/PracticeGlyph.astro. */
-export type GlyphKind = 'provenance' | 'evaluation' | 'verification';
+/** The small charts drawn by src/components/diagram/home/PracticeChart.astro. */
+export type ChartKind = 'metric' | 'versions' | 'network';
 
 export interface PracticeArea {
   id: string;
-  /** Which small figure sits beside the item on the homepage. */
-  diagram: GlyphKind;
-  /** The failure as a team would describe it. */
+  /** Which illustrative chart sits above the item on the homepage. */
+  chart: ChartKind;
+  /** What gets built, as a client would name it. */
   problem: string;
-  /** What gets built in response. */
+  /** What that involves. */
   intervention: string;
 }
 
 export const practiceAreas: PracticeArea[] = [
   {
-    id: 'traceability',
-    diagram: 'provenance',
-    problem: 'Answers can’t be traced back to evidence',
+    id: 'dashboards',
+    chart: 'metric',
+    problem: 'Dashboards your team can run',
     intervention:
-      'Knowledge graphs that keep provenance on every entity and claim — source, version, and confidence — so any answer can be walked back to the records behind it.',
+      'Plotly Dash and Streamlit apps on your own data, built so your team can change them after I leave.',
   },
   {
-    id: 'evaluation',
-    diagram: 'evaluation',
-    problem: 'No one can say whether the model is getting better or worse',
+    id: 'model-charts',
+    chart: 'versions',
+    problem: 'Charts that explain a model',
     intervention:
-      'Evaluation suites built from real questions and graded against ground truth, run as a regression gate on every prompt, model, or data change.',
+      'Evaluation results and errors drawn so people outside the ML team can see where a model fails.',
   },
   {
-    id: 'agents',
-    diagram: 'verification',
-    problem: 'Agents act on claims no one has checked',
+    id: 'connected-data',
+    chart: 'network',
+    problem: 'Views of connected data',
     intervention:
-      'Graph-grounded verification between retrieval and action: what an agent is about to rely on is checked against the knowledge graph before the tool call goes through.',
+      'Knowledge graphs and networks laid out so you can follow one record to the next.',
   },
 ];

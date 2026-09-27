@@ -1,4 +1,5 @@
 ---
+import { formatDate } from '@utils/date';
 import type { CollectionEntry } from 'astro:content';
 import { getReadingTime } from '../../utils/readingTime';
 
@@ -11,11 +12,7 @@ const { post, searchText } = Astro.props;
 
 const readingTime = getReadingTime(post.body);
 
-const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
-  month: 'short',
-  day: 'numeric',
-  year: 'numeric',
-});
+const formattedDate = formatDate(post.data.pubDate);
 ---
 
 <article class="post-card" data-search={searchText}>
@@ -31,7 +28,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     {post.data.updatedDate && (
       <>
         <span aria-hidden="true" class="meta-sep">·</span>
-        <span class="updated">Updated {post.data.updatedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+        <span class="updated">Updated {formatDate(post.data.updatedDate)}</span>
       </>
     )}
   </div>

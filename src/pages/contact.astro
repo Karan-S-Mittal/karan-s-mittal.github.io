@@ -8,32 +8,33 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
 
 <Layout
   title="Contact | Karan Mittal"
-  description="Start a conversation with Karan Mittal about a knowledge system, an LLM evaluation, or a talk."
+  description="Start a conversation with Karan Mittal about a dashboard, a data visualisation project, or a talk."
 >
   <main class="container contact-page">
     <PageHeader
       title="What needs to work better?"
       description="Tell me about the problem, who it affects, and what a useful outcome would look like. A few sentences are enough to start."
     >
-      <a class="button" href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>Email me</a>
+      <a class="button" href={`mailto:${SITE.email}?subject=Project%20enquiry`}>Email me</a>
       <a class="more-link" href="#tally-container">Use the contact form</a>
     </PageHeader>
 
     <div class="contact-layout">
-      <aside class="contact-aside" aria-label="Consulting guidance">
+      <aside class="contact-aside" aria-label="How to get in touch">
         <div class="aside-brief-card">
           <div class="brief-section">
-            <p class="aside-label">Engagement scope</p>
+            <p class="aside-label">What I can help with</p>
             <ul class="aside-list">
-              <li>Reviews of existing knowledge and retrieval systems</li>
-              <li>Knowledge graph and evaluation design, build, and handover</li>
-              <li>Technical advisory, talks, and workshops</li>
+              <li>Dashboards in Plotly Dash or Streamlit, built and handed over</li>
+              <li>Charts that explain model evaluations and errors</li>
+              <li>Graph and network visualisation</li>
+              <li>Talks and workshops</li>
             </ul>
           </div>
 
           <div class="brief-section">
             <p class="aside-label">What happens next</p>
-            <p>I review messages personally. Response timing depends on current commitments, so include any real deadline. If there is a fit, we’ll clarify scope, useful outcomes, and next steps before agreeing on an engagement.</p>
+            <p>I review messages personally. Response timing depends on current commitments, so include any real deadline. If there is a fit, we’ll agree on the scope and what you’ll get before any work starts.</p>
           </div>
 
           <div class="brief-section quiet-route">
@@ -43,16 +44,15 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
                 <span>Connect on LinkedIn</span>
                 <span class="arrow" aria-hidden="true">↗</span>
               </a>
-              <a href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`} class="route-link">
+              <a href={`mailto:${SITE.email}?subject=Project%20enquiry`} class="route-link">
                 <span>{SITE.email}</span>
-                <span class="arrow" aria-hidden="true">↗</span>
               </a>
             </div>
           </div>
         </div>
       </aside>
 
-      <section class="form-panel" aria-label="Engineering conversation form">
+      <section class="form-panel" aria-label="Contact form">
         <div class="form-panel-head">
           <p class="form-register">Contact form</p>
           <p>The form is provided by Tally under its <a href="https://tally.so/help/privacy-policy" target="_blank" rel="noopener">privacy notice</a>.</p>
@@ -78,14 +78,14 @@ const tallyEmbedUrl = 'https://tally.so/embed/jar8jY?alignLeft=1&hideTitle=1&dyn
             frameborder="0"
             marginheight="0"
             marginwidth="0"
-            title="Start an engineering conversation with Karan Mittal"
+            title="Contact Karan Mittal"
           ></iframe>
           <p id="form-error" class="form-error" role="alert" hidden>
-            The intake form could not be loaded. <a href="https://tally.so/r/jar8jY" target="_blank" rel="noopener">Open it directly on Tally</a> or <a href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>send the project brief by email</a>.
+            The intake form could not be loaded. <a href="https://tally.so/r/jar8jY" target="_blank" rel="noopener">Open it directly on Tally</a> or <a href={`mailto:${SITE.email}?subject=Project%20enquiry`}>send a few lines by email</a>.
           </p>
           <noscript>
             <p class="form-fallback">
-              This form needs JavaScript to load. <a href={`mailto:${SITE.email}?subject=Systems%20Engineering%20Inquiry`}>Send the project brief by email instead</a>.
+              This form needs JavaScript to load. <a href={`mailto:${SITE.email}?subject=Project%20enquiry`}>Send a few lines by email instead</a>.
             </p>
           </noscript>
         </div>

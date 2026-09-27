@@ -8,17 +8,6 @@
   padding-inline: var(--gutter);
 }
 
-.practice-page .register {
-  display: block;
-  margin-bottom: var(--gap-tight);
-  color: var(--ie-muted);
-  font-family: var(--font-sans);
-  font-size: var(--ie-type-small);
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
-}
-
 .practice-page h1,
 .practice-page h2,
 .practice-page h3 {
@@ -107,7 +96,7 @@
 
 /* A heading block's own trailing margin must not add to the gap token that
    follows it. */
-.practice-page :is(.section-header, .section-intro, .section-head > div, .closing-copy) > :last-child {
+.practice-page :is(.section-header, .section-head > div) > :last-child {
   margin-bottom: 0;
 }
 
