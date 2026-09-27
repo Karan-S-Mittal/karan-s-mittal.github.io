@@ -54,9 +54,8 @@ const formattedDate = formatDate(post.data.pubDate);
             <span>{readingTime} min read</span>
             {post.data.updatedDate && (
               <>
-                <span aria-hidden="true" class="meta-sep">·</span>
                 <span class="updated">
-                  Updated <time datetime={post.data.updatedDate.toISOString()}>{formatDate(post.data.updatedDate)}</time>
+                  <span aria-hidden="true" class="meta-sep">·</span> Updated <time datetime={post.data.updatedDate.toISOString()}>{formatDate(post.data.updatedDate)}</time>
                 </span>
               </>
             )}
@@ -81,9 +80,7 @@ const formattedDate = formatDate(post.data.pubDate);
           {post.data.description && <p class="post-standfirst">{post.data.description}</p>}
 
           {post.data.tags.length > 0 && (
-            <div class="post-tags">
-              {post.data.tags.map((tag) => <span class="tag">{tag}</span>)}
-            </div>
+            <p class="post-tags">{post.data.tags.join(' · ')}</p>
           )}
         </div>
 
@@ -107,11 +104,7 @@ const formattedDate = formatDate(post.data.pubDate);
               />
             </a>
             {post.data.heroCaption && (
-              <figcaption class="post-hero-caption">
-                <span class="caption-marker">FIG 00</span>
-                <span>{post.data.heroCaption}</span>
-                <span class="post-hero-hint" aria-hidden="true">Open full-size ↗</span>
-              </figcaption>
+              <figcaption class="post-hero-caption">{post.data.heroCaption}</figcaption>
             )}
           </figure>
         )}
@@ -120,7 +113,7 @@ const formattedDate = formatDate(post.data.pubDate);
       {showToc && (
         <details class="post-mobile-toc">
           <summary>
-            <span>Article contents</span>
+            <span>Contents</span>
             <span class="post-mobile-toc-count">{tocHeadings.length} sections</span>
           </summary>
           <div class="post-mobile-toc-panel">
@@ -148,20 +141,20 @@ const formattedDate = formatDate(post.data.pubDate);
 </Layout>
 
 <style>
+  /* Essay page. Same edge, gaps and type steps as every other page; the
+     contents column sits beside the prose on wide screens. */
   .post-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 232px;
     gap: 2.5rem;
-    max-width: var(--width-page);
     align-items: start;
   }
   .post-content {
     min-width: 0;
-    max-width: none;
   }
   .post-sidebar {
     position: sticky;
-    top: 5rem;
+    top: var(--gap-group);
     align-self: start;
   }
   .post-mobile-toc {
@@ -170,10 +163,7 @@ const formattedDate = formatDate(post.data.pubDate);
 
   .post-header {
     max-width: 1040px;
-    margin-bottom: 4.5rem;
-    padding: 3.5rem 0 2rem;
-    border-bottom: 1px solid var(--ie-rule-strong);
-    background: transparent;
+    margin-bottom: var(--gap-block);
   }
 
   .post-header-copy {
@@ -185,11 +175,10 @@ const formattedDate = formatDate(post.data.pubDate);
     align-items: center;
     gap: 0.45rem;
     flex-wrap: wrap;
-    margin-bottom: 1.25rem;
-    font-size: var(--ie-type-small);
+    margin-bottom: var(--gap-related);
     color: var(--ie-muted);
+    font-size: var(--ie-type-small);
   }
-
   .post-meta time {
     font-family: var(--font-mono);
     font-size: var(--ie-type-caption);
@@ -197,99 +186,52 @@ const formattedDate = formatDate(post.data.pubDate);
   .meta-sep {
     color: var(--ie-rule-strong);
   }
-  .updated {
-    color: var(--ie-rust);
-  }
 
   .post-header h1 {
     max-width: 28ch;
-    margin: 0 0 1.35rem;
-    color: var(--ie-ink);
-    font-family: var(--font-display);
+    margin: 0;
     font-size: var(--ie-type-h1);
-    font-weight: 600;
-    letter-spacing: -0.025em;
     line-height: 1.15;
   }
 
   .post-standfirst {
-    max-width: 62ch;
-    margin: 0;
-    color: var(--ie-ink-secondary);
-    font-family: var(--font-sans);
-    font-size: var(--ie-type-h3);
-    line-height: 1.6;
+    max-width: 52ch;
+    margin: var(--gap-related) 0 0;
+    color: var(--ie-muted);
+    font-size: var(--ie-type-body);
   }
 
   .post-tags {
-    display: flex;
-    gap: 0.9rem;
-    flex-wrap: wrap;
-    margin-top: 1.5rem;
-    font-family: var(--font-mono);
-  }
-
-  .post-tags .tag {
-    padding: 0 0 0.15rem;
-    border: 0;
-    border-bottom: 1px solid var(--ie-rule-strong);
-    border-radius: 0;
-    background: transparent;
+    margin: var(--gap-related) 0 0;
     color: var(--ie-muted);
-    font-size: var(--ie-type-label);
-    text-decoration: none;
-    transition: color 120ms ease, border-color 120ms ease;
-  }
-  .post-tags a.tag:hover {
-    color: var(--ie-blue);
-    border-bottom-color: var(--ie-blue);
+    font-size: var(--ie-type-small);
   }
 
+  /* Framed like the About portrait: a hairline holds the edge when the
+     image is as light as the page. */
   .post-hero-figure {
     max-width: 1040px;
-    margin: 3rem 0 0;
-    border-radius: 6px;
-    border: 1px solid var(--ie-rule-strong);
-    background: var(--ie-surface);
-    overflow: hidden;
+    margin: var(--gap-block) 0 0;
   }
-
   .post-hero-media {
     display: block;
     overflow-x: auto;
-    color: inherit;
+    border-radius: 18px;
+    corner-shape: squircle;
+    outline: 1px solid var(--ie-rule-strong);
+    outline-offset: -1px;
   }
-
   .post-hero-img {
+    display: block;
     width: 100%;
     height: auto;
     max-height: 440px;
     object-fit: cover;
-    display: block;
   }
-
   .post-hero-caption {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    padding: 10px 16px;
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-micro);
+    margin-top: 0.75rem;
     color: var(--ie-muted);
-    border-top: 1px solid var(--ie-rule);
-    background: var(--ie-surface-raised);
-  }
-
-  .caption-marker {
-    font-weight: 600;
-    color: var(--ie-rust);
-    letter-spacing: 0.05em;
-  }
-
-  .post-hero-hint {
-    margin-left: auto;
-    white-space: nowrap;
-    color: var(--ie-blue);
+    font-size: var(--ie-type-caption);
   }
 
   .post-footer {
@@ -299,32 +241,24 @@ const formattedDate = formatDate(post.data.pubDate);
   @media (max-width: 1100px) {
     .post-layout {
       grid-template-columns: minmax(0, 1fr);
-      max-width: 1040px;
-      padding-inline: 1.25rem;
     }
     .post-sidebar {
       display: none;
     }
     .post-mobile-toc {
       display: block;
-      max-width: var(--prose-max-width, 700px);
-      margin: -1rem 0 3rem;
-      border: 1px solid var(--ie-rule);
-      border-radius: var(--radius-sm, 6px);
-      background: var(--ie-surface);
+      max-width: 700px;
+      margin: 0 0 var(--gap-block);
+      border-block: 1px solid var(--ie-rule);
     }
     .post-mobile-toc summary {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       gap: 1rem;
-      padding: 0.75rem 1rem;
+      padding: 0.75rem 0;
       color: var(--ie-ink);
-      font-family: var(--font-sans);
-      font-size: var(--ie-type-micro);
+      font-size: var(--ie-type-small);
       font-weight: 600;
-      letter-spacing: 0.055em;
-      text-transform: uppercase;
       cursor: pointer;
       list-style: none;
     }
@@ -338,46 +272,23 @@ const formattedDate = formatDate(post.data.pubDate);
     .post-mobile-toc-count {
       margin-left: auto;
       color: var(--ie-muted);
-      font-family: var(--font-mono);
       font-weight: 400;
-      letter-spacing: 0;
-      text-transform: none;
     }
     .post-mobile-toc-panel {
-      padding: 0 0.75rem 0.75rem;
+      padding-bottom: 0.75rem;
     }
     .post-mobile-toc-panel :global(.toc-root) {
       max-height: min(60vh, 30rem);
-      border: 0;
-      border-left: 1px solid var(--ie-rule-strong);
-      border-radius: 0;
-      padding: 0.75rem 0 0.75rem 0.75rem;
-      background: transparent;
     }
   }
 
   @media (max-width: 640px) {
-    .post-header {
-      padding-top: 2rem;
-      margin-bottom: 3rem;
-    }
-    .post-header h1 {
-      font-size: clamp(1.6rem, 6.5vw, 2rem);
-      line-height: 1.15;
-    }
+    /* Wide figures keep their size and scroll inside their frame. */
     .post-hero-img {
       width: 720px;
       min-width: 720px;
       max-width: none;
       max-height: none;
-    }
-    .post-hero-caption {
-      align-items: flex-start;
-      flex-wrap: wrap;
-    }
-    .post-hero-hint {
-      width: 100%;
-      margin-left: 0;
     }
   }
 </style>
@@ -410,11 +321,11 @@ const formattedDate = formatDate(post.data.pubDate);
     margin-bottom: 0.45rem;
   }
 
+  /* Space alone marks a new section; the header scrolls away, so anchor
+     targets only need a small offset. */
   .instrumented-essay .post-content > h2 {
-    margin-top: 5.5rem;
-    padding-top: 1rem;
-    scroll-margin-top: 5.5rem;
-    border-top: 1px solid var(--ie-rule-strong);
+    margin-top: var(--gap-block);
+    scroll-margin-top: var(--gap-group);
     color: var(--ie-ink);
     font-family: var(--font-display);
     font-size: var(--ie-type-h2);
@@ -424,8 +335,8 @@ const formattedDate = formatDate(post.data.pubDate);
   }
 
   .instrumented-essay .post-content > h3 {
-    margin-top: 3.25rem;
-    scroll-margin-top: 5.5rem;
+    margin-top: var(--gap-group);
+    scroll-margin-top: var(--gap-group);
     color: var(--ie-ink);
     font-family: var(--font-display);
     font-size: var(--ie-type-h3);
@@ -435,9 +346,9 @@ const formattedDate = formatDate(post.data.pubDate);
 
   .instrumented-essay .post-content > h4 {
     margin: 2rem 0 0.65rem;
-    scroll-margin-top: 5.5rem;
+    scroll-margin-top: var(--gap-group);
     font-family: var(--font-display);
-    font-size: var(--ie-type-h4);
+    font-size: var(--ie-type-base);
     font-weight: 600;
     line-height: 1.4;
     letter-spacing: -0.01em;
@@ -451,7 +362,7 @@ const formattedDate = formatDate(post.data.pubDate);
   .instrumented-essay .post-content > blockquote {
     margin-block: 2.5rem;
     padding: 0.2rem 0 0.2rem 1.25rem;
-    border-left: 3px solid var(--ie-rust);
+    border-left: 2px solid var(--ie-rule-strong);
     background: transparent;
     color: var(--ie-ink-secondary);
   }
@@ -476,13 +387,8 @@ const formattedDate = formatDate(post.data.pubDate);
     overflow-y: hidden;
   }
   .instrumented-essay .post-content .katex-display {
-    margin: var(--space-5, 2rem) 0 var(--space-3, 1rem);
-    padding: var(--space-4, 1.25rem) var(--space-5, 2rem);
+    margin: 2rem 0;
     overflow-x: auto;
-    border: 1px solid var(--ie-rule);
-    border-left: 2px solid var(--ie-blue);
-    border-radius: 4px;
-    background: var(--ie-surface);
     color: var(--ie-ink);
   }
   .instrumented-essay .post-content .katex-display > .katex {
@@ -490,13 +396,13 @@ const formattedDate = formatDate(post.data.pubDate);
     font-size: 1.1em;
   }
 
-  /* Table styling: Inter for prose sentences, Mono for code and data tags */
+  /* Tables: Inter for text, mono for code only. */
   .instrumented-essay .post-content table {
     width: 100%;
     margin: 2rem 0;
     border-collapse: collapse;
     table-layout: auto;
-    border-top: 2px solid var(--ie-ink);
+    border-top: 1px solid var(--ie-rule-strong);
     border-bottom: 1px solid var(--ie-rule-strong);
     font-family: var(--font-sans);
     font-size: var(--ie-type-small);
@@ -519,9 +425,6 @@ const formattedDate = formatDate(post.data.pubDate);
     background: transparent;
     color: var(--ie-ink);
     font-weight: 600;
-    font-size: var(--ie-type-micro);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
   }
 
   .instrumented-essay .post-content td {
@@ -534,19 +437,9 @@ const formattedDate = formatDate(post.data.pubDate);
     overflow-wrap: normal;
   }
 
-  .instrumented-essay .post-sidebar .toc-root {
-    position: sticky;
-    top: 5.5rem;
-    padding: 1rem 0 1rem 1rem;
-    border: 0;
-    border-left: 1px solid var(--ie-rule-strong);
-    border-radius: 0;
-    background: transparent;
-  }
 
   @media (max-width: 640px) {
     .instrumented-essay .post-content .katex-display {
-      padding: var(--space-3, 1rem);
       font-size: 0.88rem;
     }
     .instrumented-essay .post-content .katex-display > .katex {

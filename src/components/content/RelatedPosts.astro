@@ -46,47 +46,31 @@ const related = candidates
 {
   related.length > 0 && (
     <section class="related-posts" aria-labelledby="related-posts-heading">
-      <p class="related-posts-eyebrow">Continue reading</p>
-      <h2 id="related-posts-heading">Related field notes</h2>
-      <div class="related-posts-list">
+      <h2 id="related-posts-heading">More writing</h2>
+      <ul class="related-posts-list">
         {related.map((relatedPost) => (
           <BlogPostCard post={relatedPost} />
         ))}
-      </div>
+      </ul>
     </section>
   )
 }
 
 <style>
   .related-posts {
-    max-width: var(--prose-max-width);
-    margin-top: var(--space-8, 4rem);
-    padding-top: 2.5rem;
-    border-top: 1px solid var(--ie-rule-strong);
-  }
-
-  .related-posts-eyebrow {
-    margin: 0 0 0.6rem;
-    color: var(--ie-muted);
-    font-family: var(--font-mono);
-    font-size: var(--ie-type-label);
-    font-weight: 600;
-    letter-spacing: 0.055em;
-    text-transform: uppercase;
+    max-width: 700px;
+    margin-top: var(--gap-section);
   }
 
   .related-posts h2 {
-    margin: 0 0 1.25rem;
-    color: var(--ie-ink);
-    font-family: var(--font-display);
-    font-size: var(--ie-type-h2);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+    margin: 0 0 var(--gap-group);
+    font-size: var(--ie-type-h3);
   }
 
   .related-posts-list {
-    display: flex;
-    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--ie-rule);
+    list-style: none;
   }
 </style>
